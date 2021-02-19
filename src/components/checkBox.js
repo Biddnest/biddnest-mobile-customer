@@ -1,7 +1,7 @@
 import React from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {Colors, hp, wp} from '../constant/colors';
-import Feather from 'react-native-vector-icons/Feather';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const CheckBox = (props) => {
   return (
@@ -10,14 +10,14 @@ const CheckBox = (props) => {
       style={[
         styles.checkBoxView,
         {
-          borderColor: props.value ? '#0F0C75' : Colors.grey,
-          backgroundColor: props.value ? '#0F0C75' : Colors.transparent,
+          borderColor: props.value ? Colors.darkBlue : Colors.grey,
+          backgroundColor: props.value ? Colors.darkBlue : Colors.transparent,
           ...styles.common,
         },
       ]}>
       {props.value && (
-        <Feather
-          name={'check'}
+        <Ionicons
+          name={'checkmark-sharp'}
           size={15}
           color={Colors.white}
           style={{fontWeight: 'bold'}}

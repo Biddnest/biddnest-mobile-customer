@@ -130,7 +130,7 @@ const Home = (props) => {
             renderItem={({item, index}) => {
               return (
                 <LinearGradient
-                  colors={['#49039B', '#0F0C75']}
+                  colors={['#49039B', Colors.darkBlue]}
                   start={{x: 0, y: 0}}
                   end={{x: 1, y: 0}}
                   style={styles.movementLinear}>
@@ -160,7 +160,7 @@ const Home = (props) => {
               style={{
                 fontFamily: 'Roboto-Bold',
                 fontSize: wp(5),
-                color: '#0F0C75',
+                color: Colors.darkBlue,
               }}>
               NEED ASSISTANCE?
             </Text>

@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.cp_biddnest_mobile_customer"
+        applicationId "com.biddnest.customer"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

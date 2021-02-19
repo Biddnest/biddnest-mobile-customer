@@ -1,22 +1,29 @@
 import React from 'react';
 import {Input} from 'react-native-elements';
 import {hp, Colors, wp} from '../constant/colors';
-import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const TextInput = (props) => {
   return (
     <Input
+      disabled={props.disable || false}
       keyboardType={props.keyboard || 'default'}
       placeholder={props.placeHolder}
       label={props.label}
-      rightIcon={
-        props.isRight ? (
-          <Feather name="check" size={25} color={Colors.lightGreen} />
-        ) : (
-          <Ionicons name="close-outline" size={25} color={Colors.red} />
-        )
-      }
+      rightIcon={() => {
+        if (props.isRight === true) {
+          return (
+            <Ionicons
+              name="checkmark-sharp"
+              size={25}
+              color={Colors.lightGreen}
+            />
+          );
+        } else if (props.isRight === false) {
+          return <Ionicons name="close-outline" size={25} color={Colors.red} />;
+        }
+      }}
+      onChangeText={props.onChange}
       inputContainerStyle={{
         borderWidth: 2,
         paddingHorizontal: 15,

@@ -15,6 +15,7 @@ export const Colors = {
   transparent: 'transparent',
   red: 'red',
   lightGreen: '#83C373',
+  darkBlue: '#0F0C75',
 };
 
 export const boxShadow = {

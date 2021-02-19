@@ -8,12 +8,12 @@ import TextInput from '../../components/textInput';
 import Button from '../../components/button';
 import CheckBox from '../../components/checkBox';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {CommonActions} from '@react-navigation/native';
 import {resetNavigator} from '../../constant/commonFun';
 
 const Signup = (props) => {
   const [data, setData] = React.useState({});
-  const [isAgree, setAgree] = React.useState(false);
+  const [error, setError] = React.useState({});
+  const [isAgree, setAgree] = React.useState(true);
   const handleState = (key, value) => {
     setData({
       ...data,
@@ -44,16 +44,28 @@ const Signup = (props) => {
           </Text>
           <View style={{flexDirection: 'row'}}>
             <View style={{width: wp(45)}}>
-              <TextInput label={'First Name'} placeHolder={'First Name'} />
+              <TextInput
+                label={'First Name'}
+                isRight={error.firstName}
+                placeHolder={'First Name'}
+                onChange={(text) => handleState('firstName', text)}
+              />
             </View>
             <View style={{width: wp(45)}}>
-              <TextInput label={'Last Name'} placeHolder={'Last Name'} />
+              <TextInput
+                label={'Last Name'}
+                isRight={error.lastName}
+                placeHolder={'Last Name'}
+                onChange={(text) => handleState('lastName', text)}
+              />
             </View>
           </View>
           <TextInput
             label={'Email'}
             placeHolder={'Email'}
+            isRight={error.email}
             keyboard={'email-address'}
+            onChange={(text) => handleState('email', text)}
           />
           <View style={{flexDirection: 'row'}}>
             <View style={{width: wp(45), paddingHorizontal: 10}}>
@@ -78,7 +90,6 @@ const Signup = (props) => {
                     {label: 'Male', value: 'male'},
                     {label: 'Female', value: 'female'},
                   ]}
-                  // showArrow={false}
                   defaultValue={'male'}
                   customArrowUp={() => (
                     <MaterialIcons
@@ -96,15 +107,18 @@ const Signup = (props) => {
                   )}
                   containerStyle={{
                     height: hp(6.5),
-                    borderWidth: 2,
+                    borderWidth: 1,
                     borderRadius: 10,
                     borderColor: Colors.silver,
-                    overflow: 'hidden',
                   }}
                   style={[
-                    styles.customDropDowm,
+                    styles.customDropDown,
                     {
                       paddingHorizontal: 15,
+                      borderTopLeftRadius: 10,
+                      borderTopRightRadius: 10,
+                      borderBottomLeftRadius: 10,
+                      borderBottomRightRadius: 10,
                     },
                   ]}
                   labelStyle={{
@@ -115,12 +129,7 @@ const Signup = (props) => {
                   itemStyle={{
                     justifyContent: 'flex-start',
                   }}
-                  dropDownStyle={[
-                    styles.customDropDowm,
-                    {
-                      overflow: 'hidden',
-                    },
-                  ]}
+                  dropDownStyle={styles.customDropDown}
                   onChangeItem={(item) => handleState('gender', item.value)}
                 />
               </View>
@@ -128,7 +137,9 @@ const Signup = (props) => {
             <View style={{width: wp(45)}}>
               <TextInput
                 label={'Referral Code'}
+                isRight={error.referralCode}
                 placeHolder={'Referral Code'}
+                onChange={(text) => handleState('referralCode', text)}
               />
             </View>
           </View>
@@ -156,8 +167,52 @@ const Signup = (props) => {
           <Button
             label={'GET STARTED'}
             onPress={() => {
-              // resetNavigator(props, 'Dashboard');
-              props.navigation.navigate('Dashboard');
+              let tempError = {};
+              if (
+                !data.firstName ||
+                data.firstName.length === 0 ||
+                /[^a-zA-Z]/.test(data.firstName)
+              ) {
+                tempError.firstName = false;
+              } else {
+                tempError.firstName = true;
+              }
+              if (
+                !data.lastName ||
+                data.lastName.length === 0 ||
+                /[^a-zA-Z]/.test(data.lastName)
+              ) {
+                tempError.lastName = false;
+              } else {
+                tempError.lastName = true;
+              }
+              if (
+                !data.email ||
+                data.email.length === 0 ||
+                !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+                  data.email,
+                )
+              ) {
+                tempError.email = false;
+              } else {
+                tempError.email = true;
+              }
+              if (!data.referralCode || data.referralCode.length === 0) {
+                tempError.referralCode = false;
+              } else {
+                tempError.referralCode = true;
+              }
+              if (!isAgree) {
+                tempError.isAgree = false;
+              }
+              setError(tempError);
+              if (
+                Object.values(tempError).findIndex((item) => item === false) ===
+                -1
+              ) {
+                // resetNavigator(props, 'Dashboard');
+                props.navigation.navigate('Dashboard');
+              }
             }}
           />
         </View>
@@ -194,9 +249,7 @@ const styles = StyleSheet.create({
     paddingTop: hp(5),
     alignItems: 'center',
   },
-  customDropDowm: {
+  customDropDown: {
     backgroundColor: Colors.textBG,
-    borderWidth: 0,
-    borderRadius: 10,
   },
 });

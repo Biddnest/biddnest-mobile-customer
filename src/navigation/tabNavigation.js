@@ -16,7 +16,7 @@ const TabNavigation = (props: any) => {
     <Tab.Navigator
       initialRouteName={'Home'}
       tabBarOptions={{
-        activeTintColor: '#0F0C75',
+        activeTintColor: Colors.darkBlue,
         inactiveTintColor: '#9D9CC5',
         activeBackgroundColor: Colors.white,
         style: {
@@ -51,7 +51,7 @@ const TabNavigation = (props: any) => {
               style={{
                 fontFamily: 'Roboto-Bold',
                 fontSize: wp(3.5),
-                color: focused ? '#0F0C75' : '#9D9CC5',
+                color: focused ? Colors.darkBlue : '#9D9CC5',
               }}>
               {tabLabel}
             </Text>

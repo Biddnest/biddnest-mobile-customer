@@ -9,8 +9,10 @@ import Header from './header';
 import CheckBox from '../../components/checkBox';
 
 const Login = (props) => {
+  const [phoneNumber, setPhoneNumber] = React.useState();
+  const [phoneValidate, setPhoneValidate] = React.useState(undefined);
   const [otpSend, setOtpSend] = React.useState(false);
-  const [isAgree, setAgree] = React.useState(false);
+  const [isAgree, setAgree] = React.useState(true);
   return (
     <View style={[styles.container, {...styles.common}]}>
       <Header />
@@ -25,9 +27,12 @@ const Login = (props) => {
         }}>
         <View style={styles.bottomView}>
           <TextInput
+            disable={otpSend}
+            isRight={phoneValidate}
             label={'Phone Number'}
             placeHolder={'Phone Number'}
             keyboard={'decimal-pad'}
+            onChange={(text) => setPhoneNumber(text)}
           />
           {(!otpSend && (
             <View style={{alignItems: 'center'}}>
@@ -52,7 +57,22 @@ const Login = (props) => {
                   </Text>
                 </Text>
               </View>
-              <Button label={'SEND OTP'} onPress={() => setOtpSend(true)} />
+              <Button
+                label={'SEND OTP'}
+                onPress={() => {
+                  if (
+                    !phoneNumber?.length ||
+                    phoneNumber?.length !== 10 ||
+                    /\D/.test(phoneNumber)
+                  ) {
+                    setPhoneValidate(false);
+                  } else if (!isAgree) {
+                  } else {
+                    setPhoneValidate(true);
+                    setOtpSend(true);
+                  }
+                }}
+              />
             </View>
           )) || (
             <View style={{alignItems: 'center'}}>
