@@ -1,6 +1,8 @@
 import React from 'react';
 import {Input} from 'react-native-elements';
 import {hp, Colors, wp} from '../constant/colors';
+import Feather from 'react-native-vector-icons/Feather';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const TextInput = (props) => {
   return (
@@ -8,10 +10,16 @@ const TextInput = (props) => {
       keyboardType={props.keyboard || 'default'}
       placeholder={props.placeHolder}
       label={props.label}
-      // rightIcon={{type: 'font-awesome', name: 'comment'}}
+      rightIcon={
+        props.isRight ? (
+          <Feather name="check" size={25} color={Colors.lightGreen} />
+        ) : (
+          <Ionicons name="close-outline" size={25} color={Colors.red} />
+        )
+      }
       inputContainerStyle={{
         borderWidth: 2,
-        paddingHorizontal: 20,
+        paddingHorizontal: 15,
         borderRadius: 10,
         height: hp(6.5),
         marginTop: hp(1),

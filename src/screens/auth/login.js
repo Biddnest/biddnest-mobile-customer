@@ -3,13 +3,14 @@ import {View, Text, StyleSheet} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Colors, hp, wp} from '../../constant/colors';
 import TextInput from '../../components/textInput';
-import {Checkbox} from 'react-native-paper';
 import Button from '../../components/button';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Header from './header';
+import CheckBox from '../../components/checkBox';
 
 const Login = (props) => {
   const [otpSend, setOtpSend] = React.useState(false);
+  const [isAgree, setAgree] = React.useState(false);
   return (
     <View style={[styles.container, {...styles.common}]}>
       <Header />
@@ -33,12 +34,9 @@ const Login = (props) => {
               <View
                 style={{
                   flexDirection: 'row',
+                  alignItems: 'center',
                 }}>
-                {/*<Checkbox*/}
-                {/*  status={'checked'}*/}
-                {/*  onPress={() => {}}*/}
-                {/*  iconType="material"*/}
-                {/*/>*/}
+                <CheckBox onPress={() => setAgree(!isAgree)} value={isAgree} />
                 <Text
                   style={{
                     color: Colors.grey,
@@ -151,5 +149,12 @@ const styles = StyleSheet.create({
     borderColor: Colors.silver,
     color: Colors.textLabelColor,
     fontSize: wp(6),
+  },
+  checkBoxView: {
+    height: 20,
+    width: 20,
+    borderWidth: 2,
+    borderRadius: 3,
+    marginRight: wp(2),
   },
 });

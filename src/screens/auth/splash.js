@@ -1,10 +1,12 @@
 import React, {useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import {resetNavigator} from '../../constant/commonFun';
+import {Colors} from '../../constant/colors';
 
 const Splash = (props) => {
   useEffect(() => {
     setTimeout(() => {
-      props.navigation.navigate('Login');
+      resetNavigator(props, 'Login');
     }, 1500);
   }, []);
   return (
@@ -21,5 +23,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: Colors.white,
   },
 });

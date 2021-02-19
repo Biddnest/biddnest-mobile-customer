@@ -6,6 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Splash from '../screens/auth/splash';
 import Login from '../screens/auth/login';
 import Signup from '../screens/auth/signup';
+import DrawerNavigation from './drawerNavigation';
 
 const Stack = createStackNavigator();
 
@@ -16,28 +17,11 @@ const App = () => {
   }, []);
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Splash">
-        <Stack.Screen
-          name="Splash"
-          component={Splash}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="Signup"
-          component={Signup}
-          options={{
-            headerShown: false,
-          }}
-        />
+      <Stack.Navigator initialRouteName="Dashboard" headerMode={false}>
+        <Stack.Screen name="Splash" component={Splash} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="Dashboard" component={DrawerNavigation} />
       </Stack.Navigator>
     </NavigationContainer>
   );

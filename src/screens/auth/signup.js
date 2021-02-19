@@ -1,13 +1,25 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Platform} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {Colors, hp, wp} from '../../constant/colors';
 import Header from './header';
 import TextInput from '../../components/textInput';
 import Button from '../../components/button';
+import CheckBox from '../../components/checkBox';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {CommonActions} from '@react-navigation/native';
+import {resetNavigator} from '../../constant/commonFun';
 
-const Signup = () => {
+const Signup = (props) => {
+  const [data, setData] = React.useState({});
+  const [isAgree, setAgree] = React.useState(false);
+  const handleState = (key, value) => {
+    setData({
+      ...data,
+      [key]: value,
+    });
+  };
   return (
     <View style={[styles.container, {...styles.common}]}>
       <Header />
@@ -44,23 +56,74 @@ const Signup = () => {
             keyboard={'email-address'}
           />
           <View style={{flexDirection: 'row'}}>
-            <View style={{width: wp(45)}}>
-              <DropDownPicker
-                items={[
-                  {label: 'USA', value: 'usa'},
-                  {label: 'UK', value: 'uk'},
-                  {label: 'France', value: 'france'},
-                ]}
-                // defaultValue={this.state.country}
-                containerStyle={{height: 40}}
-                style={{backgroundColor: '#fafafa'}}
-                itemStyle={{
-                  justifyContent: 'flex-start',
-                }}
-                dropDownStyle={{backgroundColor: '#fafafa'}}
-                onChangeItem={(item) => {}}
-              />
-              {/*<TextInput label={'Gender'} />*/}
+            <View style={{width: wp(45), paddingHorizontal: 10}}>
+              <Text
+                style={{
+                  fontFamily: 'Roboto-Bold',
+                  color: Colors.textLabelColor,
+                  fontSize: wp(4),
+                  marginBottom: hp(1),
+                }}>
+                Gender
+              </Text>
+              <View
+                style={
+                  (Platform.OS !== 'android' && {
+                    zIndex: 10,
+                  }) ||
+                  {}
+                }>
+                <DropDownPicker
+                  items={[
+                    {label: 'Male', value: 'male'},
+                    {label: 'Female', value: 'female'},
+                  ]}
+                  // showArrow={false}
+                  defaultValue={'male'}
+                  customArrowUp={() => (
+                    <MaterialIcons
+                      name="arrow-drop-up"
+                      size={25}
+                      color={'#3B4B58'}
+                    />
+                  )}
+                  customArrowDown={() => (
+                    <MaterialIcons
+                      name="arrow-drop-down"
+                      size={25}
+                      color={'#3B4B58'}
+                    />
+                  )}
+                  containerStyle={{
+                    height: hp(6.5),
+                    borderWidth: 2,
+                    borderRadius: 10,
+                    borderColor: Colors.silver,
+                    overflow: 'hidden',
+                  }}
+                  style={[
+                    styles.customDropDowm,
+                    {
+                      paddingHorizontal: 15,
+                    },
+                  ]}
+                  labelStyle={{
+                    fontSize: wp(4),
+                    backgroundColor: Colors.textBG,
+                    color: Colors.inputTextColor,
+                  }}
+                  itemStyle={{
+                    justifyContent: 'flex-start',
+                  }}
+                  dropDownStyle={[
+                    styles.customDropDowm,
+                    {
+                      overflow: 'hidden',
+                    },
+                  ]}
+                  onChangeItem={(item) => handleState('gender', item.value)}
+                />
+              </View>
             </View>
             <View style={{width: wp(45)}}>
               <TextInput
@@ -69,21 +132,34 @@ const Signup = () => {
               />
             </View>
           </View>
-          <Text
+          <View
             style={{
-              color: Colors.grey,
-              fontSize: wp(3.8),
+              flexDirection: 'row',
+              alignItems: 'center',
             }}>
-            I agree to the{' '}
+            <CheckBox onPress={() => setAgree(!isAgree)} value={isAgree} />
             <Text
               style={{
-                fontFamily: 'Roboto-Bold',
-                color: Colors.textLabelColor,
+                color: Colors.grey,
+                fontSize: wp(3.8),
               }}>
-              Terms & conditions
+              I agree to the{' '}
+              <Text
+                style={{
+                  fontFamily: 'Roboto-Bold',
+                  color: Colors.textLabelColor,
+                }}>
+                Terms & conditions
+              </Text>
             </Text>
-          </Text>
-          <Button label={'GET STARTED'} onPress={() => {}} />
+          </View>
+          <Button
+            label={'GET STARTED'}
+            onPress={() => {
+              // resetNavigator(props, 'Dashboard');
+              props.navigation.navigate('Dashboard');
+            }}
+          />
         </View>
       </KeyboardAwareScrollView>
     </View>
@@ -117,5 +193,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(5),
     paddingTop: hp(5),
     alignItems: 'center',
+  },
+  customDropDowm: {
+    backgroundColor: Colors.textBG,
+    borderWidth: 0,
+    borderRadius: 10,
   },
 });

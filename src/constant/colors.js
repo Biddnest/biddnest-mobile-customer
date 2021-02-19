@@ -12,6 +12,17 @@ export const Colors = {
   btnBG: '#EBC352',
   silver: '#E0E5EC',
   grey: 'grey',
+  transparent: 'transparent',
+  red: 'red',
+  lightGreen: '#83C373',
+};
+
+export const boxShadow = {
+  shadowOffset: {width: 0, height: 10},
+  shadowOpacity: 0.8,
+  elevation: 2,
+  shadowRadius: 2,
+  shadowColor: '#3B4B5833',
 };
 
 export const wp = widthPercentageToDP;
