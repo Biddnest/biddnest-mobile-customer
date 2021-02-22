@@ -60,6 +60,7 @@ class Shimmer extends Component {
     return Animated.timing(this.state.beginShimmerPosition, {
       toValue: 1,
       duration: this.props.duration,
+      useNativeDriver: true,
     });
   };
   render() {

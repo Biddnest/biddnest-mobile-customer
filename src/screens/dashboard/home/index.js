@@ -11,6 +11,9 @@ import {
 import {Colors, hp, wp, boxShadow} from '../../../constant/colors';
 import Shimmer from '../../../components/shimmer';
 import LinearGradient from 'react-native-linear-gradient';
+import CustomModal from '../../../components/customModal';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import FlatButton from '../../../components/flatButton';
 
 const HomeHeader = (props) => {
   return (
@@ -51,6 +54,10 @@ const HomeHeader = (props) => {
 };
 
 const Home = (props) => {
+  const [couponVisible, setCouponVisible] = React.useState(false);
+  const [bookingSelectionVisible, setBookingSelectionVisible] = React.useState(
+    true,
+  );
   const renderItem = ({item, index}) => {
     return (
       <Shimmer
@@ -116,12 +123,33 @@ const Home = (props) => {
             showsHorizontalScrollIndicator={false}
             data={[
               {
+                image: (
+                  <Image
+                    source={require('../../../assets/images/home_tab.png')}
+                    resizeMode={'contain'}
+                    style={{height: 40, width: 40}}
+                  />
+                ),
                 name: 'Residential',
               },
               {
+                image: (
+                  <Image
+                    source={require('../../../assets/images/supermarket_tab.png')}
+                    resizeMode={'contain'}
+                    style={{height: 40, width: 40}}
+                  />
+                ),
                 name: 'Commercial',
               },
               {
+                image: (
+                  <Image
+                    source={require('../../../assets/images/home_tab.png')}
+                    resizeMode={'contain'}
+                    style={{height: 40, width: 40}}
+                  />
+                ),
                 name: 'Office',
               },
             ]}
@@ -134,12 +162,14 @@ const Home = (props) => {
                   start={{x: 0, y: 0}}
                   end={{x: 1, y: 0}}
                   style={styles.movementLinear}>
-                  <View
+                  <Pressable
+                    onPress={() => setBookingSelectionVisible(true)}
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
                       height: 100,
                     }}>
+                    {item.image}
                     <Text
                       style={{
                         fontFamily: 'Roboto-Medium',
@@ -148,7 +178,7 @@ const Home = (props) => {
                       }}>
                       {item.name}
                     </Text>
-                  </View>
+                  </Pressable>
                 </LinearGradient>
               );
             }}
@@ -222,6 +252,99 @@ const Home = (props) => {
             paddingRight: 0,
           }}
         />
+        <CustomModal visible={couponVisible}>
+          <Pressable
+            onPress={() => setCouponVisible(false)}
+            style={{
+              position: 'absolute',
+              right: 15,
+              top: 15,
+            }}>
+            <Ionicons name="close-sharp" size={35} color={Colors.silver} />
+          </Pressable>
+          <View
+            style={{
+              height: 150,
+              width: 150,
+              backgroundColor: Colors.silver,
+            }}
+          />
+          <Text
+            style={{
+              marginTop: hp(3),
+              fontSize: wp(5),
+              ...styles.textStyle,
+            }}>
+            DISCOUNT COUPON
+          </Text>
+          <Text
+            style={{
+              fontSize: wp(4),
+              marginTop: hp(1),
+              textAlign: 'center',
+              ...styles.textStyle,
+            }}>
+            Get 20% off on your first order! {'\n'}So what are you waiting for,
+            go ahead and proceed!
+          </Text>
+          <FlatButton label={'OKAY'} />
+        </CustomModal>
+        <CustomModal visible={bookingSelectionVisible}>
+          <Pressable
+            onPress={() => setBookingSelectionVisible(false)}
+            style={{
+              position: 'absolute',
+              right: 15,
+              top: 35,
+            }}>
+            <Ionicons name="close-sharp" size={25} color={Colors.silver} />
+          </Pressable>
+          <Text
+            style={{
+              fontSize: wp(4.5),
+              fontFamily: 'Roboto-Regular',
+              color: Colors.inputTextColor,
+            }}>
+            WHOM ARE YOU BOOKING FOR?
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              marginTop: hp(3),
+              width: wp(100),
+            }}>
+            <View style={styles.common}>
+              <Pressable style={styles.selectionView} />
+              <Text style={styles.selectionText}>Myself</Text>
+            </View>
+            <View style={styles.common}>
+              <Pressable style={styles.selectionView} />
+              <Text style={styles.selectionText}>Others</Text>
+            </View>
+          </View>
+          <Pressable
+            onPress={() => {
+              setBookingSelectionVisible(false);
+              props.navigation.navigate('BookingStepper');
+            }}
+            style={{
+              height: hp(7),
+              backgroundColor: Colors.btnBG,
+              width: wp(100),
+              marginTop: hp(5),
+              ...styles.common,
+            }}>
+            <Text
+              style={{
+                fontFamily: 'Roboto-Bold',
+                color: Colors.white,
+                fontSize: wp(5),
+              }}>
+              CONFIRM
+            </Text>
+          </Pressable>
+        </CustomModal>
       </ScrollView>
     </View>
   );
@@ -232,7 +355,7 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     // flex: 1,
-    backgroundColor: '#EFEFF4',
+    backgroundColor: Colors.pageBG,
   },
   common: {
     alignItems: 'center',
@@ -242,7 +365,7 @@ const styles = StyleSheet.create({
     height: hp(15),
     width: wp(70),
     borderRadius: 10,
-    backgroundColor: Colors.black,
+    backgroundColor: Colors.silver,
     marginRight: wp(4),
     overflow: 'hidden',
   },
@@ -275,5 +398,21 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     width: wp(92),
     alignSelf: 'center',
+  },
+  textStyle: {
+    fontFamily: 'Roboto-Medium',
+    color: Colors.inputTextColor,
+  },
+  selectionView: {
+    height: 100,
+    width: 100,
+    borderRadius: 50,
+    backgroundColor: '#F2E6FF',
+  },
+  selectionText: {
+    fontFamily: 'Roboto-Regular',
+    fontSize: wp(4),
+    color: '#3B4B58',
+    marginTop: hp(1),
   },
 });

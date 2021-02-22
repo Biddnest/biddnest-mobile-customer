@@ -16,10 +16,11 @@ export const Colors = {
   red: 'red',
   lightGreen: '#83C373',
   darkBlue: '#0F0C75',
+  pageBG: '#EFEFF4',
 };
 
 export const boxShadow = {
-  shadowOffset: {width: 0, height: 10},
+  shadowOffset: {width: 0, height: 4},
   shadowOpacity: 0.8,
   elevation: 2,
   shadowRadius: 2,

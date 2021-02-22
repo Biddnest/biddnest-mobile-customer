@@ -1,14 +1,13 @@
 import React from 'react';
 import {View, Text, StyleSheet, Platform} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import DropDownPicker from 'react-native-dropdown-picker';
 import {Colors, hp, wp} from '../../constant/colors';
 import Header from './header';
 import TextInput from '../../components/textInput';
 import Button from '../../components/button';
 import CheckBox from '../../components/checkBox';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {resetNavigator} from '../../constant/commonFun';
+import DropDown from '../../components/dropDown';
 
 const Signup = (props) => {
   const [data, setData] = React.useState({});
@@ -68,72 +67,14 @@ const Signup = (props) => {
             onChange={(text) => handleState('email', text)}
           />
           <View style={{flexDirection: 'row'}}>
-            <View style={{width: wp(45), paddingHorizontal: 10}}>
-              <Text
-                style={{
-                  fontFamily: 'Roboto-Bold',
-                  color: Colors.textLabelColor,
-                  fontSize: wp(4),
-                  marginBottom: hp(1),
-                }}>
-                Gender
-              </Text>
-              <View
-                style={
-                  (Platform.OS !== 'android' && {
-                    zIndex: 10,
-                  }) ||
-                  {}
-                }>
-                <DropDownPicker
-                  items={[
-                    {label: 'Male', value: 'male'},
-                    {label: 'Female', value: 'female'},
-                  ]}
-                  defaultValue={'male'}
-                  customArrowUp={() => (
-                    <MaterialIcons
-                      name="arrow-drop-up"
-                      size={25}
-                      color={'#3B4B58'}
-                    />
-                  )}
-                  customArrowDown={() => (
-                    <MaterialIcons
-                      name="arrow-drop-down"
-                      size={25}
-                      color={'#3B4B58'}
-                    />
-                  )}
-                  containerStyle={{
-                    height: hp(6.5),
-                    borderWidth: 1,
-                    borderRadius: 10,
-                    borderColor: Colors.silver,
-                  }}
-                  style={[
-                    styles.customDropDown,
-                    {
-                      paddingHorizontal: 15,
-                      borderTopLeftRadius: 10,
-                      borderTopRightRadius: 10,
-                      borderBottomLeftRadius: 10,
-                      borderBottomRightRadius: 10,
-                    },
-                  ]}
-                  labelStyle={{
-                    fontSize: wp(4),
-                    backgroundColor: Colors.textBG,
-                    color: Colors.inputTextColor,
-                  }}
-                  itemStyle={{
-                    justifyContent: 'flex-start',
-                  }}
-                  dropDownStyle={styles.customDropDown}
-                  onChangeItem={(item) => handleState('gender', item.value)}
-                />
-              </View>
-            </View>
+            <DropDown
+              label={'Gender'}
+              items={[
+                {label: 'Male', value: 'male'},
+                {label: 'Female', value: 'female'},
+              ]}
+              onChangeItem={(text) => handleState('gender', text)}
+            />
             <View style={{width: wp(45)}}>
               <TextInput
                 label={'Referral Code'}

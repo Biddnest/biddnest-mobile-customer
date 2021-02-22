@@ -11,12 +11,17 @@ const Button = (props) => {
         }
       }}
       style={{
-        backgroundColor: Colors.btnBG,
+        backgroundColor: props.backgroundColor
+          ? props.backgroundColor
+          : Colors.btnBG,
+        borderColor: Colors.btnBG,
+        borderWidth: props.backgroundColor ? 2 : 0,
         height: hp(6),
-        width: wp(85),
+        width: props.width ? props.width : wp(85),
         alignItems: 'center',
         justifyContent: 'center',
-        marginVertical: hp(2.5),
+        marginTop: hp(2.5),
+        marginBottom: props.spaceBottom === 0 ? 0 : hp(2.5),
         borderRadius: hp(1),
       }}>
       {(props.isLoading && (
@@ -25,7 +30,7 @@ const Button = (props) => {
         <Text
           style={{
             fontSize: wp(4),
-            color: Colors.white,
+            color: props.backgroundColor ? Colors.btnBG : Colors.white,
             fontFamily: 'Roboto-Bold',
           }}>
           {props.label}
