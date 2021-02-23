@@ -45,7 +45,8 @@ const MovingForm = (props) => {
           label={'To City'}
           // isRight={error.firstName}
           placeHolder={'To City'}
-          onChange={(text) => handleState('firstName', text)}
+          // onFocus={() => setMapVisible(true)}
+          onChange={(text) => setMapVisible(true)}
         />
         <TextInput
           label={'Address Line 1'}

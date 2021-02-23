@@ -17,7 +17,7 @@ import {STYLES} from '../../../constant/commonStyle';
 import CloseIcon from '../../../components/closeIcon';
 import LocationDistance from '../../../components/locationDistance';
 
-const HomeHeader = (props) => {
+export const HomeHeader = (props) => {
   return (
     <View
       style={[
@@ -41,15 +41,27 @@ const HomeHeader = (props) => {
         />
       </Pressable>
       <View style={{width: wp(87), height: '100%', ...styles.common}}>
-        <Image
-          source={require('../../../assets/images/biddnest_logo.png')}
-          resizeMode={'contain'}
-          style={{
-            height: '65%',
-            width: '70%',
-            marginRight: wp(13),
-          }}
-        />
+        {(props.title && (
+          <Text
+            style={{
+              fontFamily: 'Gilroy-Semibold',
+              color: Colors.inputTextColor,
+              fontSize: wp(4.5),
+              marginRight: wp(13),
+            }}>
+            {props.title}
+          </Text>
+        )) || (
+          <Image
+            source={require('../../../assets/images/biddnest_logo.png')}
+            resizeMode={'contain'}
+            style={{
+              height: '65%',
+              width: '70%',
+              marginRight: wp(13),
+            }}
+          />
+        )}
       </View>
     </View>
   );
@@ -148,7 +160,7 @@ const Home = (props) => {
               {
                 image: (
                   <Image
-                    source={require('../../../assets/images/home_tab.png')}
+                    source={require('../../../assets/images/building_tab.png')}
                     resizeMode={'contain'}
                     style={{height: 40, width: 40}}
                   />
@@ -323,10 +335,16 @@ const Home = (props) => {
                   styles.selectionView,
                   {
                     borderWidth: bookingFor === 'Myself' ? 2 : 0,
+                    ...STYLES.common,
                   },
                 ]}
-                onPress={() => setBookingFor('Myself')}
-              />
+                onPress={() => setBookingFor('Myself')}>
+                <Image
+                  source={require('../../../assets/images/myself.png')}
+                  resizeMode={'contain'}
+                  style={{height: '60%', width: '60%'}}
+                />
+              </Pressable>
               <Text style={styles.selectionText}>Myself</Text>
             </View>
             <View style={styles.common}>

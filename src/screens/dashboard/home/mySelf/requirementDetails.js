@@ -30,6 +30,7 @@ const RequirementDetails = (props) => {
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(
     false,
   );
+  const [data, setData] = useState({});
   const [low, setLow] = useState(250);
   const [high, setHigh] = useState(750);
   const [itemData, setItemData] = useState({});
@@ -459,7 +460,7 @@ const RequirementDetails = (props) => {
             {label: 'Male', value: 'male'},
             {label: 'Female', value: 'female'},
           ]}
-          onChangeItem={(text) => handleState('gender', text)}
+          onChangeItem={(text) => {}}
         />
         <View style={{flexDirection: 'row', marginTop: hp(2)}}>
           <DropDown
@@ -468,7 +469,7 @@ const RequirementDetails = (props) => {
               {label: 'Male', value: 'male'},
               {label: 'Female', value: 'female'},
             ]}
-            onChangeItem={(text) => handleState('gender', text)}
+            onChangeItem={(text) => {}}
           />
           <DropDown
             label={'Size'}
@@ -476,7 +477,7 @@ const RequirementDetails = (props) => {
               {label: 'Male', value: 'male'},
               {label: 'Female', value: 'female'},
             ]}
-            onChangeItem={(text) => handleState('gender', text)}
+            onChangeItem={(text) => {}}
           />
         </View>
         <View style={{width: '95%'}}>
@@ -504,11 +505,11 @@ const RequirementDetails = (props) => {
                   marginBottom: hp(1),
                   justifyContent: 'flex-end',
                 }}
-                min={0}
-                max={1000}
+                min={250}
+                max={750}
                 step={1}
                 floatingLabel
-                renderThumb={() => <View style={styles.silderThumb} />}
+                renderThumb={() => <View style={styles.sliderThumb} />}
                 renderRail={() => (
                   <View
                     style={{
@@ -639,7 +640,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.darkBlue,
     height: 2,
   },
-  silderThumb: {
+  sliderThumb: {
     height: 20,
     width: 20,
     borderRadius: 10,

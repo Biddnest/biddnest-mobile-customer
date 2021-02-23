@@ -16,6 +16,7 @@ import CustomModal from '../../../../components/customModal';
 import CloseIcon from '../../../../components/closeIcon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {STYLES} from '../../../../constant/commonStyle';
+import Feather from 'react-native-vector-icons/Feather';
 const Timer = (props) => {
   const [orderPlacedVisible, setOrderPlacedVisible] = useState(true);
   return (
@@ -62,11 +63,7 @@ const Timer = (props) => {
             ...styles.circleView,
             ...STYLES.common,
           }}>
-          <Ionicons
-            name={'checkmark-outline'}
-            size={wp(15)}
-            color={Colors.btnBG}
-          />
+          <Feather name={'check'} size={wp(15)} color={Colors.btnBG} />
         </View>
         <Text
           style={[
@@ -139,7 +136,7 @@ const styles = StyleSheet.create({
     width: wp(25),
     borderRadius: wp(12.5),
     backgroundColor: Colors.white,
-    borderWidth: 3,
+    borderWidth: 4,
     marginBottom: hp(3),
     borderColor: Colors.btnBG,
   },

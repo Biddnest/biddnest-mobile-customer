@@ -6,7 +6,7 @@ import Home from '../screens/dashboard/home';
 import MyBooking from '../screens/dashboard/myBooking';
 import MyProfile from '../screens/dashboard/myProfile';
 import BookingStepper from '../screens/dashboard/home/bookingStepper';
-import DateOfMovement from '../screens/dashboard/home/mySelf/dateOfMovement';
+import OrderTracking from '../screens/dashboard/myBooking/orderTracking';
 
 const Stack = createStackNavigator();
 
@@ -23,7 +23,6 @@ const MainStackNavigator = () => {
     <Stack.Navigator screenOptions={screenOptionStyle} headerMode={false}>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="BookingStepper" component={BookingStepper} />
-      <Stack.Screen name="DateOfMovement" component={DateOfMovement} />
     </Stack.Navigator>
   );
 };
@@ -32,6 +31,7 @@ const MyBookingStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle} headerMode={false}>
       <Stack.Screen name="MyBooking" component={MyBooking} />
+      <Stack.Screen name="OrderTracking" component={OrderTracking} />
     </Stack.Navigator>
   );
 };

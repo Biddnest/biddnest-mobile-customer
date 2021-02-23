@@ -12,6 +12,7 @@ const TextInput = (props) => {
       multiline={props.numberOfLines}
       numberOfLines={props.numberOfLines || 1}
       value={props.value}
+      onFocus={props.onFocus}
       label={() => {
         if (props.smallLabel) {
           return (

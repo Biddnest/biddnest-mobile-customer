@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Text, Pressable, Platform, Image} from 'react-native';
 import SimpleHeader from '../../../components/simpleHeader';
 import {Colors, hp, wp, boxShadow} from '../../../constant/colors';
@@ -32,10 +32,55 @@ const customStyles = {
   stepIndicatorCurrentColor: Colors.darkBlue,
 };
 const BookingStepper = (props) => {
-  const [currentPosition, setCurrentPosition] = React.useState(0);
+  const [currentPosition, setCurrentPosition] = useState(0);
   const bookingFor = props?.route?.params?.bookingFor || 'Myself';
   const movementType = props?.route?.params?.movementType || 'Residential';
-  const [headerText, setHeaderText] = useState('MOVING TO');
+  const [headerText, setHeaderText] = useState(
+    bookingFor === 'Myself' ? 'MOVING TO' : '',
+  );
+
+  useEffect(() => {
+    switch (currentPosition) {
+      case 0:
+        if (bookingFor === 'Others') {
+          setHeaderText("FRIEND'S DETAILS");
+        } else {
+          setHeaderText('MOVING TO');
+        }
+        break;
+      case 1:
+        if (bookingFor === 'Others') {
+          setHeaderText('MOVING TO');
+        } else {
+          setHeaderText('DATE OF MOVEMENT');
+        }
+        break;
+      case 2:
+        if (bookingFor === 'Others') {
+          setHeaderText('DATE OF MOVEMENT');
+        } else {
+          setHeaderText('REQUIREMENT DETAILS');
+        }
+        break;
+      case 3:
+        if (bookingFor === 'Others') {
+          setHeaderText('REQUIREMENT DETAILS');
+        } else {
+          setHeaderText('INITIAL QUOTE');
+        }
+        break;
+      case 4:
+        if (bookingFor === 'Others') {
+          setHeaderText('INITIAL QUOTE');
+        } else {
+          setHeaderText('');
+        }
+        break;
+      default: {
+        break;
+      }
+    }
+  }, [currentPosition])
 
   const onPageChange = (position) => {
     // if (currentPosition > position) {
@@ -249,7 +294,17 @@ const BookingStepper = (props) => {
   };
   return (
     <View style={{flex: 1, backgroundColor: Colors.pageBG}}>
-      <SimpleHeader headerText={headerText} navigation={props.navigation} />
+      <SimpleHeader
+        headerText={headerText}
+        navigation={props.navigation}
+        onBack={() => {
+          if (currentPosition > 0) {
+            setCurrentPosition(currentPosition - 1);
+          } else {
+            props.navigation.goBack();
+          }
+        }}
+      />
       <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
         {currentPosition !== 0 && (
           <LocationDistance onEditClick={() => setCurrentPosition(0)} />

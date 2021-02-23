@@ -151,7 +151,7 @@ const InitialQuote = (props) => {
             {label: 'Male', value: 'male'},
             {label: 'Female', value: 'female'},
           ]}
-          onChangeItem={(text) => handleState('gender', text)}
+          onChangeItem={(text) => {}}
         />
         <View style={{width: wp(90)}}>
           <TextInput
