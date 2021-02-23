@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, Text, Pressable, Platform, Image} from 'react-native';
 import SimpleHeader from '../../../components/simpleHeader';
 import {Colors, hp, wp, boxShadow} from '../../../constant/colors';
@@ -6,11 +6,15 @@ import LinearGradient from 'react-native-linear-gradient';
 import StepIndicator from 'react-native-step-indicator';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import MovingForm from './moveForm/movingForm';
-import DateOfMovement from './moveForm/dateOfMovement';
-import RequirementDetails from './moveForm/requirementDetails';
-import InitialQuote from './moveForm/initialQuote';
-import Timer from './moveForm/timer';
+import MovingForm from './mySelf/movingForm';
+import DateOfMovement from './mySelf/dateOfMovement';
+import RequirementDetails from './mySelf/requirementDetails';
+import InitialQuote from './mySelf/initialQuote';
+import Timer from './mySelf/timer';
+import LocationDistance from '../../../components/locationDistance';
+import FriendsDetails from './mySelf/friendsDetails';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Feather from 'react-native-vector-icons/Feather';
 
 const customStyles = {
   stepIndicatorSize: 45,
@@ -29,14 +33,62 @@ const customStyles = {
 };
 const BookingStepper = (props) => {
   const [currentPosition, setCurrentPosition] = React.useState(0);
-  let headerText = 'MOVING TO';
+  const bookingFor = props?.route?.params?.bookingFor || 'Myself';
+  const movementType = props?.route?.params?.movementType || 'Residential';
+  const [headerText, setHeaderText] = useState('MOVING TO');
 
   const onPageChange = (position) => {
     // if (currentPosition > position) {
-      setCurrentPosition(position);
+    setCurrentPosition(position);
     // }
   };
-
+  const renderImage = (uri) => {
+    return (
+      <Image
+        source={uri}
+        resizeMode={'contain'}
+        style={{height: '60%', width: '60%'}}
+      />
+    );
+  };
+  const renderMapPin = (stepStatus) => {
+    if (stepStatus === 'current') {
+      return renderImage(require('../../../assets/images/active_pin_map.png'));
+    } else if (stepStatus === 'finished') {
+      return renderImage(require('../../../assets/images/finish_map_pin.png'));
+    } else {
+      return <Feather name={'map-pin'} size={25} color={'#9597B1'} />;
+    }
+  };
+  const renderCalender = (stepStatus) => {
+    if (stepStatus === 'current') {
+      return renderImage(require('../../../assets/images/active_calender.png'));
+    } else if (stepStatus === 'finished') {
+      return renderImage(require('../../../assets/images/finish_calender.png'));
+    } else {
+      return renderImage(
+        require('../../../assets/images/inactive_calender.png'),
+      );
+    }
+  };
+  const renderBed = (stepStatus) => {
+    if (stepStatus === 'current') {
+      return renderImage(require('../../../assets/images/active_bed.png'));
+    } else if (stepStatus === 'finished') {
+      return renderImage(require('../../../assets/images/finish_bed.png'));
+    } else {
+      return renderImage(require('../../../assets/images/inactive_bed.png'));
+    }
+  };
+  const renderRS = (stepStatus) => {
+    if (stepStatus === 'current') {
+      return renderImage(require('../../../assets/images/active_rs.png'));
+    } else if (stepStatus === 'finished') {
+      return null;
+    } else {
+      return renderImage(require('../../../assets/images/inactive_rs.png'));
+    }
+  };
   const getStepIndicatorIconConfig = ({
     position,
     stepStatus,
@@ -44,69 +96,151 @@ const BookingStepper = (props) => {
     position: number,
     stepStatus: string,
   }) => {
-    const iconConfig = {
-      name: 'feed',
-      color: stepStatus === 'finished' ? Colors.darkBlue : '#fe7013',
-      size: 15,
-    };
     switch (position) {
-      case 0: {
-        iconConfig.name = 'shopping-cart';
-        break;
-      }
-      case 1: {
-        iconConfig.name = 'location-on';
-        break;
-      }
-      case 2: {
-        iconConfig.name = 'assessment';
-        break;
-      }
-      case 3: {
-        iconConfig.name = 'payment';
-        break;
-      }
+      case 0:
+        if (bookingFor === 'Others') {
+          return null;
+        }
+        return renderMapPin(stepStatus);
+      case 1:
+        if (bookingFor === 'Others') {
+          return renderMapPin(stepStatus);
+        }
+        return renderCalender(stepStatus);
+      case 2:
+        if (bookingFor === 'Others') {
+          return renderCalender(stepStatus);
+        }
+        return renderBed(stepStatus);
+      case 3:
+        if (bookingFor === 'Others') {
+          return renderBed(stepStatus);
+        }
+        return renderRS(stepStatus);
+      case 4:
+        if (bookingFor === 'Others') {
+          return renderRS(stepStatus);
+        }
+        return null;
       default: {
         break;
       }
     }
-    return iconConfig;
   };
-  const renderStepIndicator = (params: any) => (
-    <MaterialIcons {...getStepIndicatorIconConfig(params)} size={30} />
-  );
+  const renderStepIndicator = (params: any) =>
+    getStepIndicatorIconConfig(params);
+
   const renderComponent = () => {
     switch (currentPosition) {
       case 0:
+        if (headerText !== 'MOVING TO') {
+          // setHeaderText(headerText);
+        }
+        if (bookingFor === 'Others') {
+          return (
+            <FriendsDetails
+              bookingFor={bookingFor}
+              movementType={movementType}
+              navigation={props.navigation}
+              onPageChange={onPageChange}
+            />
+          );
+        }
         return (
           <MovingForm
+            bookingFor={bookingFor}
+            movementType={movementType}
             navigation={props.navigation}
             onPageChange={onPageChange}
           />
         );
       case 1:
-        headerText = 'DATE OF MOVEMENT';
+        if (headerText !== 'DATE OF MOVEMENT') {
+          // setHeaderText(headerText);
+        }
+        if (bookingFor === 'Others') {
+          return (
+            <MovingForm
+              bookingFor={bookingFor}
+              movementType={movementType}
+              navigation={props.navigation}
+              onPageChange={onPageChange}
+            />
+          );
+        }
         return (
           <DateOfMovement
+            bookingFor={bookingFor}
+            movementType={movementType}
             navigation={props.navigation}
             onPageChange={onPageChange}
           />
         );
       case 2:
-        headerText = 'REQUIREMENT DETAILS';
+        if (headerText !== 'REQUIREMENT DETAILS') {
+          // setHeaderText(headerText);
+        }
+        if (bookingFor === 'Others') {
+          return (
+            <DateOfMovement
+              bookingFor={bookingFor}
+              movementType={movementType}
+              navigation={props.navigation}
+              onPageChange={onPageChange}
+            />
+          );
+        }
         return (
           <RequirementDetails
+            bookingFor={bookingFor}
+            movementType={movementType}
             navigation={props.navigation}
             onPageChange={onPageChange}
           />
         );
       case 3:
-        headerText = 'Initial Quote';
+        if (headerText !== 'Initial Quote') {
+          // setHeaderText(headerText);
+        }
+        if (bookingFor === 'Others') {
+          return (
+            <RequirementDetails
+              bookingFor={bookingFor}
+              movementType={movementType}
+              navigation={props.navigation}
+              onPageChange={onPageChange}
+            />
+          );
+        }
         return (
-          <Timer navigation={props.navigation} onPageChange={onPageChange} />
+          <Timer
+            bookingFor={bookingFor}
+            movementType={movementType}
+            navigation={props.navigation}
+            onPageChange={onPageChange}
+          />
         );
         return (
           <InitialQuote
+            bookingFor={bookingFor}
+            movementType={movementType}
+            navigation={props.navigation}
+            onPageChange={onPageChange}
+          />
+        );
+      case 4:
+        return (
+          <Timer
+            bookingFor={bookingFor}
+            movementType={movementType}
+            navigation={props.navigation}
+            onPageChange={onPageChange}
+          />
+        );
+        return (
+          <InitialQuote
+            bookingFor={bookingFor}
+            movementType={movementType}
             navigation={props.navigation}
             onPageChange={onPageChange}
           />
@@ -118,42 +252,11 @@ const BookingStepper = (props) => {
       <SimpleHeader headerText={headerText} navigation={props.navigation} />
       <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
         {currentPosition !== 0 && (
-          <View
-            style={{
-              backgroundColor: Colors.white,
-              marginTop: hp(2),
-              padding: hp(2),
-              flexDirection: 'row',
-            }}>
-            <View />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                flex: 1,
-              }}>
-              <View>
-                <Text style={styles.locationText}>CHENNAI</Text>
-                <Text style={styles.locationText}>BENGALURU</Text>
-              </View>
-              <View>
-                <Text style={styles.locationText}>DISTANCE</Text>
-                <Text
-                  style={{
-                    fontFamily: 'Roboto-Bold',
-                    fontSize: wp(5),
-                    color: Colors.inputTextColor,
-                    marginTop: hp(2),
-                  }}>
-                  314KM
-                </Text>
-              </View>
-            </View>
-          </View>
+          <LocationDistance onEditClick={() => setCurrentPosition(0)} />
         )}
         <View style={{paddingVertical: hp(2)}}>
           <StepIndicator
-            stepCount={4}
+            stepCount={bookingFor === 'Myself' ? 4 : 5}
             customStyles={customStyles}
             currentPosition={currentPosition}
             onPress={(text) => onPageChange(text)}
@@ -168,11 +271,4 @@ const BookingStepper = (props) => {
 
 export default BookingStepper;
 
-const styles = StyleSheet.create({
-  locationText: {
-    fontFamily: 'Gilroy-Light',
-    color: Colors.inputTextColor,
-    fontSize: wp(4.5),
-    marginTop: hp(2),
-  },
-});
+const styles = StyleSheet.create({});

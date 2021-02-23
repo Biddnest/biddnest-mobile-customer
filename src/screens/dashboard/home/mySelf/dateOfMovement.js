@@ -111,7 +111,16 @@ const DateOfMovement = (props) => {
         </CustomModal>
       </KeyboardAwareScrollView>
       <View style={{alignSelf: 'center'}}>
-        <Button label={'NEXT'} onPress={() => props.onPageChange(2)} />
+        <Button
+          label={'NEXT'}
+          onPress={() => {
+            if (props.bookingFor === 'Others') {
+              props.onPageChange(3);
+            } else {
+              props.onPageChange(2);
+            }
+          }}
+        />
       </View>
     </View>
   );

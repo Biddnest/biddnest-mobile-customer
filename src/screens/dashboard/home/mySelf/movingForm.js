@@ -13,6 +13,7 @@ import MapView, {
   PROVIDER_DEFAULT,
 } from 'react-native-maps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import CloseIcon from '../../../../components/closeIcon';
 
 const MovingForm = (props) => {
   const [mapVisible, setMapVisible] = useState(false);
@@ -133,7 +134,13 @@ const MovingForm = (props) => {
         <View style={{marginHorizontal: wp(3)}}>
           <Button
             label={'NEXT'}
-            onPress={() => props.onPageChange(1)}
+            onPress={() => {
+              if (props.bookingFor === 'Others') {
+                props.onPageChange(2);
+              } else {
+                props.onPageChange(1);
+              }
+            }}
             width={wp(80)}
           />
         </View>
@@ -156,7 +163,7 @@ const MovingForm = (props) => {
               }}
             />
           </MapView>
-          <Pressable
+          <CloseIcon
             onPress={() => setMapVisible(false)}
             style={[
               boxShadow,
@@ -170,9 +177,8 @@ const MovingForm = (props) => {
                 backgroundColor: Colors.white,
                 ...styles.common,
               },
-            ]}>
-            <Ionicons name="close-sharp" size={25} color={Colors.silver} />
-          </Pressable>
+            ]}
+          />
           <View style={{marginTop: hp(3), width: wp(95)}}>
             <TextInput
               label={'Location'}

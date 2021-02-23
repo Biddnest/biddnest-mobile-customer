@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -12,8 +12,10 @@ import {Colors, hp, wp, boxShadow} from '../../../constant/colors';
 import Shimmer from '../../../components/shimmer';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomModal from '../../../components/customModal';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import FlatButton from '../../../components/flatButton';
+import {STYLES} from '../../../constant/commonStyle';
+import CloseIcon from '../../../components/closeIcon';
+import LocationDistance from '../../../components/locationDistance';
 
 const HomeHeader = (props) => {
   return (
@@ -54,10 +56,10 @@ const HomeHeader = (props) => {
 };
 
 const Home = (props) => {
-  const [couponVisible, setCouponVisible] = React.useState(false);
-  const [bookingSelectionVisible, setBookingSelectionVisible] = React.useState(
-    true,
-  );
+  const [couponVisible, setCouponVisible] = useState(false);
+  const [bookingSelectionVisible, setBookingSelectionVisible] = useState(false);
+  const [movementType, setMovementType] = useState('');
+  const [bookingFor, setBookingFor] = useState('Myself');
   const renderItem = ({item, index}) => {
     return (
       <Shimmer
@@ -96,6 +98,7 @@ const Home = (props) => {
         style={[styles.container, {marginBottom: hp(7)}]}
         showsVerticalScrollIndicator={false}
         bounces={false}>
+        <LocationDistance inTransit={true} />
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -163,7 +166,10 @@ const Home = (props) => {
                   end={{x: 1, y: 0}}
                   style={styles.movementLinear}>
                   <Pressable
-                    onPress={() => setBookingSelectionVisible(true)}
+                    onPress={() => {
+                      setMovementType(item.name);
+                      setBookingSelectionVisible(true);
+                    }}
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
@@ -253,15 +259,14 @@ const Home = (props) => {
           }}
         />
         <CustomModal visible={couponVisible}>
-          <Pressable
+          <CloseIcon
             onPress={() => setCouponVisible(false)}
             style={{
               position: 'absolute',
               right: 15,
               top: 15,
-            }}>
-            <Ionicons name="close-sharp" size={35} color={Colors.silver} />
-          </Pressable>
+            }}
+          />
           <View
             style={{
               height: 150,
@@ -290,15 +295,13 @@ const Home = (props) => {
           <FlatButton label={'OKAY'} />
         </CustomModal>
         <CustomModal visible={bookingSelectionVisible}>
-          <Pressable
+          <CloseIcon
             onPress={() => setBookingSelectionVisible(false)}
             style={{
               position: 'absolute',
               right: 15,
-              top: 35,
-            }}>
-            <Ionicons name="close-sharp" size={25} color={Colors.silver} />
-          </Pressable>
+            }}
+          />
           <Text
             style={{
               fontSize: wp(4.5),
@@ -315,18 +318,43 @@ const Home = (props) => {
               width: wp(100),
             }}>
             <View style={styles.common}>
-              <Pressable style={styles.selectionView} />
+              <Pressable
+                style={[
+                  styles.selectionView,
+                  {
+                    borderWidth: bookingFor === 'Myself' ? 2 : 0,
+                  },
+                ]}
+                onPress={() => setBookingFor('Myself')}
+              />
               <Text style={styles.selectionText}>Myself</Text>
             </View>
             <View style={styles.common}>
-              <Pressable style={styles.selectionView} />
+              <Pressable
+                onPress={() => setBookingFor('Others')}
+                style={[
+                  styles.selectionView,
+                  {
+                    borderWidth: bookingFor === 'Others' ? 2 : 0,
+                    ...STYLES.common,
+                  },
+                ]}>
+                <Image
+                  source={require('../../../assets/images/friends.png')}
+                  resizeMode={'contain'}
+                  style={{height: '60%', width: '60%'}}
+                />
+              </Pressable>
               <Text style={styles.selectionText}>Others</Text>
             </View>
           </View>
           <Pressable
             onPress={() => {
               setBookingSelectionVisible(false);
-              props.navigation.navigate('BookingStepper');
+              props.navigation.navigate('BookingStepper', {
+                bookingFor,
+                movementType,
+              });
             }}
             style={{
               height: hp(7),
@@ -408,6 +436,7 @@ const styles = StyleSheet.create({
     width: 100,
     borderRadius: 50,
     backgroundColor: '#F2E6FF',
+    borderColor: Colors.darkBlue,
   },
   selectionText: {
     fontFamily: 'Roboto-Regular',

@@ -11,13 +11,19 @@ import {
 } from 'react-native';
 import {Colors, hp, wp, boxShadow} from '../../../../constant/colors';
 import Button from '../../../../components/button';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {STYLES} from '../../../../constant/commonStyle';
 import TextInput from '../../../../components/textInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import CustomModal from '../../../../components/customModal';
+import DropDown from '../../../../components/dropDown';
+import CheckBox from '../../../../components/checkBox';
+import FlatButton from '../../../../components/flatButton';
+import CloseIcon from '../../../../components/closeIcon';
 
-const InitialQuote = (props) => {
+const FinalQuote = (props) => {
   const [offerType, setOfferType] = useState(0);
+  const [rejectVisible, setRejectVisible] = useState(false);
+  const [isAgree, setAgree] = useState(true);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
@@ -41,6 +47,7 @@ const InitialQuote = (props) => {
         {[1, 2].map((item, index) => {
           return (
             <Pressable
+              key={index}
               style={styles.inputForm}
               onPress={() => setOfferType(index)}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -117,14 +124,65 @@ const InitialQuote = (props) => {
           width={wp(90)}
           backgroundColor={Colors.white}
           label={'REJECT'}
-          onPress={() => {}}
+          onPress={() => setRejectVisible(true)}
         />
       </View>
+      <CustomModal visible={rejectVisible}>
+        <CloseIcon
+          onPress={() => setRejectVisible(false)}
+          style={{
+            position: 'absolute',
+            right: 15,
+            top: Platform.OS === 'android' ? 15 : -10,
+          }}
+        />
+        <Text
+          style={{
+            fontFamily: 'Roboto-Regular',
+            color: Colors.inputTextColor,
+            fontSize: wp(3.5),
+          }}>
+          REASON FOR REJECTION
+        </Text>
+        <DropDown
+          label={''}
+          width={wp(90)}
+          items={[
+            {label: 'Male', value: 'male'},
+            {label: 'Female', value: 'female'},
+          ]}
+          onChangeItem={(text) => handleState('gender', text)}
+        />
+        <View style={{width: wp(90)}}>
+          <TextInput
+            label={''}
+            placeHolder={'Enter your expected price here'}
+            numberOfLines={4}
+            onChange={(text) => {}}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <CheckBox onPress={() => setAgree(!isAgree)} value={isAgree} />
+          <Text
+            style={{
+              fontFamily: 'Roboto-Regular',
+              color: Colors.inputTextColor,
+              fontSize: wp(3.8),
+            }}>
+            Talk to our agent
+          </Text>
+        </View>
+        <FlatButton label={'CANCEL BOOKING'} />
+      </CustomModal>
     </ScrollView>
   );
 };
 
-export default InitialQuote;
+export default FinalQuote;
 
 const styles = StyleSheet.create({
   inputForm: {

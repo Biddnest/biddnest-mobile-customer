@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Modal,
-  View,
-  StyleSheet,
-  Text,
-  Pressable,
-  ScrollView,
-} from 'react-native';
+import {Modal, View, StyleSheet, ScrollView, SafeAreaView} from 'react-native';
 import {wp, hp} from '../constant/colors';
 
 const CustomModal = (props) => {
@@ -18,14 +11,17 @@ const CustomModal = (props) => {
       onRequestClose={() => {
         alert('Modal has been closed.');
       }}>
-      <View style={styles.centeredView}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{alignItems: 'center'}}
-          style={styles.modalView}>
-          {props.children}
-        </ScrollView>
-      </View>
+      <SafeAreaView style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.5)'}}>
+        <View style={styles.centeredView}>
+          <ScrollView
+            bounces={false}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{alignItems: 'center'}}
+            style={styles.modalView}>
+            {props.children}
+          </ScrollView>
+        </View>
+      </SafeAreaView>
     </Modal>
   );
 };
@@ -36,11 +32,8 @@ const styles = StyleSheet.create({
   centeredView: {
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'absolute',
-    bottom: 0,
-    top: 0,
+    height: hp(91),
     width: wp(100),
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
     backgroundColor: 'white',

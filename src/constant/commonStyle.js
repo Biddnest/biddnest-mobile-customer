@@ -7,8 +7,8 @@ export const STYLES = {
     color: Colors.inputTextColor,
     textAlign: 'center',
   },
-    common: {
-      alignItems: 'center',
-        justifyContent: 'center'
-    }
+  common: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 };

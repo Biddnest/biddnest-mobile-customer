@@ -6,7 +6,7 @@ import Home from '../screens/dashboard/home';
 import MyBooking from '../screens/dashboard/myBooking';
 import MyProfile from '../screens/dashboard/myProfile';
 import BookingStepper from '../screens/dashboard/home/bookingStepper';
-import DateOfMovement from '../screens/dashboard/home/moveForm/dateOfMovement';
+import DateOfMovement from '../screens/dashboard/home/mySelf/dateOfMovement';
 
 const Stack = createStackNavigator();
 
