@@ -2,6 +2,8 @@ import {
   widthPercentageToDP,
   heightPercentageToDP,
 } from 'react-native-responsive-screen';
+import {Image} from 'react-native';
+import React from 'react';
 
 export const Colors = {
   white: '#FFFFFF',
@@ -42,3 +44,46 @@ export const IMAGE_OPTIONS = {
 
 export const wp = widthPercentageToDP;
 export const hp = heightPercentageToDP;
+
+export const PAYMENT_OPTION = [
+  {
+    image: (
+      <Image
+        source={require('../assets/images/credit_card.png')}
+        resizeMode={'contain'}
+        style={{height: 40, width: 40}}
+      />
+    ),
+    name: 'Credit Card',
+  },
+  {
+    image: (
+      <Image
+        source={require('../assets/images/debit_card.png')}
+        resizeMode={'contain'}
+        style={{height: 40, width: 40}}
+      />
+    ),
+    name: 'Debit Card',
+  },
+  {
+    image: (
+      <Image
+        source={require('../assets/images/netbanking.png')}
+        resizeMode={'contain'}
+        style={{height: 40, width: 40}}
+      />
+    ),
+    name: 'Net Banking',
+  },
+  {
+    image: (
+      <Image
+        source={require('../assets/images/upipayment.png')}
+        resizeMode={'contain'}
+        style={{height: 50, width: 50}}
+      />
+    ),
+    name: 'UPI Payment',
+  },
+];

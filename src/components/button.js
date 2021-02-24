@@ -20,8 +20,8 @@ const Button = (props) => {
         width: props.width ? props.width : wp(85),
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: hp(2.5),
-        marginBottom: props.spaceBottom === 0 ? 0 : hp(2.5),
+        marginTop: props.spaceTop ? props.spaceTop : hp(2.5),
+        marginBottom: props.spaceBottom ? props.spaceBottom : hp(2.5),
         borderRadius: hp(1),
       }}>
       {(props.isLoading && (

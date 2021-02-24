@@ -112,6 +112,7 @@ const Home = (props) => {
         bounces={false}>
         <LocationDistance inTransit={true} />
         <FlatList
+          bounces={false}
           horizontal
           showsHorizontalScrollIndicator={false}
           data={[1, 2]}
@@ -134,6 +135,7 @@ const Home = (props) => {
             MOVEMENT TYPE
           </Text>
           <FlatList
+            bounces={false}
             numColumns={3}
             showsHorizontalScrollIndicator={false}
             data={[
@@ -229,6 +231,7 @@ const Home = (props) => {
           />
         </View>
         <FlatList
+          bounces={false}
           horizontal
           showsHorizontalScrollIndicator={false}
           data={[1, 2]}

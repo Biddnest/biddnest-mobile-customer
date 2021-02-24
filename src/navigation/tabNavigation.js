@@ -7,10 +7,20 @@ import {
   MyProfileStackNavigator,
 } from './stackNavigation';
 import {wp, hp, Colors} from '../constant/colors';
-import {Text} from 'react-native';
+import {Image, Text} from 'react-native';
 
 const TabNavigation = (props: any) => {
   const Tab = createBottomTabNavigator();
+
+  const renderImage = (uri) => {
+    return (
+      <Image
+        source={uri}
+        style={{height: hp(3), width: hp(3)}}
+        resizeMode={'contain'}
+      />
+    );
+  };
 
   return (
     <Tab.Navigator
@@ -29,14 +39,33 @@ const TabNavigation = (props: any) => {
       }}
       screenOptions={({route}) => ({
         tabBarIcon: ({focused, color, size}) => {
-          let iconName = 'ios-home';
           if (route.name === 'Home') {
+            if (focused) {
+              return renderImage(require('../assets/images/active_home.png'));
+            }
+            return renderImage(require('../assets/images/active_home.png'));
           } else if (route.name === 'MyBooking') {
-            iconName = 'ios-list';
+            if (focused) {
+              return renderImage(require('../assets/images/active_home.png'));
+            }
+            return renderImage(
+              require('../assets/images/inactive_booking.png'),
+            );
           } else if (route.name === 'MyProfile') {
-            iconName = 'ios-call';
+            if (focused) {
+              return renderImage(require('../assets/images/active_home.png'));
+            }
+            return renderImage(
+              require('../assets/images/inactive_profile.png'),
+            );
           }
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return (
+            <Image
+              source={require('../assets/images/active_home.png')}
+              style={{height: hp(3), width: hp(3)}}
+              resizeMode={'contain'}
+            />
+          );
         },
         tabBarLabel: ({focused, color, size}) => {
           let tabLabel = 'Home';

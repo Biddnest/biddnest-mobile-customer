@@ -14,6 +14,7 @@ import MapView, {
 } from 'react-native-maps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CloseIcon from '../../../../components/closeIcon';
+import FlatButton from '../../../../components/flatButton';
 
 const MovingForm = (props) => {
   const [mapVisible, setMapVisible] = useState(false);
@@ -49,15 +50,10 @@ const MovingForm = (props) => {
           onChange={(text) => setMapVisible(true)}
         />
         <TextInput
-          label={'Address Line 1'}
+          label={'Address'}
           // isRight={error.firstName}
-          placeHolder={'Address Line 1'}
-          onChange={(text) => handleState('firstName', text)}
-        />
-        <TextInput
-          label={'Address Line 2'}
-          // isRight={error.firstName}
-          placeHolder={'Address Line 2'}
+          placeHolder={'Address'}
+          numberOfLines={4}
           onChange={(text) => handleState('firstName', text)}
         />
         <TextInput
@@ -189,22 +185,7 @@ const MovingForm = (props) => {
               onChange={(text) => handleState('firstName', text)}
             />
           </View>
-          <Pressable
-            style={{
-              height: hp(7),
-              backgroundColor: Colors.btnBG,
-              width: wp(100),
-              ...styles.common,
-            }}>
-            <Text
-              style={{
-                fontFamily: 'Roboto-Bold',
-                color: Colors.white,
-                fontSize: wp(5),
-              }}>
-              OKAY
-            </Text>
-          </Pressable>
+          <FlatButton label={'OKAY'} />
         </MapModal>
       </View>
     </KeyboardAwareScrollView>
@@ -234,7 +215,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   mapView: {
-    height: hp(60),
+    height: hp(65),
     width: wp(100),
   },
   common: {

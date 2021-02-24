@@ -11,17 +11,15 @@ const MapModal = (props) => {
       onRequestClose={() => {
         alert('Modal has been closed.');
       }}>
-      <SafeAreaView style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.5)'}}>
-        <View style={styles.centeredView}>
-          <ScrollView
-            bounces={false}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{alignItems: 'center'}}
-            style={styles.modalView}>
-            {props.children}
-          </ScrollView>
-        </View>
-      </SafeAreaView>
+      <View style={styles.centeredView}>
+        <ScrollView
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{alignItems: 'center'}}
+          style={styles.modalView}>
+          {props.children}
+        </ScrollView>
+      </View>
     </Modal>
   );
 };
@@ -32,8 +30,9 @@ const styles = StyleSheet.create({
   centeredView: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: hp(91),
+    height: hp(100),
     width: wp(100),
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalView: {
     backgroundColor: 'white',
@@ -44,7 +43,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: wp(100),
-    maxHeight: hp(100),
+    maxHeight: hp(90),
   },
   modalText: {
     marginBottom: 15,

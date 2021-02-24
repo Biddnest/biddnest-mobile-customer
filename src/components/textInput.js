@@ -68,6 +68,7 @@ const TextInput = (props) => {
         height: props.numberOfLines ? hp(12) : hp(6.5),
         marginTop: hp(1),
         borderColor: Colors.silver,
+        backgroundColor: Colors.white,
       }}
       labelStyle={{
         fontFamily: 'Roboto-Bold',

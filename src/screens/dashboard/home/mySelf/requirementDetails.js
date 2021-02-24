@@ -22,6 +22,8 @@ import {ImageSelection} from '../../../../constant/commonFun';
 import CloseIcon from '../../../../components/closeIcon';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Slider from 'rn-range-slider';
+import TwoButton from '../../../../components/twoButton';
+import OrderDetailModal from '../../myBooking/orderDetailModal';
 
 const RequirementDetails = (props) => {
   const [roomType, setRoomType] = useState(1);
@@ -236,6 +238,7 @@ const RequirementDetails = (props) => {
         </Text>
         <View style={{marginTop: hp(3)}}>
           <FlatList
+            bounces={false}
             data={fetchedData}
             extraData={fetchedData}
             renderItem={renderItem}
@@ -344,89 +347,18 @@ const RequirementDetails = (props) => {
         />
       </View>
       <CustomModal visible={confirmationModalVisible}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            width: '90%',
-          }}>
-          <Text>CONFIRM ITEM LIST</Text>
-          <CloseIcon
-            onPress={() => {
-              setConfirmationModalVisible(false);
-            }}
-            style={{}}
-          />
-        </View>
-        <View
-          style={{
-            borderWidth: 0.8,
-            borderColor: Colors.silver,
-            width: '90%',
-            marginVertical: hp(2),
+        <OrderDetailModal
+          title={'CONFIRM ITEM LIST'}
+          onCloseIcon={() => setConfirmationModalVisible(false)}
+          leftOnPress={() => setConfirmationModalVisible(false)}
+          rightOnPress={() => {
+            if (props.bookingFor === 'Others') {
+              props.onPageChange(4);
+            } else {
+              props.onPageChange(3);
+            }
           }}
         />
-        <View style={{width: wp(90)}}>
-          <FlatList
-            data={fetchedData}
-            extraData={fetchedData}
-            renderItem={renderItem}
-            ItemSeparatorComponent={() => (
-              <View
-                style={{
-                  borderWidth: 0.7,
-                  borderColor: Colors.silver,
-                  marginVertical: hp(2),
-                }}
-              />
-            )}
-          />
-        </View>
-        <View
-          style={{
-            flex: 1,
-            height: hp(6),
-            flexDirection: 'row',
-            width: wp(100),
-            marginTop: hp(4),
-          }}>
-          <Pressable
-            onPress={() => setConfirmationModalVisible(false)}
-            style={{
-              flex: 1,
-              borderWidth: 3,
-              borderColor: Colors.btnBG,
-              ...STYLES.common,
-            }}>
-            <Text
-              style={{
-                fontFamily: 'Roboto-Bold',
-                color: Colors.btnBG,
-                fontSize: wp(3.5),
-              }}>
-              CANCEL
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={() => {
-              if (props.bookingFor === 'Others') {
-                props.onPageChange(4);
-              } else {
-                props.onPageChange(3);
-              }
-            }}
-            style={{flex: 1, backgroundColor: Colors.btnBG, ...STYLES.common}}>
-            <Text
-              style={{
-                fontFamily: 'Roboto-Bold',
-                color: Colors.white,
-                fontSize: wp(3.5),
-              }}>
-              CONFIRM
-            </Text>
-          </Pressable>
-        </View>
       </CustomModal>
       <CustomModal visible={itemModalVisible || editItem}>
         <View

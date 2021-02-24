@@ -22,7 +22,7 @@ const LocationDistance = (props) => {
           alignItems: 'center',
         }}>
         <View>
-          <Text style={styles.locationText}>CHENNAI</Text>
+          <Text style={[styles.locationText, {marginTop: 0}]}>CHENNAI</Text>
           <Text style={styles.locationText}>BENGALURU</Text>
         </View>
         {(props.inTransit && (
@@ -41,7 +41,7 @@ const LocationDistance = (props) => {
             </View>
           </View>
         )) || (
-          <View style={{alignItems: 'flex-end'}}>
+          <View style={{alignItems: 'center'}}>
             <Text style={styles.locationText}>DISTANCE</Text>
             <View
               style={{
@@ -78,7 +78,7 @@ export default LocationDistance;
 
 const styles = StyleSheet.create({
   locationText: {
-    fontFamily: 'Gilroy-Light',
+    fontFamily: 'Gilroy-Regular',
     color: Colors.inputTextColor,
     fontSize: wp(4.5),
     marginTop: hp(2),

@@ -72,7 +72,7 @@ const InitialQuote = (props) => {
                   borderColor: index === offerType ? Colors.btnBG : Colors.grey,
                   height: wp(30),
                   width: wp(30),
-                  borderWidth: 2,
+                  borderWidth: 3,
                   marginVertical: hp(2),
                   ...STYLES.common,
                 }}>
@@ -116,7 +116,7 @@ const InitialQuote = (props) => {
       <View style={{alignSelf: 'center'}}>
         <Button
           label={'PLACE ORDER'}
-          onPress={() => {}}
+          onPress={() => props.handleBooking()}
           spaceBottom={0}
           width={wp(90)}
         />
