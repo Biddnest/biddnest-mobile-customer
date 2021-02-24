@@ -10,6 +10,7 @@ import OrderTracking from '../screens/dashboard/myBooking/orderTracking';
 import Payment from '../screens/dashboard/myBooking/payment';
 import CardDetails from '../screens/dashboard/myBooking/cardDetails';
 import FinalQuote from '../screens/dashboard/myBooking/finalQuote';
+import EditProfile from '../screens/dashboard/myProfile/editProfile';
 
 const Stack = createStackNavigator();
 
@@ -37,7 +38,7 @@ const MyBookingStackNavigator = () => {
       <Stack.Screen name="OrderTracking" component={OrderTracking} />
       <Stack.Screen name="Payment" component={Payment} />
       <Stack.Screen name="CardDetails" component={CardDetails} />
-        <Stack.Screen name="FinalQuote" component={FinalQuote} />
+      <Stack.Screen name="FinalQuote" component={FinalQuote} />
     </Stack.Navigator>
   );
 };
@@ -46,6 +47,7 @@ const MyProfileStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle} headerMode={false}>
       <Stack.Screen name="MyProfile" component={MyProfile} />
+      <Stack.Screen name="EditProfile" component={EditProfile} />
     </Stack.Navigator>
   );
 };

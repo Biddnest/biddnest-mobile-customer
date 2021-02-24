@@ -16,6 +16,7 @@ import FlatButton from '../../../components/flatButton';
 import {STYLES} from '../../../constant/commonStyle';
 import CloseIcon from '../../../components/closeIcon';
 import LocationDistance from '../../../components/locationDistance';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 export const HomeHeader = (props) => {
   return (
@@ -40,14 +41,19 @@ export const HomeHeader = (props) => {
           }}
         />
       </Pressable>
-      <View style={{width: wp(87), height: '100%', ...styles.common}}>
+      <View
+        style={{
+          width: props.edit ? wp(74) : wp(87),
+          height: '100%',
+          ...styles.common,
+        }}>
         {(props.title && (
           <Text
             style={{
               fontFamily: 'Gilroy-Semibold',
               color: Colors.inputTextColor,
               fontSize: wp(4.5),
-              marginRight: wp(13),
+              marginRight: props.edit ? wp(0) : wp(13),
             }}>
             {props.title}
           </Text>
@@ -63,6 +69,13 @@ export const HomeHeader = (props) => {
           />
         )}
       </View>
+      {props.edit ? (
+        <Pressable
+          style={{...STYLES.common, width: wp(13)}}
+          onPress={props.onEditPress}>
+          <MaterialIcons name={'edit'} color={Colors.darkBlue} size={25} />
+        </Pressable>
+      ) : null}
     </View>
   );
 };
@@ -104,10 +117,10 @@ const Home = (props) => {
     );
   };
   return (
-    <View style={styles.container}>
+    <LinearGradient colors={[Colors.pageBG, Colors.white]}>
       <HomeHeader navigation={props.navigation} />
       <ScrollView
-        style={[styles.container, {marginBottom: hp(7)}]}
+        style={{marginBottom: hp(7)}}
         showsVerticalScrollIndicator={false}
         bounces={false}>
         <LocationDistance inTransit={true} />
@@ -395,7 +408,7 @@ const Home = (props) => {
           </Pressable>
         </CustomModal>
       </ScrollView>
-    </View>
+    </LinearGradient>
   );
 };
 
