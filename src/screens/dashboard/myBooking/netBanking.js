@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomModal from '../../../components/customModal';
+import CustomModalAndroid from '../../../components/customModal';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {Colors, wp, hp} from '../../../constant/colors';
 import CloseIcon from '../../../components/closeIcon';
@@ -11,7 +11,7 @@ import DropDown from '../../../components/dropDown';
 
 const NetBanking = (props) => {
   return (
-    <CustomModal visible={props.visible}>
+    <CustomModalAndroid visible={props.visible}>
       <View
         style={{
           width: '100%',
@@ -21,7 +21,7 @@ const NetBanking = (props) => {
         <View
           style={{
             flexDirection: 'row',
-            width: '90%',
+            width: '85%',
             justifyContent: 'space-between',
           }}>
           <Text
@@ -34,7 +34,7 @@ const NetBanking = (props) => {
           </Text>
           <CloseIcon onPress={props.onCloseIcon} />
         </View>
-        <View style={{...styles.separatorView, width: '90%'}} />
+        <View style={{...styles.separatorView, width: '85%'}} />
         <View style={{marginBottom: hp(5)}}>
           <DropDown
             width={wp(90)}
@@ -48,7 +48,7 @@ const NetBanking = (props) => {
         </View>
         <FlatButton label={'SUBMIT'} />
       </View>
-    </CustomModal>
+    </CustomModalAndroid>
   );
 };
 

@@ -14,7 +14,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from '../../../components/button';
 import LinearGradient from 'react-native-linear-gradient';
-import CustomModal from '../../../components/customModal';
+import CustomModalAndroid from '../../../components/customModal';
 import CloseIcon from '../../../components/closeIcon';
 import TwoButton from '../../../components/twoButton';
 import VerticalStepper from './verticalStepper';
@@ -209,19 +209,19 @@ const OrderTracking = (props) => {
           </View>
         </ScrollView>
       </LinearGradient>
-      <CustomModal visible={orderDetailsVisible}>
+      <CustomModalAndroid visible={orderDetailsVisible}>
         <OrderDetailModal
           title={'ORDER DETAILS'}
           onCloseIcon={() => setOrderDetailsVisible(false)}
         />
-      </CustomModal>
-      <CustomModal visible={manageOrderVisible || cancelOrder}>
+      </CustomModalAndroid>
+      <CustomModalAndroid visible={manageOrderVisible || cancelOrder}>
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
-            width: '90%',
+            width: '85%',
           }}>
           <Text
             style={{
@@ -239,7 +239,7 @@ const OrderTracking = (props) => {
             style={{position: 'absolute', right: 0}}
           />
         </View>
-        <View style={{...styles.separatorView, width: '90%'}} />
+        <View style={{...styles.separatorView, width: '85%'}} />
         <View
           style={{
             marginTop: hp(4),
@@ -289,7 +289,7 @@ const OrderTracking = (props) => {
             }
           }}
         />
-      </CustomModal>
+      </CustomModalAndroid>
     </View>
   );
 };

@@ -7,7 +7,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Input} from 'react-native-elements';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import CustomModal from '../../../../components/customModal';
+import CustomModalAndroid from '../../../../components/customModal';
 
 const DateOfMovement = (props) => {
   const [openCalender, setCalender] = useState(false);
@@ -73,7 +73,7 @@ const DateOfMovement = (props) => {
             }}
           />
         </View>
-        <CustomModal visible={false}>
+        <CustomModalAndroid visible={false}>
           <Calendar
             // currentMonth={'2015-08-01'} // Optional date to set the currently displayed month after initialization
             customStyle={{
@@ -108,7 +108,7 @@ const DateOfMovement = (props) => {
             today={new Date()} // Defaults to today
             weekStart={1} // Day on which week starts 0 - Sunday, 1 - Monday, 2 - Tuesday, etc, Default: 1
           />
-        </CustomModal>
+        </CustomModalAndroid>
       </KeyboardAwareScrollView>
       <View style={{alignSelf: 'center'}}>
         <Button

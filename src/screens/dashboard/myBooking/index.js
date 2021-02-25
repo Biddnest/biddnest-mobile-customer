@@ -148,8 +148,8 @@ const styles = StyleSheet.create({
   },
   inputForm: {
     marginHorizontal: wp(5),
-    paddingVertical: wp(3),
-    paddingHorizontal: wp(3),
+    paddingVertical: wp(5),
+    paddingHorizontal: wp(5),
     borderWidth: 1,
     borderRadius: 15,
     backgroundColor: Colors.white,

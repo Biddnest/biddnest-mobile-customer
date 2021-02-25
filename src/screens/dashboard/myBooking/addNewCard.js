@@ -1,6 +1,6 @@
 import React from 'react';
-import CustomModal from '../../../components/customModal';
-import {StyleSheet, Text, View} from 'react-native';
+import CustomModalAndroid from '../../../components/customModal';
+import {Platform, StyleSheet, Text, View} from 'react-native';
 import {Colors, wp, hp} from '../../../constant/colors';
 import CloseIcon from '../../../components/closeIcon';
 import TextInput from '../../../components/textInput';
@@ -11,7 +11,7 @@ import FlatButton from '../../../components/flatButton';
 const AddNewCard = (props) => {
   const [isAgree, setAgree] = React.useState(true);
   return (
-    <CustomModal visible={props.visible}>
+    <CustomModalAndroid visible={props.visible}>
       <View
         style={{
           width: '100%',
@@ -21,7 +21,7 @@ const AddNewCard = (props) => {
         <View
           style={{
             flexDirection: 'row',
-            width: '90%',
+            width: '85%',
             justifyContent: 'space-between',
           }}>
           <Text
@@ -34,7 +34,7 @@ const AddNewCard = (props) => {
           </Text>
           <CloseIcon onPress={props.onCloseIcon} />
         </View>
-        <View style={{...styles.separatorView, width: '90%'}} />
+        <View style={{...styles.separatorView, width: '85%'}} />
         <View style={{width: wp(90)}}>
           <TextInput
             label={'Card Number'}
@@ -80,7 +80,7 @@ const AddNewCard = (props) => {
         </View>
         <FlatButton label={'SUBMIT'} />
       </View>
-    </CustomModal>
+    </CustomModalAndroid>
   );
 };
 

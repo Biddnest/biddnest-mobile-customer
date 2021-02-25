@@ -14,7 +14,7 @@ import Button from '../../../components/button';
 import {STYLES} from '../../../constant/commonStyle';
 import TextInput from '../../../components/textInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomModal from '../../../components/customModal';
+import CustomModalAndroid from '../../../components/customModal';
 import DropDown from '../../../components/dropDown';
 import CheckBox from '../../../components/checkBox';
 import FlatButton from '../../../components/flatButton';
@@ -138,13 +138,13 @@ const FinalQuote = (props) => {
               width={wp(43)}
             />
           </View>
-          <CustomModal visible={rejectVisible}>
+          <CustomModalAndroid visible={rejectVisible}>
             <CloseIcon
               onPress={() => setRejectVisible(false)}
               style={{
                 position: 'absolute',
                 right: 15,
-                top: Platform.OS === 'android' ? 15 : -10,
+                top: Platform.OS === 'android' ? 0 : -10,
               }}
             />
             <Text
@@ -188,7 +188,7 @@ const FinalQuote = (props) => {
               </Text>
             </View>
             <FlatButton label={'CANCEL BOOKING'} />
-          </CustomModal>
+          </CustomModalAndroid>
         </ScrollView>
       </View>
     </LinearGradient>

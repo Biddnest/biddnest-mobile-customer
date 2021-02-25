@@ -6,7 +6,7 @@ import TextInput from '../../../../components/textInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Switch from '../../../../components/switch';
 import Button from '../../../../components/button';
-import MapModal from '../../../../components/mapModal';
+import MapModalAndroid from '../../../../components/mapModal';
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,

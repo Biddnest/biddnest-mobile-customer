@@ -44,7 +44,10 @@ const ReferFriend = (props) => {
         </View>
         <RateUs
           visible={rateUsVisible}
-          onCloseIcon={() => setRateUsVisible(false)}
+          onCloseIcon={() => {
+            setRateUsVisible(false);
+            resetNavigator(props, 'Home');
+          }}
         />
       </View>
     </LinearGradient>

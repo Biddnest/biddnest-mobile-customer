@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
-import CustomModal from '../../../components/customModal';
+import CustomModalAndroid from '../../../components/customModal';
 import {Colors, hp, wp} from '../../../constant/colors';
 import CloseIcon from '../../../components/closeIcon';
 import {Rating, AirbnbRating} from 'react-native-elements';
@@ -28,11 +28,11 @@ const RateUs = (props) => {
     }
   }, [currentStep]);
   return (
-    <CustomModal visible={props.visible}>
+    <CustomModalAndroid visible={props.visible}>
       <View
         style={{
           flexDirection: 'row',
-          width: '90%',
+          width: '85%',
           justifyContent: 'space-between',
         }}>
         <Text
@@ -50,7 +50,7 @@ const RateUs = (props) => {
           }}
         />
       </View>
-      <View style={{...styles.separatorView, width: '90%'}} />
+      <View style={{...styles.separatorView, width: '85%'}} />
       {currentStep === 4 && (
         <View
           style={{
@@ -110,7 +110,7 @@ const RateUs = (props) => {
           }
         }}
       />
-    </CustomModal>
+    </CustomModalAndroid>
   );
 };
 

@@ -6,7 +6,7 @@ import TextInput from '../../../../components/textInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Switch from '../../../../components/switch';
 import Button from '../../../../components/button';
-import MapModal from '../../../../components/mapModal';
+import MapModalAndroid from '../../../../components/mapModal';
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
@@ -141,7 +141,7 @@ const MovingForm = (props) => {
             width={wp(80)}
           />
         </View>
-        <MapModal visible={mapVisible}>
+        <MapModalAndroid visible={mapVisible}>
           <MapView
             provider={
               Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
@@ -188,7 +188,7 @@ const MovingForm = (props) => {
           <View style={{marginTop: hp(2)}}>
             <FlatButton label={'OKAY'} />
           </View>
-        </MapModal>
+        </MapModalAndroid>
       </View>
     </KeyboardAwareScrollView>
   );

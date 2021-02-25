@@ -156,12 +156,11 @@ const styles = StyleSheet.create({
     fontSize: wp(4),
   },
   bottomView: {
-    flex: 1,
     borderTopLeftRadius: wp(8),
     borderTopRightRadius: wp(8),
     backgroundColor: Colors.white,
     padding: wp(3),
-    height: hp(75.4),
+    height: '100%',
   },
   menuView: {
     flexDirection: 'row',

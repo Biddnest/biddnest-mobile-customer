@@ -14,7 +14,7 @@ import Button from '../../../../components/button';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {STYLES} from '../../../../constant/commonStyle';
 import TextInput from '../../../../components/textInput';
-import CustomModal from '../../../../components/customModal';
+import CustomModalAndroid from '../../../../components/customModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DropDown from '../../../../components/dropDown';
 import FlatButton from '../../../../components/flatButton';
@@ -346,7 +346,7 @@ const RequirementDetails = (props) => {
           }}
         />
       </View>
-      <CustomModal visible={confirmationModalVisible}>
+      <CustomModalAndroid visible={confirmationModalVisible}>
         <OrderDetailModal
           title={'CONFIRM ITEM LIST'}
           onCloseIcon={() => setConfirmationModalVisible(false)}
@@ -359,14 +359,14 @@ const RequirementDetails = (props) => {
             }
           }}
         />
-      </CustomModal>
-      <CustomModal visible={itemModalVisible || editItem}>
+      </CustomModalAndroid>
+      <CustomModalAndroid visible={itemModalVisible || editItem}>
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            width: '90%',
+            width: '85%',
           }}>
           <Text>{editItem ? 'EDIT ITEM' : 'ADD ITEM'}</Text>
           <CloseIcon
@@ -381,7 +381,7 @@ const RequirementDetails = (props) => {
           style={{
             borderWidth: 0.8,
             borderColor: Colors.silver,
-            width: '90%',
+            width: '85%',
             marginVertical: hp(2),
           }}
         />
@@ -412,7 +412,7 @@ const RequirementDetails = (props) => {
             onChangeItem={(text) => {}}
           />
         </View>
-        <View style={{width: '95%'}}>
+        <View style={{width: '90%'}}>
           {(props.movementType !== 'Residential' && (
             <View
               style={{
@@ -431,7 +431,7 @@ const RequirementDetails = (props) => {
 
               <Slider
                 style={{
-                  width: wp(87),
+                  width: wp(85),
                   alignSelf: 'center',
                   marginTop: hp(4),
                   marginBottom: hp(1),
@@ -470,7 +470,7 @@ const RequirementDetails = (props) => {
           )) || (
             <View
               style={{
-                width: Platform.OS === 'android' ? wp(56) : wp(57),
+                width: Platform.OS === 'android' ? wp(60) : wp(57),
                 flexDirection: 'row',
                 alignItems: 'center',
                 marginTop: hp(2),
@@ -525,7 +525,7 @@ const RequirementDetails = (props) => {
           }}
           label={editItem ? 'SAVE' : 'ADD ITEM'}
         />
-      </CustomModal>
+      </CustomModalAndroid>
     </ScrollView>
   );
 };

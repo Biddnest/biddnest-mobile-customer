@@ -12,7 +12,7 @@ import {
 import {Colors, hp, wp, boxShadow} from '../../../../constant/colors';
 import Button from '../../../../components/button';
 import {resetNavigator} from '../../../../constant/commonFun';
-import CustomModal from '../../../../components/customModal';
+import CustomModalAndroid from '../../../../components/customModal';
 import CloseIcon from '../../../../components/closeIcon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {STYLES} from '../../../../constant/commonStyle';
@@ -49,13 +49,13 @@ const Timer = (props) => {
           onPress={() => resetNavigator(props, 'Dashboard')}
         />
       </View>
-      <CustomModal visible={orderPlacedVisible}>
+      <CustomModalAndroid visible={orderPlacedVisible}>
         <CloseIcon
           onPress={() => setOrderPlacedVisible(false)}
           style={{
             position: 'absolute',
             right: 15,
-            top: Platform.OS === 'android' ? 15 : -10,
+            top: Platform.OS === 'android' ? 0 : -10,
           }}
         />
         <View
@@ -86,7 +86,7 @@ const Timer = (props) => {
           <Text style={styles.orderID}>ORDER ID</Text>
           <Text style={styles.orderNo}>#34123</Text>
         </View>
-      </CustomModal>
+      </CustomModalAndroid>
     </ScrollView>
   );
 };

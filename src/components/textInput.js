@@ -9,7 +9,7 @@ const TextInput = (props) => {
       disabled={props.disable || false}
       keyboardType={props.keyboard || 'default'}
       placeholder={props.placeHolder}
-      multiline={props.numberOfLines}
+      multiline={!!props.numberOfLines}
       numberOfLines={props.numberOfLines || 1}
       value={props.value}
       onFocus={props.onFocus}

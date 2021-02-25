@@ -1,17 +1,17 @@
 import React, {useState} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Pressable,
-  FlatList,
-  ScrollView,
+    View,
+    Text,
+    StyleSheet,
+    Image,
+    Pressable,
+    FlatList,
+    ScrollView, Platform,
 } from 'react-native';
 import {Colors, hp, wp, boxShadow} from '../../../constant/colors';
 import Shimmer from '../../../components/shimmer';
 import LinearGradient from 'react-native-linear-gradient';
-import CustomModal from '../../../components/customModal';
+import CustomModalAndroid from '../../../components/customModal';
 import FlatButton from '../../../components/flatButton';
 import {STYLES} from '../../../constant/commonStyle';
 import CloseIcon from '../../../components/closeIcon';
@@ -286,13 +286,13 @@ const Home = (props) => {
             paddingRight: 0,
           }}
         />
-        <CustomModal visible={couponVisible}>
+        <CustomModalAndroid visible={couponVisible}>
           <CloseIcon
             onPress={() => setCouponVisible(false)}
             style={{
               position: 'absolute',
               right: 15,
-              top: 15,
+              top: Platform.OS === 'android' ? 0 : -10,
             }}
           />
           <View
@@ -321,8 +321,8 @@ const Home = (props) => {
             go ahead and proceed!
           </Text>
           <FlatButton label={'OKAY'} />
-        </CustomModal>
-        <CustomModal visible={bookingSelectionVisible}>
+        </CustomModalAndroid>
+        <CustomModalAndroid visible={bookingSelectionVisible}>
           <CloseIcon
             onPress={() => setBookingSelectionVisible(false)}
             style={{
@@ -406,7 +406,7 @@ const Home = (props) => {
               CONFIRM
             </Text>
           </Pressable>
-        </CustomModal>
+        </CustomModalAndroid>
       </ScrollView>
     </LinearGradient>
   );

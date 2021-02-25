@@ -1,8 +1,8 @@
 import React from 'react';
 import {Modal, View, StyleSheet, ScrollView, SafeAreaView} from 'react-native';
-import {wp, hp} from '../constant/colors';
+import {wp, hp, Colors} from '../constant/colors';
 
-const CustomModal = (props) => {
+const MapModalAndroid = (props) => {
   return (
     <Modal
       animationType="slide"
@@ -24,7 +24,7 @@ const CustomModal = (props) => {
   );
 };
 
-export default CustomModal;
+export default MapModalAndroid;
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -35,15 +35,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalView: {
-    backgroundColor: 'white',
+    backgroundColor: Colors.white,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    paddingTop: 35,
-    paddingHorizontal: 10,
+    overflow: 'hidden',
     position: 'absolute',
     bottom: 0,
     width: wp(100),
-    maxHeight: hp(80),
+    maxHeight: hp(95),
   },
   modalText: {
     marginBottom: 15,

@@ -4,7 +4,7 @@ import {
   Text,
   ScrollView,
   ImageBackground,
-  StyleSheet,
+  StyleSheet, Platform,
 } from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
 import LinearGradient from 'react-native-linear-gradient';
@@ -21,7 +21,7 @@ const MyProfile = (props) => {
         onEditPress={() => props.navigation.navigate('EditProfile')}
       />
       <ScrollView
-        style={{marginBottom: hp(7)}}
+        style={{marginBottom: Platform.OS === 'android' ? 0 : hp(7)}}
         showsVerticalScrollIndicator={false}
         bounces={false}>
         <ImageBackground

@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomModal from '../../../components/customModal';
+import CustomModalAndroid from '../../../components/customModal';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {Colors, wp, hp} from '../../../constant/colors';
 import CloseIcon from '../../../components/closeIcon';
@@ -10,7 +10,7 @@ import FlatButton from '../../../components/flatButton';
 
 const UPIPayment = (props) => {
   return (
-    <CustomModal visible={props.visible}>
+    <CustomModalAndroid visible={props.visible}>
       <View
         style={{
           width: '100%',
@@ -20,7 +20,7 @@ const UPIPayment = (props) => {
         <View
           style={{
             flexDirection: 'row',
-            width: '90%',
+            width: '85%',
             justifyContent: 'space-between',
           }}>
           <Text
@@ -33,7 +33,7 @@ const UPIPayment = (props) => {
           </Text>
           <CloseIcon onPress={props.onCloseIcon} />
         </View>
-        <View style={{...styles.separatorView, width: '90%'}} />
+        <View style={{...styles.separatorView, width: '85%'}} />
         <View style={{width: wp(90)}}>
           <TextInput
             label={'UPI ID'}
@@ -49,7 +49,7 @@ const UPIPayment = (props) => {
         <Text style={styles.mainText}>Time Left</Text>
         <FlatButton label={'SUBMIT'} />
       </View>
-    </CustomModal>
+    </CustomModalAndroid>
   );
 };
 

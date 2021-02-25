@@ -14,6 +14,9 @@
       android:usesCleartextTraffic="true"
       android:requestLegacyExternalStorage="true"
       android:theme="@style/AppTheme">
+      <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyAYDSU5T8I3l4zQntUO0YO9QDEK6-NgxIQ"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
