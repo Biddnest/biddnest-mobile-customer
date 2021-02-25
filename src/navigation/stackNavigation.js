@@ -11,6 +11,10 @@ import Payment from '../screens/dashboard/myBooking/payment';
 import CardDetails from '../screens/dashboard/myBooking/cardDetails';
 import FinalQuote from '../screens/dashboard/myBooking/finalQuote';
 import EditProfile from '../screens/dashboard/myProfile/editProfile';
+import ReferFriend from '../screens/dashboard/drawer/referFriend';
+import ContactUs from '../screens/dashboard/drawer/contactUs';
+import FAQs from '../screens/dashboard/drawer/faqs';
+import FAQDetails from '../screens/dashboard/drawer/faqs/faqDetails';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +31,12 @@ const MainStackNavigator = () => {
     <Stack.Navigator screenOptions={screenOptionStyle} headerMode={false}>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="BookingStepper" component={BookingStepper} />
+      <Stack.Screen name="AboutUs" component={AboutUs} />
+      <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
+      <Stack.Screen name="ReferFriend" component={ReferFriend} />
+      <Stack.Screen name="ContactUs" component={ContactUs} />
+      <Stack.Screen name="FAQs" component={FAQs} />
+      <Stack.Screen name="FAQDetails" component={FAQDetails} />
     </Stack.Navigator>
   );
 };
@@ -52,18 +62,4 @@ const MyProfileStackNavigator = () => {
   );
 };
 
-const DrawerStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="AboutUs" component={AboutUs} />
-      <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
-    </Stack.Navigator>
-  );
-};
-
-export {
-  MainStackNavigator,
-  MyBookingStackNavigator,
-  MyProfileStackNavigator,
-  DrawerStackNavigator,
-};
+export {MainStackNavigator, MyBookingStackNavigator, MyProfileStackNavigator};

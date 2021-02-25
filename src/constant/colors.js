@@ -45,45 +45,110 @@ export const IMAGE_OPTIONS = {
 export const wp = widthPercentageToDP;
 export const hp = heightPercentageToDP;
 
+const renderImage = (uri, size = 50) => {
+  return (
+    <Image
+      source={uri}
+      resizeMode={'contain'}
+      style={{height: size, width: size}}
+    />
+  );
+};
+
 export const PAYMENT_OPTION = [
   {
-    image: (
-      <Image
-        source={require('../assets/images/credit_card.png')}
-        resizeMode={'contain'}
-        style={{height: 40, width: 40}}
-      />
-    ),
+    image: renderImage(require('../assets/images/credit_card.png'), 40),
     name: 'Credit Card',
   },
   {
-    image: (
-      <Image
-        source={require('../assets/images/debit_card.png')}
-        resizeMode={'contain'}
-        style={{height: 40, width: 40}}
-      />
-    ),
+    image: renderImage(require('../assets/images/debit_card.png'), 40),
     name: 'Debit Card',
   },
   {
-    image: (
-      <Image
-        source={require('../assets/images/netbanking.png')}
-        resizeMode={'contain'}
-        style={{height: 40, width: 40}}
-      />
-    ),
+    image: renderImage(require('../assets/images/netbanking.png'), 40),
     name: 'Net Banking',
   },
   {
-    image: (
-      <Image
-        source={require('../assets/images/upipayment.png')}
-        resizeMode={'contain'}
-        style={{height: 50, width: 50}}
-      />
-    ),
+    image: renderImage(require('../assets/images/upipayment.png')),
     name: 'UPI Payment',
+  },
+];
+
+export const FAQS_OPTION = [
+  {
+    image: renderImage(require('../assets/images/delivery.png')),
+    name: 'Delivery',
+  },
+  {
+    image: renderImage(require('../assets/images/packaging.png')),
+    name: 'Packaging',
+  },
+  {
+    image: renderImage(require('../assets/images/vendor.png')),
+    name: 'Vendor',
+  },
+  {
+    image: renderImage(require('../assets/images/bidding.png')),
+    name: 'Bidding',
+  },
+  {
+    image: renderImage(require('../assets/images/safety.png')),
+    name: 'Safety',
+  },
+  {
+    image: renderImage(require('../assets/images/pricing.png')),
+    name: 'Pricing',
+  },
+];
+
+export const SIDE_DRAWER = [
+  {
+    iconFamily: 'FontAwesome5',
+    icon: 'list-ul',
+    topText: 'Home',
+    bottomText: 'Explore Biddnest',
+    navigate: 'Home',
+  },
+  {
+    iconFamily: 'MaterialCommunityIcons',
+    icon: 'clock-time-four-outline',
+    topText: 'My Bookings',
+    bottomText: 'Everything you need to know',
+    navigate: 'MyBooking',
+  },
+  {
+    iconFamily: 'Feather',
+    icon: 'info',
+    topText: 'About Us',
+    bottomText: 'Get to know us!',
+    navigate: 'AboutUs',
+  },
+  {
+    iconFamily: 'AntDesign',
+    icon: 'copyright',
+    topText: 'Terms and Conditions',
+    bottomText: 'Read more about our terms',
+    navigate: 'TermsAndConditions',
+  },
+  {
+    iconFamily: 'Ionicons',
+    icon: 'share-social-outline',
+    topText: 'Refer a friend',
+    bottomText: 'Spread the joy of ease',
+    navigate: 'ReferFriend',
+  },
+  {
+    iconFamily: 'Ionicons',
+    icon: 'call-outline',
+    topText: 'Contact us',
+    bottomText: 'Get in touch with us',
+    navigate: 'ContactUs',
+  },
+  {
+    iconFamily: 'MaterialCommunityIcons',
+    icon: 'comment-question-outline',
+    topText: 'FAQs',
+    bottomText: 'Find answers for what you need',
+    navigate: 'FAQs',
   },
 ];

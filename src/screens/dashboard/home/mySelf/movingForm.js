@@ -185,7 +185,9 @@ const MovingForm = (props) => {
               onChange={(text) => handleState('firstName', text)}
             />
           </View>
-          <FlatButton label={'OKAY'} />
+          <View style={{marginTop: hp(2)}}>
+            <FlatButton label={'OKAY'} />
+          </View>
         </MapModal>
       </View>
     </KeyboardAwareScrollView>
@@ -215,7 +217,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   mapView: {
-    height: hp(65),
+    height: hp(67),
     width: wp(100),
   },
   common: {

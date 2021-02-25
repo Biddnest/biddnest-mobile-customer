@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: wp(100),
-    maxHeight: hp(90),
+    maxHeight: hp(95),
   },
   modalText: {
     marginBottom: 15,

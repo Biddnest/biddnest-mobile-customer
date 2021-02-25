@@ -1,7 +1,6 @@
 import React from 'react';
 import {Image, Pressable, View, Text, StyleSheet} from 'react-native';
 import {boxShadow, Colors, wp} from '../constant/colors';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
 const SimpleHeader = (props) => {
@@ -33,6 +32,7 @@ const SimpleHeader = (props) => {
             fontSize: wp(5),
             color: Colors.inputTextColor,
             marginRight: wp(13),
+            textTransform: 'uppercase',
           }}>
           {props.headerText}
         </Text>
