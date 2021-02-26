@@ -1,8 +1,8 @@
 import {Colors, hp, wp} from '../../../constant/colors';
-import {Pressable, ScrollView, StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
-import React from 'react';
+import React, {useState} from 'react';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import DropDown from '../../../components/dropDown';
 import TextInput from '../../../components/textInput';
@@ -10,8 +10,17 @@ import {Text} from 'react-native-elements';
 import {STYLES} from '../../../constant/commonStyle';
 import Button from '../../../components/button';
 import {ImageSelection} from '../../../constant/commonFun';
+import DatePicker from 'react-native-datepicker';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const EditProfile = (props) => {
+  const [data, setData] = useState({});
+  const handleState = (key, value) => {
+    setData({
+      ...data,
+      [key]: value,
+    });
+  };
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <View style={styles.container}>
@@ -72,11 +81,69 @@ const EditProfile = (props) => {
               onChangeItem={(text) => handleState('gender', text)}
             />
           </View>
-          <TextInput
-            label={'Date of Birth'}
-            placeHolder={'23 Dec 20'}
-            onChange={(text) => handleState('referralCode', text)}
-          />
+          <View style={{width: '92%', marginHorizontal: wp(3)}}>
+            <Text
+              style={{
+                fontFamily: 'Roboto-Bold',
+                color: Colors.textLabelColor,
+                fontSize: wp(4),
+              }}>
+              Date Of Birth
+            </Text>
+            <View
+              style={{
+                marginTop: hp(1),
+                marginBottom: hp(3),
+                borderWidth: 2,
+                // paddingHorizontal: 15,
+                borderRadius: 10,
+                height: hp(6.5),
+                borderColor: Colors.silver,
+                backgroundColor: Colors.white,
+              }}>
+              <DatePicker
+                style={{width: '100%'}}
+                date={data.DOB || new Date()}
+                mode="date"
+                placeholder="select date"
+                format="D MMM yyyy"
+                minDate="2016-05-01"
+                maxDate={new Date()}
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
+                iconComponent={
+                  <Entypo
+                    name={'calendar'}
+                    size={25}
+                    color={Colors.inputTextColor}
+                    style={{
+                      position: 'absolute',
+                      right: 8,
+                      top: 7,
+                      marginLeft: 0,
+                    }}
+                  />
+                }
+                customStyles={{
+                  dateInput: {
+                    borderWidth: 0,
+                    height: hp(6.5),
+                    marginTop: 1,
+                    ...STYLES.common,
+                  },
+                  dateText: {
+                    fontSize: wp(4),
+                    backgroundColor: Colors.textBG,
+                    color: Colors.inputTextColor,
+                    justifyContent: 'flex-start',
+                  },
+                }}
+                onDateChange={(date) => {
+                  handleState('DOB', date);
+                }}
+              />
+            </View>
+          </View>
           <View style={{marginHorizontal: wp(3)}}>
             <Text
               style={{

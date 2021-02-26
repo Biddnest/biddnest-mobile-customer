@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, Pressable, Platform, Image} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
 import SimpleHeader from '../../../components/simpleHeader';
-import {Colors, hp, wp, boxShadow} from '../../../constant/colors';
+import {Colors, hp} from '../../../constant/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import StepIndicator from 'react-native-step-indicator';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import MovingForm from './mySelf/movingForm';
 import DateOfMovement from './mySelf/dateOfMovement';
 import RequirementDetails from './mySelf/requirementDetails';
@@ -13,7 +11,6 @@ import InitialQuote from './mySelf/initialQuote';
 import Timer from './mySelf/timer';
 import LocationDistance from '../../../components/locationDistance';
 import FriendsDetails from './mySelf/friendsDetails';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 
 const customStyles = {
@@ -39,6 +36,7 @@ const BookingStepper = (props) => {
     bookingFor === 'Myself' ? 'MOVING TO' : '',
   );
   const [orderBooked, setOrderBooked] = useState(false);
+  const [movingFrom, setMovingFrom] = useState(false);
 
   useEffect(() => {
     switch (currentPosition) {
@@ -46,12 +44,12 @@ const BookingStepper = (props) => {
         if (bookingFor === 'Others') {
           setHeaderText("FRIEND'S DETAILS");
         } else {
-          setHeaderText('MOVING TO');
+          setHeaderText(movingFrom ? 'MOVING TO' : 'MOVING FROM');
         }
         break;
       case 1:
         if (bookingFor === 'Others') {
-          setHeaderText('MOVING TO');
+          setHeaderText(movingFrom ? 'MOVING TO' : 'MOVING FROM');
         } else {
           setHeaderText('DATE OF MOVEMENT');
         }
@@ -89,7 +87,7 @@ const BookingStepper = (props) => {
         break;
       }
     }
-  }, [currentPosition, orderBooked]);
+  }, [currentPosition, orderBooked, movingFrom]);
 
   const onPageChange = (position) => {
     // if (currentPosition > position) {
@@ -202,6 +200,8 @@ const BookingStepper = (props) => {
         }
         return (
           <MovingForm
+            movingFrom={movingFrom}
+            changeTo={() => setMovingFrom(true)}
             bookingFor={bookingFor}
             movementType={movementType}
             navigation={props.navigation}
@@ -215,6 +215,8 @@ const BookingStepper = (props) => {
         if (bookingFor === 'Others') {
           return (
             <MovingForm
+              movingFrom={movingFrom}
+              changeTo={() => setMovingFrom(true)}
               bookingFor={bookingFor}
               movementType={movementType}
               navigation={props.navigation}
@@ -315,10 +317,14 @@ const BookingStepper = (props) => {
         headerText={headerText}
         navigation={props.navigation}
         onBack={() => {
-          if (currentPosition > 0) {
-            setCurrentPosition(currentPosition - 1);
+          if (headerText === 'MOVING TO') {
+            setMovingFrom(false);
           } else {
-            props.navigation.goBack();
+            if (currentPosition > 0) {
+              setCurrentPosition(currentPosition - 1);
+            } else {
+              props.navigation.goBack();
+            }
           }
         }}
       />

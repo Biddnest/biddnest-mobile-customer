@@ -124,6 +124,7 @@ const InitialQuote = (props) => {
           width={wp(90)}
           backgroundColor={Colors.white}
           label={'REJECT'}
+          spaceTop={hp(0.1)}
           onPress={() => setRejectVisible(true)}
         />
       </View>

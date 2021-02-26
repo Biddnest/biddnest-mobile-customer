@@ -39,14 +39,14 @@ const MovingForm = (props) => {
           color: Colors.inputTextColor,
           textAlign: 'center',
         }}>
-        MOVING TO
+        MOVING {props.movingFrom ? 'To' : 'From'}
       </Text>
       <View style={{marginTop: hp(3)}}>
         <TextInput
           label={'To City'}
           // isRight={error.firstName}
           placeHolder={'To City'}
-          // onFocus={() => setMapVisible(true)}
+          onFocus={() => setMapVisible(true)}
           onChange={(text) => setMapVisible(true)}
         />
         <TextInput
@@ -132,34 +132,40 @@ const MovingForm = (props) => {
           <Button
             label={'NEXT'}
             onPress={() => {
-              if (props.bookingFor === 'Others') {
-                props.onPageChange(2);
+              if (props.movingFrom) {
+                if (props.bookingFor === 'Others') {
+                  props.onPageChange(2);
+                } else {
+                  props.onPageChange(1);
+                }
               } else {
-                props.onPageChange(1);
+                props.changeTo();
               }
             }}
             width={wp(80)}
           />
         </View>
         <MapModalAndroid visible={mapVisible}>
-          <MapView
-            provider={
-              Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
-            }
-            style={styles.mapView}
-            initialRegion={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}>
-            <Marker
-              coordinate={{
+          <View style={styles.mapView}>
+            <MapView
+              provider={
+                Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
+              }
+              style={{flex: 1}}
+              initialRegion={{
                 latitude: 37.78825,
                 longitude: -122.4324,
-              }}
-            />
-          </MapView>
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}>
+              <Marker
+                coordinate={{
+                  latitude: 37.78825,
+                  longitude: -122.4324,
+                }}
+              />
+            </MapView>
+          </View>
           <CloseIcon
             onPress={() => setMapVisible(false)}
             style={[
@@ -219,6 +225,9 @@ const styles = StyleSheet.create({
   mapView: {
     height: hp(67),
     width: wp(100),
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    overflow: 'hidden',
   },
   common: {
     alignItems: 'center',

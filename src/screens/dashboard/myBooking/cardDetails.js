@@ -67,7 +67,7 @@ const CardDetails = (props) => {
           </View>
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={[1, 2]}
+            data={[1, 2, 3, 4, 5]}
             bounces={false}
             renderItem={({item, index}) => {
               return (

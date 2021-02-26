@@ -23,7 +23,14 @@ const SimpleHeader = (props) => {
         onPress={() => {
           props.onBack();
         }}>
-        <Fontisto name={'arrow-left-l'} size={25} color={Colors.black} />
+        <Image
+          source={require('../assets/images/back_arrow.png')}
+          style={{
+            height: wp(10),
+            width: wp(10),
+          }}
+          resizeMode={'contain'}
+        />
       </Pressable>
       <View style={{width: wp(87), height: '100%', ...styles.common}}>
         <Text

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   FlatList,
   ImageBackground,
@@ -16,8 +16,13 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import DeviceInfo from 'react-native-device-info';
 
 export function DrawerContent(props) {
+  useEffect(() => {
+    // let buildNumber = DeviceInfo.getBuildNumber(); // 1
+    let buildNumber = DeviceInfo.getReadableVersion(); // 1.0.1
+  }, []);
   const renderIcon = (item) => {
     switch (item.iconFamily) {
       case 'FontAwesome5':

@@ -13,7 +13,11 @@ const LocationDistance = (props) => {
         padding: hp(2),
         flexDirection: 'row',
       }}>
-      <View />
+      <Image
+        source={require('../assets/images/pin_distance.png')}
+        style={{height: wp(15), width: wp(10)}}
+        resizeMode={'contain'}
+      />
       <View
         style={{
           flexDirection: 'row',
@@ -27,7 +31,8 @@ const LocationDistance = (props) => {
         </View>
         {(props.inTransit && (
           <View style={{alignItems: 'center', flexDirection: 'row'}}>
-            <Text style={styles.inTransitText}>In Transit</Text>
+            {/*<Text style={styles.inTransitText}>In Transit</Text>*/}
+            <Text style={styles.inTransitText}>04:10</Text>
             <View
               style={{
                 ...styles.transitArrow,

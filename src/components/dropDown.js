@@ -22,10 +22,10 @@ const DropDown = (props) => {
       </Text>
       <View
         style={
-          (Platform.OS !== 'android' && {
-            zIndex: 10,
-          }) ||
-          {}
+          {
+            // zIndex: 10,
+            // minHeight: hp(5)
+          }
         }>
         <DropDownPicker
           items={props.items}
@@ -38,9 +38,9 @@ const DropDown = (props) => {
           )}
           containerStyle={{
             height: hp(6.5),
-            borderWidth: 1,
-            borderRadius: 10,
-            borderColor: Colors.silver,
+            // borderWidth: 1,
+            // borderRadius: 10,
+            // borderColor: Colors.silver,
           }}
           style={[
             styles.customDropDown,

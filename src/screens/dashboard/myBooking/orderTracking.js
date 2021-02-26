@@ -19,11 +19,13 @@ import CloseIcon from '../../../components/closeIcon';
 import TwoButton from '../../../components/twoButton';
 import VerticalStepper from './verticalStepper';
 import OrderDetailModal from './orderDetailModal';
+import FlatButton from '../../../components/flatButton';
 
 const OrderTracking = (props) => {
   const [manageOrderVisible, setManageOrderVisible] = useState(false);
   const [orderDetailsVisible, setOrderDetailsVisible] = useState(false);
   const [cancelOrder, setCancelOrder] = useState(false);
+  const [resecheduleOrder, setResecheduleOrder] = useState(false);
   return (
     <View style={styles.container}>
       <SimpleHeader
@@ -229,10 +231,15 @@ const OrderTracking = (props) => {
               fontFamily: 'Roboto-Regular',
               color: Colors.inputTextColor,
             }}>
-            {cancelOrder ? 'CANCEL ORDER' : 'MANAGE ORDER'}
+            {cancelOrder
+              ? 'CANCEL ORDER'
+              : resecheduleOrder
+              ? 'RESCHEDULE'
+              : 'MANAGE ORDER'}
           </Text>
           <CloseIcon
             onPress={() => {
+              setResecheduleOrder(false);
               setCancelOrder(false);
               setManageOrderVisible(false);
             }}
@@ -246,49 +253,64 @@ const OrderTracking = (props) => {
             marginBottom: hp(2),
             marginHorizontal: cancelOrder ? wp(6) : wp(20),
           }}>
-          {cancelOrder && (
-            <Text
-              style={{
-                textAlign: 'center',
-                fontFamily: 'Roboto-Regular',
-                fontSize: wp(4),
-                color: Colors.inputTextColor,
-                marginBottom: hp(2),
-              }}>
-              Terms & Conditions
-            </Text>
-          )}
+          {/*{cancelOrder && (*/}
+          {/*  <Text*/}
+          {/*    style={{*/}
+          {/*      textAlign: 'center',*/}
+          {/*      fontFamily: 'Roboto-Regular',*/}
+          {/*      fontSize: wp(4),*/}
+          {/*      color: Colors.inputTextColor,*/}
+          {/*      marginBottom: hp(2),*/}
+          {/*    }}>*/}
+          {/*    Terms & Conditions*/}
+          {/*  </Text>*/}
+          {/*)}*/}
+          {/*  '1. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. \n\n 2. AtLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 3. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.'*/}
           <Text
             style={{
               ...styles.manageOrderText,
               textAlign: cancelOrder ? 'left' : 'center',
             }}>
             {cancelOrder
-              ? '1. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. \n\n 2. AtLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 3. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.'
+              ? 'Are you sure y ou want to cancel this order?'
+              : resecheduleOrder
+              ? 'Our Virtual Assistant will get in touch with you shortly'
               : 'How would you like to manage your order?'}
           </Text>
         </View>
-        <TwoButton
-          leftLabel={cancelOrder ? 'No' : 'CANCEL & REFUND'}
-          rightLabel={cancelOrder ? 'Yes' : 'RESCHEDULE'}
-          leftOnPress={() => {
-            if (cancelOrder) {
+        {(resecheduleOrder && (
+          <FlatButton
+            label={'OKEY'}
+            onPress={() => {
+              setResecheduleOrder(false);
               setCancelOrder(false);
               setManageOrderVisible(false);
-            } else {
-              setCancelOrder(true);
-            }
-          }}
-          rightOnPress={() => {
-            if (cancelOrder) {
-              setCancelOrder(false);
-              setManageOrderVisible(false);
-              props.navigation.goBack();
-            } else {
-              setManageOrderVisible(false);
-            }
-          }}
-        />
+            }}
+          />
+        )) || (
+          <TwoButton
+            leftLabel={cancelOrder ? 'No' : 'CANCEL & REFUND'}
+            rightLabel={cancelOrder ? 'Yes' : 'RESCHEDULE'}
+            leftOnPress={() => {
+              if (cancelOrder) {
+                setCancelOrder(false);
+                setManageOrderVisible(false);
+              } else {
+                setCancelOrder(true);
+              }
+            }}
+            rightOnPress={() => {
+              if (cancelOrder) {
+                setCancelOrder(false);
+                setManageOrderVisible(false);
+                props.navigation.goBack();
+              } else {
+                setResecheduleOrder(true);
+                // setManageOrderVisible(false);
+              }
+            }}
+          />
+        )}
       </CustomModalAndroid>
     </View>
   );

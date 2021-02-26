@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {
-    View,
-    Text,
-    StyleSheet,
-    Image,
-    Pressable,
-    FlatList,
-    ScrollView, Platform,
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  FlatList,
+  ScrollView,
+  Platform,
 } from 'react-native';
 import {Colors, hp, wp, boxShadow} from '../../../constant/colors';
 import Shimmer from '../../../components/shimmer';
@@ -144,6 +145,7 @@ const Home = (props) => {
               fontSize: wp(4),
               color: Colors.inputTextColor,
               textAlign: 'center',
+              marginTop: hp(1),
             }}>
             MOVEMENT TYPE
           </Text>
@@ -295,11 +297,12 @@ const Home = (props) => {
               top: Platform.OS === 'android' ? 0 : -10,
             }}
           />
-          <View
+          <Image
+            source={require('../../../assets/images/coupon.png')}
+            resizeMode={'contain'}
             style={{
-              height: 150,
-              width: 150,
-              backgroundColor: Colors.silver,
+              height: 200,
+              width: 200,
             }}
           />
           <Text

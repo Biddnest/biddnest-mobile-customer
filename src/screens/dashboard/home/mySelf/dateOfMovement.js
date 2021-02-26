@@ -2,15 +2,16 @@ import React, {useState} from 'react';
 import {View, StyleSheet, Text, Pressable, Platform, Image} from 'react-native';
 import {Colors, hp, wp, boxShadow} from '../../../../constant/colors';
 import Button from '../../../../components/button';
-import Calendar from 'react-native-calendar/components/Calendar';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Input} from 'react-native-elements';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CustomModalAndroid from '../../../../components/customModal';
+import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
+import FlatButton from '../../../../components/flatButton';
 
 const DateOfMovement = (props) => {
   const [openCalender, setCalender] = useState(false);
+  const [dateArray, setDateArray] = useState({});
   return (
     <View>
       <KeyboardAwareScrollView
@@ -73,41 +74,39 @@ const DateOfMovement = (props) => {
             }}
           />
         </View>
-        <CustomModalAndroid visible={false}>
+        <CustomModalAndroid visible={true}>
           <Calendar
-            // currentMonth={'2015-08-01'} // Optional date to set the currently displayed month after initialization
-            customStyle={{
-              day: {fontSize: 15, textAlign: 'center'},
-              currentDayCircle: {
-                backgroundColor: Colors.darkBlue,
-              },
-              dayHeading: {
-                color: Colors.darkBlue,
-              },
+            markedDates={dateArray}
+            style={{width: wp(90), height: hp(50)}}
+            current={'2021-02-26'}
+            // minDate={new Date()}
+            onDayPress={(day) => {
+              let temp = {...dateArray};
+              if (day.dateString in temp) {
+                delete temp[day.dateString];
+              } else {
+                temp[day.dateString] = {selected: true, selectedColor: 'blue'};
+              }
+              setDateArray(temp);
             }}
-            dayHeadings={Array} // Default: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-            events={[{date: '2015-07-01'}]} // Optional array of event objects with a date property and custom styles for the event indicator
-            monthNames={Array} // Defaults to english names of months
-            nextButtonText={'Next'} // Text for next button. Default: 'Next'
-            // onDateSelect={(date) => this.onDateSelect(date)} // Callback after date selection
-            // onDateLongPress={(date) => this.onDateLongPress(date)} // Callback after date is long pressed
-            // onSwipeNext={this.onSwipeNext} // Callback for forward swipe event
-            // onSwipePrev={this.onSwipePrev} // Callback for back swipe event
-            // onTouchNext={this.onTouchNext} // Callback for next touch event
-            // onTouchPrev={this.onTouchPrev} // Callback for prev touch event
-            // onTitlePress={this.onTitlePress} // Callback on title press
-            prevButtonText={'Prev'} // Text for previous button. Default: 'Prev'
-            removeClippedSubviews={false} // Set to false for us within Modals. Default: true
-            // renderDay={<CustomDay />} // Optionally render a custom day component
-            scrollEnabled={true} // False disables swiping. Default: False
-            selectedDate={'2015-08-15'} // Day to be selected
-            showControls={true} // False hides prev/next buttons. Default: False
-            showEventIndicators={true} // False hides event indicators. Default:False
-            startDate={'2015-08-01'} // The first month that will display. Default: current month
-            titleFormat={'MMMM YYYY'} // Format for displaying current month. Default: 'MMMM YYYY'
-            today={new Date()} // Defaults to today
-            weekStart={1} // Day on which week starts 0 - Sunday, 1 - Monday, 2 - Tuesday, etc, Default: 1
+            onDayLongPress={(day) => {
+              console.log('selected day', day);
+            }}
+            monthFormat={'MMM yyyy'}
+            onMonthChange={(month) => {
+              console.log('month changed', month);
+            }}
+            showWeekNumbers={true}
+            onPressArrowLeft={(subtractMonth) => subtractMonth()}
+            onPressArrowRight={(addMonth) => addMonth()}
+            disableAllTouchEventsForDisabledDays={true}
+            // Replace default month and year title with custom one. the function receive a date as parameter.
+            // renderHeader={(date) => {
+            //   /*Return JSX*/
+            // }}
+            enableSwipeMonths={true}
           />
+          <FlatButton label={'OKAY'} onPress={() => {}} />
         </CustomModalAndroid>
       </KeyboardAwareScrollView>
       <View style={{alignSelf: 'center'}}>

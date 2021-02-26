@@ -16,7 +16,7 @@ const TabNavigation = (props: any) => {
     return (
       <Image
         source={uri}
-        style={{height: hp(3), width: hp(3)}}
+        style={{height: hp(5), width: hp(5)}}
         resizeMode={'contain'}
       />
     );
@@ -43,17 +43,21 @@ const TabNavigation = (props: any) => {
             if (focused) {
               return renderImage(require('../assets/images/active_home.png'));
             }
-            return renderImage(require('../assets/images/active_home.png'));
+            return renderImage(require('../assets/images/inactive_home.png'));
           } else if (route.name === 'MyBooking') {
             if (focused) {
-              return renderImage(require('../assets/images/active_home.png'));
+              return renderImage(
+                require('../assets/images/active_booking.png'),
+              );
             }
             return renderImage(
               require('../assets/images/inactive_booking.png'),
             );
           } else if (route.name === 'MyProfile') {
             if (focused) {
-              return renderImage(require('../assets/images/active_home.png'));
+              return renderImage(
+                require('../assets/images/active_profile.png'),
+              );
             }
             return renderImage(
               require('../assets/images/inactive_profile.png'),

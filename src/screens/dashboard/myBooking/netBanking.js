@@ -3,9 +3,6 @@ import CustomModalAndroid from '../../../components/customModal';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {Colors, wp, hp} from '../../../constant/colors';
 import CloseIcon from '../../../components/closeIcon';
-import TextInput from '../../../components/textInput';
-import {STYLES} from '../../../constant/commonStyle';
-import CheckBox from '../../../components/checkBox';
 import FlatButton from '../../../components/flatButton';
 import DropDown from '../../../components/dropDown';
 

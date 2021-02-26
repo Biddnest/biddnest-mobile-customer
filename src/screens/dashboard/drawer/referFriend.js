@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
     fontSize: wp(3.8),
   },
   image: {
-    height: 150,
-    width: 150,
+    height: 200,
+    width: 200,
     alignSelf: 'center',
     marginBottom: wp(8),
     marginTop: wp(4),

@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   ScrollView,
+  Pressable,
 } from 'react-native';
 import {Colors, hp, SIDE_DRAWER, wp} from '../../../constant/colors';
 import SimpleHeader from '../../../components/simpleHeader';
@@ -78,36 +79,51 @@ const ContactUs = (props) => {
         <View style={styles.inputForm}>
           <Text style={styles.headerText}>recent order</Text>
           <View style={styles.separatorView} />
-          <View>
-            <View style={styles.flexBox}>
-              <Text style={{...styles.locationText, marginTop: 0}}>
-                CHENNAI
-              </Text>
-              <Text style={{...styles.locationText, marginTop: 0}}>
-                ID:{' '}
-                <Text
-                  style={{
-                    fontFamily: 'Gilroy-Extrabold',
-                  }}>
-                  #123456
+          <View
+            style={{
+              backgroundColor: Colors.white,
+              flexDirection: 'row',
+            }}>
+            <Image
+              source={require('../../../assets/images/pin_distance.png')}
+              style={{height: wp(15), width: wp(10)}}
+              resizeMode={'contain'}
+            />
+            <View>
+              <View style={[styles.flexBox, {width: wp(70)}]}>
+                <Text style={{...styles.locationText, marginTop: 0}}>
+                  CHENNAI
                 </Text>
-              </Text>
-            </View>
-            <View
-              style={{
-                ...styles.flexBox,
-                marginTop: hp(1.5),
-              }}>
-              <Text style={styles.locationText}>BENGALURU</Text>
+                <Text style={{...styles.locationText, marginTop: 0, textAlign: 'right'}}>
+                  ID:{' '}
+                  <Text
+                    style={{
+                      fontFamily: 'Gilroy-Extrabold',
+                    }}>
+                    #123456
+                  </Text>
+                </Text>
+              </View>
               <View
                 style={{
-                  height: wp(8),
-                  width: wp(8),
-                  borderRadius: wp(4),
-                  backgroundColor: '#F2E6FF',
-                  ...STYLES.common,
+                  ...styles.flexBox,
+                  marginTop: hp(1),
                 }}>
-                <Ionicons name={'call'} color={Colors.darkBlue} size={wp(4)} />
+                <Text style={styles.locationText}>BENGALURU</Text>
+                <View
+                  style={{
+                    height: wp(8),
+                    width: wp(8),
+                    borderRadius: wp(4),
+                    backgroundColor: '#F2E6FF',
+                    ...STYLES.common,
+                  }}>
+                  <Ionicons
+                    name={'call'}
+                    color={Colors.darkBlue}
+                    size={wp(4)}
+                  />
+                </View>
               </View>
             </View>
           </View>
@@ -160,7 +176,7 @@ const ContactUs = (props) => {
           <Button
             width={wp(90)}
             backgroundColor={Colors.white}
-            label={''}
+            label={'RAISE SERVICE REQUEST'}
             spaceBottom={0.1}
             onPress={() => {}}
           />

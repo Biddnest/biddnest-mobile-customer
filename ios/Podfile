@@ -8,6 +8,8 @@ target 'cp_biddnest_mobile_customer' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'react-native-onesignal', :path => '../node_modules/react-native-onesignal'
+
   target 'cp_biddnest_mobile_customerTests' do
     inherit! :complete
     # Pods for testing

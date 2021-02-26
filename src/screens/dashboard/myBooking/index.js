@@ -3,12 +3,13 @@ import {View, Text, StyleSheet, Pressable, FlatList, Image} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
 import {HomeHeader} from '../home';
 import {STYLES} from '../../../constant/commonStyle';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const MyBooking = (props) => {
   const [selectedTab, setSelectedTab] = useState(0);
   const handleOrderClicked = (item) => {
-    props.navigation.navigate('OrderTracking', {orderData: item});
-    // props.navigation.navigate('Payment', {orderData: item});
+    // props.navigation.navigate('OrderTracking', {orderData: item});
+    props.navigation.navigate('Payment', {orderData: item});
     // props.navigation.navigate('FinalQuote', {orderData: item});
   };
   const renderItem = ({item, index}) => {
@@ -22,7 +23,11 @@ const MyBooking = (props) => {
             backgroundColor: Colors.white,
             flexDirection: 'row',
           }}>
-          <View />
+          <Image
+            source={require('../../../assets/images/pin_distance.png')}
+            style={{height: wp(15), width: wp(10)}}
+            resizeMode={'contain'}
+          />
           <View
             style={{
               flexDirection: 'row',
@@ -160,7 +165,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Regular',
     color: Colors.inputTextColor,
     fontSize: wp(4.5),
-    marginTop: hp(2),
+    marginTop: hp(1),
   },
   separatorView: {
     borderWidth: 0.8,
