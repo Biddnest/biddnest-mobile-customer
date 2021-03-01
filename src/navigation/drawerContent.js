@@ -17,6 +17,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DeviceInfo from 'react-native-device-info';
+import LinearGradient from 'react-native-linear-gradient';
 
 export function DrawerContent(props) {
   useEffect(() => {
@@ -81,54 +82,55 @@ export function DrawerContent(props) {
     );
   };
   return (
-    <DrawerContentScrollView
-      {...props}
-      bounces={false}
-      style={{backgroundColor: Colors.darkBlue}}>
-      <View style={styles.drawerContent}>
-        <ImageBackground
-          source={require('../assets/images/logo_background.png')}
-          style={{height: hp(15), width: '100%', ...STYLES.common}}
-          resizeMode={'cover'}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Pressable
-              onPress={() => props.navigation.closeDrawer()}
-              style={{
-                width: wp(15),
-                alignItems: 'flex-end',
-                paddingRight: wp(3),
-              }}>
-              <Feather name={'arrow-left'} color={Colors.white} size={30} />
-            </Pressable>
-            <View style={styles.profilePhoto}>
-              <Text style={styles.profileText}>DJ</Text>
-            </View>
-            <View style={{width: wp(35), paddingLeft: wp(2)}}>
-              <Text numberOfLines={1} style={styles.userText}>
-                David Jerome
-              </Text>
-            </View>
-            <View style={{width: wp(15)}}>
-              <View style={styles.logoutWrapper}>
-                <MaterialIcons
-                  name={'logout'}
-                  color={Colors.white}
-                  size={wp(6)}
-                />
-              </View>
+    <LinearGradient
+      colors={[Colors.darkBlue, '#333092']}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 0}}
+      style={{
+        flex: 1,
+      }}>
+      <ImageBackground
+        source={require('../assets/images/logo_background.png')}
+        style={{height: hp(15), width: '100%', ...STYLES.common}}
+        resizeMode={'cover'}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Pressable
+            onPress={() => props.navigation.closeDrawer()}
+            style={{
+              width: wp(15),
+              alignItems: 'flex-end',
+              paddingRight: wp(3),
+            }}>
+            <Feather name={'arrow-left'} color={Colors.white} size={30} />
+          </Pressable>
+          <View style={styles.profilePhoto}>
+            <Text style={styles.profileText}>DJ</Text>
+          </View>
+          <View style={{width: wp(35), paddingLeft: wp(2)}}>
+            <Text numberOfLines={1} style={styles.userText}>
+              David Jerome
+            </Text>
+          </View>
+          <View style={{width: wp(15)}}>
+            <View style={styles.logoutWrapper}>
+              <MaterialIcons
+                name={'logout'}
+                color={Colors.white}
+                size={wp(6)}
+              />
             </View>
           </View>
-        </ImageBackground>
-        <View style={styles.bottomView}>
-          <FlatList
-            bounces={false}
-            showsVerticalScrollIndicator={false}
-            data={SIDE_DRAWER}
-            renderItem={renderItem}
-          />
         </View>
+      </ImageBackground>
+      <View style={styles.bottomView}>
+        <FlatList
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+          data={SIDE_DRAWER}
+          renderItem={renderItem}
+        />
       </View>
-    </DrawerContentScrollView>
+    </LinearGradient>
   );
 }
 
@@ -165,7 +167,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: wp(8),
     backgroundColor: Colors.white,
     padding: wp(3),
-    height: '100%',
+    flex: 1,
   },
   menuView: {
     flexDirection: 'row',
