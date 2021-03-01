@@ -8,8 +8,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 const MyBooking = (props) => {
   const [selectedTab, setSelectedTab] = useState(0);
   const handleOrderClicked = (item) => {
-    // props.navigation.navigate('OrderTracking', {orderData: item});
-    props.navigation.navigate('Payment', {orderData: item});
+    props.navigation.navigate('OrderTracking', {orderData: item});
+    // props.navigation.navigate('Payment', {orderData: item});
     // props.navigation.navigate('FinalQuote', {orderData: item});
   };
   const renderItem = ({item, index}) => {

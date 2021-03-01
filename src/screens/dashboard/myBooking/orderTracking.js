@@ -20,12 +20,34 @@ import TwoButton from '../../../components/twoButton';
 import VerticalStepper from './verticalStepper';
 import OrderDetailModal from './orderDetailModal';
 import FlatButton from '../../../components/flatButton';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 const OrderTracking = (props) => {
   const [manageOrderVisible, setManageOrderVisible] = useState(false);
   const [orderDetailsVisible, setOrderDetailsVisible] = useState(false);
   const [cancelOrder, setCancelOrder] = useState(false);
   const [resecheduleOrder, setResecheduleOrder] = useState(false);
+  const renderIcon = (item) => {
+    switch (item.iconFamily) {
+      case 'Feather':
+        return (
+          <Feather name={item.icon} size={wp(8)} color={Colors.darkBlue} />
+        );
+      case 'AntDesign':
+        return (
+          <AntDesign name={item.icon} size={wp(8)} color={Colors.darkBlue} />
+        );
+      case 'Ionicons':
+        return (
+          <Ionicons name={item.icon} size={wp(8)} color={Colors.darkBlue} />
+        );
+      default:
+        break;
+    }
+  };
   return (
     <View style={styles.container}>
       <SimpleHeader
@@ -86,10 +108,22 @@ const OrderTracking = (props) => {
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
             {[
-              {icon: 'phone-call', title: 'Virtual Assistance'},
-              {icon: 'file-text', title: 'Order Details'},
-              {icon: 'share-2', title: 'Share'},
-              {icon: 'test', title: 'Manage Order'},
+              {
+                icon: 'phone-call',
+                title: 'Virtual Assistance',
+                iconFamily: 'Feather',
+              },
+              {
+                icon: 'file-text',
+                title: 'Order Details',
+                iconFamily: 'Feather',
+              },
+              {icon: 'share-social-outline', title: 'Share', iconFamily: 'Ionicons'},
+              {
+                icon: 'closecircleo',
+                title: 'Manage Order',
+                iconFamily: 'AntDesign',
+              },
             ].map((item, index) => {
               return (
                 <Pressable
@@ -110,11 +144,7 @@ const OrderTracking = (props) => {
                       ...styles.btnView,
                       ...STYLES.common,
                     }}>
-                    <Feather
-                      name={item.icon}
-                      size={wp(8)}
-                      color={Colors.darkBlue}
-                    />
+                    {renderIcon(item)}
                   </View>
                   <Text numberOfLines={1} style={styles.btnText}>
                     {item.title}
