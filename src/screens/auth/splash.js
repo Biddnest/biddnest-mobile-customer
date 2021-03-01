@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Image} from 'react-native';
 import OneSignal from 'react-native-onesignal';
 import {resetNavigator} from '../../constant/commonFun';
-import {Colors} from '../../constant/colors';
+import {Colors, hp, wp} from '../../constant/colors';
 
 const Splash = (props) => {
   useEffect(() => {
@@ -45,7 +45,11 @@ const Splash = (props) => {
   }, []);
   return (
     <View style={styles.container}>
-      <Text>Splash</Text>
+      <Image
+        source={require('../../assets/images/logo.png')}
+        style={{height: hp(50), width: wp(80)}}
+        resizeMode={'contain'}
+      />
     </View>
   );
 };
@@ -57,6 +61,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.silver,
   },
 });

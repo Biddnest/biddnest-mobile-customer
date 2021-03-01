@@ -72,9 +72,10 @@ const DateOfMovement = (props) => {
               backgroundColor: Colors.textBG,
               color: Colors.inputTextColor,
             }}
+            onFocus={() => setCalender(true)}
           />
         </View>
-        <CustomModalAndroid visible={true}>
+        <CustomModalAndroid visible={openCalender}>
           <Calendar
             markedDates={dateArray}
             style={{width: wp(90), height: hp(50)}}
@@ -106,7 +107,7 @@ const DateOfMovement = (props) => {
             // }}
             enableSwipeMonths={true}
           />
-          <FlatButton label={'OKAY'} onPress={() => {}} />
+          <FlatButton label={'OKAY'} onPress={() => setCalender(false)} />
         </CustomModalAndroid>
       </KeyboardAwareScrollView>
       <View style={{alignSelf: 'center'}}>
