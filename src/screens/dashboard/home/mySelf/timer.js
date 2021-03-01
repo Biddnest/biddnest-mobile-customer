@@ -37,6 +37,16 @@ const Timer = (props) => {
           style={{height: wp(30), width: wp(30), marginVertical: hp(0.8)}}
           resizeMode={'contain'}
         />
+        <Text
+          style={{
+            color: Colors.darkBlue,
+            position: 'absolute',
+            top: wp(28),
+            fontFamily: 'Roboto-Medium',
+            fontSize: wp(3.8),
+          }}>
+          23:30
+        </Text>
         <Text style={styles.mainText}>Time Left</Text>
         <View style={styles.separatorView} />
         <View style={styles.flexView}>
