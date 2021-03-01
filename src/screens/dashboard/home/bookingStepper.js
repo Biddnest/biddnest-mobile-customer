@@ -103,6 +103,15 @@ const BookingStepper = (props) => {
       />
     );
   };
+  const renderFriends = (stepStatus) => {
+    if (stepStatus === 'current') {
+      return renderImage(require('../../../assets/images/active_friends.png'));
+    } else if (stepStatus === 'finished') {
+      return renderImage(require('../../../assets/images/finish_friends.png'));
+    } else {
+      return null;
+    }
+  };
   const renderMapPin = (stepStatus) => {
     if (stepStatus === 'current') {
       return renderImage(require('../../../assets/images/active_pin_map.png'));
@@ -151,7 +160,7 @@ const BookingStepper = (props) => {
     switch (position) {
       case 0:
         if (bookingFor === 'Others') {
-          return null;
+          return renderFriends(stepStatus);
         }
         return renderMapPin(stepStatus);
       case 1:

@@ -7,6 +7,7 @@ import Button from '../../components/button';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Header from './header';
 import CheckBox from '../../components/checkBox';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Login = (props) => {
   const [phoneNumber, setPhoneNumber] = React.useState();
@@ -16,124 +17,134 @@ const Login = (props) => {
   return (
     <View style={[styles.container, {...styles.common}]}>
       <Header />
-      <KeyboardAwareScrollView
-        enableOnAndroid={false}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          backgroundColor: '#243C99',
+      <LinearGradient
+        colors={[Colors.darkBlue, '#333092']}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
+        style={{
           height: hp(70),
           width: wp(100),
         }}>
-        <View style={styles.bottomView}>
-          <TextInput
-            disable={otpSend}
-            isRight={phoneValidate}
-            label={'Phone Number'}
-            placeHolder={'Phone Number'}
-            keyboard={'decimal-pad'}
-            onChange={(text) => setPhoneNumber(text)}
-          />
-          {(!otpSend && (
-            <View style={{alignItems: 'center'}}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <CheckBox onPress={() => setAgree(!isAgree)} value={isAgree} />
+        <KeyboardAwareScrollView
+          enableOnAndroid={false}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            flex: 1,
+          }}>
+          <View style={styles.bottomView}>
+            <TextInput
+              disable={otpSend}
+              isRight={phoneValidate}
+              label={'Phone Number'}
+              placeHolder={'Phone Number'}
+              keyboard={'decimal-pad'}
+              onChange={(text) => setPhoneNumber(text)}
+            />
+            {(!otpSend && (
+              <View style={{alignItems: 'center'}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <CheckBox
+                    onPress={() => setAgree(!isAgree)}
+                    value={isAgree}
+                  />
+                  <Text
+                    style={{
+                      color: Colors.grey,
+                      fontSize: wp(3.8),
+                    }}>
+                    I agree to the{' '}
+                    <Text
+                      style={{
+                        fontFamily: 'Roboto-Bold',
+                        color: Colors.textLabelColor,
+                      }}>
+                      Terms & conditions
+                    </Text>
+                  </Text>
+                </View>
+                <Button
+                  label={'SEND OTP'}
+                  onPress={() => {
+                    if (
+                      !phoneNumber?.length ||
+                      phoneNumber?.length !== 10 ||
+                      /\D/.test(phoneNumber)
+                    ) {
+                      setPhoneValidate(false);
+                    } else if (!isAgree) {
+                    } else {
+                      setPhoneValidate(true);
+                      setOtpSend(true);
+                    }
+                  }}
+                />
+              </View>
+            )) || (
+              <View style={{alignItems: 'center'}}>
+                <View
+                  style={{
+                    width: wp(85),
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'Roboto-Bold',
+                      color: Colors.textLabelColor,
+                      fontSize: wp(4),
+                    }}>
+                    Verify OTP
+                  </Text>
+                  <View
+                    style={{
+                      height: hp(9),
+                    }}>
+                    <OTPInputView
+                      pinCount={6}
+                      onCodeChanged={(code) => console.log(code)}
+                      codeInputFieldStyle={styles.textInput}
+                      codeInputHighlightStyle={[
+                        styles.textInput,
+                        {borderColor: '#243C99'},
+                      ]}
+                    />
+                  </View>
+                </View>
+                <Text
+                  style={{
+                    color: Colors.grey,
+                    fontSize: wp(3.8),
+                    marginTop: hp(1),
+                  }}>
+                  Waiting for OTP
+                </Text>
+                <Button
+                  label={'SUBMIT'}
+                  onPress={() => props.navigation.navigate('Signup')}
+                />
                 <Text
                   style={{
                     color: Colors.grey,
                     fontSize: wp(3.8),
                   }}>
-                  I agree to the{' '}
+                  Did not receive OTP?{' '}
                   <Text
+                    onPress={() => setOtpSend(false)}
                     style={{
                       fontFamily: 'Roboto-Bold',
                       color: Colors.textLabelColor,
                     }}>
-                    Terms & conditions
+                    Resend
                   </Text>
                 </Text>
               </View>
-              <Button
-                label={'SEND OTP'}
-                onPress={() => {
-                  if (
-                    !phoneNumber?.length ||
-                    phoneNumber?.length !== 10 ||
-                    /\D/.test(phoneNumber)
-                  ) {
-                    setPhoneValidate(false);
-                  } else if (!isAgree) {
-                  } else {
-                    setPhoneValidate(true);
-                    setOtpSend(true);
-                  }
-                }}
-              />
-            </View>
-          )) || (
-            <View style={{alignItems: 'center'}}>
-              <View
-                style={{
-                  width: wp(85),
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'Roboto-Bold',
-                    color: Colors.textLabelColor,
-                    fontSize: wp(4.6),
-                  }}>
-                  Verify OTP
-                </Text>
-                <View
-                  style={{
-                    height: hp(9),
-                  }}>
-                  <OTPInputView
-                    pinCount={6}
-                    onCodeChanged={(code) => console.log(code)}
-                    codeInputFieldStyle={styles.textInput}
-                    codeInputHighlightStyle={[
-                      styles.textInput,
-                      {borderColor: '#243C99'},
-                    ]}
-                  />
-                </View>
-              </View>
-              <Text
-                style={{
-                  color: Colors.grey,
-                  fontSize: wp(3.8),
-                  marginTop: hp(1),
-                }}>
-                Waiting for OTP
-              </Text>
-              <Button
-                label={'SUBMIT'}
-                onPress={() => props.navigation.navigate('Signup')}
-              />
-              <Text
-                style={{
-                  color: Colors.grey,
-                  fontSize: wp(3.8),
-                }}>
-                Did not receive OTP?{' '}
-                <Text
-                  onPress={() => setOtpSend(false)}
-                  style={{
-                    fontFamily: 'Roboto-Bold',
-                    color: Colors.textLabelColor,
-                  }}>
-                  Resend
-                </Text>
-              </Text>
-            </View>
-          )}
-        </View>
-      </KeyboardAwareScrollView>
+            )}
+          </View>
+        </KeyboardAwareScrollView>
+      </LinearGradient>
     </View>
   );
 };
