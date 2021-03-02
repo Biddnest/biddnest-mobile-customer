@@ -18,6 +18,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DeviceInfo from 'react-native-device-info';
 import LinearGradient from 'react-native-linear-gradient';
+import {resetNavigator} from '../constant/commonFun';
 
 export function DrawerContent(props) {
   useEffect(() => {
@@ -112,13 +113,15 @@ export function DrawerContent(props) {
             </Text>
           </View>
           <View style={{width: wp(15)}}>
-            <View style={styles.logoutWrapper}>
+            <Pressable
+              style={styles.logoutWrapper}
+              onPress={() => resetNavigator(props, 'Login')}>
               <MaterialIcons
                 name={'logout'}
                 color={Colors.white}
                 size={wp(6)}
               />
-            </View>
+            </Pressable>
           </View>
         </View>
       </ImageBackground>
