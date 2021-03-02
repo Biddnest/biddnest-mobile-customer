@@ -118,7 +118,11 @@ const OrderTracking = (props) => {
                 title: 'Order Details',
                 iconFamily: 'Feather',
               },
-              {icon: 'share-social-outline', title: 'Share', iconFamily: 'Ionicons'},
+              {
+                icon: 'share-social-outline',
+                title: 'Share',
+                iconFamily: 'Ionicons',
+              },
               {
                 icon: 'closecircleo',
                 title: 'Manage Order',
@@ -132,6 +136,8 @@ const OrderTracking = (props) => {
                       setOrderDetailsVisible(true);
                     } else if (item.title === 'Manage Order') {
                       setManageOrderVisible(true);
+                    } else if (item.title === 'Virtual Assistance') {
+                      props.navigation.navigate('FinalQuote');
                     }
                   }}
                   style={{

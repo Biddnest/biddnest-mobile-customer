@@ -47,7 +47,7 @@ const LocationDistance = (props) => {
           </View>
         )) || (
           <View style={{alignItems: 'center'}}>
-            <Text style={styles.locationText}>DISTANCE</Text>
+            <Text style={[styles.locationText, {marginTop: 0}]}>DISTANCE</Text>
             <View
               style={{
                 flexDirection: 'row',
