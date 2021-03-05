@@ -1,5 +1,6 @@
 import {CommonActions} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-picker';
+import Toast from 'react-native-simple-toast';
 import {IMAGE_OPTIONS} from './colors';
 
 export const resetNavigator = (props, screenName) => {
@@ -9,6 +10,10 @@ export const resetNavigator = (props, screenName) => {
       routes: [{name: screenName}],
     }),
   );
+};
+
+export const CustomAlert = (msg = '') => {
+  return Toast.show(msg, Toast.LONG);
 };
 
 export const ImageSelection = () => {

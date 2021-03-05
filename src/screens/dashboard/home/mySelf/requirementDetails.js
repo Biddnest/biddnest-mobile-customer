@@ -16,7 +16,7 @@ import {STYLES} from '../../../../constant/commonStyle';
 import TextInput from '../../../../components/textInput';
 import CustomModalAndroid from '../../../../components/customModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import DropDown from '../../../../components/dropDown';
+import DropDownAndroid from '../../../../components/dropDown';
 import FlatButton from '../../../../components/flatButton';
 import {ImageSelection} from '../../../../constant/commonFun';
 import CloseIcon from '../../../../components/closeIcon';
@@ -385,7 +385,7 @@ const RequirementDetails = (props) => {
             marginVertical: hp(2),
           }}
         />
-        <DropDown
+        <DropDownAndroid
           label={'Item Name'}
           width={wp(90)}
           items={[
@@ -395,7 +395,7 @@ const RequirementDetails = (props) => {
           onChangeItem={(text) => {}}
         />
         <View style={{flexDirection: 'row', marginTop: hp(2)}}>
-          <DropDown
+          <DropDownAndroid
             label={'Material'}
             items={[
               {label: 'Male', value: 'male'},
@@ -403,7 +403,7 @@ const RequirementDetails = (props) => {
             ]}
             onChangeItem={(text) => {}}
           />
-          <DropDown
+          <DropDownAndroid
             label={'Size'}
             items={[
               {label: 'Male', value: 'male'},

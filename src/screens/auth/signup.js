@@ -6,13 +6,26 @@ import Header from './header';
 import TextInput from '../../components/textInput';
 import Button from '../../components/button';
 import CheckBox from '../../components/checkBox';
-import {resetNavigator} from '../../constant/commonFun';
-import DropDown from '../../components/dropDown';
+import {CustomAlert, resetNavigator} from '../../constant/commonFun';
+import DropDownAndroid from '../../components/dropDown';
 import LinearGradient from 'react-native-linear-gradient';
+import {signUP} from '../../redux/actions/user';
+import {useDispatch} from 'react-redux';
 
 const Signup = (props) => {
-  const [data, setData] = React.useState({});
-  const [error, setError] = React.useState({});
+  const dispatch = useDispatch();
+  const [data, setData] = React.useState({
+    fname: '',
+    lname: '',
+    email: '',
+    gender: 'male',
+    referral_code: '',
+  });
+  const [error, setError] = React.useState({
+    fname: undefined,
+    lname: undefined,
+    email: undefined,
+  });
   const [isAgree, setAgree] = React.useState(true);
   const handleState = (key, value) => {
     setData({
@@ -52,17 +65,17 @@ const Signup = (props) => {
               <View style={{width: wp(45)}}>
                 <TextInput
                   label={'First Name'}
-                  isRight={error.firstName}
+                  isRight={error.fname}
                   placeHolder={'First Name'}
-                  onChange={(text) => handleState('firstName', text)}
+                  onChange={(text) => handleState('fname', text)}
                 />
               </View>
               <View style={{width: wp(45)}}>
                 <TextInput
                   label={'Last Name'}
-                  isRight={error.lastName}
+                  isRight={error.lname}
                   placeHolder={'Last Name'}
-                  onChange={(text) => handleState('lastName', text)}
+                  onChange={(text) => handleState('lname', text)}
                 />
               </View>
             </View>
@@ -74,7 +87,7 @@ const Signup = (props) => {
               onChange={(text) => handleState('email', text)}
             />
             <View style={{flexDirection: 'row'}}>
-              <DropDown
+              <DropDownAndroid
                 label={'Gender'}
                 items={[
                   {label: 'Male', value: 'male'},
@@ -85,9 +98,9 @@ const Signup = (props) => {
               <View style={{width: wp(45)}}>
                 <TextInput
                   label={'Referral Code'}
-                  isRight={error.referralCode}
+                  isRight={error.referral_code}
                   placeHolder={'Referral Code'}
-                  onChange={(text) => handleState('referralCode', text)}
+                  onChange={(text) => handleState('referral_code', text)}
                 />
               </View>
             </View>
@@ -117,22 +130,22 @@ const Signup = (props) => {
               onPress={() => {
                 let tempError = {};
                 if (
-                  !data.firstName ||
-                  data.firstName.length === 0 ||
-                  /[^a-zA-Z]/.test(data.firstName)
+                  !data.fname ||
+                  data.fname.length === 0 ||
+                  /[^a-zA-Z]/.test(data.fname)
                 ) {
-                  tempError.firstName = false;
+                  tempError.fname = false;
                 } else {
-                  tempError.firstName = true;
+                  tempError.fname = true;
                 }
                 if (
-                  !data.lastName ||
-                  data.lastName.length === 0 ||
-                  /[^a-zA-Z]/.test(data.lastName)
+                  !data.lname ||
+                  data.lname.length === 0 ||
+                  /[^a-zA-Z]/.test(data.lname)
                 ) {
-                  tempError.lastName = false;
+                  tempError.lname = false;
                 } else {
-                  tempError.lastName = true;
+                  tempError.lname = true;
                 }
                 if (
                   !data.email ||
@@ -145,12 +158,13 @@ const Signup = (props) => {
                 } else {
                   tempError.email = true;
                 }
-                if (!data.referralCode || data.referralCode.length === 0) {
-                  tempError.referralCode = false;
-                } else {
-                  tempError.referralCode = true;
-                }
+                // if (!data.referral_code || data.referral_code.length === 0) {
+                //   tempError.referral_code = false;
+                // } else {
+                //   tempError.referral_code = true;
+                // }
                 if (!isAgree) {
+                  CustomAlert('Agree to the Terms & Conditions');
                   tempError.isAgree = false;
                 }
                 setError(tempError);
@@ -160,7 +174,7 @@ const Signup = (props) => {
                   ) === -1
                 ) {
                   // resetNavigator(props, 'Dashboard');
-                  props.navigation.navigate('Dashboard');
+                  dispatch(signUP(data));
                 }
               }}
             />

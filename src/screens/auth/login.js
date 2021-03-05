@@ -8,9 +8,14 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Header from './header';
 import CheckBox from '../../components/checkBox';
 import LinearGradient from 'react-native-linear-gradient';
+import {CustomAlert} from '../../constant/commonFun';
+import {useDispatch} from 'react-redux';
+import {sendOTP, verifyOTP} from '../../redux/actions/user';
 
 const Login = (props) => {
-  const [phoneNumber, setPhoneNumber] = React.useState();
+  const dispatch = useDispatch();
+  const [phone, setPhone] = React.useState();
+  const [otp, setOTP] = React.useState();
   const [phoneValidate, setPhoneValidate] = React.useState(undefined);
   const [otpSend, setOtpSend] = React.useState(false);
   const [isAgree, setAgree] = React.useState(true);
@@ -34,12 +39,14 @@ const Login = (props) => {
           }}>
           <View style={styles.bottomView}>
             <TextInput
-              disable={otpSend}
               isRight={phoneValidate}
               label={'Phone Number'}
               placeHolder={'Phone Number'}
               keyboard={'decimal-pad'}
-              onChange={(text) => setPhoneNumber(text)}
+              onChange={(text) => {
+                setOtpSend(false);
+                setPhone(text);
+              }}
             />
             {(!otpSend && (
               <View style={{alignItems: 'center'}}>
@@ -71,15 +78,19 @@ const Login = (props) => {
                   label={'SEND OTP'}
                   onPress={() => {
                     if (
-                      !phoneNumber?.length ||
-                      phoneNumber?.length !== 10 ||
-                      /\D/.test(phoneNumber)
+                      !phone?.length ||
+                      phone?.length !== 10 ||
+                      /\D/.test(phone)
                     ) {
                       setPhoneValidate(false);
                     } else if (!isAgree) {
+                      setPhoneValidate(true);
+                      CustomAlert('Agree to the Terms & Conditions');
                     } else {
                       setPhoneValidate(true);
                       setOtpSend(true);
+                      // Send OTP
+                      sendOTP({phone}).then((res) => {});
                     }
                   }}
                 />
@@ -104,7 +115,7 @@ const Login = (props) => {
                     }}>
                     <OTPInputView
                       pinCount={6}
-                      onCodeChanged={(code) => console.log(code)}
+                      onCodeChanged={(code) => setOTP(code)}
                       codeInputFieldStyle={styles.textInput}
                       codeInputHighlightStyle={[
                         styles.textInput,
@@ -123,7 +134,16 @@ const Login = (props) => {
                 </Text>
                 <Button
                   label={'SUBMIT'}
-                  onPress={() => props.navigation.navigate('Signup')}
+                  onPress={() => {
+                    // Verify OTP
+                    verifyOTP({
+                      phone,
+                      otp,
+                    }).then((res) => {
+
+                    })
+                    props.navigation.navigate('Signup');
+                  }}
                 />
                 <Text
                   style={{

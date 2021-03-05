@@ -15,7 +15,7 @@ import {STYLES} from '../../../constant/commonStyle';
 import TextInput from '../../../components/textInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomModalAndroid from '../../../components/customModal';
-import DropDown from '../../../components/dropDown';
+import DropDownAndroid from '../../../components/dropDown';
 import CheckBox from '../../../components/checkBox';
 import FlatButton from '../../../components/flatButton';
 import CloseIcon from '../../../components/closeIcon';
@@ -155,7 +155,7 @@ const FinalQuote = (props) => {
               }}>
               REASON FOR REJECTION
             </Text>
-            <DropDown
+            <DropDownAndroid
               label={''}
               width={wp(90)}
               items={[

@@ -4,7 +4,7 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import {Colors, wp, hp} from '../../../constant/colors';
 import CloseIcon from '../../../components/closeIcon';
 import FlatButton from '../../../components/flatButton';
-import DropDown from '../../../components/dropDown';
+import DropDownAndroid from '../../../components/dropDown';
 
 const NetBanking = (props) => {
   return (
@@ -33,7 +33,7 @@ const NetBanking = (props) => {
         </View>
         <View style={{...styles.separatorView, width: '85%'}} />
         <View style={{marginBottom: hp(5)}}>
-          <DropDown
+          <DropDownAndroid
             width={wp(90)}
             label={'Bank'}
             items={[

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import TextInput from '../../../components/textInput';
 import {STYLES} from '../../../constant/commonStyle';
-import DropDown from '../../../components/dropDown';
+import DropDownAndroid from '../../../components/dropDown';
 import Button from '../../../components/button';
 import AddNewCard from './addNewCard';
 import UPIPayment from './UPIPayment';

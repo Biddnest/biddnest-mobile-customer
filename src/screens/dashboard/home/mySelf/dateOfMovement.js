@@ -8,6 +8,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CustomModalAndroid from '../../../../components/customModal';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import FlatButton from '../../../../components/flatButton';
+import CloseIcon from '../../../../components/closeIcon';
 
 const DateOfMovement = (props) => {
   const [openCalender, setCalender] = useState(false);
@@ -53,7 +54,7 @@ const DateOfMovement = (props) => {
                 />
               );
             }}
-            onChangeText={() => {}}
+            onChangeText={() => setCalender(true)}
             inputContainerStyle={{
               borderWidth: 2,
               paddingHorizontal: 15,
@@ -72,10 +73,16 @@ const DateOfMovement = (props) => {
               backgroundColor: Colors.textBG,
               color: Colors.inputTextColor,
             }}
-            onFocus={() => setCalender(true)}
+            onFocus={() => {}}
           />
         </View>
         <CustomModalAndroid visible={openCalender}>
+          <CloseIcon
+            onPress={() => {
+              setCalender(false);
+            }}
+            style={{marginTop: 0, width: '90%', alignItems: 'flex-end'}}
+          />
           <Calendar
             markedDates={dateArray}
             style={{width: wp(90), height: hp(50)}}

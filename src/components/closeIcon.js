@@ -6,7 +6,7 @@ import {Pressable} from 'react-native';
 const CloseIcon = (props) => {
   return (
     <Pressable onPress={props.onPress} style={props.style}>
-      <Ionicons name="close-sharp" size={25} color={Colors.silver} />
+      <Ionicons name="close-sharp" size={25} color={'#C9CDCF'} />
     </Pressable>
   );
 };

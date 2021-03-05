@@ -70,7 +70,11 @@ const AddNewCard = (props) => {
                   backgroundColor: Colors.white,
                 }}>
                 <DatePicker
-                  style={{width: '100%'}}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    justifyContent: 'center',
+                  }}
                   date={new Date()}
                   mode="date"
                   placeholder="select date"
@@ -97,7 +101,10 @@ const AddNewCard = (props) => {
                       borderWidth: 0,
                       height: hp(6.5),
                       marginTop: 1,
-                      ...STYLES.common,
+                      width: '100%',
+                      alignItems: 'flex-start',
+                      justifyContent: 'center',
+                      paddingHorizontal: 15,
                     },
                     dateText: {
                       fontSize: wp(4),

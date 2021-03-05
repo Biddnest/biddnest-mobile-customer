@@ -118,10 +118,10 @@ const Home = (props) => {
     );
   };
   return (
-    <LinearGradient colors={[Colors.pageBG, Colors.white]}>
+    <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <HomeHeader navigation={props.navigation} />
       <ScrollView
-        style={{marginBottom: hp(7)}}
+        style={{flex: 1}}
         showsVerticalScrollIndicator={false}
         bounces={false}>
         <LocationDistance inTransit={true} />
@@ -134,9 +134,7 @@ const Home = (props) => {
           contentContainerStyle={{
             padding: wp(4),
             paddingRight: 0,
-            height: hp(20),
           }}
-          style={{height: hp(20)}}
         />
         <View style={styles.movementView}>
           <Text
@@ -454,7 +452,7 @@ const styles = StyleSheet.create({
   assistantView: {
     flexDirection: 'row',
     padding: wp(5),
-    marginTop: hp(3),
+    marginTop: hp(2),
     justifyContent: 'space-between',
     alignItems: 'center',
     borderRadius: 10,

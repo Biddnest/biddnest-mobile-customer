@@ -11,7 +11,7 @@ import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import React, {useState} from 'react';
 import {STYLES} from '../../../constant/commonStyle';
-import DropDown from '../../../components/dropDown';
+import DropDownAndroid from '../../../components/dropDown';
 import TextInput from '../../../components/textInput';
 import Button from '../../../components/button';
 import DatePicker from 'react-native-datepicker';
@@ -104,7 +104,7 @@ const CardDetails = (props) => {
                   {selectedCard === index ? (
                     <View>
                       <View style={{marginLeft: 20, marginTop: hp(1)}}>
-                        <DropDown
+                        <DropDownAndroid
                           width={wp(75)}
                           label={'Bank Name'}
                           items={[
@@ -140,7 +140,11 @@ const CardDetails = (props) => {
                                 backgroundColor: Colors.white,
                               }}>
                               <DatePicker
-                                style={{width: '100%'}}
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  justifyContent: 'center',
+                                }}
                                 date={new Date()}
                                 mode="date"
                                 placeholder="select date"
@@ -167,7 +171,10 @@ const CardDetails = (props) => {
                                     borderWidth: 0,
                                     height: hp(6.5),
                                     marginTop: 1,
-                                    ...STYLES.common,
+                                    width: '100%',
+                                    alignItems: 'flex-start',
+                                    justifyContent: 'center',
+                                    paddingHorizontal: 15,
                                   },
                                   dateText: {
                                     fontSize: wp(4),

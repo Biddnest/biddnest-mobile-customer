@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, Platform} from 'react-native';
 import OneSignal from 'react-native-onesignal';
-import {resetNavigator} from '../../constant/commonFun';
+import NetInfo from '@react-native-community/netinfo';
+import {CustomAlert, resetNavigator} from '../../constant/commonFun';
 import {Colors, hp, wp} from '../../constant/colors';
 
 const Splash = (props) => {
@@ -39,10 +40,19 @@ const Splash = (props) => {
     console.log('Device info: ', device);
   }
   useEffect(() => {
+    checkConnectivity();
     setTimeout(() => {
       resetNavigator(props, 'Login');
     }, 1500);
   }, []);
+  const checkConnectivity = () => {
+    NetInfo.addEventListener((state) => {
+      if (state.isConnected === false) {
+        CustomAlert('Check your internet connectivity');
+      }
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Image

@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  // baseURL: 'https://wap-api.dev.diginnovators.com:3000/',
-  baseURL: 'https://api.wap-awaragainstpollution.com/v2/',
+  baseURL: 'https://dashboard-biddnest.dev.diginnovators.com:8080/api/v1/',
 });
 
 instance.defaults.headers.post['Content-Type'] = 'application/json';

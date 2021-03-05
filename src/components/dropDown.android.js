@@ -4,7 +4,7 @@ import {Colors, hp, wp} from '../constant/colors';
 import DropDownPicker from 'react-native-dropdown-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const DropDown = (props) => {
+const DropDownAndroid = (props) => {
   return (
     <View
       style={{
@@ -68,7 +68,7 @@ const DropDown = (props) => {
   );
 };
 
-export default DropDown;
+export default DropDownAndroid;
 
 const styles = StyleSheet.create({
   common: {

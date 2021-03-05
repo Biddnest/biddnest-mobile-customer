@@ -9,28 +9,30 @@ const FAQDetails = (props) => {
   const [openArray, setOpenArray] = useState([0]);
   const renderItem = ({item, index}) => {
     return (
-      <View style={styles.inputForm} key={index}>
+      <Pressable
+        onPress={() => {
+          let temp = [...openArray];
+          if (openArray.includes(index)) {
+            const indexT = temp.indexOf(index);
+            if (indexT > -1) {
+              temp.splice(indexT, 1);
+            }
+          } else {
+            temp.push(index);
+          }
+          setOpenArray(temp);
+        }}
+        style={styles.inputForm}
+        key={index}>
         <View style={styles.flexBox}>
           <Text style={styles.topText}>{index + 1}. Test and save</Text>
-          <Pressable
-            onPress={() => {
-              let temp = [...openArray];
-              if (openArray.includes(index)) {
-                const indexT = temp.indexOf(index);
-                if (indexT > -1) {
-                  temp.splice(indexT, 1);
-                }
-              } else {
-                temp.push(index);
-              }
-              setOpenArray(temp);
-            }}>
+          <View>
             <MaterialCommunityIcons
               name={openArray.includes(index) ? 'minus' : 'plus'}
               size={26}
               color={'#9A9FA4'}
             />
-          </Pressable>
+          </View>
         </View>
         {openArray.includes(index) && (
           <View>
@@ -42,7 +44,7 @@ const FAQDetails = (props) => {
             </Text>
           </View>
         )}
-      </View>
+      </Pressable>
     );
   };
   return (
