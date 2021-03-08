@@ -24,6 +24,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Slider from 'rn-range-slider';
 import TwoButton from '../../../../components/twoButton';
 import OrderDetailModal from '../../myBooking/orderDetailModal';
+import ImageCross from '../../../../assets/svg/image_cross.svg';
 
 const RequirementDetails = (props) => {
   const [roomType, setRoomType] = useState(1);
@@ -296,17 +297,16 @@ const RequirementDetails = (props) => {
                     backgroundColor: Colors.silver,
                     marginRight: wp(3),
                   }}>
-                  <Image
-                    source={require('../../../../assets/images/image_cross.png')}
-                    resizeMode={'contain'}
+                  <View
                     style={{
                       position: 'absolute',
                       right: -4,
                       top: -4,
                       height: 18,
                       width: 18,
-                    }}
-                  />
+                    }}>
+                    <ImageCross width={18} height={18} />
+                  </View>
                 </Pressable>
               );
             })}

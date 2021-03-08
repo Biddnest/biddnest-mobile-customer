@@ -14,6 +14,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {STYLES} from '../../../constant/commonStyle';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from '../../../components/button';
+import HomeCall from '../../../assets/svg/home_call.svg';
 
 const ContactUs = (props) => {
   const renderItem = ({item, index}) => {
@@ -94,7 +95,12 @@ const ContactUs = (props) => {
                 <Text style={{...styles.locationText, marginTop: 0}}>
                   CHENNAI
                 </Text>
-                <Text style={{...styles.locationText, marginTop: 0, textAlign: 'right'}}>
+                <Text
+                  style={{
+                    ...styles.locationText,
+                    marginTop: 0,
+                    textAlign: 'right',
+                  }}>
                   ID:{' '}
                   <Text
                     style={{
@@ -166,11 +172,7 @@ const ContactUs = (props) => {
               Call us at +91-900080000
             </Text>
           </View>
-          <Image
-            source={require('../../../assets/images/home_call.png')}
-            resizeMode={'contain'}
-            style={{height: 55, width: 55}}
-          />
+          <HomeCall width={55} height={55} />
         </View>
         <View style={{alignSelf: 'center'}}>
           <Button

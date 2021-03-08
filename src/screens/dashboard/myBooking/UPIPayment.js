@@ -7,6 +7,7 @@ import TextInput from '../../../components/textInput';
 import {STYLES} from '../../../constant/commonStyle';
 import CheckBox from '../../../components/checkBox';
 import FlatButton from '../../../components/flatButton';
+import TimerClock from '../../../assets/svg/timer_clock.svg';
 
 const UPIPayment = (props) => {
   return (
@@ -41,11 +42,9 @@ const UPIPayment = (props) => {
             onChange={(text) => {}}
           />
         </View>
-        <Image
-          source={require('../../../assets/images/timer_clock.png')}
-          style={{height: wp(30), width: wp(30), marginVertical: hp(0.8)}}
-          resizeMode={'contain'}
-        />
+        <View style={{marginVertical: hp(0.8)}}>
+          <TimerClock width={wp(30)} height={wp(30)} />
+        </View>
         <Text style={styles.mainText}>Time Left</Text>
         <FlatButton label={'SUBMIT'} />
       </View>

@@ -12,6 +12,18 @@ import Timer from './mySelf/timer';
 import LocationDistance from '../../../components/locationDistance';
 import FriendsDetails from './mySelf/friendsDetails';
 import Feather from 'react-native-vector-icons/Feather';
+import ActivePinMap from '../../../assets/svg/active_pin_map.svg';
+import FinishMapPin from '../../../assets/svg/finish_map_pin.svg';
+import InActiveCalender from '../../../assets/svg/inactive_calender.svg';
+import ActiveCalender from '../../../assets/svg/active_calender.svg';
+import FinishCalender from '../../../assets/svg/finish_calender.svg';
+import InActiveBed from '../../../assets/svg/inactive_bed.svg';
+import ActiveBed from '../../../assets/svg/active_bed.svg';
+import FinishBed from '../../../assets/svg/finish_bed.svg';
+import InActiveRs from '../../../assets/svg/inactive_rs.svg';
+import ActiveRs from '../../../assets/svg/active_rs.svg';
+import ActiveFriends from '../../../assets/svg/active_friends.svg';
+import FinishFriends from '../../../assets/svg/finish_friends.svg';
 
 const customStyles = {
   stepIndicatorSize: 45,
@@ -105,49 +117,47 @@ const BookingStepper = (props) => {
   };
   const renderFriends = (stepStatus) => {
     if (stepStatus === 'current') {
-      return renderImage(require('../../../assets/images/active_friends.png'));
+      return <ActiveFriends width={hp(9)} height={hp(9)} />;
     } else if (stepStatus === 'finished') {
-      return renderImage(require('../../../assets/images/finish_friends.png'));
+      return <FinishFriends width={hp(9)} height={hp(9)} />;
     } else {
       return null;
     }
   };
   const renderMapPin = (stepStatus) => {
     if (stepStatus === 'current') {
-      return renderImage(require('../../../assets/images/active_pin_map.png'));
+      return <ActivePinMap width={hp(3.5)} height={hp(3.5)} />;
     } else if (stepStatus === 'finished') {
-      return renderImage(require('../../../assets/images/finish_map_pin.png'));
+      return <FinishMapPin width={hp(3.5)} height={hp(3.5)} />;
     } else {
       return <Feather name={'map-pin'} size={25} color={'#9597B1'} />;
     }
   };
   const renderCalender = (stepStatus) => {
     if (stepStatus === 'current') {
-      return renderImage(require('../../../assets/images/active_calender.png'));
+      return <ActiveCalender width={hp(3.5)} height={hp(3.5)} />;
     } else if (stepStatus === 'finished') {
-      return renderImage(require('../../../assets/images/finish_calender.png'));
+      return <FinishCalender width={hp(3.5)} height={hp(3.5)} />;
     } else {
-      return renderImage(
-        require('../../../assets/images/inactive_calender.png'),
-      );
+      return <InActiveCalender width={hp(3.5)} height={hp(3.5)} />;
     }
   };
   const renderBed = (stepStatus) => {
     if (stepStatus === 'current') {
-      return renderImage(require('../../../assets/images/active_bed.png'));
+      return <ActiveBed width={hp(3.5)} height={hp(3.5)} />;
     } else if (stepStatus === 'finished') {
-      return renderImage(require('../../../assets/images/finish_bed.png'));
+      return <FinishBed width={hp(3.5)} height={hp(3.5)} />;
     } else {
-      return renderImage(require('../../../assets/images/inactive_bed.png'));
+      return <InActiveBed width={hp(3.5)} height={hp(3.5)} />;
     }
   };
   const renderRS = (stepStatus) => {
     if (stepStatus === 'current') {
-      return renderImage(require('../../../assets/images/active_rs.png'));
+      return <ActiveRs width={hp(3.5)} height={hp(3.5)} />;
     } else if (stepStatus === 'finished') {
       return null;
     } else {
-      return renderImage(require('../../../assets/images/inactive_rs.png'));
+      return <InActiveRs width={hp(3.5)} height={hp(3.5)} />;
     }
   };
   const getStepIndicatorIconConfig = ({

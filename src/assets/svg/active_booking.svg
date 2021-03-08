@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="59" viewBox="0 0 64 59">
+  <defs>
+    <clipPath id="clip-active_">
+      <rect width="64" height="59"/>
+    </clipPath>
+  </defs>
+  <g id="active_" data-name="active " clip-path="url(#clip-active_)">
+    <g id="Icon_ionic-ios-list" data-name="Icon ionic-ios-list" transform="translate(19.251 15.658)">
+      <path id="Path_12270" data-name="Path 12270" d="M6.906,17.234a1.2,1.2,0,1,1-1.2-1.2A1.2,1.2,0,0,1,6.906,17.234Z" transform="translate(0 -3.392)" fill="#fdc403"/>
+      <path id="Path_12271" data-name="Path 12271" d="M6.906,8.515a1.2,1.2,0,1,1-1.2-1.2A1.2,1.2,0,0,1,6.906,8.515Z" fill="#fdc403"/>
+      <path id="Path_12272" data-name="Path 12272" d="M6.906,25.953a1.2,1.2,0,1,1-1.2-1.2,1.2,1.2,0,0,1,1.2,1.2Z" transform="translate(0 -6.783)" fill="#fdc403"/>
+      <path id="Path_12273" data-name="Path 12273" d="M23.359,16.875H13.027a.687.687,0,0,0,0,1.375H23.359a.687.687,0,0,0,0-1.375Z" transform="translate(-3.05 -3.72)" fill="#0f0c75"/>
+      <path id="Path_12274" data-name="Path 12274" d="M23.359,25.594H13.027a.687.687,0,1,0,0,1.375H23.359a.687.687,0,0,0,0-1.375Z" transform="translate(-3.05 -7.112)" fill="#0f0c75"/>
+      <path id="Path_12275" data-name="Path 12275" d="M13.027,9.531H23.359a.687.687,0,0,0,0-1.375H13.027a.687.687,0,0,0,0,1.375Z" transform="translate(-3.05 -0.328)" fill="#0f0c75"/>
+    </g>
+  </g>
+</svg>

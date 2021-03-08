@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, Pressable, View, Text, StyleSheet} from 'react-native';
-import {boxShadow, Colors, wp} from '../constant/colors';
-import Fontisto from 'react-native-vector-icons/Fontisto';
+import {boxShadow, Colors, hp, wp} from '../constant/colors';
+import BackArrow from '../assets/svg/back_arrow.svg';
 
 const SimpleHeader = (props) => {
   return (
@@ -23,14 +23,7 @@ const SimpleHeader = (props) => {
         onPress={() => {
           props.onBack();
         }}>
-        <Image
-          source={require('../assets/images/back_arrow.png')}
-          style={{
-            height: wp(10),
-            width: wp(10),
-          }}
-          resizeMode={'contain'}
-        />
+        <BackArrow width={100} height={100} />
       </Pressable>
       <View style={{width: wp(87), height: '100%', ...styles.common}}>
         <Text

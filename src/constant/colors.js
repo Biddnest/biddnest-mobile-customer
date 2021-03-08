@@ -4,6 +4,15 @@ import {
 } from 'react-native-responsive-screen';
 import {Image} from 'react-native';
 import React from 'react';
+import Delivery from '../assets/svg/delivery.svg';
+import Packaging from '../assets/svg/packaging.svg';
+import Vendor from '../assets/svg/vendor.svg';
+import Bidding from '../assets/svg/bidding.svg';
+import Safety from '../assets/svg/safety.svg';
+import Pricing from '../assets/svg/pricing.svg';
+import CreditCard from '../assets/svg/credit_card.svg';
+import DebitCard from '../assets/svg/debit_card.svg';
+import NetBanking from '../assets/svg/netbanking.svg';
 
 export const Colors = {
   white: '#FFFFFF',
@@ -57,15 +66,15 @@ const renderImage = (uri, size = 50) => {
 
 export const PAYMENT_OPTION = [
   {
-    image: renderImage(require('../assets/images/credit_card.png'), 40),
+    image: <CreditCard width={40} height={40} />,
     name: 'Credit Card',
   },
   {
-    image: renderImage(require('../assets/images/debit_card.png'), 40),
+    image: <DebitCard width={40} height={40} />,
     name: 'Debit Card',
   },
   {
-    image: renderImage(require('../assets/images/netbanking.png'), 40),
+    image: <NetBanking width={40} height={40} />,
     name: 'Net Banking',
   },
   {
@@ -76,27 +85,27 @@ export const PAYMENT_OPTION = [
 
 export const FAQS_OPTION = [
   {
-    image: renderImage(require('../assets/images/delivery.png')),
+    image: <Delivery width={50} height={50} />,
     name: 'Delivery',
   },
   {
-    image: renderImage(require('../assets/images/packaging.png')),
+    image: <Packaging width={50} height={50} />,
     name: 'Packaging',
   },
   {
-    image: renderImage(require('../assets/images/vendor.png')),
+    image: <Vendor width={50} height={50} />,
     name: 'Vendor',
   },
   {
-    image: renderImage(require('../assets/images/bidding.png')),
+    image: <Bidding width={50} height={50} />,
     name: 'Bidding',
   },
   {
-    image: renderImage(require('../assets/images/safety.png')),
+    image: <Safety width={50} height={50} />,
     name: 'Safety',
   },
   {
-    image: renderImage(require('../assets/images/pricing.png')),
+    image: <Pricing width={50} height={50} />,
     name: 'Pricing',
   },
 ];

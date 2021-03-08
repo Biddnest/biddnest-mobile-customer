@@ -1,8 +1,9 @@
 import React from 'react';
-import {FlatList, Pressable, Text, View, StyleSheet, Image} from 'react-native';
-import {Colors, FAQS_OPTION, hp, PAYMENT_OPTION, wp} from '../../../../constant/colors';
+import {FlatList, Pressable, Text, View, StyleSheet} from 'react-native';
+import {Colors, FAQS_OPTION, wp} from '../../../../constant/colors';
 import SimpleHeader from '../../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
+import RightArrow from '../../../../assets/svg/right_arrow.svg';
 
 const FAQS = (props) => {
   return (
@@ -33,11 +34,7 @@ const FAQS = (props) => {
                 </Pressable>
                 <View style={styles.bottomView}>
                   <Text style={styles.bottomText}>{item.name}</Text>
-                  <Image
-                    source={require('../../../../assets/images/right_arrow.png')}
-                    style={{height: 20, width: 20}}
-                    resizeMode={'contain'}
-                  />
+                  <RightArrow width={20} height={20} />
                 </View>
               </View>
             );

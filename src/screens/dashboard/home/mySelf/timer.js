@@ -17,6 +17,8 @@ import CloseIcon from '../../../../components/closeIcon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {STYLES} from '../../../../constant/commonStyle';
 import Feather from 'react-native-vector-icons/Feather';
+import TimerClock from '../../../../assets/svg/timer_clock.svg';
+
 const Timer = (props) => {
   const [orderPlacedVisible, setOrderPlacedVisible] = useState(true);
   return (
@@ -32,11 +34,9 @@ const Timer = (props) => {
         You’ll get the estimated price once the time is up
       </Text>
       <View style={styles.inputForm}>
-        <Image
-          source={require('../../../../assets/images/timer_clock.png')}
-          style={{height: wp(30), width: wp(30), marginVertical: hp(0.8)}}
-          resizeMode={'contain'}
-        />
+        <View style={{marginVertical: hp(0.8)}}>
+          <TimerClock width={wp(30)} height={wp(30)} />
+        </View>
         <Text
           style={{
             color: Colors.darkBlue,

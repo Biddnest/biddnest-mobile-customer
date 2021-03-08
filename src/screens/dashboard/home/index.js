@@ -18,6 +18,15 @@ import {STYLES} from '../../../constant/commonStyle';
 import CloseIcon from '../../../components/closeIcon';
 import LocationDistance from '../../../components/locationDistance';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Friends from '../../../assets/svg/friends.svg';
+import MenuIcon from '../../../assets/svg/menu_icon.svg';
+import HomeTab from '../../../assets/svg/home_tab.svg';
+import SupermarketTab from '../../../assets/svg/supermarket_tab.svg';
+import BuildingTab from '../../../assets/svg/building_tab.svg';
+import HomeCall from '../../../assets/svg/home_call.svg';
+import MySelf from '../../../assets/svg/myself.svg';
+import Coupon from '../../../assets/svg/coupon.svg';
+import ActiveBooking from '../../../assets/svg/active_booking.svg';
 
 export const HomeHeader = (props) => {
   return (
@@ -33,14 +42,7 @@ export const HomeHeader = (props) => {
       <Pressable
         style={{width: wp(13), height: '100%', ...styles.common}}
         onPress={() => props.navigation.toggleDrawer()}>
-        <Image
-          source={require('../../../assets/images/menu_icon.png')}
-          resizeMode={'contain'}
-          style={{
-            height: 20,
-            width: 20,
-          }}
-        />
+        <MenuIcon width={20} height={20} />
       </Pressable>
       <View
         style={{
@@ -153,33 +155,15 @@ const Home = (props) => {
             showsHorizontalScrollIndicator={false}
             data={[
               {
-                image: (
-                  <Image
-                    source={require('../../../assets/images/home_tab.png')}
-                    resizeMode={'contain'}
-                    style={{height: 40, width: 40}}
-                  />
-                ),
+                image: <HomeTab width={40} height={40} />,
                 name: 'Residential',
               },
               {
-                image: (
-                  <Image
-                    source={require('../../../assets/images/supermarket_tab.png')}
-                    resizeMode={'contain'}
-                    style={{height: 40, width: 40}}
-                  />
-                ),
+                image: <SupermarketTab width={40} height={40} />,
                 name: 'Commercial',
               },
               {
-                image: (
-                  <Image
-                    source={require('../../../assets/images/building_tab.png')}
-                    resizeMode={'contain'}
-                    style={{height: 40, width: 40}}
-                  />
-                ),
+                image: <BuildingTab width={40} height={40} />,
                 name: 'Office',
               },
             ]}
@@ -237,11 +221,7 @@ const Home = (props) => {
               We are just a call away! {'\n'}(9123445566)
             </Text>
           </View>
-          <Image
-            source={require('../../../assets/images/home_call.png')}
-            resizeMode={'contain'}
-            style={{height: 55, width: 55}}
-          />
+          <HomeCall width={55} height={55} />
         </View>
         <FlatList
           bounces={false}
@@ -295,14 +275,7 @@ const Home = (props) => {
               top: Platform.OS === 'android' ? 0 : -10,
             }}
           />
-          <Image
-            source={require('../../../assets/images/coupon.png')}
-            resizeMode={'contain'}
-            style={{
-              height: 200,
-              width: 200,
-            }}
-          />
+          <Coupon width={hp(25)} height={hp(25)} />
           <Text
             style={{
               marginTop: hp(3),
@@ -356,11 +329,7 @@ const Home = (props) => {
                   },
                 ]}
                 onPress={() => setBookingFor('Myself')}>
-                <Image
-                  source={require('../../../assets/images/myself.png')}
-                  resizeMode={'contain'}
-                  style={{height: '60%', width: '60%'}}
-                />
+                <MySelf width={60} height={60} />
               </Pressable>
               <Text style={styles.selectionText}>Myself</Text>
             </View>
@@ -374,11 +343,7 @@ const Home = (props) => {
                     ...STYLES.common,
                   },
                 ]}>
-                <Image
-                  source={require('../../../assets/images/friends.png')}
-                  resizeMode={'contain'}
-                  style={{height: '60%', width: '60%'}}
-                />
+                <Friends width={60} height={60} />
               </Pressable>
               <Text style={styles.selectionText}>Others</Text>
             </View>

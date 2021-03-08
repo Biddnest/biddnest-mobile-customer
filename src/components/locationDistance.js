@@ -3,6 +3,7 @@ import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {STYLES} from '../constant/commonStyle';
+import EditPen from '../assets/svg/edit_pen.svg';
 
 const LocationDistance = (props) => {
   return (
@@ -64,11 +65,7 @@ const LocationDistance = (props) => {
               </Text>
               {props.onEditClick && (
                 <Pressable style={{marginLeft: 10}} onPress={props.onEditClick}>
-                  <Image
-                    source={require('../assets/images/edit_pen.png')}
-                    style={{height: 30, width: 30}}
-                    resizeMode={'contain'}
-                  />
+                  <EditPen width={30} height={30} />
                 </Pressable>
               )}
             </View>
