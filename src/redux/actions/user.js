@@ -1,6 +1,7 @@
 import instance from '../../constant/baseService';
 import {LOGIN_USER_DATA, RESET_STORE} from '../types';
 import {CustomAlert} from '../../constant/commonFun';
+import {STORE} from '../index';
 
 export const APICall = (obj) => {
   return new Promise((resolve, reject) => {
@@ -58,16 +59,13 @@ export const signUP = (data) => {
       let obj = {
         url: 'auth/signup',
         method: 'post',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
         data: data,
       };
       APICall(obj)
         .then((res) => {
-          if (res?.data?.status === 'success') {
-            dispatch({
-              type: LOGIN_USER_DATA,
-              payload: res.data,
-            });
-          }
           resolve(res.data);
         })
         .catch((err) => {

@@ -57,6 +57,7 @@ const DropDownAndroid = (props) => {
             backgroundColor: Colors.textBG,
             color: Colors.inputTextColor,
           }}
+          selectedLabelLength={10}
           itemStyle={{
             justifyContent: 'flex-start',
           }}

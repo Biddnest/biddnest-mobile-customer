@@ -70,7 +70,6 @@ const TextInput = (props) => {
         borderColor: props.isRight === false ? Colors.red : Colors.silver,
         backgroundColor: Colors.white,
         borderBottomWidth: 2,
-        alignItems: 'center',
       }}
       labelStyle={{
         fontFamily: 'Roboto-Bold',

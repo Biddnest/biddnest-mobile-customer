@@ -144,7 +144,7 @@ const FinalQuote = (props) => {
               style={{
                 position: 'absolute',
                 right: 15,
-                top: Platform.OS === 'android' ? 0 : -10,
+                top: Platform.OS === 'android' ? -4 : -10,
               }}
             />
             <Text
@@ -158,10 +158,7 @@ const FinalQuote = (props) => {
             <DropDownAndroid
               label={''}
               width={wp(90)}
-              items={[
-                {label: 'Male', value: 'male'},
-                {label: 'Female', value: 'female'},
-              ]}
+              items={[{label: 'High Price', value: 'highprice'}]}
               onChangeItem={(text) => {}}
             />
             <View style={{width: wp(90)}}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, Platform} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Colors, hp, wp} from '../../constant/colors';
@@ -10,23 +10,28 @@ import {CustomAlert, resetNavigator} from '../../constant/commonFun';
 import DropDownAndroid from '../../components/dropDown';
 import LinearGradient from 'react-native-linear-gradient';
 import {signUP} from '../../redux/actions/user';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {LOGIN_USER_DATA} from '../../redux/types';
+import {STORE} from '../../redux';
 
 const Signup = (props) => {
   const dispatch = useDispatch();
-  const [data, setData] = React.useState({
+  const userData = STORE.getState().Login?.loginData;
+  const [isLoading, setLoading] = useState(false);
+  const [data, setData] = useState({
     fname: '',
     lname: '',
     email: '',
     gender: 'male',
     referral_code: '',
+    phone: props?.route?.params?.phone || 0,
   });
-  const [error, setError] = React.useState({
+  const [error, setError] = useState({
     fname: undefined,
     lname: undefined,
     email: undefined,
   });
-  const [isAgree, setAgree] = React.useState(true);
+  const [isAgree, setAgree] = useState(true);
   const handleState = (key, value) => {
     setData({
       ...data,
@@ -127,7 +132,9 @@ const Signup = (props) => {
             </View>
             <Button
               label={'GET STARTED'}
+              isLoading={isLoading}
               onPress={() => {
+                setLoading(true);
                 let tempError = {};
                 if (
                   !data.fname ||
@@ -158,11 +165,11 @@ const Signup = (props) => {
                 } else {
                   tempError.email = true;
                 }
-                // if (!data.referral_code || data.referral_code.length === 0) {
-                //   tempError.referral_code = false;
-                // } else {
-                //   tempError.referral_code = true;
-                // }
+                if (!data.referral_code || data.referral_code.length === 0) {
+                  tempError.referral_code = false;
+                } else {
+                  tempError.referral_code = true;
+                }
                 if (!isAgree) {
                   CustomAlert('Agree to the Terms & Conditions');
                   tempError.isAgree = false;
@@ -173,8 +180,25 @@ const Signup = (props) => {
                     (item) => item === false,
                   ) === -1
                 ) {
-                  // resetNavigator(props, 'Dashboard');
-                  dispatch(signUP(data));
+                  dispatch(signUP(data))
+                    .then((res) => {
+                      setLoading(false);
+                      if (res.status === 'success') {
+                        dispatch({
+                          type: LOGIN_USER_DATA,
+                          payload: {...userData, ...res?.data},
+                        });
+                        resetNavigator(props, 'Dashboard');
+                      } else {
+                        CustomAlert(res.message);
+                      }
+                    })
+                    .catch((err) => {
+                      setLoading(false);
+                      CustomAlert(err.data.message);
+                    });
+                } else {
+                  setLoading(false);
                 }
               }}
             />

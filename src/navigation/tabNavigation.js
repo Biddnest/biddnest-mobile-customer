@@ -57,7 +57,7 @@ const TabNavigation = (props: any) => {
           let tabLabel = 'Home';
           if (route.name === 'Home') {
           } else if (route.name === 'MyBooking') {
-            tabLabel = 'My Booking';
+            tabLabel = 'My Bookings';
           } else if (route.name === 'MyProfile') {
             tabLabel = 'My Profile';
           }

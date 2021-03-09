@@ -9,7 +9,7 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import {Colors, hp, wp, boxShadow} from '../../../../constant/colors';
+import {Colors, hp, wp} from '../../../../constant/colors';
 import Button from '../../../../components/button';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {STYLES} from '../../../../constant/commonStyle';
@@ -18,11 +18,10 @@ import CustomModalAndroid from '../../../../components/customModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DropDownAndroid from '../../../../components/dropDown';
 import FlatButton from '../../../../components/flatButton';
-import {ImageSelection} from '../../../../constant/commonFun';
+import {ImageSelection, pad_with_zeroes} from '../../../../constant/commonFun';
 import CloseIcon from '../../../../components/closeIcon';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Slider from 'rn-range-slider';
-import TwoButton from '../../../../components/twoButton';
 import OrderDetailModal from '../../myBooking/orderDetailModal';
 import ImageCross from '../../../../assets/svg/image_cross.svg';
 
@@ -36,7 +35,9 @@ const RequirementDetails = (props) => {
   const [data, setData] = useState({});
   const [low, setLow] = useState(250);
   const [high, setHigh] = useState(750);
-  const [itemData, setItemData] = useState({});
+  const [itemData, setItemData] = useState({
+    quantity: 1,
+  });
   const [fetchedData, setFetchedData] = useState([
     {
       title: 'Table',
@@ -81,7 +82,7 @@ const RequirementDetails = (props) => {
           {item.title}
         </Text>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <View style={{width: '40%'}}>
+          <View style={{width: '38%', marginRight: '2%'}}>
             <Text
               numberOfLines={1}
               style={{
@@ -388,26 +389,21 @@ const RequirementDetails = (props) => {
         <DropDownAndroid
           label={'Item Name'}
           width={wp(90)}
-          items={[
-            {label: 'Male', value: 'male'},
-            {label: 'Female', value: 'female'},
-          ]}
+          items={[{label: 'TV', value: 'tv'}]}
           onChangeItem={(text) => {}}
         />
         <View style={{flexDirection: 'row', marginTop: hp(2)}}>
           <DropDownAndroid
             label={'Material'}
-            items={[
-              {label: 'Male', value: 'male'},
-              {label: 'Female', value: 'female'},
-            ]}
+            items={[{label: 'Polycarbonate', value: 'polycarbonate'}]}
             onChangeItem={(text) => {}}
           />
           <DropDownAndroid
             label={'Size'}
             items={[
-              {label: 'Male', value: 'male'},
-              {label: 'Female', value: 'female'},
+              {label: 'Small', value: 'small'},
+              {label: 'Medium', value: 'medium'},
+              {label: 'Large', value: 'large'},
             ]}
             onChangeItem={(text) => {}}
           />
@@ -479,13 +475,13 @@ const RequirementDetails = (props) => {
                 label={'Quantity'}
                 // isRight={error.firstName}
                 placeHolder={'Quantity'}
-                value={itemData?.quantity?.toString()}
+                value={pad_with_zeroes(itemData?.quantity, 2).toString()}
                 onChange={(text) => handleItemState('quantity', text)}
               />
               <Pressable
                 style={styles.arrowView}
                 onPress={() => {
-                  if (parseInt(itemData.quantity) - 1 >= 0) {
+                  if (parseInt(itemData.quantity) - 1 > 0) {
                     handleItemState(
                       'quantity',
                       parseInt(itemData.quantity) - 1 || 0,

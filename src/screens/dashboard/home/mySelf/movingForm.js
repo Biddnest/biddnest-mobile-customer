@@ -15,10 +15,13 @@ import MapView, {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CloseIcon from '../../../../components/closeIcon';
 import FlatButton from '../../../../components/flatButton';
+import {pad_with_zeroes} from '../../../../constant/commonFun';
 
 const MovingForm = (props) => {
   const [mapVisible, setMapVisible] = useState(false);
-  const [data, setData] = useState({});
+  const [data, setData] = useState({
+    floor: 0,
+  });
   const handleState = (key, value) => {
     setData({
       ...data,
@@ -39,27 +42,28 @@ const MovingForm = (props) => {
           color: Colors.inputTextColor,
           textAlign: 'center',
         }}>
-        MOVING {props.movingFrom ? 'To' : 'From'}
+        MOVING {props.movingFrom ? 'TO' : 'FROM'}
       </Text>
       <View style={{marginTop: hp(3)}}>
-        <TextInput
-          label={'To City'}
-          // isRight={error.firstName}
-          placeHolder={'To City'}
-          onFocus={() => setMapVisible(true)}
-          onChange={(text) => setMapVisible(true)}
-        />
+        <Pressable onPress={() => setMapVisible(true)}>
+          <TextInput
+            disable={true}
+            label={props.movingFrom ? 'To City' : 'From City'}
+            // isRight={error.firstName}
+            placeHolder={'Chennai'}
+          />
+        </Pressable>
         <TextInput
           label={'Address'}
           // isRight={error.firstName}
-          placeHolder={'Address'}
+          placeHolder={'Select building or nearest landmark'}
           numberOfLines={4}
           onChange={(text) => handleState('firstName', text)}
         />
         <TextInput
           label={'Pincode'}
           // isRight={error.firstName}
-          placeHolder={'Pincode'}
+          placeHolder={'560097'}
           onChange={(text) => handleState('firstName', text)}
         />
         <View
@@ -70,7 +74,7 @@ const MovingForm = (props) => {
           }}>
           <TextInput
             label={'Floor'}
-            value={data.floor?.toString()}
+            value={pad_with_zeroes(data.floor, 2).toString()}
             placeHolder={'Floor'}
             onChange={(text) => handleState('firstName', text)}
           />

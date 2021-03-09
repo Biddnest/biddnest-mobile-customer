@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://dashboard-biddnest.dev.diginnovators.com:8080/api/v1/',
+  baseURL: 'https://dashboard-biddnest.dev.diginnovators.com/api/v1/',
 });
 
 instance.defaults.headers.post['Content-Type'] = 'application/json';

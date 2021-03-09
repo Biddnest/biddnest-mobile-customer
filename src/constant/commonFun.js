@@ -16,6 +16,14 @@ export const CustomAlert = (msg = '') => {
   return Toast.show(msg, Toast.LONG);
 };
 
+export const pad_with_zeroes = (number, length) => {
+  let my_string = '' + number;
+  while (my_string.length < length) {
+    my_string = '0' + my_string;
+  }
+  return my_string;
+};
+
 export const ImageSelection = () => {
   ImagePicker.showImagePicker(IMAGE_OPTIONS, (response) => {
     console.log('Response = ', response);

@@ -64,7 +64,7 @@ const MyBooking = (props) => {
           </View>
         </View>
         <View style={styles.separatorView} />
-        {selectedTab === 1 && (
+        {selectedTab === 0 && (
           <View style={styles.flexBox}>
             <Text style={styles.leftText}>price</Text>
             <Text style={styles.rightText}>Rs. 5000</Text>

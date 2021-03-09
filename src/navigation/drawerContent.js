@@ -19,8 +19,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DeviceInfo from 'react-native-device-info';
 import LinearGradient from 'react-native-linear-gradient';
 import {resetNavigator} from '../constant/commonFun';
+import {RESET_STORE} from '../redux/types';
+import {useDispatch} from 'react-redux';
 
 export function DrawerContent(props) {
+  const dispatch = useDispatch();
   useEffect(() => {
     // let buildNumber = DeviceInfo.getBuildNumber(); // 1
     let buildNumber = DeviceInfo.getReadableVersion(); // 1.0.1
@@ -115,7 +118,12 @@ export function DrawerContent(props) {
           <View style={{width: wp(15)}}>
             <Pressable
               style={styles.logoutWrapper}
-              onPress={() => resetNavigator(props, 'Login')}>
+              onPress={() => {
+                dispatch({
+                  type: RESET_STORE,
+                });
+                resetNavigator(props, 'Login');
+              }}>
               <MaterialIcons
                 name={'logout'}
                 color={Colors.white}

@@ -19,6 +19,7 @@ import DropDownAndroid from '../../../../components/dropDown';
 import CheckBox from '../../../../components/checkBox';
 import FlatButton from '../../../../components/flatButton';
 import CloseIcon from '../../../../components/closeIcon';
+import TwoButton from '../../../../components/twoButton';
 
 const InitialQuote = (props) => {
   const [offerType, setOfferType] = useState(0);
@@ -44,7 +45,18 @@ const InitialQuote = (props) => {
           marginHorizontal: wp(5),
           justifyContent: 'space-between',
         }}>
-        {[1, 2].map((item, index) => {
+        {[
+          {
+            title: 'Economy',
+            price: '2,300',
+            desc: 'Economy services includes moving only',
+          },
+          {
+            title: 'Premium',
+            price: '3,300',
+            desc: 'Premium services includes Packing and Moving',
+          },
+        ].map((item, index) => {
           return (
             <Pressable
               key={index}
@@ -58,7 +70,7 @@ const InitialQuote = (props) => {
                     color: Colors.inputTextColor,
                     marginRight: 5,
                   }}>
-                  Economy
+                  {item.title}
                 </Text>
                 <Ionicons
                   name={'information-circle'}
@@ -85,7 +97,7 @@ const InitialQuote = (props) => {
                         ? Colors.btnBG
                         : Colors.inputTextColor,
                   }}>
-                  Rs. 2,300
+                  Rs. {item.price}
                 </Text>
                 <Text
                   style={{
@@ -107,36 +119,19 @@ const InitialQuote = (props) => {
                   color: '#99A0A5',
                   textAlign: 'center',
                 }}>
-                Economy services includes moving only
+                {item.desc}
               </Text>
             </Pressable>
           );
         })}
       </View>
-      <View style={{alignSelf: 'center'}}>
-        <Button
-          label={'PLACE ORDER'}
-          onPress={() => props.handleBooking()}
-          spaceBottom={0}
-          width={wp(90)}
-        />
-        <Button
-          width={wp(90)}
-          backgroundColor={Colors.white}
-          label={'REJECT'}
-          spaceTop={hp(0.1)}
-          onPress={() => setRejectVisible(true)}
-        />
-      </View>
+      <TwoButton
+        leftLabel={'Reject'}
+        rightLabel={'Place order'}
+        leftOnPress={() => setRejectVisible(true)}
+        rightOnPress={props.handleBooking}
+      />
       <CustomModalAndroid visible={rejectVisible}>
-        <CloseIcon
-          onPress={() => setRejectVisible(false)}
-          style={{
-            position: 'absolute',
-            right: 15,
-            top: Platform.OS === 'android' ? 0 : -10,
-          }}
-        />
         <Text
           style={{
             fontFamily: 'Roboto-Regular',
@@ -145,13 +140,18 @@ const InitialQuote = (props) => {
           }}>
           REASON FOR REJECTION
         </Text>
+        <CloseIcon
+          onPress={() => setRejectVisible(false)}
+          style={{
+            position: 'absolute',
+            right: 15,
+            top: Platform.OS === 'android' ? -4 : -10,
+          }}
+        />
         <DropDownAndroid
           label={''}
           width={wp(90)}
-          items={[
-            {label: 'Male', value: 'male'},
-            {label: 'Female', value: 'female'},
-          ]}
+          items={[{label: 'High Price', value: 'highprice'}]}
           onChangeItem={(text) => {}}
         />
         <View style={{width: wp(90)}}>
@@ -166,6 +166,7 @@ const InitialQuote = (props) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
+            marginBottom: hp(1.5),
           }}>
           <CheckBox onPress={() => setAgree(!isAgree)} value={isAgree} />
           <Text

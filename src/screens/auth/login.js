@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Colors, hp, wp} from '../../constant/colors';
@@ -8,9 +8,10 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Header from './header';
 import CheckBox from '../../components/checkBox';
 import LinearGradient from 'react-native-linear-gradient';
-import {CustomAlert} from '../../constant/commonFun';
+import {CustomAlert, resetNavigator} from '../../constant/commonFun';
 import {useDispatch} from 'react-redux';
 import {sendOTP, verifyOTP} from '../../redux/actions/user';
+import {LOGIN_USER_DATA} from '../../redux/types';
 
 const Login = (props) => {
   const dispatch = useDispatch();
@@ -19,6 +20,40 @@ const Login = (props) => {
   const [phoneValidate, setPhoneValidate] = React.useState(undefined);
   const [otpSend, setOtpSend] = React.useState(false);
   const [isAgree, setAgree] = React.useState(true);
+  const [isLoading, setLoading] = useState(false);
+  const [otpResponse, setOtpResponse] = useState({});
+
+  const sendOTPFun = () => {
+    setLoading(true);
+    if (!phone?.length || phone?.length !== 10 || /\D/.test(phone)) {
+      setPhoneValidate(false);
+      setLoading(false);
+    } else if (!isAgree) {
+      setPhoneValidate(true);
+      setLoading(false);
+      CustomAlert('Agree to the Terms & Conditions');
+    } else {
+      setPhoneValidate(true);
+
+      // Send OTP
+      sendOTP({phone})
+        .then((res) => {
+          setLoading(false);
+          if (res.status === 'success') {
+            CustomAlert(res.message + res.data.otp);
+            setOtpResponse(res.data);
+            setOtpSend(true);
+          } else {
+            CustomAlert(res.message);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          CustomAlert(err?.data?.message);
+        });
+    }
+  };
+
   return (
     <View style={[styles.container, {...styles.common}]}>
       <Header />
@@ -75,23 +110,10 @@ const Login = (props) => {
                   </Text>
                 </View>
                 <Button
+                  spaceTop={hp(4)}
                   label={'SEND OTP'}
                   onPress={() => {
-                    if (
-                      !phone?.length ||
-                      phone?.length !== 10 ||
-                      /\D/.test(phone)
-                    ) {
-                      setPhoneValidate(false);
-                    } else if (!isAgree) {
-                      setPhoneValidate(true);
-                      CustomAlert('Agree to the Terms & Conditions');
-                    } else {
-                      setPhoneValidate(true);
-                      setOtpSend(true);
-                      // Send OTP
-                      sendOTP({phone}).then((res) => {});
-                    }
+                    sendOTPFun();
                   }}
                 />
               </View>
@@ -134,15 +156,36 @@ const Login = (props) => {
                 </Text>
                 <Button
                   label={'SUBMIT'}
+                  isLoading={isLoading}
                   onPress={() => {
                     // Verify OTP
+                    setLoading(true);
                     verifyOTP({
                       phone,
                       otp,
-                    }).then((res) => {
-
                     })
-                    props.navigation.navigate('Signup');
+                      .then((res) => {
+                        setLoading(false);
+                        if (res.status === 'success') {
+                          dispatch({
+                            type: LOGIN_USER_DATA,
+                            payload: res.data,
+                          });
+                          if (otpResponse?.new === true) {
+                            props.navigation.navigate('Signup', {
+                              phone,
+                            });
+                          } else {
+                            resetNavigator(props, 'Dashboard');
+                          }
+                        } else {
+                          CustomAlert(res.message);
+                        }
+                      })
+                      .catch((err) => {
+                        setLoading(false);
+                        CustomAlert(err?.data?.message);
+                      });
                   }}
                 />
                 <Text
@@ -152,7 +195,7 @@ const Login = (props) => {
                   }}>
                   Did not receive OTP?{' '}
                   <Text
-                    onPress={() => setOtpSend(false)}
+                    onPress={() => sendOTPFun()}
                     style={{
                       fontFamily: 'Roboto-Bold',
                       color: Colors.textLabelColor,

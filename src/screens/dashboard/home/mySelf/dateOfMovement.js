@@ -41,9 +41,10 @@ const DateOfMovement = (props) => {
             else you can chose a range of dates.
           </Text>
         </View>
-        <View style={{marginTop: hp(3)}}>
+        <Pressable style={{marginTop: hp(3)}} onPress={() => setCalender(true)}>
           <Input
             placeholder={'Choose Date'}
+            disabled={true}
             label={'Choose Date'}
             rightIcon={() => {
               return (
@@ -54,7 +55,6 @@ const DateOfMovement = (props) => {
                 />
               );
             }}
-            onChangeText={() => setCalender(true)}
             inputContainerStyle={{
               borderWidth: 2,
               paddingHorizontal: 15,
@@ -73,9 +73,8 @@ const DateOfMovement = (props) => {
               backgroundColor: Colors.textBG,
               color: Colors.inputTextColor,
             }}
-            onFocus={() => {}}
           />
-        </View>
+        </Pressable>
         <CustomModalAndroid visible={openCalender}>
           <CloseIcon
             onPress={() => {

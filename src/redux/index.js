@@ -9,6 +9,7 @@ import Thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import {logger} from 'redux-logger';
+import ChatBotButton from '../components/chatBotButton';
 
 const PERSIST_CONFIG = {
   key: 'root',
@@ -31,6 +32,9 @@ const MainNavigator = () => {
       <PersistGate loading={null} persistor={PERSIST_STORE}>
         <SafeAreaView style={{flex: 1}}>
           <App />
+          {STORE.getState().Login?.loginData?.token && (
+            <ChatBotButton onPress={() => {}} />
+          )}
         </SafeAreaView>
       </PersistGate>
     </Provider>

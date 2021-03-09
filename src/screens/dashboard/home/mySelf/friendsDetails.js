@@ -44,19 +44,20 @@ const FriendsDetails = (props) => {
           <TextInput
             label={'Friend’s Name *'}
             // isRight={error.firstName}
-            placeHolder={'To City'}
+            placeHolder={'Friend’s Name'}
             onChange={(text) => handleState('firstName', text)}
           />
           <TextInput
             label={'Friend’s Phone Number *'}
             // isRight={error.firstName}
-            placeHolder={'Address Line 1'}
+            placeHolder={'Friend’s Phone Number'}
             onChange={(text) => handleState('firstName', text)}
           />
           <TextInput
-            label={'Friend’s Phone Number *'}
+            label={'Friend’s Email *'}
             // isRight={error.firstName}
-            placeHolder={'Address Line 2'}
+            keyboard={'email-address'}
+            placeHolder={'Friend’s Email'}
             onChange={(text) => handleState('firstName', text)}
           />
         </View>
