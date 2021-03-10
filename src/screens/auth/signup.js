@@ -10,7 +10,7 @@ import {CustomAlert, resetNavigator} from '../../constant/commonFun';
 import DropDownAndroid from '../../components/dropDown';
 import LinearGradient from 'react-native-linear-gradient';
 import {signUP} from '../../redux/actions/user';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {LOGIN_USER_DATA} from '../../redux/types';
 import {STORE} from '../../redux';
 

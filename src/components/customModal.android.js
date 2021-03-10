@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal, View, StyleSheet, ScrollView, SafeAreaView, Platform} from 'react-native';
+import {Modal, View, StyleSheet, ScrollView, SafeAreaView} from 'react-native';
 import {wp, hp} from '../constant/colors';
 
 const CustomModalAndroid = (props) => {
@@ -9,7 +9,9 @@ const CustomModalAndroid = (props) => {
       transparent={true}
       visible={props.visible}
       onRequestClose={() => {
-        alert('Modal has been closed.');
+        if (props.onPress) {
+          props.onPress();
+        }
       }}>
       <SafeAreaView style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.5)'}}>
         <View style={styles.centeredView}>

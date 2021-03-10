@@ -131,7 +131,9 @@ const InitialQuote = (props) => {
         leftOnPress={() => setRejectVisible(true)}
         rightOnPress={props.handleBooking}
       />
-      <CustomModalAndroid visible={rejectVisible}>
+      <CustomModalAndroid
+        visible={rejectVisible}
+        onPress={() => setRejectVisible(false)}>
         <Text
           style={{
             fontFamily: 'Roboto-Regular',

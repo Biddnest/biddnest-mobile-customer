@@ -29,7 +29,7 @@ const DropDownAndroid = (props) => {
         }>
         <DropDownPicker
           items={props.items}
-          defaultValue={props.items[0]?.value}
+          defaultValue={props.value || props.items[0]?.value}
           customArrowUp={() => (
             <MaterialIcons name="arrow-drop-up" size={25} color={'#3B4B58'} />
           )}

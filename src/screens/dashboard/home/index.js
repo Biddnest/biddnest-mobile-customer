@@ -91,6 +91,7 @@ const Home = (props) => {
   const renderItem = ({item, index}) => {
     return (
       <Shimmer
+        key={index}
         autoRun={true}
         style={{
           height: hp(15),
@@ -104,8 +105,7 @@ const Home = (props) => {
             {
               ...styles.common,
             },
-          ]}
-          key={index}>
+          ]}>
           <Image
             style={{
               height: '100%',
@@ -133,6 +133,7 @@ const Home = (props) => {
           showsHorizontalScrollIndicator={false}
           data={[1, 2]}
           renderItem={renderItem}
+          keyExtractor={(item, index) => index}
           contentContainerStyle={{
             padding: wp(4),
             paddingRight: 0,
@@ -167,11 +168,13 @@ const Home = (props) => {
                 name: 'Office',
               },
             ]}
+            keyExtractor={(item, index) => index}
             style={{marginTop: hp(2)}}
             contentContainerStyle={{justifyContent: 'space-evenly'}}
             renderItem={({item, index}) => {
               return (
                 <LinearGradient
+                  key={index}
                   colors={['#49039B', Colors.darkBlue]}
                   start={{x: 0, y: 0}}
                   end={{x: 1, y: 0}}
@@ -228,9 +231,11 @@ const Home = (props) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           data={[1, 2]}
+          keyExtractor={(item, index) => index}
           renderItem={({item, index}) => {
             return (
               <Shimmer
+                key={index}
                 autoRun={true}
                 style={{
                   height: hp(25),
@@ -246,8 +251,7 @@ const Home = (props) => {
                       height: hp(25),
                       ...styles.common,
                     },
-                  ]}
-                  key={index}>
+                  ]}>
                   <Image
                     style={{
                       height: '100%',
@@ -266,7 +270,9 @@ const Home = (props) => {
             paddingRight: 0,
           }}
         />
-        <CustomModalAndroid visible={couponVisible}>
+        <CustomModalAndroid
+          visible={couponVisible}
+          onPress={() => setCouponVisible(false)}>
           <CloseIcon
             onPress={() => setCouponVisible(false)}
             style={{
@@ -296,7 +302,9 @@ const Home = (props) => {
           </Text>
           <FlatButton label={'OKAY'} />
         </CustomModalAndroid>
-        <CustomModalAndroid visible={bookingSelectionVisible}>
+        <CustomModalAndroid
+          visible={bookingSelectionVisible}
+          onPress={() => setBookingSelectionVisible(false)}>
           <CloseIcon
             onPress={() => setBookingSelectionVisible(false)}
             style={{

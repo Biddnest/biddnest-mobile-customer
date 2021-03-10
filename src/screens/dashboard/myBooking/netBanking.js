@@ -8,7 +8,7 @@ import DropDownAndroid from '../../../components/dropDown';
 
 const NetBanking = (props) => {
   return (
-    <CustomModalAndroid visible={props.visible}>
+    <CustomModalAndroid visible={props.visible} onPress={props.onCloseIcon}>
       <View
         style={{
           width: '100%',

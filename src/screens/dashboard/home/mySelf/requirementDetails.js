@@ -9,7 +9,7 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import {Colors, hp, wp} from '../../../../constant/colors';
+import {boxShadow, Colors, hp, wp} from '../../../../constant/colors';
 import Button from '../../../../components/button';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {STYLES} from '../../../../constant/commonStyle';
@@ -22,8 +22,10 @@ import {ImageSelection, pad_with_zeroes} from '../../../../constant/commonFun';
 import CloseIcon from '../../../../components/closeIcon';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Slider from 'rn-range-slider';
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import OrderDetailModal from '../../myBooking/orderDetailModal';
 import ImageCross from '../../../../assets/svg/image_cross.svg';
+import CustomLabel from './CustomLabel';
 
 const RequirementDetails = (props) => {
   const [roomType, setRoomType] = useState(1);
@@ -32,6 +34,7 @@ const RequirementDetails = (props) => {
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(
     false,
   );
+  const [multiSliderValue, setMultiSliderValue] = React.useState([250, 750]);
   const [data, setData] = useState({});
   const [low, setLow] = useState(250);
   const [high, setHigh] = useState(750);
@@ -63,6 +66,7 @@ const RequirementDetails = (props) => {
       [key]: value,
     });
   };
+  const multiSliderValuesChange = (values) => setMultiSliderValue(values);
 
   const renderItem = ({item, index}) => {
     return (
@@ -361,7 +365,12 @@ const RequirementDetails = (props) => {
           }}
         />
       </CustomModalAndroid>
-      <CustomModalAndroid visible={itemModalVisible || editItem}>
+      <CustomModalAndroid
+        visible={itemModalVisible || editItem}
+        onPress={() => {
+          setItemModalVisible(false);
+          setEditItem(false);
+        }}>
         <View
           style={{
             flexDirection: 'row',
@@ -424,35 +433,59 @@ const RequirementDetails = (props) => {
                 }}>
                 Quantity
               </Text>
-
-              <Slider
-                style={{
-                  width: wp(85),
-                  alignSelf: 'center',
-                  marginTop: hp(4),
-                  marginBottom: hp(1),
-                  justifyContent: 'flex-end',
-                }}
-                min={250}
-                max={750}
+              <MultiSlider
+                values={[multiSliderValue[0], multiSliderValue[1]]}
+                sliderLength={wp(85)}
+                onValuesChange={multiSliderValuesChange}
+                selectedStyle={{backgroundColor: Colors.darkBlue}}
+                min={0}
+                max={1000}
                 step={1}
-                floatingLabel
-                renderThumb={() => <View style={styles.sliderThumb} />}
-                renderRail={() => (
+                allowOverlap
+                snapped
+                customMarker={() => (
                   <View
                     style={{
-                      ...styles.sliderRail,
-                      width: '100%',
-                      borderColor: '#EEE5FC',
+                      height: 20,
+                      width: 20,
+                      borderRadius: 10,
+                      backgroundColor: Colors.white,
+                      borderColor: Colors.black,
+                      borderWidth: 0.8,
+                      ...boxShadow,
                     }}
                   />
                 )}
-                renderRailSelected={() => <View style={styles.sliderRail} />}
-                renderLabel={(value) => (
-                  <Text style={styles.sliderLabel}>{value}</Text>
-                )}
-                onValueChanged={handleValueChange}
+                customLabel={CustomLabel}
               />
+              {/*<Slider*/}
+              {/*  style={{*/}
+              {/*    width: wp(85),*/}
+              {/*    alignSelf: 'center',*/}
+              {/*    marginTop: hp(4),*/}
+              {/*    marginBottom: hp(1),*/}
+              {/*    justifyContent: 'flex-end',*/}
+              {/*  }}*/}
+              {/*  min={0}*/}
+              {/*  max={1000}*/}
+              {/*  step={1}*/}
+              {/*  floatingLabel*/}
+              {/*  renderThumb={() => <View style={styles.sliderThumb} />}*/}
+              {/*  renderRail={() => (*/}
+              {/*    <View*/}
+              {/*      style={{*/}
+              {/*        ...styles.sliderRail,*/}
+              {/*        width: '100%',*/}
+              {/*        borderColor: '#EEE5FC',*/}
+              {/*      }}*/}
+              {/*    />*/}
+              {/*  )}*/}
+              {/*  renderRailSelected={() => <View style={styles.sliderRail} />}*/}
+              {/*  renderLabel={(value) => (*/}
+              {/*    <Text style={styles.sliderLabel}>{value}</Text>*/}
+              {/*  )}*/}
+              {/*  onValueChanged={handleValueChange}*/}
+              {/*/>*/}
               <View
                 style={{
                   flexDirection: 'row',

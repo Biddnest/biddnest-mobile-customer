@@ -4,8 +4,10 @@ import OneSignal from 'react-native-onesignal';
 import NetInfo from '@react-native-community/netinfo';
 import {CustomAlert, resetNavigator} from '../../constant/commonFun';
 import {Colors, hp, wp} from '../../constant/colors';
+import {useSelector} from 'react-redux';
 
 const Splash = (props) => {
+  const userData = useSelector((state) => state.Login?.loginData?.user);
   useEffect(() => {
     OneSignal.setLogLevel(6, 0);
 
@@ -42,7 +44,11 @@ const Splash = (props) => {
   useEffect(() => {
     checkConnectivity();
     setTimeout(() => {
-      resetNavigator(props, 'Login');
+      if (userData?.fname) {
+        resetNavigator(props, 'Dashboard');
+      } else {
+        resetNavigator(props, 'Login');
+      }
     }, 1500);
   }, []);
   const checkConnectivity = () => {

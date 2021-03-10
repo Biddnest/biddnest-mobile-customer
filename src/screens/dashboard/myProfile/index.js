@@ -4,14 +4,18 @@ import {
   Text,
   ScrollView,
   ImageBackground,
-  StyleSheet, Platform,
+  StyleSheet,
+  Image,
 } from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import {HomeHeader} from '../home';
 import {STYLES} from '../../../constant/commonStyle';
+import {useSelector} from 'react-redux';
+import moment from 'moment';
 
 const MyProfile = (props) => {
+  const userData = useSelector((state) => state.Login?.loginData?.user) || {};
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <HomeHeader
@@ -29,7 +33,11 @@ const MyProfile = (props) => {
           style={{height: hp(20), width: '100%', ...STYLES.common}}
           resizeMode={'cover'}>
           <View style={styles.profilePhoto}>
-            <Text style={styles.profileText}>DJ</Text>
+            <Image
+              source={{uri: userData?.avatar}}
+              style={{height: '100%', width: '100%'}}
+              resizeMode={'contain'}
+            />
           </View>
         </ImageBackground>
         <View style={{padding: hp(2)}}>
@@ -40,28 +48,32 @@ const MyProfile = (props) => {
             }}>
             <View style={{flex: 1}}>
               <Text style={styles.headerText}>First Name</Text>
-              <Text style={styles.bodyText}>David</Text>
+              <Text style={styles.bodyText}>{userData?.fname}</Text>
             </View>
             <View style={{flex: 1}}>
               <Text style={styles.headerText}>Last Name</Text>
-              <Text style={styles.bodyText}>Jerome</Text>
+              <Text style={styles.bodyText}>{userData?.lname}</Text>
             </View>
           </View>
           <View style={styles.textWrapper}>
             <Text style={styles.headerText}>Email ID</Text>
-            <Text style={styles.bodyText}>davidjerome@gmail.com</Text>
+            <Text style={styles.bodyText}>{userData?.email}</Text>
           </View>
           <View style={styles.textWrapper}>
             <Text style={styles.headerText}>Phone Number</Text>
-            <Text style={styles.bodyText}>9739912345</Text>
+            <Text style={styles.bodyText}>{userData?.phone}</Text>
           </View>
           <View style={styles.textWrapper}>
             <Text style={styles.headerText}>Gender</Text>
-            <Text style={styles.bodyText}>Male</Text>
+            <Text style={[styles.bodyText, {textTransform: 'capitalize'}]}>
+              {userData.gender}
+            </Text>
           </View>
           <View style={styles.textWrapper}>
             <Text style={styles.headerText}>Date of Birth</Text>
-            <Text style={styles.bodyText}>23 Dec 20</Text>
+            <Text style={styles.bodyText}>
+              {moment(userData?.dob).format('D MMM yyyy')}
+            </Text>
           </View>
         </View>
       </ScrollView>
@@ -77,6 +89,7 @@ const styles = StyleSheet.create({
     width: hp(12),
     borderRadius: hp(6),
     backgroundColor: Colors.white,
+    overflow: 'hidden',
     ...STYLES.common,
   },
   profileText: {

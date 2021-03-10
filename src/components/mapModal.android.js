@@ -9,7 +9,9 @@ const MapModalAndroid = (props) => {
       transparent={true}
       visible={props.visible}
       onRequestClose={() => {
-        alert('Modal has been closed.');
+        if (props.onPress) {
+          props.onPress();
+        }
       }}>
       <SafeAreaView style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.5)'}}>
         <View style={styles.centeredView}>

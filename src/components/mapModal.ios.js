@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal, View, StyleSheet, ScrollView, SafeAreaView} from 'react-native';
+import {Modal, View, StyleSheet, ScrollView} from 'react-native';
 import {wp, hp, Colors} from '../constant/colors';
 
 const MapModalAndroid = (props) => {
@@ -9,7 +9,9 @@ const MapModalAndroid = (props) => {
       transparent={true}
       visible={props.visible}
       onRequestClose={() => {
-        alert('Modal has been closed.');
+        if (props.onPress) {
+          props.onPress();
+        }
       }}>
       <View style={styles.centeredView}>
         <ScrollView

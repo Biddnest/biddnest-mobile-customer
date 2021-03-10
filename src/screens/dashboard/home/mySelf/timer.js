@@ -59,7 +59,7 @@ const Timer = (props) => {
           onPress={() => resetNavigator(props, 'Dashboard')}
         />
       </View>
-      <CustomModalAndroid visible={orderPlacedVisible}>
+      <CustomModalAndroid visible={orderPlacedVisible} onPress={() => setOrderPlacedVisible(false)}>
         <CloseIcon
           onPress={() => setOrderPlacedVisible(false)}
           style={{

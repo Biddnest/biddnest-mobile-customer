@@ -4,14 +4,12 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import {Colors, wp, hp} from '../../../constant/colors';
 import CloseIcon from '../../../components/closeIcon';
 import TextInput from '../../../components/textInput';
-import {STYLES} from '../../../constant/commonStyle';
-import CheckBox from '../../../components/checkBox';
 import FlatButton from '../../../components/flatButton';
 import TimerClock from '../../../assets/svg/timer_clock.svg';
 
 const UPIPayment = (props) => {
   return (
-    <CustomModalAndroid visible={props.visible}>
+    <CustomModalAndroid visible={props.visible} onPress={props.onCloseIcon}>
       <View
         style={{
           width: '100%',

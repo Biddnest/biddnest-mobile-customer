@@ -2,6 +2,8 @@ import {CommonActions} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-picker';
 import Toast from 'react-native-simple-toast';
 import {IMAGE_OPTIONS} from './colors';
+import {STORE} from '../redux';
+import {APICall} from '../redux/actions/user';
 
 export const resetNavigator = (props, screenName) => {
   props.navigation.dispatch(
@@ -25,20 +27,20 @@ export const pad_with_zeroes = (number, length) => {
 };
 
 export const ImageSelection = () => {
-  ImagePicker.showImagePicker(IMAGE_OPTIONS, (response) => {
-    console.log('Response = ', response);
+  return new Promise((resolve, reject) => {
+    ImagePicker.showImagePicker(IMAGE_OPTIONS, (response) => {
+      console.log('Response = ', response);
 
-    if (response.didCancel) {
-      console.log('User cancelled image picker');
-    } else if (response.error) {
-      console.log('ImagePicker Error: ', response.error);
-    } else if (response.customButton) {
-      console.log('User tapped custom button: ', response.customButton);
-    } else {
-      const source = {uri: response.uri};
-
-      // You can also display the image using data:
-      // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-    }
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        resolve('data:image/jpeg;base64,' + response.data);
+      }
+      reject(false);
+    });
   });
 };

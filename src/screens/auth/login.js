@@ -133,7 +133,9 @@ const Login = (props) => {
                   </Text>
                   <View
                     style={{
-                      height: hp(9),
+                      height: hp(7),
+                      marginTop: hp(1),
+                      marginBottom: hp(2),
                     }}>
                     <OTPInputView
                       pinCount={6}
@@ -238,11 +240,11 @@ const styles = StyleSheet.create({
   textInput: {
     borderWidth: 2,
     borderRadius: 10,
-    height: hp(6.5),
+    height: '99%',
     marginTop: hp(1),
     borderColor: Colors.silver,
     color: Colors.textLabelColor,
-    fontSize: wp(6),
+    fontSize: hp(3),
   },
   checkBoxView: {
     height: 20,

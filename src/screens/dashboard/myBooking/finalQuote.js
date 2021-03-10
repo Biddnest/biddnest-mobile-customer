@@ -138,7 +138,9 @@ const FinalQuote = (props) => {
               width={wp(43)}
             />
           </View>
-          <CustomModalAndroid visible={rejectVisible}>
+          <CustomModalAndroid
+            visible={rejectVisible}
+            onPress={() => setRejectVisible(false)}>
             <CloseIcon
               onPress={() => setRejectVisible(false)}
               style={{

@@ -253,7 +253,13 @@ const OrderTracking = (props) => {
           onCloseIcon={() => setOrderDetailsVisible(false)}
         />
       </CustomModalAndroid>
-      <CustomModalAndroid visible={manageOrderVisible || cancelOrder}>
+      <CustomModalAndroid
+        visible={manageOrderVisible || cancelOrder}
+        onPress={() => {
+          setResecheduleOrder(false);
+          setCancelOrder(false);
+          setManageOrderVisible(false);
+        }}>
         <View
           style={{
             flexDirection: 'row',

@@ -149,7 +149,9 @@ const MovingForm = (props) => {
             width={wp(80)}
           />
         </View>
-        <MapModalAndroid visible={mapVisible}>
+        <MapModalAndroid
+          visible={mapVisible}
+          onPress={() => setMapVisible(false)}>
           <View style={styles.mapView}>
             <MapView
               provider={

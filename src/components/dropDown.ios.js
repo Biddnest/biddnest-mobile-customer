@@ -46,6 +46,7 @@ const DropDownAndroid = (props) => {
               borderBottomRightRadius: 10,
             },
           ]}
+          selectedLabelLength={10}
           labelStyle={{
             fontSize: wp(4),
             backgroundColor: Colors.textBG,

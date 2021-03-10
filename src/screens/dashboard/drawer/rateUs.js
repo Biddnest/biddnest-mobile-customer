@@ -28,7 +28,12 @@ const RateUs = (props) => {
     }
   }, [currentStep]);
   return (
-    <CustomModalAndroid visible={props.visible}>
+    <CustomModalAndroid
+      visible={props.visible}
+      onPress={() => {
+        setCurrentStep(0);
+        props.onCloseIcon();
+      }}>
       <View
         style={{
           flexDirection: 'row',

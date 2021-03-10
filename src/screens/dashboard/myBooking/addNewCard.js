@@ -13,7 +13,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 const AddNewCard = (props) => {
   const [isAgree, setAgree] = React.useState(true);
   return (
-    <CustomModalAndroid visible={props.visible}>
+    <CustomModalAndroid visible={props.visible} onPress={props.onCloseIcon}>
       <View
         style={{
           width: '100%',

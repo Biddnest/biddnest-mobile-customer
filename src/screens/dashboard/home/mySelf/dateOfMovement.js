@@ -75,7 +75,11 @@ const DateOfMovement = (props) => {
             }}
           />
         </Pressable>
-        <CustomModalAndroid visible={openCalender}>
+        <CustomModalAndroid
+          visible={openCalender}
+          onPress={() => {
+            setCalender(false);
+          }}>
           <CloseIcon
             onPress={() => {
               setCalender(false);

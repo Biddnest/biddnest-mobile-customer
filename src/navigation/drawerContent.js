@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react';
 import {
-  FlatList,
+  FlatList, Image,
   ImageBackground,
   Pressable,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import {DrawerContentScrollView} from '@react-navigation/drawer';
 import {Colors, hp, SIDE_DRAWER, wp} from '../constant/colors';
 import {STYLES} from '../constant/commonStyle';
 import Feather from 'react-native-vector-icons/Feather';
@@ -20,10 +19,11 @@ import DeviceInfo from 'react-native-device-info';
 import LinearGradient from 'react-native-linear-gradient';
 import {resetNavigator} from '../constant/commonFun';
 import {RESET_STORE} from '../redux/types';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 export function DrawerContent(props) {
   const dispatch = useDispatch();
+  const userData = useSelector((state) => state.Login?.loginData?.user) || {};
   useEffect(() => {
     // let buildNumber = DeviceInfo.getBuildNumber(); // 1
     let buildNumber = DeviceInfo.getReadableVersion(); // 1.0.1
@@ -108,11 +108,15 @@ export function DrawerContent(props) {
             <Feather name={'arrow-left'} color={Colors.white} size={30} />
           </Pressable>
           <View style={styles.profilePhoto}>
-            <Text style={styles.profileText}>DJ</Text>
+            <Image
+                source={{uri: userData?.avatar}}
+                style={{height: '100%', width: '100%'}}
+                resizeMode={'contain'}
+            />
           </View>
           <View style={{width: wp(35), paddingLeft: wp(2)}}>
             <Text numberOfLines={1} style={styles.userText}>
-              David Jerome
+              {userData?.fname} {userData?.lname}
             </Text>
           </View>
           <View style={{width: wp(15)}}>
@@ -154,6 +158,7 @@ const styles = StyleSheet.create({
     width: wp(15),
     borderRadius: wp(7.5),
     backgroundColor: Colors.white,
+    overflow: 'hidden',
     ...STYLES.common,
   },
   profileText: {

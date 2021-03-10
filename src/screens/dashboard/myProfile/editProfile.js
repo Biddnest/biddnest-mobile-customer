@@ -1,20 +1,32 @@
+import React, {useState} from 'react';
 import {Colors, hp, wp} from '../../../constant/colors';
-import {Pressable, StyleSheet, View} from 'react-native';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
 import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
-import React, {useState} from 'react';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import DropDownAndroid from '../../../components/dropDown';
 import TextInput from '../../../components/textInput';
 import {Text} from 'react-native-elements';
 import {STYLES} from '../../../constant/commonStyle';
 import Button from '../../../components/button';
-import {ImageSelection} from '../../../constant/commonFun';
+import {CustomAlert, ImageSelection} from '../../../constant/commonFun';
 import DatePicker from 'react-native-datepicker';
 import Entypo from 'react-native-vector-icons/Entypo';
+import {useDispatch, useSelector} from 'react-redux';
+import {updateProfile} from '../../../redux/actions/user';
+import moment from 'moment';
 
 const EditProfile = (props) => {
-  const [data, setData] = useState({});
+  const dispatch = useDispatch();
+  const [isLoading, setLoading] = useState(false);
+  const [data, setData] = useState(
+    useSelector((state) => state.Login?.loginData?.user) || {},
+  );
+  const [error, setError] = useState({
+    fname: undefined,
+    lname: undefined,
+    email: undefined,
+  });
   const handleState = (key, value) => {
     setData({
       ...data,
@@ -41,37 +53,46 @@ const EditProfile = (props) => {
           <View style={{flexDirection: 'row'}}>
             <View style={{width: wp(45)}}>
               <TextInput
+                value={data?.fname}
+                isRight={error.fname}
                 label={'First Name'}
                 placeHolder={'David'}
-                onChange={(text) => handleState('referralCode', text)}
+                onChange={(text) => handleState('fname', text)}
               />
             </View>
             <View style={{width: wp(45)}}>
               <TextInput
+                value={data?.lname}
+                isRight={error.lname}
                 label={'Last Name'}
                 placeHolder={'Jerome'}
-                onChange={(text) => handleState('referralCode', text)}
+                onChange={(text) => handleState('lname', text)}
               />
             </View>
           </View>
           <View style={{flexDirection: 'row'}}>
             <View style={{width: wp(45)}}>
               <TextInput
+                value={data?.email}
+                isRight={error.email}
                 label={'Email ID'}
                 placeHolder={'davidje@gmail.com'}
-                onChange={(text) => handleState('referralCode', text)}
+                onChange={(text) => handleState('email', text)}
               />
             </View>
             <View style={{width: wp(45)}}>
               <TextInput
+                disable={true}
+                value={data?.phone}
                 label={'Phone Number'}
                 placeHolder={'9739912345'}
-                onChange={(text) => handleState('referralCode', text)}
+                onChange={(text) => handleState('phone', text)}
               />
             </View>
           </View>
           <View style={{marginBottom: hp(3)}}>
             <DropDownAndroid
+              value={data.gender}
               width={wp(90)}
               label={'Gender'}
               items={[
@@ -107,11 +128,10 @@ const EditProfile = (props) => {
                   height: '100%',
                   justifyContent: 'center',
                 }}
-                date={data.DOB || new Date()}
+                date={moment(data?.dob).format('D MMM yyyy')}
                 mode="date"
                 placeholder="select date"
                 format="D MMM yyyy"
-                minDate="2016-05-01"
                 maxDate={new Date()}
                 confirmBtnText="Confirm"
                 cancelBtnText="Cancel"
@@ -146,7 +166,7 @@ const EditProfile = (props) => {
                   },
                 }}
                 onDateChange={(date) => {
-                  handleState('DOB', date);
+                  handleState('dob', date);
                 }}
               />
             </View>
@@ -168,7 +188,11 @@ const EditProfile = (props) => {
                 marginTop: hp(1),
               }}>
               <View style={styles.profilePhoto}>
-                <Text style={styles.profileText}>DJ</Text>
+                <Image
+                  source={{uri: data?.avatar}}
+                  style={{height: '100%', width: '100%'}}
+                  resizeMode={'contain'}
+                />
               </View>
               <View
                 style={{
@@ -177,7 +201,13 @@ const EditProfile = (props) => {
                   height: wp(18),
                 }}>
                 <Pressable
-                  onPress={() => ImageSelection()}
+                  onPress={async () => {
+                    ImageSelection()
+                      .then((res) => {
+                        handleState('avatar', res);
+                      })
+                      .catch((err) => {});
+                  }}
                   style={styles.imageUploadBtn}>
                   <Text
                     style={{
@@ -199,9 +229,65 @@ const EditProfile = (props) => {
               </View>
             </View>
             <Button
+              isLoading={isLoading}
               spaceBottom={wp(0.1)}
               label={'SAVE'}
-              onPress={() => props.navigation.goBack()}
+              onPress={() => {
+                setLoading(true);
+                let tempError = {};
+                if (
+                  !data.fname ||
+                  data.fname.length === 0 ||
+                  /[^a-zA-Z]/.test(data.fname)
+                ) {
+                  tempError.fname = false;
+                } else {
+                  tempError.fname = true;
+                }
+                if (
+                  !data.lname ||
+                  data.lname.length === 0 ||
+                  /[^a-zA-Z]/.test(data.lname)
+                ) {
+                  tempError.lname = false;
+                } else {
+                  tempError.lname = true;
+                }
+                if (
+                  !data.email ||
+                  data.email.length === 0 ||
+                  !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+                    data.email,
+                  )
+                ) {
+                  tempError.email = false;
+                } else {
+                  tempError.email = true;
+                }
+                setError(tempError);
+                if (
+                  Object.values(tempError).findIndex(
+                    (item) => item === false,
+                  ) === -1
+                ) {
+                  dispatch(updateProfile(data))
+                    .then((res) => {
+                      setLoading(false);
+                      if (res.status === 'success') {
+                        setData(res?.data?.user);
+                        props.navigation.goBack();
+                      } else {
+                        CustomAlert(res.message);
+                      }
+                    })
+                    .catch((err) => {
+                      setLoading(false);
+                      CustomAlert(err.data.message);
+                    });
+                } else {
+                  setLoading(false);
+                }
+              }}
             />
           </View>
         </KeyboardAwareScrollView>
@@ -220,7 +306,8 @@ const styles = StyleSheet.create({
     height: wp(18),
     width: wp(18),
     borderRadius: wp(9),
-    backgroundColor: Colors.darkBlue,
+    backgroundColor: Colors.btnBG,
+    overflow: 'hidden',
     ...STYLES.common,
   },
   profileText: {
