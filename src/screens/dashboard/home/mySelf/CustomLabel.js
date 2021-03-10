@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Animated} from 'react-native';
+import {Colors, hp, wp} from '../../../../constant/colors';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -35,12 +36,11 @@ function LabelBase(props) {
             left: position - width / 2,
             transform: [
               {translateY: width},
-              {scale: scaleValue.current},
+              // {scale: scaleValue.current},
               {translateY: -width},
             ],
           },
         ]}>
-        <View style={styles.pointer} />
         <Text style={styles.sliderLabelText}>{value}</Text>
       </AnimatedView>
     )
@@ -57,7 +57,6 @@ export default function CustomLabel(props) {
     oneMarkerPressed,
     twoMarkerPressed,
   } = props;
-  alert('call')
   return (
     <View style={styles.parentView}>
       <LabelBase
@@ -83,26 +82,22 @@ const styles = StyleSheet.create({
   sliderLabel: {
     position: 'absolute',
     justifyContent: 'center',
-    bottom: '100%',
+    top: hp(5),
     width: width,
-    height: width,
   },
   sliderLabelText: {
     textAlign: 'center',
-    lineHeight: width,
-    borderRadius: width / 2,
-    borderWidth: 2,
-    borderColor: '#999',
-    backgroundColor: '#fff',
+    backgroundColor: Colors.darkBlue,
     flex: 1,
-    fontSize: 18,
-    color: '#aaa',
+    fontSize: wp(3.8),
+    color: Colors.white,
+    borderRadius: 5,
+    paddingVertical: 2,
   },
   pointer: {
     position: 'absolute',
-    bottom: -pointerWidth / 4,
+    top: -pointerWidth / 4,
     left: (width - pointerWidth) / 2,
-    transform: [{rotate: '45deg'}],
     width: pointerWidth,
     height: pointerWidth,
     backgroundColor: '#999',

@@ -438,11 +438,13 @@ const RequirementDetails = (props) => {
                 sliderLength={wp(85)}
                 onValuesChange={multiSliderValuesChange}
                 selectedStyle={{backgroundColor: Colors.darkBlue}}
+                unselectedStyle={{backgroundColor: '#F5E3FF'}}
                 min={0}
                 max={1000}
                 step={1}
                 allowOverlap
                 snapped
+                enableLabel={true}
                 customMarker={() => (
                   <View
                     style={{
@@ -450,7 +452,7 @@ const RequirementDetails = (props) => {
                       width: 20,
                       borderRadius: 10,
                       backgroundColor: Colors.white,
-                      borderColor: Colors.black,
+                      borderColor: '#B6DFFF',
                       borderWidth: 0.8,
                       ...boxShadow,
                     }}
