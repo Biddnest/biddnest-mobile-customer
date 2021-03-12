@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
     color: Colors.white,
     borderRadius: 5,
     paddingVertical: 2,
+    overflow: 'hidden',
   },
   pointer: {
     position: 'absolute',

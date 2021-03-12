@@ -1,6 +1,7 @@
 import React from 'react';
 import {Modal, View, StyleSheet, ScrollView} from 'react-native';
 import {wp, hp, Colors} from '../constant/colors';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const MapModalAndroid = (props) => {
   return (
@@ -13,7 +14,11 @@ const MapModalAndroid = (props) => {
           props.onPress();
         }
       }}>
-      <View style={styles.centeredView}>
+      <KeyboardAwareScrollView
+        enableOnAndroid={false}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.centeredView}>
         <ScrollView
           bounces={false}
           showsVerticalScrollIndicator={false}
@@ -21,7 +26,7 @@ const MapModalAndroid = (props) => {
           style={styles.modalView}>
           {props.children}
         </ScrollView>
-      </View>
+      </KeyboardAwareScrollView>
     </Modal>
   );
 };
