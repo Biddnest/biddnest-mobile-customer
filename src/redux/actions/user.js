@@ -1,7 +1,15 @@
 import instance from '../../constant/baseService';
-import {LOGIN_USER_DATA, RESET_STORE} from '../types';
-import {CustomAlert} from '../../constant/commonFun';
+import {
+  CONFIG_DATA,
+  LOGIN_USER_DATA,
+  RESET_STORE,
+  SERVICE_DATA,
+  SLIDER_DATA,
+} from '../types';
+import {CustomAlert, resetNavigator} from '../../constant/commonFun';
 import {STORE} from '../index';
+import {CommonActions} from '@react-navigation/native';
+import axios from 'axios';
 
 export const APICall = (obj) => {
   return new Promise((resolve, reject) => {
@@ -14,9 +22,32 @@ export const APICall = (obj) => {
           reject(err.response);
         } else {
           CustomAlert('Server Down');
+          reject(false);
         }
       });
   });
+};
+
+export const initialConfig = () => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      let obj = {
+        url: 'configuration',
+        method: 'get',
+      };
+      APICall(obj)
+        .then((res) => {
+          dispatch({
+            type: CONFIG_DATA,
+            payload: res?.data?.data || {},
+          });
+          resolve(res.data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  };
 };
 
 export const sendOTP = (data) => {
@@ -117,6 +148,66 @@ export const signOut = (data) => {
           resolve(res.data);
         })
         .catch((err) => {
+          reject(err);
+        });
+    });
+  };
+};
+
+export const getSlider = (data) => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      let obj = {
+        url: `sliders?lat=${data.latitude}&lng=${data.longitude}`,
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+      };
+      APICall(obj)
+        .then((res) => {
+          dispatch({
+            type: SLIDER_DATA,
+            payload: res?.data?.data || {},
+          });
+          resolve(res.data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  };
+};
+
+export const getServices = (data) => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      let obj = {
+        url: `services?lat=${data.latitude}&lng=${data.longitude}`,
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+      };
+      APICall(obj)
+        .then((res) => {
+          dispatch({
+            type: SERVICE_DATA,
+            payload: res?.data?.data || {},
+          });
+          resolve(res.data);
+        })
+        .catch((err) => {
+          if (err.status === 401) {
+            // dispatch({
+            //   type: RESET_STORE,
+            // });
+            // CommonActions.reset({
+            //   index: 0,
+            //   routes: [{name: 'Login'}],
+            // });
+          }
+          CustomAlert(err?.data?.message);
           reject(err);
         });
     });

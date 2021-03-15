@@ -1,12 +1,19 @@
-import React, {useEffect} from 'react';
-import {View, Text, StyleSheet, Image, Platform} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, Image, ActivityIndicator, Alert} from 'react-native';
 import OneSignal from 'react-native-onesignal';
 import NetInfo from '@react-native-community/netinfo';
-import {CustomAlert, resetNavigator} from '../../constant/commonFun';
+import {
+  CustomAlert,
+  locationPermission,
+  resetNavigator,
+} from '../../constant/commonFun';
 import {Colors, hp, wp} from '../../constant/colors';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {initialConfig} from '../../redux/actions/user';
 
 const Splash = (props) => {
+  const dispatch = useDispatch();
+  const [isLoading, setLoading] = useState(false);
   const userData = useSelector((state) => state.Login?.loginData?.user);
   useEffect(() => {
     OneSignal.setLogLevel(6, 0);
@@ -41,26 +48,55 @@ const Splash = (props) => {
   function onIds(device) {
     console.log('Device info: ', device);
   }
+  const callServiceAPI = () => {
+    setLoading(true);
+    locationPermission();
+    dispatch(initialConfig())
+      .then((res) => {
+        setLoading(false);
+        if (res.status === 'success') {
+          if (userData?.fname) {
+            resetNavigator(props, 'Dashboard');
+          } else {
+            resetNavigator(props, 'Login');
+          }
+        }
+      })
+      .catch((err) => {
+        checkConnectivity();
+        setLoading(false);
+        err?.data && CustomAlert(err?.data?.message);
+      });
+  };
   useEffect(() => {
     checkConnectivity();
-    setTimeout(() => {
-      if (userData?.fname) {
-        resetNavigator(props, 'Dashboard');
-      } else {
-        resetNavigator(props, 'Login');
-      }
-    }, 1500);
+    callServiceAPI();
   }, []);
   const checkConnectivity = () => {
     NetInfo.addEventListener((state) => {
       if (state.isConnected === false) {
-        CustomAlert('Check your internet connectivity');
+        Alert.alert(
+          'Internet Connectivity',
+          'Check your internet connectivity',
+          [
+            {
+              text: 'Retry',
+              onPress: () => callServiceAPI(),
+            },
+          ],
+          {cancelable: false},
+        );
       }
     });
   };
 
   return (
     <View style={styles.container}>
+      {!!isLoading && (
+        <View style={{position: 'absolute', bottom: hp(20), zIndex: 111}}>
+          <ActivityIndicator size="large" color={Colors.black} />
+        </View>
+      )}
       <Image
         source={require('../../assets/images/logo.png')}
         style={{height: hp(50), width: wp(80)}}

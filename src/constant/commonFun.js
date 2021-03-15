@@ -1,9 +1,15 @@
+import {Alert, PermissionsAndroid, Platform} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-picker';
 import Toast from 'react-native-simple-toast';
 import {IMAGE_OPTIONS} from './colors';
-import {STORE} from '../redux';
-import {APICall} from '../redux/actions/user';
+import {
+  openSettings,
+  check,
+  PERMISSIONS,
+  RESULTS,
+} from 'react-native-permissions';
+import Geolocation from '@react-native-community/geolocation';
 
 export const resetNavigator = (props, screenName) => {
   props.navigation.dispatch(
@@ -42,5 +48,92 @@ export const ImageSelection = () => {
       }
       reject(false);
     });
+  });
+};
+
+export const locationPermission = async () => {
+  try {
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the location');
+      } else {
+        Alert.alert(
+          'Location Permission',
+          "Allow Biddnest to access this device's location?",
+          [
+            {
+              text: 'Cancel',
+              onPress: () => locationPermission(),
+              style: 'cancel',
+            },
+            {
+              text: 'Go To Setting',
+              onPress: () =>
+                openSettings()
+                  .then((res) => {
+                    setTimeout(() => {
+                      locationPermission();
+                    }, 5000);
+                  })
+                  .catch(() => console.warn('cannot open settings')),
+            },
+          ],
+          {cancelable: false},
+        );
+      }
+    } else {
+      check(PERMISSIONS.IOS.LOCATION_ALWAYS)
+        .then((result) => {
+          switch (result) {
+            case RESULTS.UNAVAILABLE:
+              console.log(
+                'This feature is not available (on this device / in this context)',
+              );
+              break;
+            case RESULTS.DENIED:
+              console.log(
+                'The permission has not been requested / is denied but requestable',
+              );
+              break;
+            case RESULTS.LIMITED:
+              console.log(
+                'The permission is limited: some actions are possible',
+              );
+              break;
+            case RESULTS.GRANTED:
+              console.log('The permission is granted');
+              break;
+            case RESULTS.BLOCKED:
+              console.log(
+                'The permission is denied and not requestable anymore',
+              );
+              break;
+          }
+        })
+        .catch((error) => {
+          CustomAlert(error);
+        });
+    }
+  } catch (err) {
+    CustomAlert(err);
+  }
+};
+
+export const getLocation = () => {
+  return new Promise((resolve, reject) => {
+    Geolocation.getCurrentPosition(
+      (position) => {
+        resolve(position.coords);
+      },
+      (error) => reject(error.message),
+      {
+        // enableHighAccuracy: false,
+        timeout: 20000,
+        // maximumAge: 1000,
+      },
+    );
   });
 };

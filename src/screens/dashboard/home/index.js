@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -26,7 +26,10 @@ import BuildingTab from '../../../assets/svg/building_tab.svg';
 import HomeCall from '../../../assets/svg/home_call.svg';
 import MySelf from '../../../assets/svg/myself.svg';
 import Coupon from '../../../assets/svg/coupon.svg';
-import ActiveBooking from '../../../assets/svg/active_booking.svg';
+import {CustomAlert, getLocation} from '../../../constant/commonFun';
+import {getServices, getSlider} from '../../../redux/actions/user';
+import {useDispatch, useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
 
 export const HomeHeader = (props) => {
   return (
@@ -84,10 +87,52 @@ export const HomeHeader = (props) => {
 };
 
 const Home = (props) => {
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  const userData = useSelector((state) => state.Login?.loginData?.user) || {};
+  const configData = useSelector((state) => state.Login?.configData) || {};
+  const [serviceData, setServiceData] = useState(
+    useSelector((state) => state.Login?.serviceData?.services),
+  );
+  const [sliderData, setSliderData] = useState(
+    useSelector((state) => state.Login?.sliderData),
+  );
   const [couponVisible, setCouponVisible] = useState(false);
   const [bookingSelectionVisible, setBookingSelectionVisible] = useState(false);
-  const [movementType, setMovementType] = useState('');
+  const [movementType, setMovementType] = useState();
   const [bookingFor, setBookingFor] = useState('Myself');
+  useEffect(() => {
+    if (isFocused && userData?.fname) {
+      getLocation()
+        .then((locationData) => {
+          dispatch(getSlider(locationData))
+            .then((res) => {
+              if (res.status === 'success' && res?.data) {
+                setSliderData(res?.data);
+              } else {
+                CustomAlert(res.message);
+              }
+            })
+            .catch((err) => {
+              CustomAlert(err?.data?.message);
+            });
+          dispatch(getServices(locationData))
+            .then((res) => {
+              if (res.status === 'success' && res?.data?.services) {
+                setServiceData(res?.data?.services);
+              } else {
+                CustomAlert(res.message);
+              }
+            })
+            .catch((err) => {
+              CustomAlert(err?.data?.message);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isFocused]);
   const renderItem = ({item, index}) => {
     return (
       <Shimmer
@@ -126,19 +171,41 @@ const Home = (props) => {
         style={{flex: 1}}
         showsVerticalScrollIndicator={false}
         bounces={false}>
-        <LocationDistance inTransit={true} />
-        <FlatList
-          bounces={false}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={[1, 2]}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index}
-          contentContainerStyle={{
-            padding: wp(4),
-            paddingRight: 0,
-          }}
-        />
+        {/*<LocationDistance inTransit={true} />*/}
+        {sliderData.map((item, index) => {
+          if (configData?.enums?.slider?.position?.main === item.position) {
+            return (
+              <FlatList
+                key={item.id}
+                bounces={false}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                // data={item.banner}
+                data={[
+                  {
+                    id: 5,
+                    slider_id: 2,
+                    image:
+                      'http://127.0.0.1:8000/storage/slide-banners/banner-banner1-604b088c1953e.png',
+                    name: 'banner1',
+                    url: 'http://banner1.com',
+                    from_date: '2015-03-02',
+                    to_date: '2021-03-12',
+                    order: 0,
+                    status: 1,
+                  },
+                ]}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index}
+                contentContainerStyle={{
+                  padding: wp(4),
+                  paddingRight: 0,
+                }}
+              />
+            );
+          }
+          return null;
+        })}
         <View style={styles.movementView}>
           <Text
             style={{
@@ -154,20 +221,8 @@ const Home = (props) => {
             bounces={false}
             numColumns={3}
             showsHorizontalScrollIndicator={false}
-            data={[
-              {
-                image: <HomeTab width={40} height={40} />,
-                name: 'Residential',
-              },
-              {
-                image: <SupermarketTab width={40} height={40} />,
-                name: 'Commercial',
-              },
-              {
-                image: <BuildingTab width={40} height={40} />,
-                name: 'Office',
-              },
-            ]}
+            data={serviceData}
+            extraData={serviceData}
             keyExtractor={(item, index) => index}
             style={{marginTop: hp(2)}}
             contentContainerStyle={{justifyContent: 'space-evenly'}}
@@ -181,7 +236,7 @@ const Home = (props) => {
                   style={styles.movementLinear}>
                   <Pressable
                     onPress={() => {
-                      setMovementType(item.name);
+                      setMovementType(item);
                       setBookingSelectionVisible(true);
                     }}
                     style={{
@@ -189,7 +244,11 @@ const Home = (props) => {
                       alignItems: 'center',
                       height: 100,
                     }}>
-                    {item.image}
+                    <Image
+                      source={{uri: item.image}}
+                      style={{height: '50%', width: '50%'}}
+                      resizeMode={'contain'}
+                    />
                     <Text
                       style={{
                         fontFamily: 'Roboto-Medium',
@@ -226,50 +285,60 @@ const Home = (props) => {
           </View>
           <HomeCall width={55} height={55} />
         </View>
-        <FlatList
-          bounces={false}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={[1, 2]}
-          keyExtractor={(item, index) => index}
-          renderItem={({item, index}) => {
+        {sliderData.map((item, index) => {
+          if (
+            configData?.enums?.slider?.position?.secondary === item.position
+          ) {
             return (
-              <Shimmer
-                key={index}
-                autoRun={true}
-                style={{
-                  height: hp(25),
-                  width: wp(60),
-                  marginRight: wp(4),
+              <FlatList
+                key={item.id}
+                bounces={false}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                data={[1, 2]}
+                keyExtractor={(item, index) => index}
+                renderItem={({item, index}) => {
+                  return (
+                    <Shimmer
+                      key={index}
+                      autoRun={true}
+                      style={{
+                        height: hp(25),
+                        width: wp(60),
+                        marginRight: wp(4),
+                      }}
+                      visible={true}>
+                      <View
+                        style={[
+                          styles.topScroll,
+                          {
+                            width: wp(60),
+                            height: hp(25),
+                            ...styles.common,
+                          },
+                        ]}>
+                        <Image
+                          style={{
+                            height: '100%',
+                            width: '100%',
+                          }}
+                          source={require('../../../assets/images/top_home_scroll.png')}
+                          resizeMode={'cover'}
+                          key={index}
+                        />
+                      </View>
+                    </Shimmer>
+                  );
                 }}
-                visible={true}>
-                <View
-                  style={[
-                    styles.topScroll,
-                    {
-                      width: wp(60),
-                      height: hp(25),
-                      ...styles.common,
-                    },
-                  ]}>
-                  <Image
-                    style={{
-                      height: '100%',
-                      width: '100%',
-                    }}
-                    source={require('../../../assets/images/top_home_scroll.png')}
-                    resizeMode={'cover'}
-                    key={index}
-                  />
-                </View>
-              </Shimmer>
+                contentContainerStyle={{
+                  padding: wp(4),
+                  paddingRight: 0,
+                }}
+              />
             );
-          }}
-          contentContainerStyle={{
-            padding: wp(4),
-            paddingRight: 0,
-          }}
-        />
+          }
+          return null;
+        })}
         <CustomModalAndroid
           visible={couponVisible}
           onPress={() => setCouponVisible(false)}>

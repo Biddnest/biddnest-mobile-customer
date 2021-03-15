@@ -10,6 +10,7 @@ const DropDownAndroid = (props) => {
       style={{
         width: props.width ? props.width : wp(45),
         paddingHorizontal: 10,
+        zIndex: 5002,
       }}>
       <Text
         style={{

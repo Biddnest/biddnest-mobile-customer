@@ -1,6 +1,9 @@
 import axios from 'axios';
+// import {STORE} from '../redux';
 
+// const data = STORE.getState().Login?.configData?.config?.api || '';
 const instance = axios.create({
+  // baseURL: data.base_url + '/api/' + data.version + '/',
   baseURL: 'https://dashboard-biddnest.dev.diginnovators.com/api/v1/',
 });
 

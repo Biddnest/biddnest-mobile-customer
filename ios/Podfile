@@ -10,8 +10,6 @@ target 'cp_biddnest_mobile_customer' do
 
   pod 'react-native-onesignal', :path => '../node_modules/react-native-onesignal'
 
-  pod 'jesster2k10-react-native-range-slider', :path => '../node_modules/@jesster2k10/react-native-range-slider'
-
   target 'cp_biddnest_mobile_customerTests' do
     inherit! :complete
     # Pods for testing

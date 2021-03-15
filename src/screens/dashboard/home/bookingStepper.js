@@ -43,7 +43,7 @@ const customStyles = {
 const BookingStepper = (props) => {
   const [currentPosition, setCurrentPosition] = useState(0);
   const bookingFor = props?.route?.params?.bookingFor || 'Myself';
-  const movementType = props?.route?.params?.movementType || 'Residential';
+  const movementType = props?.route?.params?.movementType || {};
   const [headerText, setHeaderText] = useState(
     bookingFor === 'Myself' ? 'MOVING TO' : '',
   );

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Colors, hp, wp} from '../../../constant/colors';
-import {Image, Pressable, StyleSheet, View} from 'react-native';
+import {Image, Platform, Pressable, StyleSheet, View} from 'react-native';
 import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -90,7 +90,11 @@ const EditProfile = (props) => {
               />
             </View>
           </View>
-          <View style={{marginBottom: hp(3)}}>
+          <View
+            style={[
+              {marginBottom: hp(3)},
+              Platform.OS !== 'android' && {zIndex: 5001},
+            ]}>
             <DropDownAndroid
               value={data.gender}
               width={wp(90)}

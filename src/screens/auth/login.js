@@ -110,6 +110,7 @@ const Login = (props) => {
                   </Text>
                 </View>
                 <Button
+                  isLoading={isLoading}
                   spaceTop={hp(4)}
                   label={'SEND OTP'}
                   onPress={() => {

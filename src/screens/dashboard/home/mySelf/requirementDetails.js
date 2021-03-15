@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -18,17 +18,22 @@ import CustomModalAndroid from '../../../../components/customModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DropDownAndroid from '../../../../components/dropDown';
 import FlatButton from '../../../../components/flatButton';
-import {ImageSelection, pad_with_zeroes} from '../../../../constant/commonFun';
+import {
+  CustomAlert,
+  ImageSelection,
+  pad_with_zeroes,
+} from '../../../../constant/commonFun';
 import CloseIcon from '../../../../components/closeIcon';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import Slider from 'rn-range-slider';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import OrderDetailModal from '../../myBooking/orderDetailModal';
 import ImageCross from '../../../../assets/svg/image_cross.svg';
 import CustomLabel from './CustomLabel';
+import {APICall} from '../../../../redux/actions/user';
+import {STORE} from '../../../../redux';
 
 const RequirementDetails = (props) => {
-  const [roomType, setRoomType] = useState(1);
+  const [roomType, setRoomType] = useState(0);
   const [itemModalVisible, setItemModalVisible] = useState(false);
   const [editItem, setEditItem] = useState(false);
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(
@@ -41,20 +46,73 @@ const RequirementDetails = (props) => {
   const [itemData, setItemData] = useState({
     quantity: 1,
   });
+  const [subServices, setSubServices] = useState([]);
   const [fetchedData, setFetchedData] = useState([
-    {
-      title: 'Table',
-      desc: 'Medium, Acrylic',
-    },
-    {
-      title: 'Chairs',
-      desc: 'Large, Polycarbonate',
-    },
-    {
-      title: 'Desk',
-      desc: 'Medium, Acrylic',
-    },
+    // {
+    //   id: 1,
+    //   icon:
+    //     'http://localhost:8000/storage/inventories/inventory-iconChair-603cd394a83de.png',
+    //   name: 'Chair',
+    //   material: '["wood","plastic","steel"]',
+    //   image:
+    //     'http://localhost:8000/storage/inventories/inventory-imageChair-603cd394a83dc.png',
+    //   status: 1,
+    //   size: '["small","medium","large"]',
+    // },
+    // {
+    //   id: 2,
+    //   icon:
+    //     'http://localhost:8000/storage/inventories/inventory-iconTable-603cd3ca1cb59.png',
+    //   name: 'Table',
+    //   material: '["wood","plastic","steel","fibre","glass"]',
+    //   image:
+    //     'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
+    //   status: 1,
+    //   size: '["small","medium","large"]',
+    // },
   ]);
+
+  const getInventories = (id) => {
+    let obj = {
+      url: `inventories?subservice_id=${id}`,
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+    };
+    APICall(obj)
+      .then((res) => {
+        if (res?.data?.status === 'success') {
+          setFetchedData(res?.data?.data);
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    let obj = {
+      url: `subservices?service_id=${props?.movementType?.id}`,
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+    };
+    APICall(obj)
+      .then((res) => {
+        if (res?.data?.status === 'success') {
+          setSubServices(res?.data?.data?.subservices || []);
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const handleValueChange = useCallback((low, high) => {
     setLow(low);
@@ -71,7 +129,7 @@ const RequirementDetails = (props) => {
   const renderItem = ({item, index}) => {
     return (
       <View
-        key={index}
+        key={item.id}
         style={{
           width: '95%',
           justifyContent: 'center',
@@ -83,7 +141,7 @@ const RequirementDetails = (props) => {
             color: Colors.inputTextColor,
             fontSize: wp(4),
           }}>
-          {item.title}
+          {item.name}
         </Text>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View style={{width: '38%', marginRight: '2%'}}>
@@ -94,10 +152,10 @@ const RequirementDetails = (props) => {
                 color: Colors.inputTextColor,
                 fontSize: wp(3.5),
               }}>
-              {item.desc}
+              {item.material}
             </Text>
           </View>
-          {(props.movementType === 'Office' && (
+          {(props?.movementType?.id === 'Office' && (
             <View
               style={{
                 width: '28%',
@@ -199,48 +257,50 @@ const RequirementDetails = (props) => {
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
-      {props.movementType === 'Residential' && (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          bounces={false}
-          contentContainerStyle={{
-            paddingHorizontal: wp(5),
-          }}>
-          {[1, 2, 3, 4, 5].map((item, index) => {
-            return (
-              <Pressable
-                key={index}
-                onPress={() => setRoomType(item)}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        bounces={false}
+        contentContainerStyle={{
+          paddingHorizontal: wp(5),
+        }}>
+        {subServices.map((item, index) => {
+          return (
+            <Pressable
+              key={index}
+              onPress={() => {
+                getInventories(item.id);
+                setRoomType(item.id);
+              }}
+              style={{
+                height: wp(20),
+                width: wp(20),
+                borderRadius: wp(10),
+                borderWidth: 2,
+                borderColor:
+                  roomType === item.id ? Colors.darkBlue : Colors.white,
+                backgroundColor: Colors.white,
+                marginRight: wp(3),
+                ...STYLES.common,
+              }}>
+              <Text
                 style={{
-                  height: wp(20),
-                  width: wp(20),
-                  borderRadius: wp(10),
-                  borderWidth: 2,
-                  borderColor:
-                    roomType === item ? Colors.darkBlue : Colors.white,
-                  backgroundColor: Colors.white,
-                  marginRight: wp(3),
-                  ...STYLES.common,
+                  fontFamily: 'Gilroy-Light',
+                  color: Colors.inputTextColor,
+                  fontSize: wp(4),
                 }}>
-                <Text
-                  style={{
-                    fontFamily: 'Gilroy-Light',
-                    color: Colors.inputTextColor,
-                    fontSize: wp(4),
-                  }}>
-                  {item} BHK
-                </Text>
-              </Pressable>
-            );
-          })}
-        </ScrollView>
-      )}
+                {item?.name}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+
       <View style={styles.inputForm}>
         <Text style={[STYLES.textHeader, {textTransform: 'uppercase'}]}>
-          {props.movementType === 'Residential'
+          {props?.movementType?.id === 1
             ? `${roomType} BHK ITEM LIST`
-            : `${props.movementType} ITEM LIST`}
+            : `${props?.movementType?.name} ITEM LIST`}
         </Text>
         <View style={{marginTop: hp(3)}}>
           <FlatList
@@ -401,7 +461,11 @@ const RequirementDetails = (props) => {
           items={[{label: 'TV', value: 'tv'}]}
           onChangeItem={(text) => {}}
         />
-        <View style={{flexDirection: 'row', marginTop: hp(2)}}>
+        <View
+          style={[
+            {flexDirection: 'row', marginTop: hp(2)},
+            Platform.OS !== 'android' && {zIndex: 5001},
+          ]}>
           <DropDownAndroid
             label={'Material'}
             items={[{label: 'Polycarbonate', value: 'polycarbonate'}]}
@@ -418,7 +482,7 @@ const RequirementDetails = (props) => {
           />
         </View>
         <View style={{width: '90%'}}>
-          {(props.movementType !== 'Residential' && (
+          {(props?.movementType?.id !== 1 && (
             <View
               style={{
                 // width: Platform.OS === 'android' ? wp(56) : wp(57),
@@ -460,34 +524,6 @@ const RequirementDetails = (props) => {
                 )}
                 customLabel={CustomLabel}
               />
-              {/*<Slider*/}
-              {/*  style={{*/}
-              {/*    width: wp(85),*/}
-              {/*    alignSelf: 'center',*/}
-              {/*    marginTop: hp(4),*/}
-              {/*    marginBottom: hp(1),*/}
-              {/*    justifyContent: 'flex-end',*/}
-              {/*  }}*/}
-              {/*  min={0}*/}
-              {/*  max={1000}*/}
-              {/*  step={1}*/}
-              {/*  floatingLabel*/}
-              {/*  renderThumb={() => <View style={styles.sliderThumb} />}*/}
-              {/*  renderRail={() => (*/}
-              {/*    <View*/}
-              {/*      style={{*/}
-              {/*        ...styles.sliderRail,*/}
-              {/*        width: '100%',*/}
-              {/*        borderColor: '#EEE5FC',*/}
-              {/*      }}*/}
-              {/*    />*/}
-              {/*  )}*/}
-              {/*  renderRailSelected={() => <View style={styles.sliderRail} />}*/}
-              {/*  renderLabel={(value) => (*/}
-              {/*    <Text style={styles.sliderLabel}>{value}</Text>*/}
-              {/*  )}*/}
-              {/*  onValueChanged={handleValueChange}*/}
-              {/*/>*/}
               <View
                 style={{
                   flexDirection: 'row',

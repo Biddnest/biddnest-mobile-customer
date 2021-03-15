@@ -91,7 +91,11 @@ const Signup = (props) => {
               keyboard={'email-address'}
               onChange={(text) => handleState('email', text)}
             />
-            <View style={{flexDirection: 'row'}}>
+            <View
+              style={[
+                {flexDirection: 'row'},
+                Platform.OS !== 'android' && {zIndex: 5001},
+              ]}>
               <DropDownAndroid
                 label={'Gender'}
                 items={[

@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {
-  FlatList, Image,
+  FlatList,
+  Image,
   ImageBackground,
   Pressable,
   StyleSheet,
@@ -109,9 +110,9 @@ export function DrawerContent(props) {
           </Pressable>
           <View style={styles.profilePhoto}>
             <Image
-                source={{uri: userData?.avatar}}
-                style={{height: '100%', width: '100%'}}
-                resizeMode={'contain'}
+              source={{uri: userData?.avatar}}
+              style={{height: '100%', width: '100%'}}
+              resizeMode={'contain'}
             />
           </View>
           <View style={{width: wp(35), paddingLeft: wp(2)}}>
