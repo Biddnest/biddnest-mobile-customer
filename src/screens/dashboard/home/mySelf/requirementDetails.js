@@ -34,6 +34,7 @@ import {APICall} from '../../../../redux/actions/user';
 import {STORE} from '../../../../redux';
 
 const RequirementDetails = (props) => {
+  const {data, handleStateChange} = props;
   const [roomType, setRoomType] = useState(0);
   const [itemModalVisible, setItemModalVisible] = useState(false);
   const [editItem, setEditItem] = useState(false);
@@ -41,7 +42,6 @@ const RequirementDetails = (props) => {
     false,
   );
   const [multiSliderValue, setMultiSliderValue] = React.useState([250, 750]);
-  const [data, setData] = useState({});
   const [low, setLow] = useState(250);
   const [high, setHigh] = useState(750);
   const [itemData, setItemData] = useState({
@@ -621,10 +621,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  mapView: {
-    height: hp(60),
-    width: wp(100),
-  },
   common: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -635,30 +631,9 @@ const styles = StyleSheet.create({
     borderRadius: 17.5,
     backgroundColor: '#EFEFF3',
   },
-  sliderRail: {
-    borderWidth: 2,
-    borderColor: Colors.darkBlue,
-    height: 2,
-  },
-  sliderThumb: {
-    height: 20,
-    width: 20,
-    borderRadius: 10,
-    backgroundColor: Colors.white,
-    borderWidth: 1,
-    borderColor: '#C6DFFA',
-  },
   sliderText: {
     fontFamily: 'Roboto-Light',
     fontSize: wp(3.5),
     color: Colors.inputTextColor,
-  },
-  sliderLabel: {
-    backgroundColor: Colors.darkBlue,
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    color: Colors.white,
-    borderRadius: 3,
-    overflow: 'hidden',
   },
 });

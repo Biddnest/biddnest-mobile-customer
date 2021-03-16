@@ -200,20 +200,6 @@ const styles = StyleSheet.create({
     width: wp(42),
     alignItems: 'center',
   },
-  arrowView: {
-    height: hp(6.5),
-    width: hp(6.5),
-    backgroundColor: Colors.white,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: Colors.btnBG,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mapView: {
-    height: hp(60),
-    width: wp(100),
-  },
   common: {
     alignItems: 'center',
     justifyContent: 'center',

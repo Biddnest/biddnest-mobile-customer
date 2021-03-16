@@ -16,13 +16,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CloseIcon from '../../../../components/closeIcon';
 
 const FriendsDetails = (props) => {
-  const [data, setData] = useState({});
-  const handleState = (key, value) => {
-    setData({
-      ...data,
-      [key]: value,
-    });
-  };
+  const {data, handleStateChange} = props;
 
   return (
     <View>
@@ -45,20 +39,20 @@ const FriendsDetails = (props) => {
             label={'Friend’s Name *'}
             // isRight={error.firstName}
             placeHolder={'Friend’s Name'}
-            onChange={(text) => handleState('firstName', text)}
+            onChange={(text) => handleStateChange('firstName', text)}
           />
           <TextInput
             label={'Friend’s Phone Number *'}
             // isRight={error.firstName}
             placeHolder={'Friend’s Phone Number'}
-            onChange={(text) => handleState('firstName', text)}
+            onChange={(text) => handleStateChange('firstName', text)}
           />
           <TextInput
             label={'Friend’s Email *'}
             // isRight={error.firstName}
             keyboard={'email-address'}
             placeHolder={'Friend’s Email'}
-            onChange={(text) => handleState('firstName', text)}
+            onChange={(text) => handleStateChange('firstName', text)}
           />
         </View>
       </KeyboardAwareScrollView>
@@ -85,22 +79,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderColor: '#DEE6ED',
   },
-  arrowView: {
-    height: hp(6.5),
-    width: hp(6.5),
-    backgroundColor: Colors.white,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: Colors.btnBG,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   mapView: {
     height: hp(60),
     width: wp(100),
-  },
-  common: {
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });

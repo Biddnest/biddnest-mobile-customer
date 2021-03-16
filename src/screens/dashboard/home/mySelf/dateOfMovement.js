@@ -1,18 +1,19 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, Pressable, Platform, Image} from 'react-native';
-import {Colors, hp, wp, boxShadow} from '../../../../constant/colors';
+import {View, StyleSheet, Text, Pressable} from 'react-native';
+import {Colors, hp, wp} from '../../../../constant/colors';
 import Button from '../../../../components/button';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Input} from 'react-native-elements';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CustomModalAndroid from '../../../../components/customModal';
-import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
+import {Calendar} from 'react-native-calendars';
 import FlatButton from '../../../../components/flatButton';
 import CloseIcon from '../../../../components/closeIcon';
 
 const DateOfMovement = (props) => {
   const [openCalender, setCalender] = useState(false);
   const [dateArray, setDateArray] = useState({});
+  const {data, handleStateChange} = props;
   return (
     <View>
       <KeyboardAwareScrollView
@@ -147,23 +148,5 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: Colors.white,
     borderColor: '#DEE6ED',
-  },
-  arrowView: {
-    height: hp(6.5),
-    width: hp(6.5),
-    backgroundColor: Colors.white,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: Colors.btnBG,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mapView: {
-    height: hp(60),
-    width: wp(100),
-  },
-  common: {
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });

@@ -92,11 +92,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     ...STYLES.common,
   },
-  profileText: {
-    fontFamily: 'Roboto-Regular',
-    color: Colors.darkBlue,
-    fontSize: wp(10),
-  },
   headerText: {
     fontFamily: 'Roboto-Light',
     fontSize: wp(3.8),

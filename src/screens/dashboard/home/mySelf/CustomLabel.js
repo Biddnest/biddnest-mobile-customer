@@ -95,12 +95,4 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     overflow: 'hidden',
   },
-  pointer: {
-    position: 'absolute',
-    top: -pointerWidth / 4,
-    left: (width - pointerWidth) / 2,
-    width: pointerWidth,
-    height: pointerWidth,
-    backgroundColor: '#999',
-  },
 });

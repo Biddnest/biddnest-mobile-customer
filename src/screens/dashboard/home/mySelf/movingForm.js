@@ -19,15 +19,7 @@ import {pad_with_zeroes} from '../../../../constant/commonFun';
 
 const MovingForm = (props) => {
   const [mapVisible, setMapVisible] = useState(false);
-  const [data, setData] = useState({
-    floor: 0,
-  });
-  const handleState = (key, value) => {
-    setData({
-      ...data,
-      [key]: value,
-    });
-  };
+  const {data, handleStateChange} = props;
 
   return (
     <KeyboardAwareScrollView
@@ -58,13 +50,13 @@ const MovingForm = (props) => {
           // isRight={error.firstName}
           placeHolder={'Select building or nearest landmark'}
           numberOfLines={4}
-          onChange={(text) => handleState('firstName', text)}
+          onChange={(text) => handleStateChange('firstName', text)}
         />
         <TextInput
           label={'Pincode'}
           // isRight={error.firstName}
           placeHolder={'560097'}
-          onChange={(text) => handleState('firstName', text)}
+          onChange={(text) => handleStateChange('firstName', text)}
         />
         <View
           style={{
@@ -76,12 +68,12 @@ const MovingForm = (props) => {
             label={'Floor'}
             value={pad_with_zeroes(data.floor, 2).toString()}
             placeHolder={'Floor'}
-            onChange={(text) => handleState('firstName', text)}
+            onChange={(text) => handleStateChange('firstName', text)}
           />
           <Pressable
             style={styles.arrowView}
             onPress={() => {
-              handleState('floor', parseInt(data.floor) + 1 || 0);
+              handleStateChange('floor', parseInt(data.floor) + 1 || 0);
             }}>
             <MaterialIcons
               name="arrow-drop-up"
@@ -96,7 +88,7 @@ const MovingForm = (props) => {
             }}
             onPress={() => {
               if (parseInt(data.floor) - 1 >= 0) {
-                handleState('floor', parseInt(data.floor) - 1 || 0);
+                handleStateChange('floor', parseInt(data.floor) - 1 || 0);
               }
             }}>
             <MaterialIcons
@@ -194,7 +186,7 @@ const MovingForm = (props) => {
               smallLabel={'(Drag the map to move the pointer)'}
               // isRight={error.firstName}
               placeHolder={'Location'}
-              onChange={(text) => handleState('firstName', text)}
+              onChange={(text) => handleStateChange('firstName', text)}
             />
           </View>
           <View style={{marginTop: hp(2)}}>

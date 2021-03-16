@@ -59,10 +59,4 @@ const styles = StyleSheet.create({
     marginTop: hp(1),
     marginBottom: hp(2),
   },
-  mainText: {
-    fontFamily: 'Roboto-Regular',
-    fontSize: wp(3.5),
-    color: Colors.inputTextColor,
-    marginTop: hp(1),
-  },
 });

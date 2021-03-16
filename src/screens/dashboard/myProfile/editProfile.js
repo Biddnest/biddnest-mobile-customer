@@ -314,11 +314,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     ...STYLES.common,
   },
-  profileText: {
-    fontFamily: 'Roboto-Regular',
-    color: Colors.white,
-    fontSize: wp(7),
-  },
   imageUploadBtn: {
     height: wp(10),
     backgroundColor: Colors.btnBG,

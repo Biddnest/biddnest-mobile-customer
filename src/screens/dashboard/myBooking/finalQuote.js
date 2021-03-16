@@ -255,5 +255,4 @@ const styles = StyleSheet.create({
     color: Colors.inputTextColor,
     marginTop: hp(2),
   },
-  rightText: {},
 });

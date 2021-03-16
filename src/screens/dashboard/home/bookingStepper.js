@@ -49,6 +49,7 @@ const BookingStepper = (props) => {
   );
   const [orderBooked, setOrderBooked] = useState(false);
   const [movingFrom, setMovingFrom] = useState(false);
+  const [data, setData] = useState({});
 
   useEffect(() => {
     switch (currentPosition) {
@@ -106,15 +107,7 @@ const BookingStepper = (props) => {
     setCurrentPosition(position);
     // }
   };
-  const renderImage = (uri) => {
-    return (
-      <Image
-        source={uri}
-        resizeMode={'contain'}
-        style={{height: '60%', width: '60%'}}
-      />
-    );
-  };
+
   const renderFriends = (stepStatus) => {
     if (stepStatus === 'current') {
       return <ActiveFriends width={hp(9)} height={hp(9)} />;
@@ -198,6 +191,12 @@ const BookingStepper = (props) => {
       }
     }
   };
+  const handleStateChange = (key, value) => {
+    setData({
+      ...data,
+      [key]: value,
+    });
+  };
   const renderStepIndicator = (params: any) =>
     getStepIndicatorIconConfig(params);
 
@@ -210,6 +209,8 @@ const BookingStepper = (props) => {
         if (bookingFor === 'Others') {
           return (
             <FriendsDetails
+              data={data}
+              handleStateChange={handleStateChange}
               bookingFor={bookingFor}
               movementType={movementType}
               navigation={props.navigation}
@@ -219,6 +220,8 @@ const BookingStepper = (props) => {
         }
         return (
           <MovingForm
+            data={data}
+            handleStateChange={handleStateChange}
             movingFrom={movingFrom}
             changeTo={() => setMovingFrom(true)}
             bookingFor={bookingFor}
@@ -234,6 +237,8 @@ const BookingStepper = (props) => {
         if (bookingFor === 'Others') {
           return (
             <MovingForm
+              data={data}
+              handleStateChange={handleStateChange}
               movingFrom={movingFrom}
               changeTo={() => setMovingFrom(true)}
               bookingFor={bookingFor}
@@ -245,6 +250,8 @@ const BookingStepper = (props) => {
         }
         return (
           <DateOfMovement
+            data={data}
+            handleStateChange={handleStateChange}
             bookingFor={bookingFor}
             movementType={movementType}
             navigation={props.navigation}
@@ -258,6 +265,8 @@ const BookingStepper = (props) => {
         if (bookingFor === 'Others') {
           return (
             <DateOfMovement
+              data={data}
+              handleStateChange={handleStateChange}
               bookingFor={bookingFor}
               movementType={movementType}
               navigation={props.navigation}
@@ -267,6 +276,8 @@ const BookingStepper = (props) => {
         }
         return (
           <RequirementDetails
+            data={data}
+            handleStateChange={handleStateChange}
             bookingFor={bookingFor}
             movementType={movementType}
             navigation={props.navigation}
@@ -280,6 +291,8 @@ const BookingStepper = (props) => {
         if (bookingFor === 'Others') {
           return (
             <RequirementDetails
+              data={data}
+              handleStateChange={handleStateChange}
               bookingFor={bookingFor}
               movementType={movementType}
               navigation={props.navigation}
@@ -290,6 +303,8 @@ const BookingStepper = (props) => {
         if (orderBooked) {
           return (
             <Timer
+              data={data}
+              handleStateChange={handleStateChange}
               bookingFor={bookingFor}
               movementType={movementType}
               navigation={props.navigation}
@@ -299,6 +314,8 @@ const BookingStepper = (props) => {
         }
         return (
           <InitialQuote
+            data={data}
+            handleStateChange={handleStateChange}
             orderBooked={orderBooked}
             handleBooking={() => setOrderBooked(true)}
             bookingFor={bookingFor}
@@ -311,6 +328,8 @@ const BookingStepper = (props) => {
         if (orderBooked) {
           return (
             <Timer
+              data={data}
+              handleStateChange={handleStateChange}
               bookingFor={bookingFor}
               movementType={movementType}
               navigation={props.navigation}
@@ -320,6 +339,8 @@ const BookingStepper = (props) => {
         }
         return (
           <InitialQuote
+            data={data}
+            handleStateChange={handleStateChange}
             orderBooked={orderBooked}
             handleBooking={() => setOrderBooked(true)}
             bookingFor={bookingFor}
@@ -367,5 +388,3 @@ const BookingStepper = (props) => {
 };
 
 export default BookingStepper;
-
-const styles = StyleSheet.create({});

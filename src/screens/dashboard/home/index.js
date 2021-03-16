@@ -459,10 +459,6 @@ const Home = (props) => {
 export default Home;
 
 const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    backgroundColor: Colors.pageBG,
-  },
   common: {
     alignItems: 'center',
     justifyContent: 'center',
