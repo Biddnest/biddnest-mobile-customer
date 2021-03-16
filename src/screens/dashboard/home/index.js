@@ -20,13 +20,14 @@ import LocationDistance from '../../../components/locationDistance';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Friends from '../../../assets/svg/friends.svg';
 import MenuIcon from '../../../assets/svg/menu_icon.svg';
-import HomeTab from '../../../assets/svg/home_tab.svg';
-import SupermarketTab from '../../../assets/svg/supermarket_tab.svg';
-import BuildingTab from '../../../assets/svg/building_tab.svg';
 import HomeCall from '../../../assets/svg/home_call.svg';
 import MySelf from '../../../assets/svg/myself.svg';
 import Coupon from '../../../assets/svg/coupon.svg';
-import {CustomAlert, getLocation} from '../../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  getLocation,
+} from '../../../constant/commonFun';
 import {getServices, getSlider} from '../../../redux/actions/user';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
@@ -129,7 +130,7 @@ const Home = (props) => {
             });
         })
         .catch((err) => {
-          console.log(err);
+          CustomConsole(err);
         });
     }
   }, [isFocused]);

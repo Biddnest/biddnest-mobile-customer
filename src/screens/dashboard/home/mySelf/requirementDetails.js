@@ -20,6 +20,7 @@ import DropDownAndroid from '../../../../components/dropDown';
 import FlatButton from '../../../../components/flatButton';
 import {
   CustomAlert,
+  CustomConsole,
   ImageSelection,
   pad_with_zeroes,
 } from '../../../../constant/commonFun';
@@ -89,7 +90,7 @@ const RequirementDetails = (props) => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        CustomConsole(err);
       });
   };
 
@@ -110,7 +111,7 @@ const RequirementDetails = (props) => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        CustomConsole(err);
       });
   }, []);
 

@@ -20,6 +20,12 @@ export const resetNavigator = (props, screenName) => {
   );
 };
 
+export const CustomConsole = (msg) => {
+  if (__DEV__) {
+    console.log(msg);
+  }
+};
+
 export const CustomAlert = (msg = '') => {
   return Toast.show(msg, Toast.LONG);
 };
@@ -89,25 +95,25 @@ export const locationPermission = async () => {
         .then((result) => {
           switch (result) {
             case RESULTS.UNAVAILABLE:
-              console.log(
+              CustomConsole(
                 'This feature is not available (on this device / in this context)',
               );
               break;
             case RESULTS.DENIED:
-              console.log(
+              CustomConsole(
                 'The permission has not been requested / is denied but requestable',
               );
               break;
             case RESULTS.LIMITED:
-              console.log(
+              CustomConsole(
                 'The permission is limited: some actions are possible',
               );
               break;
             case RESULTS.GRANTED:
-              console.log('The permission is granted');
+              CustomConsole('The permission is granted');
               break;
             case RESULTS.BLOCKED:
-              console.log(
+              CustomConsole(
                 'The permission is denied and not requestable anymore',
               );
               break;
