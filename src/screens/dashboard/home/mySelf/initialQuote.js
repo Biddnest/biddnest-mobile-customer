@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -27,15 +27,36 @@ import {
   CustomConsole,
   resetNavigator,
 } from '../../../../constant/commonFun';
+import {useSelector} from 'react-redux';
 
 const InitialQuote = (props) => {
+  const configData =
+    useSelector((state) => state.Login?.configData?.keys) || {};
   const [offerType, setOfferType] = useState(0);
   const [rejectData, setRejectData] = useState({
-    reason: 'highprice',
+    reason: '',
+    desc: '',
   });
+  const [defaultReason, setDefaultReason] = useState([]);
+  const [error, setError] = useState(undefined);
   const [isLoading, setLoading] = useState(false);
   const [rejectVisible, setRejectVisible] = useState(false);
   const [isAgree, setAgree] = useState(true);
+
+  useEffect(() => {
+    let temp = [];
+    configData.cancellation_reason_options.forEach((item) => {
+      temp.push({
+        label: item,
+        value: item,
+      });
+    });
+    setRejectData({
+      ...rejectData,
+      reason: configData?.cancellation_reason_options[0],
+    });
+    setDefaultReason(temp);
+  }, [configData]);
 
   let estimation = props?.apiResponse?.quote_estimate
     ? JSON.parse((props?.apiResponse?.quote_estimate).toString())
@@ -169,7 +190,7 @@ const InitialQuote = (props) => {
         <DropDownAndroid
           label={''}
           width={wp(90)}
-          items={[{label: 'High Price', value: 'highprice'}]}
+          items={defaultReason}
           onChangeItem={(text) => setRejectData({...rejectData, reason: text})}
         />
         <View style={{width: wp(90)}}>
@@ -177,6 +198,8 @@ const InitialQuote = (props) => {
             label={''}
             placeHolder={'Enter your expected price here'}
             numberOfLines={4}
+            isRight={error}
+            value={rejectData?.desc}
             onChange={(text) => setRejectData({...rejectData, desc: text})}
           />
         </View>
@@ -202,33 +225,39 @@ const InitialQuote = (props) => {
           onPress={() => {
             // Cancel booking API
             setLoading(true);
-            let obj = {
-              url: 'bookings/cancel',
-              method: 'delete',
-              headers: {
-                Authorization:
-                  'Bearer ' + STORE.getState().Login?.loginData?.token,
-              },
-              data: {
-                ...rejectData,
-                public_booking_id: props?.apiResponse?.public_booking_id,
-              },
-            };
-            APICall(obj)
-              .then((res) => {
-                setLoading(false);
-                if (res?.data?.status === 'success') {
-                  props.setApiResponse(res?.data?.booking);
-                  setRejectVisible(false);
-                  resetNavigator(props, 'Dashboard');
-                } else {
-                  CustomAlert(res?.data?.message);
-                }
-              })
-              .catch((err) => {
-                setLoading(false);
-                CustomConsole(err);
-              });
+            if (rejectData?.desc?.replace(/^\s+/g, '').length === 0) {
+              setError(false);
+              setLoading(false);
+            } else {
+              setError(true);
+              let obj = {
+                url: 'bookings/cancel',
+                method: 'delete',
+                headers: {
+                  Authorization:
+                    'Bearer ' + STORE.getState().Login?.loginData?.token,
+                },
+                data: {
+                  ...rejectData,
+                  public_booking_id: props?.apiResponse?.public_booking_id,
+                },
+              };
+              APICall(obj)
+                .then((res) => {
+                  setLoading(false);
+                  if (res?.data?.status === 'success') {
+                    props.setApiResponse(res?.data?.booking);
+                    setRejectVisible(false);
+                    resetNavigator(props, 'Dashboard');
+                  } else {
+                    CustomAlert(res?.data?.message);
+                  }
+                })
+                .catch((err) => {
+                  setLoading(false);
+                  CustomConsole(err);
+                });
+            }
           }}
         />
       </CustomModalAndroid>

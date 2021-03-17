@@ -32,9 +32,9 @@ const MainNavigator = () => {
       <PersistGate loading={null} persistor={PERSIST_STORE}>
         <SafeAreaView style={{flex: 1}}>
           <App />
-          {STORE.getState().Login?.loginData?.token && (
-            <ChatBotButton onPress={() => {}} />
-          )}
+          {/*{STORE.getState().Login?.loginData?.token && (*/}
+          {/*  <ChatBotButton onPress={() => {}} />*/}
+          {/*)}*/}
         </SafeAreaView>
       </PersistGate>
     </Provider>

@@ -57,7 +57,7 @@ const DropDownAndroid = (props) => {
             backgroundColor: Colors.textBG,
             color: Colors.inputTextColor,
           }}
-          selectedLabelLength={10}
+          selectedLabelLength={props.width ? props.width : wp(45)}
           itemStyle={{
             justifyContent: 'flex-start',
           }}

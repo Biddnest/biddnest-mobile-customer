@@ -140,40 +140,26 @@ const Signup = (props) => {
               onPress={() => {
                 setLoading(true);
                 let tempError = {};
-                if (
+                tempError.fname = !(
                   !data.fname ||
                   data.fname.length === 0 ||
                   /[^a-zA-Z]/.test(data.fname)
-                ) {
-                  tempError.fname = false;
-                } else {
-                  tempError.fname = true;
-                }
-                if (
+                );
+                tempError.lname = !(
                   !data.lname ||
                   data.lname.length === 0 ||
                   /[^a-zA-Z]/.test(data.lname)
-                ) {
-                  tempError.lname = false;
-                } else {
-                  tempError.lname = true;
-                }
-                if (
+                );
+                tempError.email = !(
                   !data.email ||
                   data.email.length === 0 ||
                   !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
                     data.email,
                   )
-                ) {
-                  tempError.email = false;
-                } else {
-                  tempError.email = true;
-                }
-                if (!data.referral_code || data.referral_code.length === 0) {
-                  tempError.referral_code = false;
-                } else {
-                  tempError.referral_code = true;
-                }
+                );
+                tempError.referral_code = !(
+                  !data.referral_code || data.referral_code.length === 0
+                );
                 if (!isAgree) {
                   CustomAlert('Agree to the Terms & Conditions');
                   tempError.isAgree = false;

@@ -18,8 +18,15 @@ import FlatButton from '../../../../components/flatButton';
 import {pad_with_zeroes} from '../../../../constant/commonFun';
 
 const MovingForm = (props) => {
-  const [mapVisible, setMapVisible] = useState(false);
   const {data, handleStateChange} = props;
+  const [mapVisible, setMapVisible] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState({
+    address: undefined,
+    pincode: undefined,
+    floor: undefined,
+    city: undefined,
+  });
   let source = data?.source || {};
   let destination = data?.destination || {};
 
@@ -55,13 +62,13 @@ const MovingForm = (props) => {
           <TextInput
             disable={true}
             label={props.movingFrom ? 'To City' : 'From City'}
-            // isRight={error.firstName}
+            isRight={error.city}
             placeHolder={'Chennai'}
           />
         </Pressable>
         <TextInput
           label={'Address'}
-          // isRight={error.firstName}
+          isRight={error.address}
           placeHolder={'Select building or nearest landmark'}
           numberOfLines={4}
           value={
@@ -73,11 +80,12 @@ const MovingForm = (props) => {
         />
         <TextInput
           label={'Pincode'}
-          // isRight={error.firstName}
+          isRight={error.pincode}
+          keyboard={'decimal-pad'}
           value={
             props.movingFrom
-              ? destination?.meta?.pincode
-              : source?.meta?.pincode
+              ? destination?.meta?.pincode.toString()
+              : source?.meta?.pincode.toString()
           }
           placeHolder={'560097'}
           onChange={(text) => handleState('pincode', text)}
@@ -90,6 +98,7 @@ const MovingForm = (props) => {
           }}>
           <TextInput
             label={'Floor'}
+            isRight={error.floor}
             value={
               props.movingFrom
                 ? pad_with_zeroes(destination?.meta?.floor, 2).toString()
@@ -178,14 +187,61 @@ const MovingForm = (props) => {
           <Button
             label={'NEXT'}
             onPress={() => {
-              if (props.movingFrom) {
-                if (props.bookingFor === 'Others') {
-                  props.onPageChange(2);
+              setLoading(true);
+              let tempError = {};
+              let pageData = props.movingFrom
+                ? destination?.meta
+                : source?.meta;
+              if (!pageData.city || pageData.city.length === 0) {
+                tempError.city = false;
+              } else {
+                tempError.city = true;
+              }
+              if (!pageData.address || pageData.address.length === 0) {
+                tempError.address = false;
+              } else {
+                tempError.address = true;
+              }
+              if (
+                !pageData.pincode ||
+                pageData?.pincode?.length !== 6 ||
+                !/^[0-9]+$/.test(pageData?.pincode)
+              ) {
+                tempError.pincode = false;
+              } else {
+                tempError.pincode = true;
+              }
+              if (
+                !pageData.floor ||
+                pageData.floor.length === 0 ||
+                !/^[0-9]+$/.test(pageData?.floor)
+              ) {
+                tempError.floor = false;
+              } else {
+                tempError.floor = true;
+              }
+              setError(tempError);
+              if (
+                Object.values(tempError).findIndex((item) => item === false) ===
+                -1
+              ) {
+                setError({
+                  address: undefined,
+                  pincode: undefined,
+                  floor: undefined,
+                  city: undefined,
+                });
+                if (props.movingFrom) {
+                  if (props.bookingFor === 'Others') {
+                    props.onPageChange(2);
+                  } else {
+                    props.onPageChange(1);
+                  }
                 } else {
-                  props.onPageChange(1);
+                  props.changeTo();
                 }
               } else {
-                props.changeTo();
+                setLoading(false);
               }
             }}
             width={wp(80)}

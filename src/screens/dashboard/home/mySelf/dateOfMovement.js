@@ -13,6 +13,8 @@ import CloseIcon from '../../../../components/closeIcon';
 const DateOfMovement = (props) => {
   const {data, handleStateChange} = props;
   const [openCalender, setCalender] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState(undefined);
   const [dateArray, setDateArray] = useState({});
 
   useEffect(() => {
@@ -79,7 +81,8 @@ const DateOfMovement = (props) => {
               borderRadius: 10,
               height: hp(6.5),
               marginTop: hp(1),
-              borderColor: Colors.silver,
+              borderColor: error ? Colors.red : Colors.silver,
+              borderBottomWidth: 2,
             }}
             labelStyle={{
               fontFamily: 'Roboto-Bold',
@@ -90,6 +93,7 @@ const DateOfMovement = (props) => {
               fontSize: wp(4),
               backgroundColor: Colors.textBG,
               color: Colors.inputTextColor,
+              height: '99%',
             }}
           />
         </Pressable>
@@ -140,11 +144,20 @@ const DateOfMovement = (props) => {
       <View style={{alignSelf: 'center'}}>
         <Button
           label={'NEXT'}
+          isLoading={isLoading}
           onPress={() => {
-            if (props.bookingFor === 'Others') {
-              props.onPageChange(3);
+            setLoading(true);
+            if (data?.movement_dates?.length > 0) {
+              setError(false);
+              setLoading(false);
+              if (props.bookingFor === 'Others') {
+                props.onPageChange(3);
+              } else {
+                props.onPageChange(2);
+              }
             } else {
-              props.onPageChange(2);
+              setLoading(false);
+              setError(true);
             }
           }}
         />
