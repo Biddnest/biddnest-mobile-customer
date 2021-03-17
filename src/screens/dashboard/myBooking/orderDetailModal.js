@@ -33,7 +33,7 @@ const OrderDetailModal = (props) => {
               fontSize: wp(4),
               color: Colors.inputTextColor,
             }}>
-            Cupboards
+            {item?.name}
           </Text>
           <View
             style={{
@@ -41,19 +41,31 @@ const OrderDetailModal = (props) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <View style={styles.textBox}>
+            <View
+              style={[styles.textBox, {paddingHorizontal: 10, width: '40%'}]}>
               <Text style={styles.subText} numberOfLines={1}>
-                Medium
+                {item?.material}
               </Text>
             </View>
             <Text
-              style={[styles.subText, {width: '38%', textAlign: 'center'}]}
+              style={[
+                styles.subText,
+                {
+                  width: '25%',
+                  textAlign: 'center',
+                  textTransform: 'capitalize',
+                },
+              ]}
               numberOfLines={1}>
-              Small
+              {item?.size}
             </Text>
-            <View style={[styles.textBox, {width: '20%'}]}>
-              <Text style={styles.subText} numberOfLines={1}>
-                01
+            <View style={[styles.textBox, {maxWidth: '30%'}]}>
+              <Text
+                style={[styles.subText, {paddingHorizontal: 10}]}
+                numberOfLines={1}>
+                {item?.quantity.min
+                  ? item?.quantity.min + '-' + item?.quantity.max
+                  : item?.quantity}
               </Text>
             </View>
           </View>
@@ -87,7 +99,8 @@ const OrderDetailModal = (props) => {
       <View style={{...styles.separatorView, width: '90%'}} />
       <FlatList
         bounces={false}
-        data={[1, 2, 1]}
+        data={props.data}
+        extraData={props.data}
         renderItem={renderItem}
         contentContainerStyle={{
           marginHorizontal: wp(4),
@@ -104,6 +117,7 @@ const OrderDetailModal = (props) => {
       />
       {props.title === 'CONFIRM ITEM LIST' ? (
         <TwoButton
+          isLoading={props.isLoading}
           leftLabel={'cancel'}
           rightLabel={'confirm'}
           leftOnPress={props.leftOnPress}

@@ -17,6 +17,13 @@ import CloseIcon from '../../../../components/closeIcon';
 
 const FriendsDetails = (props) => {
   const {data, handleStateChange} = props;
+  let contact_details = data?.contact_details || {};
+
+  const handleState = (key, value) => {
+    let temp = {...data.contact_details};
+    temp[key] = value;
+    handleStateChange('contact_details', temp);
+  };
 
   return (
     <View>
@@ -38,21 +45,24 @@ const FriendsDetails = (props) => {
           <TextInput
             label={'Friend’s Name *'}
             // isRight={error.firstName}
+            value={contact_details?.name}
             placeHolder={'Friend’s Name'}
-            onChange={(text) => handleStateChange('firstName', text)}
+            onChange={(text) => handleState('name', text)}
           />
           <TextInput
             label={'Friend’s Phone Number *'}
             // isRight={error.firstName}
+            value={(contact_details?.phone).toString()}
             placeHolder={'Friend’s Phone Number'}
-            onChange={(text) => handleStateChange('firstName', text)}
+            onChange={(text) => handleState('phone', text)}
           />
           <TextInput
             label={'Friend’s Email *'}
             // isRight={error.firstName}
+            value={contact_details?.email}
             keyboard={'email-address'}
             placeHolder={'Friend’s Email'}
-            onChange={(text) => handleStateChange('firstName', text)}
+            onChange={(text) => handleState('email', text)}
           />
         </View>
       </KeyboardAwareScrollView>

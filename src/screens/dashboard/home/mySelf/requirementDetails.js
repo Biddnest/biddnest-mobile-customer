@@ -32,47 +32,83 @@ import ImageCross from '../../../../assets/svg/image_cross.svg';
 import CustomLabel from './CustomLabel';
 import {APICall} from '../../../../redux/actions/user';
 import {STORE} from '../../../../redux';
+import {useSelector} from 'react-redux';
 
 const RequirementDetails = (props) => {
-  const {data, handleStateChange} = props;
-  const [roomType, setRoomType] = useState(0);
-  const [itemModalVisible, setItemModalVisible] = useState(false);
+  const {data, handleStateChange, movementType} = props;
+  const configData =
+    useSelector((state) => state.Login?.configData?.enums?.service) || {};
+  const [defaultInventories, setDefaultInventories] = useState(
+    useSelector((state) => state.Login?.inventoriesData?.inventories) || [],
+  );
+  const [isLoading, setLoading] = useState(false);
+  const [selectedInventory, setSelectedInventory] = useState({});
+  const [selectedSubCategory, setSelectedSubCategory] = useState(null);
+  const [addItem, setAddItem] = useState(false);
+  const [addData, setAddData] = useState({});
   const [editItem, setEditItem] = useState(false);
+  const [editData, setEditData] = useState({});
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(
     false,
   );
   const [multiSliderValue, setMultiSliderValue] = React.useState([250, 750]);
-  const [low, setLow] = useState(250);
-  const [high, setHigh] = useState(750);
-  const [itemData, setItemData] = useState({
-    quantity: 1,
-  });
   const [subServices, setSubServices] = useState([]);
-  const [fetchedData, setFetchedData] = useState([
-    // {
-    //   id: 1,
-    //   icon:
-    //     'http://localhost:8000/storage/inventories/inventory-iconChair-603cd394a83de.png',
-    //   name: 'Chair',
-    //   material: '["wood","plastic","steel"]',
-    //   image:
-    //     'http://localhost:8000/storage/inventories/inventory-imageChair-603cd394a83dc.png',
-    //   status: 1,
-    //   size: '["small","medium","large"]',
-    // },
-    // {
-    //   id: 2,
-    //   icon:
-    //     'http://localhost:8000/storage/inventories/inventory-iconTable-603cd3ca1cb59.png',
-    //   name: 'Table',
-    //   material: '["wood","plastic","steel","fibre","glass"]',
-    //   image:
-    //     'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
-    //   status: 1,
-    //   size: '["small","medium","large"]',
-    // },
-  ]);
+  const [defaultInventoryData, setDefaultInventoryData] = useState([]);
+  const [inventoryItems, setInventoryItems] = useState([]);
 
+  const handleState = (key, value) => {
+    let temp = {...data.meta};
+    if (key === 'remarks') {
+      temp.customer[key] = value;
+    } else {
+      if (key === 'images') {
+        let t1 = [...temp.images];
+        t1.push(value);
+        temp[key] = t1;
+      } else {
+        temp[key] = value;
+      }
+    }
+    handleStateChange('meta', temp);
+  };
+
+  useEffect(() => {
+    let inv = [...defaultInventories];
+    defaultInventories.forEach((item, index) => {
+      let temp = {...item};
+      temp.label = temp.name;
+      temp.value = temp.name;
+      delete temp.icon;
+      inv[index] = temp;
+    });
+    if (JSON.stringify(inv) !== JSON.stringify(defaultInventories)) {
+      setDefaultInventories(inv);
+      if (inv.length > 0) {
+        let temp = {...inv[0]};
+        temp.material = JSON.parse(temp.material.toString());
+        temp.size = JSON.parse(temp.size.toString());
+        let materialAry = [];
+        let sizeAry = [];
+        temp.material.forEach((item) => {
+          materialAry.push({
+            label: item,
+            value: item,
+          });
+        });
+        temp.size.forEach((item) => {
+          sizeAry.push({
+            label: item,
+            value: item,
+          });
+        });
+        temp.material = materialAry;
+        temp.size = sizeAry;
+        setSelectedInventory(temp);
+      } else {
+        setSelectedInventory({});
+      }
+    }
+  }, [defaultInventories]);
   const getInventories = (id) => {
     let obj = {
       url: `inventories?subservice_id=${id}`,
@@ -83,8 +119,12 @@ const RequirementDetails = (props) => {
     };
     APICall(obj)
       .then((res) => {
+        let temp = [...data?.inventory_items];
+        setDefaultInventoryData(temp);
+        setInventoryItems(temp);
         if (res?.data?.status === 'success') {
-          setFetchedData(res?.data?.data);
+          // setDefaultInventoryData(res?.data?.data);
+          // setInventoryItems(res?.data?.data);
         } else {
           CustomAlert(res?.data?.message);
         }
@@ -96,7 +136,7 @@ const RequirementDetails = (props) => {
 
   useEffect(() => {
     let obj = {
-      url: `subservices?service_id=${props?.movementType?.id}`,
+      url: `subservices?service_id=${movementType?.id}`,
       method: 'get',
       headers: {
         Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
@@ -105,6 +145,12 @@ const RequirementDetails = (props) => {
     APICall(obj)
       .then((res) => {
         if (res?.data?.status === 'success') {
+          if (res?.data?.data?.subservices.length > 0) {
+            let temp = res?.data?.data?.subservices[0];
+            setSelectedSubCategory(temp);
+            getInventories(temp.id);
+            handleState('subcategory', temp.name);
+          }
           setSubServices(res?.data?.data?.subservices || []);
         } else {
           CustomAlert(res?.data?.message);
@@ -115,17 +161,25 @@ const RequirementDetails = (props) => {
       });
   }, []);
 
-  const handleValueChange = useCallback((low, high) => {
-    setLow(low);
-    setHigh(high);
-  }, []);
   const handleItemState = (key, value) => {
-    setItemData({
-      ...itemData,
+    setAddData({
+      ...addData,
       [key]: value,
     });
   };
-  const multiSliderValuesChange = (values) => setMultiSliderValue(values);
+  const multiSliderValuesChange = (values) => {
+    if (editItem) {
+      let temp = {...editData.quantity};
+      temp.min = values[0];
+      temp.max = values[1];
+      setEditData({...editData, quantity: temp});
+    } else {
+      let temp = {...addData.quantity};
+      temp.min = values[0];
+      temp.max = values[1];
+      setAddData({...addData, quantity: temp});
+    }
+  };
 
   const renderItem = ({item, index}) => {
     return (
@@ -156,7 +210,8 @@ const RequirementDetails = (props) => {
               {item.material}
             </Text>
           </View>
-          {(props?.movementType?.id === 'Office' && (
+          {(configData?.inventory_quantity_type.range ===
+            movementType?.inventory_quantity_type && (
             <View
               style={{
                 width: '28%',
@@ -171,7 +226,7 @@ const RequirementDetails = (props) => {
                 style={{
                   color: Colors.inputTextColor,
                 }}>
-                100-2000
+                {item?.quantity?.min}-{item?.quantity?.max}
               </Text>
             </View>
           )) || (
@@ -187,11 +242,12 @@ const RequirementDetails = (props) => {
               }}>
               <Pressable
                 onPress={() => {
-                  let temp = [...fetchedData];
-                  let data = temp[index];
-                  if (data?.count > 0) {
-                    data.count = data?.count - 1 || 0;
-                    setFetchedData(temp);
+                  let temp = [...inventoryItems];
+                  let t1 = temp[index];
+                  if (t1?.quantity > 1) {
+                    t1.quantity = t1?.quantity - 1 || 0;
+                    setInventoryItems(temp);
+                    handleStateChange('inventory_items', temp);
                   }
                 }}>
                 <MaterialCommunityIcons
@@ -204,14 +260,15 @@ const RequirementDetails = (props) => {
                 style={{
                   color: Colors.inputTextColor,
                 }}>
-                {item?.count || 0}
+                {item?.quantity || 0}
               </Text>
               <Pressable
                 onPress={() => {
-                  let temp = [...fetchedData];
-                  let data = temp[index];
-                  data.count = data?.count + 1 || 0;
-                  setFetchedData(temp);
+                  let temp = [...inventoryItems];
+                  let t1 = temp[index];
+                  t1.quantity = t1?.quantity + 1 || 0;
+                  setInventoryItems(temp);
+                  handleStateChange('inventory_items', temp);
                 }}>
                 <MaterialCommunityIcons
                   name={'plus'}
@@ -221,7 +278,6 @@ const RequirementDetails = (props) => {
               </Pressable>
             </View>
           )}
-
           <View
             style={{
               width: '28%',
@@ -231,6 +287,7 @@ const RequirementDetails = (props) => {
             }}>
             <Pressable
               onPress={() => {
+                setEditData(item);
                 setConfirmationModalVisible(false);
                 setEditItem(true);
               }}
@@ -244,13 +301,19 @@ const RequirementDetails = (props) => {
                 color={Colors.darkBlue}
               />
             </Pressable>
-            <View
+            <Pressable
+              onPress={() => {
+                let temp = [...inventoryItems];
+                temp.splice(index, 1);
+                setInventoryItems(temp);
+                handleStateChange('inventory_items', temp);
+              }}
               style={{
                 ...styles.backgroundCircle,
                 ...STYLES.common,
               }}>
               <Ionicons name={'trash'} size={20} color={Colors.darkBlue} />
-            </View>
+            </Pressable>
           </View>
         </View>
       </View>
@@ -270,8 +333,9 @@ const RequirementDetails = (props) => {
             <Pressable
               key={index}
               onPress={() => {
+                handleState('subcategory', item.name);
                 getInventories(item.id);
-                setRoomType(item.id);
+                setSelectedSubCategory(item);
               }}
               style={{
                 height: wp(20),
@@ -279,7 +343,9 @@ const RequirementDetails = (props) => {
                 borderRadius: wp(10),
                 borderWidth: 2,
                 borderColor:
-                  roomType === item.id ? Colors.darkBlue : Colors.white,
+                  selectedSubCategory.id === item.id
+                    ? Colors.darkBlue
+                    : Colors.white,
                 backgroundColor: Colors.white,
                 marginRight: wp(3),
                 ...STYLES.common,
@@ -299,15 +365,15 @@ const RequirementDetails = (props) => {
 
       <View style={styles.inputForm}>
         <Text style={[STYLES.textHeader, {textTransform: 'uppercase'}]}>
-          {props?.movementType?.id === 1
-            ? `${roomType} BHK ITEM LIST`
-            : `${props?.movementType?.name} ITEM LIST`}
+          {movementType?.id === 1
+            ? `${selectedSubCategory?.id} BHK ITEM LIST`
+            : `${movementType?.name} ITEM LIST`}
         </Text>
         <View style={{marginTop: hp(3)}}>
           <FlatList
             bounces={false}
-            data={fetchedData}
-            extraData={fetchedData}
+            data={inventoryItems}
+            extraData={inventoryItems}
             renderItem={renderItem}
             ItemSeparatorComponent={() => (
               <View
@@ -336,7 +402,28 @@ const RequirementDetails = (props) => {
             label={'ADD ANOTHER ITEM'}
             backgroundColor={Colors.white}
             spaceBottom={0}
-            onPress={() => setItemModalVisible(true)}
+            onPress={() => {
+              setAddData({
+                name:
+                  defaultInventories.length > 0
+                    ? defaultInventories[0].name
+                    : '',
+                material:
+                  defaultInventories.length > 0
+                    ? JSON.parse(defaultInventories[0].material.toString())[0]
+                    : '',
+                size: 'small',
+                quantity:
+                  configData?.inventory_quantity_type.range ===
+                  movementType?.inventory_quantity_type
+                    ? {
+                        min: 250,
+                        max: 750,
+                      }
+                    : 1,
+              });
+              setAddItem(true);
+            }}
           />
         </View>
       </View>
@@ -351,11 +438,11 @@ const RequirementDetails = (props) => {
               paddingHorizontal: wp(5),
               paddingVertical: hp(1),
             }}>
-            {[1, 2].map((item, index) => {
+            {data?.meta?.images.map((item, index) => {
               return (
                 <Pressable
                   key={index}
-                  onPress={() => setRoomType(item)}
+                  onPress={() => setSelectedSubCategory(item)}
                   style={{
                     height: wp(16),
                     width: wp(16),
@@ -363,7 +450,22 @@ const RequirementDetails = (props) => {
                     backgroundColor: Colors.silver,
                     marginRight: wp(3),
                   }}>
-                  <View
+                  <Image
+                    source={{uri: item}}
+                    resizeMode={'contain'}
+                    style={{
+                      height: '100%',
+                      width: '100%',
+                    }}
+                  />
+                  <Pressable
+                    onPress={() => {
+                      let temp = {...data.meta};
+                      let t1 = [...temp.images];
+                      t1.splice(index, 1);
+                      temp.images = t1;
+                      handleStateChange('meta', temp);
+                    }}
                     style={{
                       position: 'absolute',
                       right: -4,
@@ -372,12 +474,18 @@ const RequirementDetails = (props) => {
                       width: 18,
                     }}>
                     <ImageCross width={18} height={18} />
-                  </View>
+                  </Pressable>
                 </Pressable>
               );
             })}
             <Pressable
-              onPress={() => ImageSelection()}
+              onPress={() =>
+                ImageSelection()
+                  .then((res) => {
+                    handleState('images', res);
+                  })
+                  .catch((err) => {})
+              }
               style={{
                 height: wp(16),
                 width: wp(16),
@@ -401,7 +509,8 @@ const RequirementDetails = (props) => {
           label={''}
           placeHolder={'Comments if any'}
           numberOfLines={4}
-          onChange={(text) => {}}
+          value={data?.meta?.customer?.remarks}
+          onChange={(text) => handleState('remarks', text)}
         />
       </View>
       <View style={{alignSelf: 'center'}}>
@@ -414,23 +523,51 @@ const RequirementDetails = (props) => {
       </View>
       <CustomModalAndroid visible={confirmationModalVisible}>
         <OrderDetailModal
+            isLoading={isLoading}
+          data={data?.inventory_items}
           title={'CONFIRM ITEM LIST'}
           onCloseIcon={() => setConfirmationModalVisible(false)}
           leftOnPress={() => setConfirmationModalVisible(false)}
           rightOnPress={() => {
-            if (props.bookingFor === 'Others') {
-              props.onPageChange(4);
-            } else {
-              props.onPageChange(3);
-            }
+            // Booking API call
+            setLoading(true);
+            let obj = {
+              url: 'bookings/enquiry',
+              method: 'post',
+              headers: {
+                Authorization:
+                  'Bearer ' + STORE.getState().Login?.loginData?.token,
+              },
+              data: props.data,
+            };
+            APICall(obj)
+              .then((res) => {
+                setLoading(false);
+                if (res?.data?.status === 'success') {
+                  props.setApiResponse(res?.data?.data?.booking);
+                  if (props.bookingFor === 'Others') {
+                    props.onPageChange(4);
+                  } else {
+                    props.onPageChange(3);
+                  }
+                } else {
+                  CustomAlert(res?.data?.message);
+                }
+              })
+              .catch((err) => {
+                setLoading(false);
+                CustomConsole(err);
+              });
           }}
         />
       </CustomModalAndroid>
       <CustomModalAndroid
-        visible={itemModalVisible || editItem}
+        visible={addItem || editItem}
         onPress={() => {
-          setItemModalVisible(false);
+          setAddItem(false);
+          setAddData({});
           setEditItem(false);
+          setEditData({});
         }}>
         <View
           style={{
@@ -442,10 +579,11 @@ const RequirementDetails = (props) => {
           <Text>{editItem ? 'EDIT ITEM' : 'ADD ITEM'}</Text>
           <CloseIcon
             onPress={() => {
-              setItemModalVisible(false);
+              setAddItem(false);
+              setAddData({});
               setEditItem(false);
+              setEditData({});
             }}
-            style={{}}
           />
         </View>
         <View
@@ -457,10 +595,57 @@ const RequirementDetails = (props) => {
           }}
         />
         <DropDownAndroid
+          value={editItem ? editData?.name : addData?.name}
           label={'Item Name'}
           width={wp(90)}
-          items={[{label: 'TV', value: 'tv'}]}
-          onChangeItem={(text) => {}}
+          items={defaultInventories}
+          onChangeItem={(text, item) => {
+            let temp = {...item};
+
+            temp.material = JSON.parse(item.material.toString());
+            temp.size = JSON.parse(item.size.toString());
+
+            temp.label = item.name;
+            temp.value = item.name;
+            let materialAry = [];
+            let sizeAry = [];
+            temp.material.forEach((i) => {
+              materialAry.push({
+                label: i,
+                value: i,
+              });
+            });
+            temp.size.forEach((i) => {
+              sizeAry.push({
+                label: i,
+                value: i,
+              });
+            });
+            temp.material = materialAry;
+            temp.size = sizeAry;
+            setSelectedInventory(temp);
+            if (editItem) {
+              setEditData({...editData, name: text});
+            } else {
+              setAddData({
+                name: text,
+                material:
+                  defaultInventories.length > 0
+                    ? JSON.parse(defaultInventories[0].material.toString())[0]
+                    : '',
+                size: 'small',
+                quantity:
+                  configData?.inventory_quantity_type.range ===
+                  movementType?.inventory_quantity_type
+                    ? {
+                        min: 200,
+                        max: 750,
+                      }
+                    : 1,
+              });
+              // setAddData({...addData, name: text});
+            }
+          }}
         />
         <View
           style={[
@@ -468,25 +653,34 @@ const RequirementDetails = (props) => {
             Platform.OS !== 'android' && {zIndex: 5001},
           ]}>
           <DropDownAndroid
+            value={editItem ? editData?.material : addData?.material}
             label={'Material'}
-            items={[{label: 'Polycarbonate', value: 'polycarbonate'}]}
-            onChangeItem={(text) => {}}
+            items={selectedInventory?.material}
+            onChangeItem={(text) => {
+              if (editItem) {
+                setEditData({...editData, material: text});
+              } else {
+                setAddData({...addData, material: text});
+              }
+            }}
           />
           <DropDownAndroid
             label={'Size'}
-            items={[
-              {label: 'Small', value: 'small'},
-              {label: 'Medium', value: 'medium'},
-              {label: 'Large', value: 'large'},
-            ]}
-            onChangeItem={(text) => {}}
+            value={editItem ? editData?.size : addData?.size}
+            items={selectedInventory?.size}
+            onChangeItem={(text) => {
+              if (editItem) {
+                setEditData({...editData, size: text});
+              } else {
+                setAddData({...addData, size: text});
+              }
+            }}
           />
         </View>
         <View style={{width: '90%'}}>
-          {(props?.movementType?.id !== 1 && (
+          {(movementType?.id !== 1 && (
             <View
               style={{
-                // width: Platform.OS === 'android' ? wp(56) : wp(57),
                 marginTop: hp(2),
                 marginHorizontal: wp(3),
               }}>
@@ -499,7 +693,11 @@ const RequirementDetails = (props) => {
                 Quantity
               </Text>
               <MultiSlider
-                values={[multiSliderValue[0], multiSliderValue[1]]}
+                values={
+                  editItem
+                    ? [editData?.quantity?.min, editData?.quantity?.max]
+                    : [multiSliderValue[0], multiSliderValue[1]]
+                }
                 sliderLength={wp(85)}
                 onValuesChange={multiSliderValuesChange}
                 selectedStyle={{backgroundColor: Colors.darkBlue}}
@@ -547,17 +745,36 @@ const RequirementDetails = (props) => {
                 label={'Quantity'}
                 // isRight={error.firstName}
                 placeHolder={'Quantity'}
-                value={pad_with_zeroes(itemData?.quantity, 2).toString()}
-                onChange={(text) => handleItemState('quantity', text)}
+                value={
+                  editItem
+                    ? editData?.quantity?.toString()
+                    : addData?.quantity?.toString()
+                }
+                onChange={(text) => {
+                  if (editItem) {
+                    setEditData({...editData, quantity: text});
+                  } else {
+                    setAddData({...addData, quantity: text});
+                  }
+                }}
               />
               <Pressable
                 style={styles.arrowView}
                 onPress={() => {
-                  if (parseInt(itemData.quantity) - 1 > 0) {
-                    handleItemState(
-                      'quantity',
-                      parseInt(itemData.quantity) - 1 || 0,
-                    );
+                  if (editItem) {
+                    if (parseInt(editData.quantity) - 1 > 0) {
+                      setEditData({
+                        ...editData,
+                        quantity: editData.quantity - 1,
+                      });
+                    }
+                  } else {
+                    if (parseInt(addData.quantity) - 1 > 0) {
+                      handleItemState(
+                        'quantity',
+                        parseInt(addData.quantity) - 1 || 0,
+                      );
+                    }
                   }
                 }}>
                 <MaterialCommunityIcons
@@ -572,10 +789,14 @@ const RequirementDetails = (props) => {
                   marginLeft: wp(2),
                 }}
                 onPress={() => {
-                  handleItemState(
-                    'quantity',
-                    parseInt(itemData.quantity) + 1 || 0,
-                  );
+                  if (editItem) {
+                    setEditData({...editData, quantity: editData.quantity + 1});
+                  } else {
+                    handleItemState(
+                      'quantity',
+                      parseInt(addData.quantity) + 1 || 0,
+                    );
+                  }
                 }}>
                 <MaterialCommunityIcons
                   name="plus"
@@ -588,8 +809,22 @@ const RequirementDetails = (props) => {
         </View>
         <FlatButton
           onPress={() => {
-            setItemData({});
-            setItemModalVisible(false);
+            let temp = [...inventoryItems];
+            if (editItem) {
+              let index = temp.findIndex(
+                (ele) => ele.inventory_id === editData.inventory_id,
+              );
+              temp[index] = editData;
+            } else {
+              addData.inventory_id = selectedInventory.id;
+              temp.push(addData);
+            }
+            handleStateChange('inventory_items', temp);
+            setInventoryItems(temp);
+            setAddData({});
+            setAddItem(false);
+            setEditItem(false);
+            setEditData({});
           }}
           label={editItem ? 'SAVE' : 'ADD ITEM'}
         />

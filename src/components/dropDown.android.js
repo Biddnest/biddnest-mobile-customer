@@ -62,7 +62,7 @@ const DropDownAndroid = (props) => {
             justifyContent: 'flex-start',
           }}
           dropDownStyle={styles.customDropDown}
-          onChangeItem={(item) => props.onChangeItem(item.value)}
+          onChangeItem={(item) => props.onChangeItem(item.value, item)}
         />
       </View>
     </View>

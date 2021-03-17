@@ -20,6 +20,20 @@ import {pad_with_zeroes} from '../../../../constant/commonFun';
 const MovingForm = (props) => {
   const [mapVisible, setMapVisible] = useState(false);
   const {data, handleStateChange} = props;
+  let source = data?.source || {};
+  let destination = data?.destination || {};
+
+  const handleState = (key, value) => {
+    if (props.movingFrom) {
+      let temp = {...destination};
+      temp.meta[key] = value;
+      handleStateChange('destination', temp);
+    } else {
+      let temp = {...source};
+      temp.meta[key] = value;
+      handleStateChange('source', temp);
+    }
+  };
 
   return (
     <KeyboardAwareScrollView
@@ -50,13 +64,23 @@ const MovingForm = (props) => {
           // isRight={error.firstName}
           placeHolder={'Select building or nearest landmark'}
           numberOfLines={4}
-          onChange={(text) => handleStateChange('firstName', text)}
+          value={
+            props.movingFrom
+              ? destination?.meta?.address
+              : source?.meta?.address
+          }
+          onChange={(text) => handleState('address', text)}
         />
         <TextInput
           label={'Pincode'}
           // isRight={error.firstName}
+          value={
+            props.movingFrom
+              ? destination?.meta?.pincode
+              : source?.meta?.pincode
+          }
           placeHolder={'560097'}
-          onChange={(text) => handleStateChange('firstName', text)}
+          onChange={(text) => handleState('pincode', text)}
         />
         <View
           style={{
@@ -66,14 +90,25 @@ const MovingForm = (props) => {
           }}>
           <TextInput
             label={'Floor'}
-            value={pad_with_zeroes(data.floor, 2).toString()}
+            value={
+              props.movingFrom
+                ? pad_with_zeroes(destination?.meta?.floor, 2).toString()
+                : pad_with_zeroes(source?.meta?.floor, 2).toString()
+            }
             placeHolder={'Floor'}
-            onChange={(text) => handleStateChange('firstName', text)}
+            onChange={(text) => handleState('floor', text)}
           />
           <Pressable
             style={styles.arrowView}
             onPress={() => {
-              handleStateChange('floor', parseInt(data.floor) + 1 || 0);
+              handleState(
+                'floor',
+                parseInt(
+                  props.movingFrom
+                    ? destination?.meta?.floor
+                    : source?.meta?.floor,
+                ) + 1 || 0,
+              );
             }}>
             <MaterialIcons
               name="arrow-drop-up"
@@ -87,8 +122,23 @@ const MovingForm = (props) => {
               marginLeft: wp(2),
             }}
             onPress={() => {
-              if (parseInt(data.floor) - 1 >= 0) {
-                handleStateChange('floor', parseInt(data.floor) - 1 || 0);
+              if (
+                parseInt(
+                  props.movingFrom
+                    ? destination?.meta?.floor
+                    : source?.meta?.floor,
+                ) -
+                  1 >=
+                0
+              ) {
+                handleState(
+                  'floor',
+                  parseInt(
+                    props.movingFrom
+                      ? destination?.meta?.floor
+                      : source?.meta?.floor,
+                  ) - 1 || 0,
+                );
               }
             }}>
             <MaterialIcons
@@ -186,7 +236,7 @@ const MovingForm = (props) => {
               smallLabel={'(Drag the map to move the pointer)'}
               // isRight={error.firstName}
               placeHolder={'Location'}
-              onChange={(text) => handleStateChange('firstName', text)}
+              onChange={(text) => handleState('firstName', text)}
             />
           </View>
           <View style={{marginTop: hp(2)}}>

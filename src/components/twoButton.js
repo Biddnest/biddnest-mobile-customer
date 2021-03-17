@@ -1,4 +1,4 @@
-import {Pressable, Text, View} from 'react-native';
+import {ActivityIndicator, Pressable, Text, View} from 'react-native';
 import {Colors, hp, wp} from '../constant/colors';
 import {STYLES} from '../constant/commonStyle';
 import React from 'react';
@@ -14,35 +14,43 @@ const TwoButton = (props) => {
         marginTop: hp(4),
       }}>
       <Pressable
-        onPress={props.leftOnPress}
+        onPress={() => !props.isLoading && props.leftOnPress()}
         style={{
           flex: 1,
           borderWidth: 3,
           borderColor: Colors.btnBG,
           ...STYLES.common,
         }}>
-        <Text
-          style={{
-            fontFamily: 'Roboto-Bold',
-            color: Colors.btnBG,
-            fontSize: wp(3.5),
-            textTransform: 'uppercase',
-          }}>
-          {props.leftLabel}
-        </Text>
+        {(props.isLoading && (
+          <ActivityIndicator size="small" color={Colors.btnBG} />
+        )) || (
+          <Text
+            style={{
+              fontFamily: 'Roboto-Bold',
+              color: Colors.btnBG,
+              fontSize: wp(3.5),
+              textTransform: 'uppercase',
+            }}>
+            {props.leftLabel}
+          </Text>
+        )}
       </Pressable>
       <Pressable
-        onPress={props.rightOnPress}
+        onPress={() => !props.isLoading && props.rightOnPress()}
         style={{flex: 1, backgroundColor: Colors.btnBG, ...STYLES.common}}>
-        <Text
-          style={{
-            fontFamily: 'Roboto-Bold',
-            color: Colors.white,
-            fontSize: wp(3.5),
-            textTransform: 'uppercase',
-          }}>
-          {props.rightLabel}
-        </Text>
+        {(props.isLoading && (
+          <ActivityIndicator size="small" color={Colors.white} />
+        )) || (
+          <Text
+            style={{
+              fontFamily: 'Roboto-Bold',
+              color: Colors.white,
+              fontSize: wp(3.5),
+              textTransform: 'uppercase',
+            }}>
+            {props.rightLabel}
+          </Text>
+        )}
       </Pressable>
     </View>
   );

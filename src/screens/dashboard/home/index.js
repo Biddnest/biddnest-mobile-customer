@@ -96,7 +96,7 @@ const Home = (props) => {
     useSelector((state) => state.Login?.serviceData?.services),
   );
   const [sliderData, setSliderData] = useState(
-    useSelector((state) => state.Login?.sliderData),
+    useSelector((state) => state.Login?.sliderData?.sliders),
   );
   const [couponVisible, setCouponVisible] = useState(false);
   const [bookingSelectionVisible, setBookingSelectionVisible] = useState(false);
@@ -109,7 +109,7 @@ const Home = (props) => {
           dispatch(getSlider(locationData))
             .then((res) => {
               if (res.status === 'success' && res?.data) {
-                setSliderData(res?.data);
+                setSliderData(res?.data?.sliders);
               } else {
                 CustomAlert(res.message);
               }

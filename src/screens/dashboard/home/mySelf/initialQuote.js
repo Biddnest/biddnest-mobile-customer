@@ -20,12 +20,26 @@ import CheckBox from '../../../../components/checkBox';
 import FlatButton from '../../../../components/flatButton';
 import CloseIcon from '../../../../components/closeIcon';
 import TwoButton from '../../../../components/twoButton';
+import {STORE} from '../../../../redux';
+import {APICall} from '../../../../redux/actions/user';
+import {
+  CustomAlert,
+  CustomConsole,
+  resetNavigator,
+} from '../../../../constant/commonFun';
 
 const InitialQuote = (props) => {
   const [offerType, setOfferType] = useState(0);
+  const [rejectData, setRejectData] = useState({
+    reason: 'highprice',
+  });
+  const [isLoading, setLoading] = useState(false);
   const [rejectVisible, setRejectVisible] = useState(false);
   const [isAgree, setAgree] = useState(true);
 
+  let estimation = props?.apiResponse?.quote_estimate
+    ? JSON.parse((props?.apiResponse?.quote_estimate).toString())
+    : {};
   return (
     <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
       <Text
@@ -48,12 +62,12 @@ const InitialQuote = (props) => {
         {[
           {
             title: 'Economy',
-            price: '2,300',
+            price: estimation?.economic,
             desc: 'Economy services includes moving only',
           },
           {
             title: 'Premium',
-            price: '3,300',
+            price: estimation?.premium,
             desc: 'Premium services includes Packing and Moving',
           },
         ].map((item, index) => {
@@ -129,7 +143,9 @@ const InitialQuote = (props) => {
         leftLabel={'Reject'}
         rightLabel={'Place order'}
         leftOnPress={() => setRejectVisible(true)}
-        rightOnPress={props.handleBooking}
+        rightOnPress={() =>
+          props.handleBooking(offerType === 0 ? 'economic' : 'premium')
+        }
       />
       <CustomModalAndroid
         visible={rejectVisible}
@@ -154,14 +170,14 @@ const InitialQuote = (props) => {
           label={''}
           width={wp(90)}
           items={[{label: 'High Price', value: 'highprice'}]}
-          onChangeItem={(text) => {}}
+          onChangeItem={(text) => setRejectData({...rejectData, reason: text})}
         />
         <View style={{width: wp(90)}}>
           <TextInput
             label={''}
             placeHolder={'Enter your expected price here'}
             numberOfLines={4}
-            onChange={(text) => {}}
+            onChange={(text) => setRejectData({...rejectData, desc: text})}
           />
         </View>
         <View
@@ -180,7 +196,41 @@ const InitialQuote = (props) => {
             Talk to our agent
           </Text>
         </View>
-        <FlatButton label={'CANCEL BOOKING'} />
+        <FlatButton
+          isLoading={isLoading}
+          label={'CANCEL BOOKING'}
+          onPress={() => {
+            // Cancel booking API
+            setLoading(true);
+            let obj = {
+              url: 'bookings/cancel',
+              method: 'delete',
+              headers: {
+                Authorization:
+                  'Bearer ' + STORE.getState().Login?.loginData?.token,
+              },
+              data: {
+                ...rejectData,
+                public_booking_id: props?.apiResponse?.public_booking_id,
+              },
+            };
+            APICall(obj)
+              .then((res) => {
+                setLoading(false);
+                if (res?.data?.status === 'success') {
+                  props.setApiResponse(res?.data?.booking);
+                  setRejectVisible(false);
+                  resetNavigator(props, 'Dashboard');
+                } else {
+                  CustomAlert(res?.data?.message);
+                }
+              })
+              .catch((err) => {
+                setLoading(false);
+                CustomConsole(err);
+              });
+          }}
+        />
       </CustomModalAndroid>
     </ScrollView>
   );

@@ -24,6 +24,10 @@ import InActiveRs from '../../../assets/svg/inactive_rs.svg';
 import ActiveRs from '../../../assets/svg/active_rs.svg';
 import ActiveFriends from '../../../assets/svg/active_friends.svg';
 import FinishFriends from '../../../assets/svg/finish_friends.svg';
+import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
+import {useDispatch} from 'react-redux';
+import {APICall, getAllInventories} from '../../../redux/actions/user';
+import {STORE} from '../../../redux';
 
 const customStyles = {
   stepIndicatorSize: 45,
@@ -41,6 +45,7 @@ const customStyles = {
   stepIndicatorCurrentColor: Colors.darkBlue,
 };
 const BookingStepper = (props) => {
+  const dispatch = useDispatch();
   const [currentPosition, setCurrentPosition] = useState(0);
   const bookingFor = props?.route?.params?.bookingFor || 'Myself';
   const movementType = props?.route?.params?.movementType || {};
@@ -49,8 +54,56 @@ const BookingStepper = (props) => {
   );
   const [orderBooked, setOrderBooked] = useState(false);
   const [movingFrom, setMovingFrom] = useState(false);
-  const [data, setData] = useState({});
+  const [data, setData] = useState({
+    booking_id: null,
+    service_id: movementType?.id,
+    source: {
+      lat: 75.3352,
+      lng: 19.33,
+      meta: {
+        geocode: '',
+        floor: 2,
+        address: 'Sai ventures, Baner',
+        city: 'Pune',
+        state: 'Maharashtra',
+        pincode: 410045,
+        lift: 0,
+      },
+    },
+    destination: {
+      lat: 75.5655,
+      lng: 19.522,
+      meta: {
+        geocode: '',
+        floor: '2',
+        address: 'Sai ventures, Senadatta Peth',
+        city: 'Pune',
+        state: 'Maharashtra',
+        pincode: 410031,
+        lift: 1,
+      },
+    },
+    contact_details: {
+      name: 'Akshita',
+      phone: 1234567890,
+      email: 'akshita@di.com',
+    },
+    meta: {
+      self_booking: bookingFor === 'Myself',
+      subcategory: null,
+      customer: {
+        remarks: 'test',
+      },
+      images: [],
+    },
+    movement_dates: ['2021-03-20', '2021-03-21'],
+    inventory_items: [],
+  });
+  const [apiResponse, setApiResponse] = useState({});
 
+  useEffect(() => {
+    dispatch(getAllInventories());
+  }, []);
   useEffect(() => {
     switch (currentPosition) {
       case 0:
@@ -197,6 +250,33 @@ const BookingStepper = (props) => {
       [key]: value,
     });
   };
+  console.log(data);
+  const handleBooking = (service_type) => {
+    //Accept order
+    let obj = {
+      url: 'bookings/confirm',
+      method: 'post',
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+      data: {
+        service_type: service_type,
+        public_booking_id: apiResponse?.public_booking_id,
+      },
+    };
+    APICall(obj)
+      .then((res) => {
+        if (res?.data?.status === 'success') {
+          setApiResponse(res?.data?.data?.booking);
+          setOrderBooked(true);
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        CustomConsole(err);
+      });
+  };
   const renderStepIndicator = (params: any) =>
     getStepIndicatorIconConfig(params);
 
@@ -277,6 +357,8 @@ const BookingStepper = (props) => {
         return (
           <RequirementDetails
             data={data}
+            apiResponse={apiResponse}
+            setApiResponse={setApiResponse}
             handleStateChange={handleStateChange}
             bookingFor={bookingFor}
             movementType={movementType}
@@ -292,6 +374,8 @@ const BookingStepper = (props) => {
           return (
             <RequirementDetails
               data={data}
+              apiResponse={apiResponse}
+              setApiResponse={setApiResponse}
               handleStateChange={handleStateChange}
               bookingFor={bookingFor}
               movementType={movementType}
@@ -304,6 +388,8 @@ const BookingStepper = (props) => {
           return (
             <Timer
               data={data}
+              apiResponse={apiResponse}
+              setApiResponse={setApiResponse}
               handleStateChange={handleStateChange}
               bookingFor={bookingFor}
               movementType={movementType}
@@ -315,9 +401,11 @@ const BookingStepper = (props) => {
         return (
           <InitialQuote
             data={data}
+            apiResponse={apiResponse}
+            setApiResponse={setApiResponse}
             handleStateChange={handleStateChange}
             orderBooked={orderBooked}
-            handleBooking={() => setOrderBooked(true)}
+            handleBooking={handleBooking}
             bookingFor={bookingFor}
             movementType={movementType}
             navigation={props.navigation}
@@ -328,6 +416,8 @@ const BookingStepper = (props) => {
         if (orderBooked) {
           return (
             <Timer
+              apiResponse={apiResponse}
+              setApiResponse={setApiResponse}
               data={data}
               handleStateChange={handleStateChange}
               bookingFor={bookingFor}
@@ -339,10 +429,12 @@ const BookingStepper = (props) => {
         }
         return (
           <InitialQuote
+            apiResponse={apiResponse}
+            setApiResponse={setApiResponse}
             data={data}
             handleStateChange={handleStateChange}
             orderBooked={orderBooked}
-            handleBooking={() => setOrderBooked(true)}
+            handleBooking={handleBooking}
             bookingFor={bookingFor}
             movementType={movementType}
             navigation={props.navigation}

@@ -1,6 +1,7 @@
 export const LoginData = {
   loginData: {},
   serviceData: {},
-  sliderData: [],
+  sliderData: {},
   configData: {},
+  inventoriesData: {},
 };

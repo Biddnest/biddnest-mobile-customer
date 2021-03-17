@@ -1,6 +1,6 @@
 import instance from '../../constant/baseService';
 import {
-  CONFIG_DATA,
+  CONFIG_DATA, INVENTORY_DATA,
   LOGIN_USER_DATA,
   RESET_STORE,
   SERVICE_DATA,
@@ -193,6 +193,41 @@ export const getServices = (data) => {
         .then((res) => {
           dispatch({
             type: SERVICE_DATA,
+            payload: res?.data?.data || {},
+          });
+          resolve(res.data);
+        })
+        .catch((err) => {
+          if (err.status === 401) {
+            // dispatch({
+            //   type: RESET_STORE,
+            // });
+            // CommonActions.reset({
+            //   index: 0,
+            //   routes: [{name: 'Login'}],
+            // });
+          }
+          CustomAlert(err?.data?.message);
+          reject(err);
+        });
+    });
+  };
+};
+
+export const getAllInventories = () => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      let obj = {
+        url: 'inventories/all',
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+      };
+      APICall(obj)
+        .then((res) => {
+          dispatch({
+            type: INVENTORY_DATA,
             payload: res?.data?.data || {},
           });
           resolve(res.data);

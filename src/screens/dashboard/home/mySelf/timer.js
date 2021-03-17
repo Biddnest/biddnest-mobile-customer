@@ -21,6 +21,7 @@ import TimerClock from '../../../../assets/svg/timer_clock.svg';
 
 const Timer = (props) => {
   const [orderPlacedVisible, setOrderPlacedVisible] = useState(true);
+  console.log(props.apiResponse)
   return (
     <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
       <Text
@@ -51,7 +52,7 @@ const Timer = (props) => {
         <View style={styles.separatorView} />
         <View style={styles.flexView}>
           <Text style={styles.orderID}>ORDER ID</Text>
-          <Text style={styles.orderNo}>#34123</Text>
+          <Text style={styles.orderNo}>{props?.apiResponse?.public_booking_id}</Text>
         </View>
         <Button
           spaceBottom={0}
@@ -94,7 +95,7 @@ const Timer = (props) => {
             },
           ]}>
           <Text style={styles.orderID}>ORDER ID</Text>
-          <Text style={styles.orderNo}>#34123</Text>
+          <Text style={styles.orderNo}>{props?.apiResponse?.public_booking_id}</Text>
         </View>
       </CustomModalAndroid>
     </ScrollView>
