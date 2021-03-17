@@ -96,7 +96,7 @@ const BookingStepper = (props) => {
       },
       images: [],
     },
-    movement_dates: ['2021-03-20', '2021-03-21'],
+    movement_dates: [],
     inventory_items: [],
   });
   const [apiResponse, setApiResponse] = useState({});

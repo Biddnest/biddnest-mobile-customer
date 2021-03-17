@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Text, Pressable} from 'react-native';
 import {Colors, hp, wp} from '../../../../constant/colors';
 import Button from '../../../../components/button';
@@ -11,9 +11,25 @@ import FlatButton from '../../../../components/flatButton';
 import CloseIcon from '../../../../components/closeIcon';
 
 const DateOfMovement = (props) => {
+  const {data, handleStateChange} = props;
   const [openCalender, setCalender] = useState(false);
   const [dateArray, setDateArray] = useState({});
-  const {data, handleStateChange} = props;
+
+  useEffect(() => {
+    setDefaultSelectedDates();
+  }, [data]);
+
+  const setDefaultSelectedDates = () => {
+    let temp = {};
+    data.movement_dates.forEach((item) => {
+      temp[item] = {
+        selected: true,
+        selectedColor: Colors.btnBG,
+      };
+    });
+    setDateArray(temp);
+  };
+
   return (
     <View>
       <KeyboardAwareScrollView
@@ -47,6 +63,7 @@ const DateOfMovement = (props) => {
             placeholder={'Choose Date'}
             disabled={true}
             label={'Choose Date'}
+            value={data?.movement_dates?.join(', ')}
             rightIcon={() => {
               return (
                 <MaterialIcons
@@ -83,6 +100,7 @@ const DateOfMovement = (props) => {
           }}>
           <CloseIcon
             onPress={() => {
+              setDefaultSelectedDates();
               setCalender(false);
             }}
             style={{marginTop: 0, width: '90%', alignItems: 'flex-end'}}
@@ -91,34 +109,32 @@ const DateOfMovement = (props) => {
             markedDates={dateArray}
             style={{width: wp(90), height: hp(50)}}
             current={'2021-02-26'}
-            // minDate={new Date()}
             onDayPress={(day) => {
               let temp = {...dateArray};
               if (day.dateString in temp) {
                 delete temp[day.dateString];
               } else {
-                temp[day.dateString] = {selected: true, selectedColor: 'blue'};
+                temp[day.dateString] = {
+                  selected: true,
+                  selectedColor: Colors.btnBG,
+                };
               }
               setDateArray(temp);
             }}
-            onDayLongPress={(day) => {
-              console.log('selected day', day);
-            }}
             monthFormat={'MMM yyyy'}
-            onMonthChange={(month) => {
-              console.log('month changed', month);
-            }}
             showWeekNumbers={true}
             onPressArrowLeft={(subtractMonth) => subtractMonth()}
             onPressArrowRight={(addMonth) => addMonth()}
             disableAllTouchEventsForDisabledDays={true}
-            // Replace default month and year title with custom one. the function receive a date as parameter.
-            // renderHeader={(date) => {
-            //   /*Return JSX*/
-            // }}
             enableSwipeMonths={true}
           />
-          <FlatButton label={'OKAY'} onPress={() => setCalender(false)} />
+          <FlatButton
+            label={'OKAY'}
+            onPress={() => {
+              handleStateChange('movement_dates', Object.keys(dateArray));
+              setCalender(false);
+            }}
+          />
         </CustomModalAndroid>
       </KeyboardAwareScrollView>
       <View style={{alignSelf: 'center'}}>

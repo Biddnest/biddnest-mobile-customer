@@ -523,7 +523,7 @@ const RequirementDetails = (props) => {
       </View>
       <CustomModalAndroid visible={confirmationModalVisible}>
         <OrderDetailModal
-            isLoading={isLoading}
+          isLoading={isLoading}
           data={data?.inventory_items}
           title={'CONFIRM ITEM LIST'}
           onCloseIcon={() => setConfirmationModalVisible(false)}
