@@ -56,9 +56,7 @@ const RequirementDetails = (props) => {
     images: undefined,
     inventory: undefined,
   });
-  const [multiSliderValue, setMultiSliderValue] = React.useState([250, 750]);
   const [subServices, setSubServices] = useState([]);
-  const [defaultInventoryData, setDefaultInventoryData] = useState([]);
   const [inventoryItems, setInventoryItems] = useState([]);
 
   const handleState = (key, value) => {
@@ -124,12 +122,8 @@ const RequirementDetails = (props) => {
     };
     APICall(obj)
       .then((res) => {
-        let temp = [...data?.inventory_items];
-        setDefaultInventoryData(temp);
-        setInventoryItems(temp);
         if (res?.data?.status === 'success') {
-          // setDefaultInventoryData(res?.data?.data);
-          // setInventoryItems(res?.data?.data);
+          setInventoryItems(res?.data?.data?.inventories);
         } else {
           CustomAlert(res?.data?.message);
         }
@@ -741,7 +735,7 @@ const RequirementDetails = (props) => {
                 values={
                   editItem
                     ? [editData?.quantity?.min, editData?.quantity?.max]
-                    : [multiSliderValue[0], multiSliderValue[1]]
+                    : [addData?.quantity?.min, addData?.quantity?.max]
                 }
                 sliderLength={wp(85)}
                 onValuesChange={multiSliderValuesChange}
