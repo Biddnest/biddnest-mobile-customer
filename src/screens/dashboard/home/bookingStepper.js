@@ -28,6 +28,7 @@ import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
 import {useDispatch} from 'react-redux';
 import {APICall, getAllInventories} from '../../../redux/actions/user';
 import {STORE} from '../../../redux';
+import {getDistance} from 'geolib';
 
 const customStyles = {
   stepIndicatorSize: 45,
@@ -461,8 +462,20 @@ const BookingStepper = (props) => {
         }}
       />
       <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
-        {currentPosition !== 0 && (
-          <LocationDistance onEditClick={() => setCurrentPosition(0)} />
+        {((bookingFor === 'Others' && currentPosition > 1) ||
+          (bookingFor === 'Myself' && currentPosition > 0)) && (
+          <LocationDistance
+            onEditClick={() => setCurrentPosition(0)}
+            from={data?.source?.meta?.city}
+            to={data?.destination?.meta?.city}
+            distance={getDistance(
+              {latitude: data?.source?.lat, longitude: data?.source?.lng},
+              {
+                latitude: data?.destination?.lat,
+                longitude: data?.destination?.lng,
+              },
+            )}
+          />
         )}
         <View style={{paddingVertical: hp(2)}}>
           <StepIndicator

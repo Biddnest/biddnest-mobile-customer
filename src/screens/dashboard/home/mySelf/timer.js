@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -11,17 +11,44 @@ import {
 } from 'react-native';
 import {Colors, hp, wp, boxShadow} from '../../../../constant/colors';
 import Button from '../../../../components/button';
-import {resetNavigator} from '../../../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  resetNavigator,
+} from '../../../../constant/commonFun';
 import CustomModalAndroid from '../../../../components/customModal';
 import CloseIcon from '../../../../components/closeIcon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {STYLES} from '../../../../constant/commonStyle';
 import Feather from 'react-native-vector-icons/Feather';
 import TimerClock from '../../../../assets/svg/timer_clock.svg';
+import {STORE} from '../../../../redux';
+import {APICall} from '../../../../redux/actions/user';
 
 const Timer = (props) => {
   const [orderPlacedVisible, setOrderPlacedVisible] = useState(true);
-  console.log(props.apiResponse)
+  const [orderDetails, setOrderDetails] = useState({});
+  useEffect(() => {
+    let obj = {
+      url: `bookings?id=${props?.apiResponse?.public_booking_id}`,
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+    };
+    APICall(obj)
+      .then((res) => {
+        if (res?.data?.status === 'success') {
+          setOrderDetails(res?.data?.data?.booking);
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        CustomConsole(err);
+      });
+  }, []);
+  console.log(orderDetails);
   return (
     <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
       <Text
@@ -52,7 +79,7 @@ const Timer = (props) => {
         <View style={styles.separatorView} />
         <View style={styles.flexView}>
           <Text style={styles.orderID}>ORDER ID</Text>
-          <Text style={styles.orderNo}>{props?.apiResponse?.public_booking_id}</Text>
+          <Text style={styles.orderNo}>{orderDetails?.public_booking_id}</Text>
         </View>
         <Button
           spaceBottom={0}
@@ -60,7 +87,9 @@ const Timer = (props) => {
           onPress={() => resetNavigator(props, 'Dashboard')}
         />
       </View>
-      <CustomModalAndroid visible={orderPlacedVisible} onPress={() => setOrderPlacedVisible(false)}>
+      <CustomModalAndroid
+        visible={orderPlacedVisible}
+        onPress={() => setOrderPlacedVisible(false)}>
         <CloseIcon
           onPress={() => setOrderPlacedVisible(false)}
           style={{
@@ -95,7 +124,9 @@ const Timer = (props) => {
             },
           ]}>
           <Text style={styles.orderID}>ORDER ID</Text>
-          <Text style={styles.orderNo}>{props?.apiResponse?.public_booking_id}</Text>
+          <Text style={styles.orderNo}>
+            {orderDetails?.public_booking_id}
+          </Text>
         </View>
       </CustomModalAndroid>
     </ScrollView>

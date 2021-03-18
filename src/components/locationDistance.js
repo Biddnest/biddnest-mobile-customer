@@ -27,8 +27,12 @@ const LocationDistance = (props) => {
           alignItems: 'center',
         }}>
         <View>
-          <Text style={[styles.locationText, {marginTop: 0}]}>CHENNAI</Text>
-          <Text style={styles.locationText}>BENGALURU</Text>
+          <Text style={[styles.locationText, {marginTop: 0}]}>
+            {props.from ? props.from : 'CHENNAI'}
+          </Text>
+          <Text style={styles.locationText}>
+            {props.to ? props.to : 'BENGALURU'}
+          </Text>
         </View>
         {(props.inTransit && (
           <View style={{alignItems: 'center', flexDirection: 'row'}}>
@@ -61,7 +65,9 @@ const LocationDistance = (props) => {
                   fontSize: wp(5),
                   color: Colors.inputTextColor,
                 }}>
-                314KM
+                {props.distance
+                  ? parseInt(props.distance / 1000) + ' KM'
+                  : '314KM'}
               </Text>
               {props.onEditClick && (
                 <Pressable style={{marginLeft: 10}} onPress={props.onEditClick}>
@@ -84,6 +90,7 @@ const styles = StyleSheet.create({
     color: Colors.inputTextColor,
     fontSize: wp(4.5),
     marginTop: hp(2),
+    textTransform: 'uppercase',
   },
   inTransitText: {
     fontFamily: 'Roboto-Bold',

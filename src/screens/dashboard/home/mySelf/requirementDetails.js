@@ -22,7 +22,6 @@ import {
   CustomAlert,
   CustomConsole,
   ImageSelection,
-  pad_with_zeroes,
 } from '../../../../constant/commonFun';
 import CloseIcon from '../../../../components/closeIcon';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';

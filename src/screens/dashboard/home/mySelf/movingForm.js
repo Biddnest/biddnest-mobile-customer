@@ -357,7 +357,7 @@ const MovingForm = (props) => {
           <View style={{marginTop: hp(3), width: wp(95)}}>
             <TextInput
               label={'Location'}
-              value={mapData?.address}
+              value={mapData?.address?.toString()}
               smallLabel={'(Drag the map to move the pointer)'}
               placeHolder={'Location'}
               onChange={(text) => setMapData({...mapData, address: text})}
