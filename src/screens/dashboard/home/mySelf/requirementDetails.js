@@ -122,7 +122,28 @@ const RequirementDetails = (props) => {
     APICall(obj)
       .then((res) => {
         if (res?.data?.status === 'success') {
-          setInventoryItems(res?.data?.data?.inventories);
+          let temp = [];
+          if (res?.data?.data?.inventories?.length > 0) {
+            res?.data?.data?.inventories.forEach((item) => {
+              console.log(item);
+              temp.push({
+                inventory_id: item?.inventory_id,
+                material: item?.material,
+                size: item?.size,
+                quantity:
+                  configData?.inventory_quantity_type.range ===
+                  movementType?.inventory_quantity_type
+                    ? {
+                        min: item?.quantity?.min,
+                        max: item?.quantity?.max,
+                      }
+                    : item?.quantity,
+                name: item?.meta?.name,
+              });
+            });
+            setInventoryItems(temp);
+            handleStateChange('inventory_items', temp);
+          }
         } else {
           CustomAlert(res?.data?.message);
         }
@@ -349,6 +370,7 @@ const RequirementDetails = (props) => {
                 ...STYLES.common,
               }}>
               <Text
+                numberOfLines={1}
                 style={{
                   fontFamily: 'Gilroy-Light',
                   color: Colors.inputTextColor,

@@ -15,10 +15,10 @@ import {
   CustomAlert,
   CustomConsole,
   resetNavigator,
+  secondsToHms,
 } from '../../../../constant/commonFun';
 import CustomModalAndroid from '../../../../components/customModal';
 import CloseIcon from '../../../../components/closeIcon';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import {STYLES} from '../../../../constant/commonStyle';
 import Feather from 'react-native-vector-icons/Feather';
 import TimerClock from '../../../../assets/svg/timer_clock.svg';
@@ -28,6 +28,7 @@ import {APICall} from '../../../../redux/actions/user';
 const Timer = (props) => {
   const [orderPlacedVisible, setOrderPlacedVisible] = useState(true);
   const [orderDetails, setOrderDetails] = useState({});
+  const [time, setTime] = useState(300);
   useEffect(() => {
     let obj = {
       url: `bookings?id=${props?.apiResponse?.public_booking_id}`,
@@ -40,6 +41,10 @@ const Timer = (props) => {
       .then((res) => {
         if (res?.data?.status === 'success') {
           setOrderDetails(res?.data?.data?.booking);
+          if (res?.data?.data?.booking?.meta) {
+            let temp = JSON.parse(res?.data?.data?.booking?.meta?.toString());
+            // setTime(temp?.timings?.bid_result);
+          }
         } else {
           CustomAlert(res?.data?.message);
         }
@@ -48,7 +53,7 @@ const Timer = (props) => {
         CustomConsole(err);
       });
   }, []);
-  console.log(orderDetails);
+  console.log(orderDetails, time);
   return (
     <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
       <Text
@@ -73,7 +78,7 @@ const Timer = (props) => {
             fontFamily: 'Roboto-Medium',
             fontSize: wp(3.8),
           }}>
-          23:30
+          {secondsToHms(time)}
         </Text>
         <Text style={styles.mainText}>Time Left</Text>
         <View style={styles.separatorView} />
@@ -124,9 +129,7 @@ const Timer = (props) => {
             },
           ]}>
           <Text style={styles.orderID}>ORDER ID</Text>
-          <Text style={styles.orderNo}>
-            {orderDetails?.public_booking_id}
-          </Text>
+          <Text style={styles.orderNo}>{orderDetails?.public_booking_id}</Text>
         </View>
       </CustomModalAndroid>
     </ScrollView>

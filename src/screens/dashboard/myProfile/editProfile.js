@@ -18,6 +18,8 @@ import moment from 'moment';
 
 const EditProfile = (props) => {
   const dispatch = useDispatch();
+  const configData =
+    useSelector((state) => state.Login?.configData?.enums) || {};
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState(
     useSelector((state) => state.Login?.loginData?.user) || {},
@@ -99,10 +101,7 @@ const EditProfile = (props) => {
               value={data.gender}
               width={wp(90)}
               label={'Gender'}
-              items={[
-                {label: 'Male', value: 'male'},
-                {label: 'Female', value: 'female'},
-              ]}
+              items={configData?.gender}
               onChangeItem={(text) => handleState('gender', text)}
             />
           </View>

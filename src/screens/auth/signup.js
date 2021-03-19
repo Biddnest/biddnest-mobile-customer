@@ -10,13 +10,15 @@ import {CustomAlert, resetNavigator} from '../../constant/commonFun';
 import DropDownAndroid from '../../components/dropDown';
 import LinearGradient from 'react-native-linear-gradient';
 import {signUP} from '../../redux/actions/user';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {LOGIN_USER_DATA} from '../../redux/types';
 import {STORE} from '../../redux';
 
 const Signup = (props) => {
   const dispatch = useDispatch();
   const userData = STORE.getState().Login?.loginData;
+  const configData =
+    useSelector((state) => state.Login?.configData?.enums) || {};
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState({
     fname: '',
@@ -98,10 +100,7 @@ const Signup = (props) => {
               ]}>
               <DropDownAndroid
                 label={'Gender'}
-                items={[
-                  {label: 'Male', value: 'male'},
-                  {label: 'Female', value: 'female'},
-                ]}
+                items={configData?.gender}
                 onChangeItem={(text) => handleState('gender', text)}
               />
               <View style={{width: wp(45)}}>
