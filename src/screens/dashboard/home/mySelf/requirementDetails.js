@@ -125,7 +125,6 @@ const RequirementDetails = (props) => {
           let temp = [];
           if (res?.data?.data?.inventories?.length > 0) {
             res?.data?.data?.inventories.forEach((item) => {
-              console.log(item);
               temp.push({
                 inventory_id: item?.inventory_id,
                 material: item?.material,
@@ -139,6 +138,7 @@ const RequirementDetails = (props) => {
                       }
                     : item?.quantity,
                 name: item?.meta?.name,
+                image: item?.meta?.image,
               });
             });
             setInventoryItems(temp);
@@ -703,7 +703,6 @@ const RequirementDetails = (props) => {
                       }
                     : 1,
               });
-              // setAddData({...addData, name: text});
             }
           }}
         />
@@ -877,6 +876,7 @@ const RequirementDetails = (props) => {
               temp[index] = editData;
             } else {
               addData.inventory_id = selectedInventory.id;
+              addData.image = selectedInventory.image;
               temp.push(addData);
             }
             handleStateChange('inventory_items', temp);

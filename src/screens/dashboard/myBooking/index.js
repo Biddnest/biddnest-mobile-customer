@@ -1,18 +1,73 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Pressable, FlatList, Image} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
 import {HomeHeader} from '../home';
 import {STYLES} from '../../../constant/commonStyle';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useDispatch, useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
+import {getLiveOrders, getPastOrders} from '../../../redux/actions/user';
+import {getDistance} from 'geolib';
+import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
+import moment from 'moment';
 
 const MyBooking = (props) => {
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  const configData =
+    useSelector((state) => state.Login?.configData?.enums?.booking) || {};
+  const userData = useSelector((state) => state.Login?.loginData?.user) || {};
+  const [liveOrders, setLiveOrders] = useState(
+    useSelector((state) => state.Login?.liveOrders?.booking) || [],
+  );
+  const [pastOrders, setPastOrders] = useState(
+    useSelector((state) => state.Login?.pastOrders?.booking) || [],
+  );
   const [selectedTab, setSelectedTab] = useState(0);
+  useEffect(() => {
+    if (isFocused && userData?.fname) {
+      dispatch(getLiveOrders())
+        .then((res) => {
+          if (res?.status === 'success') {
+            setLiveOrders(res?.data?.booking);
+          } else {
+            CustomAlert(res?.message);
+          }
+        })
+        .catch((err) => {
+          CustomConsole(err);
+        });
+      dispatch(getPastOrders())
+        .then((res) => {
+          if (res?.status === 'success') {
+            setPastOrders(res?.data?.booking);
+          } else {
+            CustomAlert(res?.message);
+          }
+        })
+        .catch((err) => {
+          CustomConsole(err);
+        });
+    }
+  }, [isFocused]);
+
   const handleOrderClicked = (item) => {
     props.navigation.navigate('OrderTracking', {orderData: item});
     // props.navigation.navigate('Payment', {orderData: item});
     // props.navigation.navigate('FinalQuote', {orderData: item});
   };
   const renderItem = ({item, index}) => {
+    let ind = Object.values(configData?.status).findIndex(
+      (ele) => ele === item?.status,
+    );
+    let status = Object.keys(configData?.status)[ind];
+    let source_meta = JSON.parse(item?.source_meta?.toString()) || {};
+    let destination_meta = JSON.parse(item?.destination_meta?.toString()) || {};
+    let meta = JSON.parse(item?.meta?.toString()) || {};
+    let dateArray = [];
+    item?.movement_dates.forEach((i) => {
+      dateArray.push(moment(i.date).format('D MMM yyyy'));
+    });
     return (
       <Pressable
         style={styles.inputForm}
@@ -36,10 +91,17 @@ const MyBooking = (props) => {
               alignItems: 'center',
             }}>
             <View>
-              <Text style={{...styles.locationText, marginTop: 0}}>
-                CHENNAI
+              <Text
+                style={{
+                  ...styles.locationText,
+                  marginTop: 0,
+                  textTransform: 'uppercase',
+                }}>
+                {source_meta?.city}
               </Text>
-              <Text style={styles.locationText}>BENGALURU</Text>
+              <Text style={[styles.locationText, {textTransform: 'uppercase'}]}>
+                {destination_meta?.city}
+              </Text>
             </View>
             <View style={{alignItems: 'flex-end'}}>
               <Text style={{...styles.locationText, marginTop: 0}}>
@@ -57,7 +119,16 @@ const MyBooking = (props) => {
                     fontSize: wp(4.5),
                     color: Colors.inputTextColor,
                   }}>
-                  314KM
+                  {parseInt(
+                    getDistance(
+                      {latitude: item?.source_lat, longitude: item?.source_lng},
+                      {
+                        latitude: item?.destination_lat,
+                        longitude: item?.destination_lng,
+                      },
+                    ) / 1000,
+                  )}{' '}
+                  KM
                 </Text>
               </View>
             </View>
@@ -67,20 +138,30 @@ const MyBooking = (props) => {
         {selectedTab === 0 && (
           <View style={styles.flexBox}>
             <Text style={styles.leftText}>price</Text>
-            <Text style={styles.rightText}>Rs. 5000</Text>
+            <Text style={styles.rightText}>
+              Rs.{' '}
+              {item?.status === 0 || item?.status === 1
+                ? item?.final_estimated_quote
+                : item?.final_quote}
+            </Text>
           </View>
         )}
         <View style={styles.flexBox}>
           <Text style={styles.leftText}>moving date</Text>
-          <Text style={styles.rightText}>25 Jan 2021</Text>
+          <Text
+            style={[styles.rightText, {maxWidth: '60%', textAlign: 'right'}]}>
+            {dateArray.join(', ')}
+          </Text>
         </View>
         <View style={styles.flexBox}>
           <Text style={styles.leftText}>category</Text>
-          <Text style={styles.rightText}>1 BHK</Text>
+          <Text style={styles.rightText}>{meta?.subcategory || 'null'}</Text>
         </View>
         <View style={styles.flexBox}>
           <Text style={styles.leftText}>status</Text>
-          <Text style={styles.rightText}>Completed</Text>
+          <Text style={[styles.rightText, {textTransform: 'capitalize'}]}>
+            {status}
+          </Text>
         </View>
       </Pressable>
     );
@@ -116,7 +197,16 @@ const MyBooking = (props) => {
         <FlatList
           bounces={false}
           showsVerticalScrollIndicator={false}
-          data={[1, 2, 3]}
+          data={
+            selectedTab === 0
+              ? liveOrders.length > 0
+                ? liveOrders
+                : []
+              : pastOrders.length > 0
+              ? pastOrders
+              : []
+          }
+          extraData={selectedTab === 0 ? liveOrders : pastOrders}
           renderItem={renderItem}
           ListEmptyComponent={() => (
             <Text

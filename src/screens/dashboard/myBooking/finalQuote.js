@@ -1,31 +1,46 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
   Text,
-  Pressable,
-  Platform,
   Image,
   ScrollView,
-  FlatList,
 } from 'react-native';
 import {Colors, hp, wp, boxShadow} from '../../../constant/colors';
 import Button from '../../../components/button';
 import {STYLES} from '../../../constant/commonStyle';
-import TextInput from '../../../components/textInput';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomModalAndroid from '../../../components/customModal';
-import DropDownAndroid from '../../../components/dropDown';
 import CheckBox from '../../../components/checkBox';
-import FlatButton from '../../../components/flatButton';
-import CloseIcon from '../../../components/closeIcon';
 import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import LocationDistance from '../../../components/locationDistance';
+import RejectBookingModal from './rejectBookingModal';
+import {useSelector} from 'react-redux';
 
 const FinalQuote = (props) => {
+  const configData =
+    useSelector((state) => state.Login?.configData?.keys) || {};
   const [rejectVisible, setRejectVisible] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [defaultReason, setDefaultReason] = useState([]);
+  const [rejectData, setRejectData] = useState({
+    reason: '',
+    desc: '',
+  });
   const [isAgree, setAgree] = useState(true);
+  useEffect(() => {
+    let temp = [];
+    configData.cancellation_reason_options.forEach((item) => {
+      temp.push({
+        label: item,
+        value: item,
+      });
+    });
+    setRejectData({
+      ...rejectData,
+      reason: configData?.cancellation_reason_options[0],
+    });
+    setDefaultReason(temp);
+  }, [configData]);
 
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
@@ -138,56 +153,22 @@ const FinalQuote = (props) => {
               width={wp(43)}
             />
           </View>
-          <CustomModalAndroid
+          <RejectBookingModal
             visible={rejectVisible}
-            onPress={() => setRejectVisible(false)}>
-            <CloseIcon
-              onPress={() => setRejectVisible(false)}
-              style={{
-                position: 'absolute',
-                right: 15,
-                top: Platform.OS === 'android' ? -4 : -10,
-              }}
-            />
-            <Text
-              style={{
-                fontFamily: 'Roboto-Regular',
-                color: Colors.inputTextColor,
-                fontSize: wp(3.5),
-              }}>
-              REASON FOR REJECTION
-            </Text>
-            <DropDownAndroid
-              label={''}
-              width={wp(90)}
-              items={[{label: 'High Price', value: 'highprice'}]}
-              onChangeItem={(text) => {}}
-            />
-            <View style={{width: wp(90)}}>
-              <TextInput
-                label={''}
-                placeHolder={'Enter your expected price here'}
-                numberOfLines={4}
-                onChange={(text) => {}}
-              />
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <CheckBox onPress={() => setAgree(!isAgree)} value={isAgree} />
-              <Text
-                style={{
-                  fontFamily: 'Roboto-Regular',
-                  color: Colors.inputTextColor,
-                  fontSize: wp(3.8),
-                }}>
-                Talk to our agent
-              </Text>
-            </View>
-            <FlatButton label={'CANCEL BOOKING'} />
-          </CustomModalAndroid>
+            closeModal={() => setRejectVisible(false)}
+            dropDownDefault={defaultReason}
+            dropDownChange={(text) =>
+              setRejectData({...rejectData, reason: text})
+            }
+            textValue={rejectData?.desc}
+            rejectData={rejectData}
+            textOnChange={(text) => setRejectData({...rejectData, desc: text})}
+            isLoading={isLoading}
+            setLoading={(text) => setLoading(text)}
+            // public_booking_id={props?.apiResponse?.public_booking_id}
+            // setApiResponse={props.setApiResponse}
+            navigation={props}
+          />
         </ScrollView>
       </View>
     </LinearGradient>

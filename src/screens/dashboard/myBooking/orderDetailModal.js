@@ -1,5 +1,12 @@
 import React from 'react';
-import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
 import CloseIcon from '../../../components/closeIcon';
 import {STYLES} from '../../../constant/commonStyle';
@@ -18,8 +25,16 @@ const OrderDetailModal = (props) => {
               width: wp(13),
               backgroundColor: '#F2E6FF',
               borderRadius: wp(13) / 2,
-            }}
-          />
+            }}>
+            <Image
+              source={{uri: item?.image}}
+              resizeMode={'contain'}
+              style={{
+                height: '100%',
+                width: '100%',
+              }}
+            />
+          </View>
         </View>
         <View
           style={{

@@ -4,3 +4,5 @@ export const SERVICE_DATA = 'SERVICE_DATA';
 export const SLIDER_DATA = 'SLIDER_DATA';
 export const CONFIG_DATA = 'CONFIG_DATA';
 export const INVENTORY_DATA = 'INVENTORY_DATA';
+export const LIVE_ORDERS = 'LIVE_ORDERS';
+export const PAST_ORDERS = 'PAST_ORDERS';

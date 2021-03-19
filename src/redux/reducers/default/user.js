@@ -4,4 +4,6 @@ export const LoginData = {
   sliderData: {},
   configData: {},
   inventoriesData: {},
+  liveOrders: {},
+  pastOrders: {},
 };

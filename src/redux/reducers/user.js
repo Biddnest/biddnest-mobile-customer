@@ -1,4 +1,12 @@
-import {CONFIG_DATA, INVENTORY_DATA, LOGIN_USER_DATA, SERVICE_DATA, SLIDER_DATA} from '../types';
+import {
+  CONFIG_DATA,
+  INVENTORY_DATA,
+  LIVE_ORDERS,
+  LOGIN_USER_DATA,
+  PAST_ORDERS,
+  SERVICE_DATA,
+  SLIDER_DATA,
+} from '../types';
 import {appDefaultReducer} from './default';
 const INITIAL_STATE = appDefaultReducer.Login;
 
@@ -18,6 +26,12 @@ export default (state = INITIAL_STATE, action) => {
     }
     case INVENTORY_DATA: {
       return {...state, inventoriesData: action.payload};
+    }
+    case LIVE_ORDERS: {
+      return {...state, liveOrders: action.payload};
+    }
+    case PAST_ORDERS: {
+      return {...state, pastOrders: action.payload};
     }
     default:
       return state;

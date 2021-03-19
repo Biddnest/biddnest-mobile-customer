@@ -20,16 +20,25 @@ import TwoButton from '../../../components/twoButton';
 import VerticalStepper from './verticalStepper';
 import OrderDetailModal from './orderDetailModal';
 import FlatButton from '../../../components/flatButton';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import {getDistance} from 'geolib';
+import Share from 'react-native-share';
+import moment from 'moment';
+import {STORE} from '../../../redux';
+import {APICall} from '../../../redux/actions/user';
+import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
 
 const OrderTracking = (props) => {
+  const orderData = props?.route?.params?.orderData || {};
+  let source_meta = JSON.parse(orderData?.source_meta?.toString()) || {};
+  const [isLoading, setLoading] = useState(false);
+  let destination_meta =
+    JSON.parse(orderData?.destination_meta?.toString()) || {};
   const [manageOrderVisible, setManageOrderVisible] = useState(false);
   const [orderDetailsVisible, setOrderDetailsVisible] = useState(false);
   const [cancelOrder, setCancelOrder] = useState(false);
-  const [resecheduleOrder, setResecheduleOrder] = useState(false);
+  const [resecheduleOrder, setRescheduleOrder] = useState(false);
+  let dateArray = [];
   const renderIcon = (item) => {
     switch (item.iconFamily) {
       case 'Feather':
@@ -48,6 +57,9 @@ const OrderTracking = (props) => {
         break;
     }
   };
+  orderData?.movement_dates.forEach((item) => {
+    dateArray.push(moment(item.date).format('D MMM yyyy'));
+  });
   return (
     <View style={styles.container}>
       <SimpleHeader
@@ -64,7 +76,11 @@ const OrderTracking = (props) => {
               padding: hp(2),
               flexDirection: 'row',
             }}>
-            <View />
+            <Image
+              source={require('../../../assets/images/pin_distance.png')}
+              style={{height: wp(15), width: wp(10)}}
+              resizeMode={'contain'}
+            />
             <View
               style={{
                 flexDirection: 'row',
@@ -73,10 +89,18 @@ const OrderTracking = (props) => {
                 alignItems: 'center',
               }}>
               <View>
-                <Text style={{...styles.locationText, marginTop: 0}}>
-                  CHENNAI
+                <Text
+                  style={{
+                    ...styles.locationText,
+                    marginTop: 0,
+                    textTransform: 'uppercase',
+                  }}>
+                  {source_meta?.city}
                 </Text>
-                <Text style={styles.locationText}>BENGALURU</Text>
+                <Text
+                  style={[styles.locationText, {textTransform: 'uppercase'}]}>
+                  {destination_meta?.city}
+                </Text>
               </View>
               <View style={{alignItems: 'flex-end'}}>
                 <Text style={{...styles.locationText, marginTop: 0}}>
@@ -85,7 +109,7 @@ const OrderTracking = (props) => {
                     style={{
                       fontFamily: 'Gilroy-Extrabold',
                     }}>
-                    #123456
+                    {orderData?.public_booking_id}
                   </Text>
                 </Text>
                 <View
@@ -100,7 +124,19 @@ const OrderTracking = (props) => {
                       fontSize: wp(4.5),
                       color: Colors.inputTextColor,
                     }}>
-                    314KM
+                    {parseInt(
+                      getDistance(
+                        {
+                          latitude: orderData?.source_lat,
+                          longitude: orderData?.source_lng,
+                        },
+                        {
+                          latitude: orderData?.destination_lat,
+                          longitude: orderData?.destination_lng,
+                        },
+                      ) / 1000,
+                    )}{' '}
+                    KM
                   </Text>
                 </View>
               </View>
@@ -136,6 +172,18 @@ const OrderTracking = (props) => {
                       setOrderDetailsVisible(true);
                     } else if (item.title === 'Manage Order') {
                       setManageOrderVisible(true);
+                    } else if (item.title === 'Share') {
+                      Share.open({
+                        title: 'Share via',
+                        message: 'some message',
+                        url: 'https://www.google.com/',
+                      })
+                        .then((res) => {
+                          console.log(res);
+                        })
+                        .catch((err) => {
+                          err && console.log(err);
+                        });
                     } else if (item.title === 'Virtual Assistance') {
                       props.navigation.navigate('FinalQuote');
                     }
@@ -235,13 +283,22 @@ const OrderTracking = (props) => {
             <View style={{...styles.flexBox, marginTop: 0}}>
               <Text style={styles.leftText}>price</Text>
               <Text style={{...styles.rightText, fontFamily: 'Roboto-Bold'}}>
-                Rs. 5000
+                Rs.{' '}
+                {orderData?.status === 0 || orderData?.status === 1
+                  ? orderData?.final_estimated_quote
+                  : orderData?.final_quote}
               </Text>
             </View>
             <View style={styles.flexBox}>
               <Text style={styles.leftText}>moving date</Text>
-              <Text style={{...styles.rightText, fontFamily: 'Roboto-Bold'}}>
-                25 Jan 2021
+              <Text
+                style={{
+                  ...styles.rightText,
+                  fontFamily: 'Roboto-Bold',
+                  maxWidth: '60%',
+                  textAlign: 'right',
+                }}>
+                {dateArray.join(', ')}
               </Text>
             </View>
           </View>
@@ -251,12 +308,13 @@ const OrderTracking = (props) => {
         <OrderDetailModal
           title={'ORDER DETAILS'}
           onCloseIcon={() => setOrderDetailsVisible(false)}
+          data={orderData?.inventories}
         />
       </CustomModalAndroid>
       <CustomModalAndroid
         visible={manageOrderVisible || cancelOrder}
         onPress={() => {
-          setResecheduleOrder(false);
+          setRescheduleOrder(false);
           setCancelOrder(false);
           setManageOrderVisible(false);
         }}>
@@ -281,7 +339,7 @@ const OrderTracking = (props) => {
           </Text>
           <CloseIcon
             onPress={() => {
-              setResecheduleOrder(false);
+              setRescheduleOrder(false);
               setCancelOrder(false);
               setManageOrderVisible(false);
             }}
@@ -314,7 +372,7 @@ const OrderTracking = (props) => {
               textAlign: cancelOrder ? 'left' : 'center',
             }}>
             {cancelOrder
-              ? 'Are you sure y ou want to cancel this order?'
+              ? 'Are you sure you want to cancel this order?'
               : resecheduleOrder
               ? 'Our Virtual Assistant will get in touch with you shortly'
               : 'How would you like to manage your order?'}
@@ -324,7 +382,7 @@ const OrderTracking = (props) => {
           <FlatButton
             label={'OKEY'}
             onPress={() => {
-              setResecheduleOrder(false);
+              setRescheduleOrder(false);
               setCancelOrder(false);
               setManageOrderVisible(false);
             }}
@@ -333,6 +391,7 @@ const OrderTracking = (props) => {
           <TwoButton
             leftLabel={cancelOrder ? 'No' : 'CANCEL & REFUND'}
             rightLabel={cancelOrder ? 'Yes' : 'RESCHEDULE'}
+            isLoading={isLoading}
             leftOnPress={() => {
               if (cancelOrder) {
                 setCancelOrder(false);
@@ -347,7 +406,32 @@ const OrderTracking = (props) => {
                 setManageOrderVisible(false);
                 props.navigation.goBack();
               } else {
-                setResecheduleOrder(true);
+                // Call reschedule API
+                setLoading(true);
+                let obj = {
+                  url: 'bookings/reschedul',
+                  method: 'post',
+                  headers: {
+                    Authorization:
+                      'Bearer ' + STORE.getState().Login?.loginData?.token,
+                  },
+                  data: {
+                    public_booking_id: orderData?.public_booking_id,
+                  },
+                };
+                APICall(obj)
+                  .then((res) => {
+                    setLoading(false);
+                    if (res?.data?.status === 'success') {
+                      setRescheduleOrder(true);
+                    } else {
+                      CustomAlert(res?.data?.message);
+                    }
+                  })
+                  .catch((err) => {
+                    setLoading(false);
+                    CustomConsole(err);
+                  });
                 // setManageOrderVisible(false);
               }
             }}

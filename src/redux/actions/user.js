@@ -1,7 +1,7 @@
 import instance from '../../constant/baseService';
 import {
-  CONFIG_DATA, INVENTORY_DATA,
-  LOGIN_USER_DATA,
+  CONFIG_DATA, INVENTORY_DATA, LIVE_ORDERS,
+  LOGIN_USER_DATA, PAST_ORDERS,
   RESET_STORE,
   SERVICE_DATA,
   SLIDER_DATA,
@@ -228,6 +228,76 @@ export const getAllInventories = () => {
         .then((res) => {
           dispatch({
             type: INVENTORY_DATA,
+            payload: res?.data?.data || {},
+          });
+          resolve(res.data);
+        })
+        .catch((err) => {
+          if (err.status === 401) {
+            // dispatch({
+            //   type: RESET_STORE,
+            // });
+            // CommonActions.reset({
+            //   index: 0,
+            //   routes: [{name: 'Login'}],
+            // });
+          }
+          CustomAlert(err?.data?.message);
+          reject(err);
+        });
+    });
+  };
+};
+
+export const getLiveOrders = () => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      let obj = {
+        url: 'bookings/history/live',
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+      };
+      APICall(obj)
+        .then((res) => {
+          dispatch({
+            type: LIVE_ORDERS,
+            payload: res?.data?.data || {},
+          });
+          resolve(res.data);
+        })
+        .catch((err) => {
+          if (err.status === 401) {
+            // dispatch({
+            //   type: RESET_STORE,
+            // });
+            // CommonActions.reset({
+            //   index: 0,
+            //   routes: [{name: 'Login'}],
+            // });
+          }
+          CustomAlert(err?.data?.message);
+          reject(err);
+        });
+    });
+  };
+};
+
+export const getPastOrders = () => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      let obj = {
+        url: 'bookings/history/past',
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+      };
+      APICall(obj)
+        .then((res) => {
+          dispatch({
+            type: PAST_ORDERS,
             payload: res?.data?.data || {},
           });
           resolve(res.data);
