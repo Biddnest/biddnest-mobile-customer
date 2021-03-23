@@ -37,6 +37,7 @@ const MainStackNavigator = () => {
       <Stack.Screen name="ContactUs" component={ContactUs} />
       <Stack.Screen name="FAQs" component={FAQs} />
       <Stack.Screen name="FAQDetails" component={FAQDetails} />
+      <Stack.Screen name="FinalQuote" component={FinalQuote} />
     </Stack.Navigator>
   );
 };

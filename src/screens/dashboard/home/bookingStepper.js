@@ -53,7 +53,6 @@ const BookingStepper = (props) => {
   const [headerText, setHeaderText] = useState(
     bookingFor === 'Myself' ? 'MOVING TO' : '',
   );
-  const [orderBooked, setOrderBooked] = useState(false);
   const [movingFrom, setMovingFrom] = useState(false);
   const [data, setData] = useState({
     booking_id: null,
@@ -134,7 +133,7 @@ const BookingStepper = (props) => {
         if (bookingFor === 'Others') {
           setHeaderText('REQUIREMENT DETAILS');
         } else {
-          if (orderBooked) {
+          if (apiResponse?.bid_result_at !== null) {
             setHeaderText('TIMER');
           } else {
             setHeaderText('INITIAL QUOTE');
@@ -143,7 +142,7 @@ const BookingStepper = (props) => {
         break;
       case 4:
         if (bookingFor === 'Others') {
-          if (orderBooked) {
+          if (apiResponse?.bid_result_at !== null) {
             setHeaderText('TIMER');
           } else {
             setHeaderText('INITIAL QUOTE');
@@ -156,7 +155,7 @@ const BookingStepper = (props) => {
         break;
       }
     }
-  }, [currentPosition, orderBooked, movingFrom]);
+  }, [currentPosition, apiResponse, movingFrom]);
 
   const onPageChange = (position) => {
     // if (currentPosition > position) {
@@ -253,7 +252,6 @@ const BookingStepper = (props) => {
       [key]: value,
     });
   };
-  console.log(data);
   const handleBooking = (service_type) => {
     //Accept order
     let obj = {
@@ -271,7 +269,6 @@ const BookingStepper = (props) => {
       .then((res) => {
         if (res?.data?.status === 'success') {
           setApiResponse(res?.data?.data?.booking);
-          setOrderBooked(true);
         } else {
           CustomAlert(res?.data?.message);
         }
@@ -387,7 +384,7 @@ const BookingStepper = (props) => {
             />
           );
         }
-        if (orderBooked) {
+        if (apiResponse?.bid_result_at !== null) {
           return (
             <Timer
               data={data}
@@ -407,7 +404,6 @@ const BookingStepper = (props) => {
             apiResponse={apiResponse}
             setApiResponse={setApiResponse}
             handleStateChange={handleStateChange}
-            orderBooked={orderBooked}
             handleBooking={handleBooking}
             bookingFor={bookingFor}
             movementType={movementType}
@@ -416,7 +412,7 @@ const BookingStepper = (props) => {
           />
         );
       case 4:
-        if (orderBooked) {
+        if (apiResponse?.bid_result_at !== null) {
           return (
             <Timer
               apiResponse={apiResponse}
@@ -436,7 +432,6 @@ const BookingStepper = (props) => {
             setApiResponse={setApiResponse}
             data={data}
             handleStateChange={handleStateChange}
-            orderBooked={orderBooked}
             handleBooking={handleBooking}
             bookingFor={bookingFor}
             movementType={movementType}

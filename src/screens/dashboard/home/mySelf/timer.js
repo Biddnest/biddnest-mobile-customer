@@ -48,7 +48,6 @@ const Timer = (props) => {
         CustomConsole(err);
       });
   }, []);
-  console.log(orderDetails, time);
   return (
     <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
       <Text
@@ -70,7 +69,7 @@ const Timer = (props) => {
           size={18}
           // digitStyle={{backgroundColor: time === 0 ? 'grey' : 'black'}}
           onFinish={() => {
-            props.navigation.navigate('FinalQuote');
+            // props.navigation.navigate('FinalQuote');
           }}
           digitTxtStyle={{color: '#000'}}
           separatorStyle={{color: '#000'}}
