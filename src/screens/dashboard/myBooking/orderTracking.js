@@ -109,7 +109,7 @@ const OrderTracking = (props) => {
                     style={{
                       fontFamily: 'Gilroy-Extrabold',
                     }}>
-                    {orderData?.public_booking_id}
+                    #{orderData?.public_booking_id}
                   </Text>
                 </Text>
                 <View

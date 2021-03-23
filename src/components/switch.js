@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Animated, Pressable, Text, View} from 'react-native';
 import {Colors, wp} from '../constant/colors';
 
 const Switch = (props) => {
-  const [switchValue, setSwitchValue] = useState(false);
+  const [switchValue, setSwitchValue] = useState(props.value != 0);
 
-  const clicked = () => {
-    setSwitchValue(!switchValue);
-  };
+  useEffect(() => {
+    setSwitchValue(props.value != 0);
+  }, [props.value]);
 
   return (
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -20,7 +20,7 @@ const Switch = (props) => {
         No
       </Text>
       <Pressable
-        onPress={() => clicked()}
+        onPress={() => props.onChange(props.value == 0 ? 1 : 0)}
         style={{
           height: 20,
           width: 45,

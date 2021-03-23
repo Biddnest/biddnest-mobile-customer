@@ -112,7 +112,8 @@ const DateOfMovement = (props) => {
           <Calendar
             markedDates={dateArray}
             style={{width: wp(90), height: hp(50)}}
-            current={'2021-02-26'}
+            current={new Date()}
+            minDate={new Date()}
             onDayPress={(day) => {
               let temp = {...dateArray};
               if (day.dateString in temp) {

@@ -1,21 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Pressable,
-  Platform,
-  Image,
-  ScrollView,
-  FlatList,
-} from 'react-native';
-import {Colors, hp, wp, boxShadow} from '../../../../constant/colors';
+import {View, StyleSheet, Text, Platform, ScrollView} from 'react-native';
+import {Colors, hp, wp} from '../../../../constant/colors';
 import Button from '../../../../components/button';
 import {
   CustomAlert,
   CustomConsole,
   resetNavigator,
-  secondsToHms,
+  DiffMin,
 } from '../../../../constant/commonFun';
 import CustomModalAndroid from '../../../../components/customModal';
 import CloseIcon from '../../../../components/closeIcon';
@@ -24,6 +15,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import TimerClock from '../../../../assets/svg/timer_clock.svg';
 import {STORE} from '../../../../redux';
 import {APICall} from '../../../../redux/actions/user';
+import CountDown from '../../../../components/countDown';
 
 const Timer = (props) => {
   const [orderPlacedVisible, setOrderPlacedVisible] = useState(true);
@@ -41,9 +33,12 @@ const Timer = (props) => {
       .then((res) => {
         if (res?.data?.status === 'success') {
           setOrderDetails(res?.data?.data?.booking);
-          if (res?.data?.data?.booking?.meta) {
-            let temp = JSON.parse(res?.data?.data?.booking?.meta?.toString());
-            // setTime(temp?.timings?.bid_result);
+          if (res?.data?.data?.booking?.bid_result_at) {
+            let temp = DiffMin(
+              new Date(),
+              new Date(res?.data?.data?.booking?.bid_result_at),
+            );
+            setTime(temp);
           }
         } else {
           CustomAlert(res?.data?.message);
@@ -70,21 +65,34 @@ const Timer = (props) => {
         <View style={{marginVertical: hp(0.8)}}>
           <TimerClock width={wp(30)} height={wp(30)} />
         </View>
-        <Text
-          style={{
-            color: Colors.darkBlue,
-            position: 'absolute',
-            top: wp(28),
-            fontFamily: 'Roboto-Medium',
-            fontSize: wp(3.8),
-          }}>
-          {secondsToHms(time)}
-        </Text>
+        <CountDown
+          until={time}
+          size={18}
+          // digitStyle={{backgroundColor: time === 0 ? 'grey' : 'black'}}
+          onFinish={() => {
+            props.navigation.navigate('FinalQuote');
+          }}
+          digitTxtStyle={{color: '#000'}}
+          separatorStyle={{color: '#000'}}
+          timeToShow={['M', 'S']}
+          timeLabels={{m: null, s: null}}
+          showSeparator
+        />
+        {/*<Text*/}
+        {/*  style={{*/}
+        {/*    color: Colors.darkBlue,*/}
+        {/*    position: 'absolute',*/}
+        {/*    top: wp(28),*/}
+        {/*    fontFamily: 'Roboto-Medium',*/}
+        {/*    fontSize: wp(3.8),*/}
+        {/*  }}>*/}
+        {/*  {DiffMin(new Date(), new Date(orderDetails?.bid_result_at))}*/}
+        {/*</Text>*/}
         <Text style={styles.mainText}>Time Left</Text>
         <View style={styles.separatorView} />
         <View style={styles.flexView}>
           <Text style={styles.orderID}>ORDER ID</Text>
-          <Text style={styles.orderNo}>{orderDetails?.public_booking_id}</Text>
+          <Text style={styles.orderNo}>#{orderDetails?.public_booking_id}</Text>
         </View>
         <Button
           spaceBottom={0}
@@ -129,7 +137,7 @@ const Timer = (props) => {
             },
           ]}>
           <Text style={styles.orderID}>ORDER ID</Text>
-          <Text style={styles.orderNo}>{orderDetails?.public_booking_id}</Text>
+          <Text style={styles.orderNo}>#{orderDetails?.public_booking_id}</Text>
         </View>
       </CustomModalAndroid>
     </ScrollView>

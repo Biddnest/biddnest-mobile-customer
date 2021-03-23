@@ -51,13 +51,11 @@ const RequirementDetails = (props) => {
     false,
   );
   const [error, setError] = useState({
-    remark: undefined,
-    images: undefined,
     inventory: undefined,
   });
   const [subServices, setSubServices] = useState([]);
   const [inventoryItems, setInventoryItems] = useState([]);
-
+  console.log(addData);
   const handleState = (key, value) => {
     let temp = {...data.meta};
     if (key === 'remarks') {
@@ -453,14 +451,7 @@ const RequirementDetails = (props) => {
           />
         </View>
       </View>
-      <View
-        style={[
-          styles.inputForm,
-          {
-            borderColor: error.images === false ? Colors.red : '#DEE6ED',
-            borderWidth: error.images === false ? 2 : 1,
-          },
-        ]}>
+      <View style={styles.inputForm}>
         <Text style={STYLES.textHeader}>UPLOAD PHOTOS</Text>
         <View style={{marginTop: hp(3)}}>
           <ScrollView
@@ -542,7 +533,6 @@ const RequirementDetails = (props) => {
           label={''}
           placeHolder={'Comments if any'}
           numberOfLines={4}
-          isRight={error.remark}
           value={data?.meta?.customer?.remarks}
           onChange={(text) => handleState('remarks', text)}
         />
@@ -554,19 +544,11 @@ const RequirementDetails = (props) => {
           onPress={() => {
             let tempError = {};
             setLoading(true);
-            tempError.remark =
-              (data?.meta?.customer?.remarks.replace(/^\s+/g, '')).length !== 0;
             if (data?.inventory_items.length === 0) {
               tempError.inventory = false;
               CustomAlert('Please Add atleast one item');
             } else {
               tempError.inventory = true;
-            }
-            if (data?.meta?.images.length === 0) {
-              tempError.images = false;
-              CustomAlert('Please Upload at least one image');
-            } else {
-              tempError.images = true;
             }
             setError(tempError);
             if (
@@ -737,7 +719,8 @@ const RequirementDetails = (props) => {
           />
         </View>
         <View style={{width: '90%'}}>
-          {(movementType?.id !== 1 && (
+          {(configData?.inventory_quantity_type.range ===
+            movementType?.inventory_quantity_type && (
             <View
               style={{
                 marginTop: hp(2),

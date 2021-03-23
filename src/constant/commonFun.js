@@ -27,6 +27,18 @@ export const secondsToHms = (d) => {
   return h.toString() + ':' + (m < 10 ? '0' : '') + m.toString();
 };
 
+export const DiffMin = (dt2, dt1) => {
+  let diff = (dt2.getTime() - dt1.getTime()) / 1000;
+  diff /= 60;
+  let d = Math.abs(Math.round(diff));
+
+  d = Number(d);
+  let h = Math.floor(d / 3600);
+  let m = Math.floor((d % 3600) / 60);
+  let s = Math.floor((d % 3600) % 60);
+  return m;
+};
+
 export const CustomAlert = (msg = '') => {
   return Toast.show(msg, Toast.LONG);
 };

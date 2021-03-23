@@ -8,8 +8,6 @@ import {
 } from '../types';
 import {CustomAlert, resetNavigator} from '../../constant/commonFun';
 import {STORE} from '../index';
-import {CommonActions} from '@react-navigation/native';
-import axios from 'axios';
 
 export const APICall = (obj) => {
   return new Promise((resolve, reject) => {

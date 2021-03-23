@@ -69,6 +69,7 @@ const BookingStepper = (props) => {
         state: '',
         pincode: '',
         lift: 0,
+        shared_service: true,
       },
     },
     destination: {
@@ -82,6 +83,7 @@ const BookingStepper = (props) => {
         state: '',
         pincode: '',
         lift: 1,
+        shared_service: false,
       },
     },
     contact_details: {

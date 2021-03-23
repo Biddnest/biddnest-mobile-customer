@@ -57,6 +57,9 @@ const MyBooking = (props) => {
     // props.navigation.navigate('FinalQuote', {orderData: item});
   };
   const renderItem = ({item, index}) => {
+    if (item.status === 4) {
+      console.log('test');
+    }
     let ind = Object.values(configData?.status).findIndex(
       (ele) => ele === item?.status,
     );

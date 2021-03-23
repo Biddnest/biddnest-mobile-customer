@@ -96,7 +96,7 @@ const Home = (props) => {
     useSelector((state) => state.Login?.serviceData?.services),
   );
   const [sliderData, setSliderData] = useState(
-    useSelector((state) => state.Login?.sliderData?.sliders),
+    useSelector((state) => state.Login?.sliderData?.sliders) || [],
   );
   const [couponVisible, setCouponVisible] = useState(false);
   const [bookingSelectionVisible, setBookingSelectionVisible] = useState(false);

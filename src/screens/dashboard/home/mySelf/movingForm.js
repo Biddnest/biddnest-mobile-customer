@@ -244,10 +244,48 @@ const MovingForm = (props) => {
                 fontSize: wp(4),
                 marginLeft: 5,
               }}>
+              Is lift available?
+            </Text>
+          </View>
+          <Switch
+            onChange={(text) => handleState('lift', text)}
+            value={
+              props.movingFrom ? destination?.meta?.lift : source?.meta?.lift
+            }
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginHorizontal: wp(3),
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              width: wp(52),
+            }}>
+            <Ionicons name={'information-circle'} size={25} color={'#99A0A5'} />
+            <Text
+              style={{
+                color: '#99A0A5',
+                fontFamily: 'Roboto-Regular',
+                fontSize: wp(4),
+                marginLeft: 5,
+              }}>
               Interested in shared services?
             </Text>
           </View>
-          <Switch />
+          <Switch
+            onChange={(text) => handleState('shared_service', text === 1)}
+            value={
+              props.movingFrom
+                ? destination?.meta?.shared_service || false
+                : source?.meta?.shared_service || false
+            }
+          />
         </View>
         <View style={{marginHorizontal: wp(3)}}>
           <Button
