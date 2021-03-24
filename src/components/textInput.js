@@ -13,6 +13,7 @@ const TextInput = (props) => {
       numberOfLines={props.numberOfLines || 1}
       value={props.value}
       onFocus={props.onFocus}
+      onBlur={props.onBlur}
       label={() => {
         if (props.smallLabel) {
           return (

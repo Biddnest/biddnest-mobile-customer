@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors, hp, wp, PAYMENT_OPTION} from '../../../constant/colors';
@@ -18,12 +18,52 @@ import Button from '../../../components/button';
 import AddNewCard from './addNewCard';
 import UPIPayment from './UPIPayment';
 import NetBanking from './netBanking';
+import {APICall, getOrderDetails} from '../../../redux/actions/user';
+import {CustomAlert, CustomConsole, DiffMin} from '../../../constant/commonFun';
+import {STORE} from '../../../redux';
 
 const Payment = (props) => {
   const [addCardVisible, setCardVisible] = useState(false);
   const [UPIVisible, setUPIVisible] = useState(false);
   const [netBankingVisible, setNetBankingVisible] = useState(false);
+  const orderData = props?.route?.params?.orderData || {};
+  const [orderDetails, setOrderDetails] = useState({});
+  const [paymentSummery, setPaymentSummery] = useState({});
+  const [coupon_code, setCouponCode] = useState('');
+  const [applyButton, setApplyButton] = useState(false);
 
+  useEffect(() => {
+    getOrderDetails(orderData?.public_booking_id)
+      .then((res) => {
+        if (res?.data?.status === 'success') {
+          setOrderDetails(res?.data?.data?.booking);
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        CustomConsole(err);
+      });
+    let obj = {
+      url: `bookings/payment/summary?public_booking_id=${orderData?.public_booking_id}`,
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+    };
+    APICall(obj)
+      .then((res) => {
+        if (res?.data?.status === 'success') {
+          setPaymentSummery(res?.data?.data?.payment_details);
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        CustomConsole(err);
+      });
+  }, []);
+  console.log(paymentSummery);
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <View style={styles.container}>
@@ -33,6 +73,12 @@ const Payment = (props) => {
           onBack={() => props.navigation.goBack()}
         />
         <ScrollView
+          // refreshControl={
+          //     <RefreshControl
+          //         refreshing={this.state.refreshing}
+          //         onRefresh={this._onRefresh}
+          //     />
+          // }
           bounces={false}
           showsVerticalScrollIndicator={false}
           style={{flex: 1, padding: hp(2)}}>
@@ -50,12 +96,60 @@ const Payment = (props) => {
             <Text style={styles.totalText}>Grand Total</Text>
             <Text style={styles.totalText}>4000</Text>
           </View>
-          <View style={{width: wp(96), alignSelf: 'center'}}>
+          <View
+            style={{
+              width: applyButton ? wp(65) : wp(96),
+              flexDirection: 'row',
+              alignItems: 'center',
+              alignSelf: applyButton ? 'flex-start' : 'center',
+            }}>
             <TextInput
               label={''}
+              value={coupon_code}
               placeHolder={'Enter Coupon Code if any'}
-              onChange={(text) => {}}
+              onChange={(text) => setCouponCode(text)}
+              onFocus={() => {
+                if (!applyButton) {
+                  setApplyButton(true);
+                }
+              }}
+              onBlur={() => {
+                if (applyButton && coupon_code.length === 0) {
+                  setApplyButton(false);
+                }
+              }}
             />
+            {applyButton && (
+              <Button
+                label={'Apply'}
+                width={wp(25)}
+                onPress={() => {
+                  // Verify coupon API
+                  let obj = {
+                    url: 'coupon/verify',
+                    method: 'post',
+                    headers: {
+                      Authorization:
+                        'Bearer ' + STORE.getState().Login?.loginData?.token,
+                    },
+                    data: {
+                      public_booking_id: orderData?.public_booking_id,
+                      coupon_code: coupon_code,
+                    },
+                  };
+                  APICall(obj)
+                    .then((res) => {
+                      if (res?.data?.status === 'success') {
+                      } else {
+                        CustomAlert(res?.data?.message);
+                      }
+                    })
+                    .catch((err) => {
+                      CustomConsole(err);
+                    });
+                }}
+              />
+            )}
           </View>
           <LinearGradient
             colors={[Colors.darkBlue, '#462F97']}
