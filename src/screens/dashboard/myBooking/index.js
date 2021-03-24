@@ -3,11 +3,9 @@ import {View, Text, StyleSheet, Pressable, FlatList, Image} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
 import {HomeHeader} from '../home';
 import {STYLES} from '../../../constant/commonStyle';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import {getLiveOrders, getPastOrders} from '../../../redux/actions/user';
-import {getDistance} from 'geolib';
 import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
 import moment from 'moment';
 
@@ -24,10 +22,19 @@ const MyBooking = (props) => {
     useSelector((state) => state.Login?.pastOrders?.booking) || [],
   );
   const [selectedTab, setSelectedTab] = useState(0);
+  const [isLoading, setLoading] = useState(false);
   useEffect(() => {
     if (isFocused && userData?.fname) {
+      fetchOrderList();
+    }
+  }, [isFocused, selectedTab]);
+
+  const fetchOrderList = () => {
+    setLoading(true);
+    if (selectedTab === 0) {
       dispatch(getLiveOrders())
         .then((res) => {
+          setLoading(false);
           if (res?.status === 'success') {
             setLiveOrders(res?.data?.booking);
           } else {
@@ -35,10 +42,13 @@ const MyBooking = (props) => {
           }
         })
         .catch((err) => {
+          setLoading(false);
           CustomConsole(err);
         });
+    } else {
       dispatch(getPastOrders())
         .then((res) => {
+          setLoading(false);
           if (res?.status === 'success') {
             setPastOrders(res?.data?.booking);
           } else {
@@ -46,27 +56,33 @@ const MyBooking = (props) => {
           }
         })
         .catch((err) => {
+          setLoading(false);
           CustomConsole(err);
         });
     }
-  }, [isFocused]);
+  };
 
   const handleOrderClicked = (item) => {
-    props.navigation.navigate('OrderTracking', {orderData: item});
-    // props.navigation.navigate('Payment', {orderData: item});
-    // props.navigation.navigate('FinalQuote', {orderData: item});
+    if (item?.status === 4) {
+      props.navigation.navigate('FinalQuote', {orderData: item});
+    } else if (item?.status === 2) {
+      props.navigation.navigate('OrderTimer', {orderData: item});
+    } else if (item?.status === 5) {
+      props.navigation.navigate('OrderTracking', {orderData: item});
+    }
   };
   const renderItem = ({item, index}) => {
-    if (item.status === 4) {
-      console.log('test');
-    }
     let ind = Object.values(configData?.status).findIndex(
       (ele) => ele === item?.status,
     );
-    let status = Object.keys(configData?.status)[ind];
-    let source_meta = JSON.parse(item?.source_meta?.toString()) || {};
-    let destination_meta = JSON.parse(item?.destination_meta?.toString()) || {};
-    let meta = JSON.parse(item?.meta?.toString()) || {};
+    let status = Object.keys(configData?.status)[ind].replace('_', ' ');
+    let source_meta =
+      (item?.source_meta && JSON.parse(item?.source_meta?.toString())) || {};
+    let destination_meta =
+      (item?.destination_meta &&
+        JSON.parse(item?.destination_meta?.toString())) ||
+      {};
+    let meta = (item?.meta && JSON.parse(item?.meta?.toString())) || {};
     let dateArray = [];
     item?.movement_dates.forEach((i) => {
       dateArray.push(moment(i.date).format('D MMM yyyy'));
@@ -122,16 +138,7 @@ const MyBooking = (props) => {
                     fontSize: wp(4.5),
                     color: Colors.inputTextColor,
                   }}>
-                  {parseInt(
-                    getDistance(
-                      {latitude: item?.source_lat, longitude: item?.source_lng},
-                      {
-                        latitude: item?.destination_lat,
-                        longitude: item?.destination_lng,
-                      },
-                    ) / 1000,
-                  )}{' '}
-                  KM
+                  {meta?.distance} KM
                 </Text>
               </View>
             </View>
@@ -140,12 +147,9 @@ const MyBooking = (props) => {
         <View style={styles.separatorView} />
         {selectedTab === 0 && (
           <View style={styles.flexBox}>
-            <Text style={styles.leftText}>price</Text>
+            <Text style={styles.leftText}>expected price</Text>
             <Text style={styles.rightText}>
-              Rs.{' '}
-              {item?.status === 0 || item?.status === 1
-                ? item?.final_estimated_quote
-                : item?.final_quote}
+              Rs. {item?.final_estimated_quote}
             </Text>
           </View>
         )}
@@ -153,13 +157,15 @@ const MyBooking = (props) => {
           <Text style={styles.leftText}>moving date</Text>
           <Text
             style={[styles.rightText, {maxWidth: '60%', textAlign: 'right'}]}>
-            {dateArray.join(', ')}
+            {dateArray.join('\n')}
           </Text>
         </View>
-        <View style={styles.flexBox}>
-          <Text style={styles.leftText}>category</Text>
-          <Text style={styles.rightText}>{meta?.subcategory || 'null'}</Text>
-        </View>
+        {meta?.subcategory && (
+          <View style={styles.flexBox}>
+            <Text style={styles.leftText}>category</Text>
+            <Text style={styles.rightText}>{meta?.subcategory}</Text>
+          </View>
+        )}
         <View style={styles.flexBox}>
           <Text style={styles.leftText}>status</Text>
           <Text style={[styles.rightText, {textTransform: 'capitalize'}]}>
@@ -211,6 +217,8 @@ const MyBooking = (props) => {
           }
           extraData={selectedTab === 0 ? liveOrders : pastOrders}
           renderItem={renderItem}
+          onRefresh={fetchOrderList}
+          refreshing={isLoading}
           ListEmptyComponent={() => (
             <Text
               style={{

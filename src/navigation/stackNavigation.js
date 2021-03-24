@@ -15,6 +15,7 @@ import ReferFriend from '../screens/dashboard/drawer/referFriend';
 import ContactUs from '../screens/dashboard/drawer/contactUs';
 import FAQs from '../screens/dashboard/drawer/faqs';
 import FAQDetails from '../screens/dashboard/drawer/faqs/faqDetails';
+import OrderTimer from '../screens/dashboard/myBooking/orderTimer';
 
 const Stack = createStackNavigator();
 
@@ -50,6 +51,7 @@ const MyBookingStackNavigator = () => {
       <Stack.Screen name="Payment" component={Payment} />
       <Stack.Screen name="CardDetails" component={CardDetails} />
       <Stack.Screen name="FinalQuote" component={FinalQuote} />
+      <Stack.Screen name="OrderTimer" component={OrderTimer} />
     </Stack.Navigator>
   );
 };

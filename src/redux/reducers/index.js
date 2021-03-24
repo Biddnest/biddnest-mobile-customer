@@ -9,8 +9,10 @@ const appReducer = combineReducers({
 
 export default function rootReducer(state, action) {
   let finalState = appReducer(state, action);
+  let finalSta = appReducer(state, action);
   if (action.type === RESET_STORE) {
     finalState = appDefaultReducer; //resetReducer(finalState, action);
   }
+  finalState.Login.configData = finalSta.Login.configData;
   return finalState;
 }

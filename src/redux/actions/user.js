@@ -1,7 +1,10 @@
 import instance from '../../constant/baseService';
 import {
-  CONFIG_DATA, INVENTORY_DATA, LIVE_ORDERS,
-  LOGIN_USER_DATA, PAST_ORDERS,
+  CONFIG_DATA,
+  INVENTORY_DATA,
+  LIVE_ORDERS,
+  LOGIN_USER_DATA,
+  PAST_ORDERS,
   RESET_STORE,
   SERVICE_DATA,
   SLIDER_DATA,
@@ -315,4 +318,33 @@ export const getPastOrders = () => {
         });
     });
   };
+};
+
+export const getOrderDetails = (id) => {
+  return new Promise((resolve, reject) => {
+    let obj = {
+      url: `bookings?id=${id}`,
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+    };
+    APICall(obj)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        if (err.status === 401) {
+          // dispatch({
+          //   type: RESET_STORE,
+          // });
+          // CommonActions.reset({
+          //   index: 0,
+          //   routes: [{name: 'Login'}],
+          // });
+        }
+        CustomAlert(err?.data?.message);
+        reject(err);
+      });
+  });
 };

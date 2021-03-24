@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Image,
-  ScrollView,
-} from 'react-native';
+import {View, StyleSheet, Text, Image, ScrollView} from 'react-native';
 import {Colors, hp, wp, boxShadow} from '../../../constant/colors';
 import Button from '../../../components/button';
 import {STYLES} from '../../../constant/commonStyle';
@@ -15,6 +9,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import LocationDistance from '../../../components/locationDistance';
 import RejectBookingModal from './rejectBookingModal';
 import {useSelector} from 'react-redux';
+import {CustomAlert} from '../../../constant/commonFun';
+import {APICall} from '../../../redux/actions/user';
+import {STORE} from '../../../redux';
 
 const FinalQuote = (props) => {
   const configData =
@@ -26,6 +23,7 @@ const FinalQuote = (props) => {
     reason: '',
     desc: '',
   });
+  const [orderDetails, setOrderDetails] = useState({});
   const [isAgree, setAgree] = useState(true);
   useEffect(() => {
     let temp = [];
@@ -42,6 +40,32 @@ const FinalQuote = (props) => {
     setDefaultReason(temp);
   }, [configData]);
 
+  useEffect(() => {
+    // let obj = {
+    //   url: 'bookings/finalquote',
+    //   method: 'get',
+    //   headers: {
+    //     Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+    //   },
+    //   data: {
+    //     public_booking_id: props?.apiResponse?.public_booking_id,
+    //   },
+    // };
+    // APICall(obj)
+    //   .then((res) => {
+    //     setLoading(false);
+    //     if (res?.data?.status === 'success') {
+    //       setOrderDetails(res?.data?.booking);
+    //     } else {
+    //       CustomAlert(res?.data?.message);
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     setLoading(false);
+    //     CustomAlert(err?.message);
+    //   });
+  });
+
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <View style={styles.container}>
@@ -54,7 +78,7 @@ const FinalQuote = (props) => {
           bounces={false}
           showsVerticalScrollIndicator={false}
           style={{flex: 1}}>
-          <LocationDistance onEditClick={() => {}} />
+          <LocationDistance />
           <View style={styles.inputForm}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text style={styles.headerText}>FINAL BIDDING IS HERE</Text>

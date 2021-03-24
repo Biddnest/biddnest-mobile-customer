@@ -35,7 +35,6 @@ const Timer = (props) => {
           setOrderDetails(res?.data?.data?.booking);
           if (res?.data?.data?.booking?.bid_result_at) {
             let temp = DiffMin(
-              new Date(),
               new Date(res?.data?.data?.booking?.bid_result_at),
             );
             setTime(temp);
@@ -85,7 +84,7 @@ const Timer = (props) => {
         {/*    fontFamily: 'Roboto-Medium',*/}
         {/*    fontSize: wp(3.8),*/}
         {/*  }}>*/}
-        {/*  {DiffMin(new Date(), new Date(orderDetails?.bid_result_at))}*/}
+        {/*  {DiffMin(new Date(orderDetails?.bid_result_at))}*/}
         {/*</Text>*/}
         <Text style={styles.mainText}>Time Left</Text>
         <View style={styles.separatorView} />

@@ -30,7 +30,10 @@ import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
 
 const OrderTracking = (props) => {
   const orderData = props?.route?.params?.orderData || {};
-  let source_meta = JSON.parse(orderData?.source_meta?.toString()) || {};
+  let source_meta =
+    (orderData?.source_meta &&
+      JSON.parse(orderData?.source_meta?.toString())) ||
+    {};
   const [isLoading, setLoading] = useState(false);
   let destination_meta =
     JSON.parse(orderData?.destination_meta?.toString()) || {};
@@ -298,7 +301,7 @@ const OrderTracking = (props) => {
                   maxWidth: '60%',
                   textAlign: 'right',
                 }}>
-                {dateArray.join(', ')}
+                {dateArray.join('\n')}
               </Text>
             </View>
           </View>

@@ -65,7 +65,7 @@ const DateOfMovement = (props) => {
             placeholder={'Choose Date'}
             disabled={true}
             label={'Choose Date'}
-            value={data?.movement_dates?.join(', ')}
+            value={data?.movement_dates?.join('\n')}
             rightIcon={() => {
               return (
                 <MaterialIcons

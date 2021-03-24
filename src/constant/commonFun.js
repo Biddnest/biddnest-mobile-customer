@@ -3,7 +3,12 @@ import {CommonActions} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-picker';
 import Toast from 'react-native-simple-toast';
 import {IMAGE_OPTIONS} from './colors';
-import {check, openSettings, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {
+  check,
+  openSettings,
+  PERMISSIONS,
+  RESULTS,
+} from 'react-native-permissions';
 import Geolocation from '@react-native-community/geolocation';
 
 export const resetNavigator = (props, screenName) => {
@@ -27,16 +32,10 @@ export const secondsToHms = (d) => {
   return h.toString() + ':' + (m < 10 ? '0' : '') + m.toString();
 };
 
-export const DiffMin = (dt2, dt1) => {
-  let diff = (dt2.getTime() - dt1.getTime()) / 1000;
-  diff /= 60;
-  let d = Math.abs(Math.round(diff));
-
-  d = Number(d);
-  let h = Math.floor(d / 3600);
-  let m = Math.floor((d % 3600) / 60);
-  let s = Math.floor((d % 3600) % 60);
-  return m;
+export const DiffMin = (dt1) => {
+  let dif = dt1 - new Date();
+  dif = Math.round(dif / 1000 / 60);
+  return dif;
 };
 
 export const CustomAlert = (msg = '') => {
