@@ -31,6 +31,7 @@ const Payment = (props) => {
   const [paymentSummery, setPaymentSummery] = useState({});
   const [coupon_code, setCouponCode] = useState('');
   const [applyButton, setApplyButton] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     getOrderDetails(orderData?.public_booking_id)
@@ -122,9 +123,11 @@ const Payment = (props) => {
             {applyButton && (
               <Button
                 label={'Apply'}
+                isLoading={isLoading}
                 width={wp(25)}
                 onPress={() => {
                   // Verify coupon API
+                  setLoading(true);
                   let obj = {
                     url: 'coupon/verify',
                     method: 'post',
@@ -139,12 +142,14 @@ const Payment = (props) => {
                   };
                   APICall(obj)
                     .then((res) => {
+                      setLoading(false);
                       if (res?.data?.status === 'success') {
                       } else {
                         CustomAlert(res?.data?.message);
                       }
                     })
                     .catch((err) => {
+                      setLoading(false);
                       CustomConsole(err);
                     });
                 }}
@@ -189,12 +194,13 @@ const Payment = (props) => {
                 <View style={styles.movementLinear} key={index}>
                   <Pressable
                     onPress={() => {
+                      alert('Razory pay');
                       if (item.name === 'UPI Payment') {
-                        setUPIVisible(true);
+                        // setUPIVisible(true);
                       } else if (item.name === 'Net Banking') {
-                        setNetBankingVisible(true);
+                        // setNetBankingVisible(true);
                       } else {
-                        props.navigation.navigate('CardDetails');
+                        // props.navigation.navigate('CardDetails');
                       }
                     }}
                     style={{
@@ -217,13 +223,13 @@ const Payment = (props) => {
               );
             }}
           />
-          <Button
-            spaceTop={hp(1)}
-            width={wp(90)}
-            backgroundColor={Colors.white}
-            label={'USE ANOTHER CARD'}
-            onPress={() => setCardVisible(true)}
-          />
+          {/*<Button*/}
+          {/*  spaceTop={hp(1)}*/}
+          {/*  width={wp(90)}*/}
+          {/*  backgroundColor={Colors.white}*/}
+          {/*  label={'USE ANOTHER CARD'}*/}
+          {/*  onPress={() => setCardVisible(true)}*/}
+          {/*/>*/}
         </ScrollView>
       </View>
       <AddNewCard

@@ -1,19 +1,32 @@
 import React from 'react';
-import {
-  FlatList,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
 import CloseIcon from '../../../components/closeIcon';
 import {STYLES} from '../../../constant/commonStyle';
 import TwoButton from '../../../components/twoButton';
+import {useSelector} from 'react-redux';
 
 const OrderDetailModal = (props) => {
+  const configData =
+    useSelector((state) => state.Login?.configData?.enums?.service) || {};
   const renderItem = ({item, index}) => {
+    let quantity = '';
+    if (props.from === 'RequirementDetails') {
+      if (item?.quantity.min) {
+        quantity = item?.quantity.min + '-' + item?.quantity.max;
+      } else {
+        quantity = item?.quantity;
+      }
+    } else {
+      if (configData?.inventory_quantity_type?.range === item?.quantity_type) {
+        quantity =
+          JSON.parse(item?.quantity?.toString()).min +
+          '-' +
+          JSON.parse(item?.quantity?.toString()).max;
+      } else {
+        quantity = item?.quantity;
+      }
+    }
     return (
       <View
         style={{flexDirection: 'row', height: wp(13), marginVertical: hp(2)}}
@@ -78,9 +91,7 @@ const OrderDetailModal = (props) => {
               <Text
                 style={[styles.subText, {paddingHorizontal: 10}]}
                 numberOfLines={1}>
-                {item?.quantity.min
-                  ? item?.quantity.min + '-' + item?.quantity.max
-                  : item?.quantity}
+                {quantity}
               </Text>
             </View>
           </View>

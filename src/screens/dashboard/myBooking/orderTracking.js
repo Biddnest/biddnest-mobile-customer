@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   Pressable,
@@ -25,18 +25,13 @@ import {getDistance} from 'geolib';
 import Share from 'react-native-share';
 import moment from 'moment';
 import {STORE} from '../../../redux';
-import {APICall} from '../../../redux/actions/user';
+import {APICall, getOrderDetails} from '../../../redux/actions/user';
 import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
 
 const OrderTracking = (props) => {
   const orderData = props?.route?.params?.orderData || {};
-  let source_meta =
-    (orderData?.source_meta &&
-      JSON.parse(orderData?.source_meta?.toString())) ||
-    {};
   const [isLoading, setLoading] = useState(false);
-  let destination_meta =
-    JSON.parse(orderData?.destination_meta?.toString()) || {};
+  const [orderDetails, setOrderDetails] = useState({});
   const [manageOrderVisible, setManageOrderVisible] = useState(false);
   const [orderDetailsVisible, setOrderDetailsVisible] = useState(false);
   const [cancelOrder, setCancelOrder] = useState(false);
@@ -63,6 +58,31 @@ const OrderTracking = (props) => {
   orderData?.movement_dates.forEach((item) => {
     dateArray.push(moment(item.date).format('D MMM yyyy'));
   });
+  useEffect(() => {
+    getOrderDetails(orderData?.public_booking_id)
+      .then((res) => {
+        if (res?.data?.status === 'success') {
+          setOrderDetails(res?.data?.data?.booking);
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        CustomConsole(err);
+      });
+  }, []);
+  let source_meta =
+    (orderDetails?.source_meta &&
+      JSON.parse(orderDetails?.source_meta?.toString())) ||
+    {};
+  let destination_meta =
+    (orderDetails?.destination_meta &&
+      JSON.parse(orderDetails?.destination_meta?.toString())) ||
+    {};
+  let meta =
+    (orderDetails?.meta && JSON.parse(orderDetails?.meta?.toString())) || {};
+
+  console.log(orderDetails, meta?.distance);
   return (
     <View style={styles.container}>
       <SimpleHeader
@@ -127,19 +147,7 @@ const OrderTracking = (props) => {
                       fontSize: wp(4.5),
                       color: Colors.inputTextColor,
                     }}>
-                    {parseInt(
-                      getDistance(
-                        {
-                          latitude: orderData?.source_lat,
-                          longitude: orderData?.source_lng,
-                        },
-                        {
-                          latitude: orderData?.destination_lat,
-                          longitude: orderData?.destination_lng,
-                        },
-                      ) / 1000,
-                    )}{' '}
-                    KM
+                    {meta?.distance} KM
                   </Text>
                 </View>
               </View>
@@ -287,9 +295,7 @@ const OrderTracking = (props) => {
               <Text style={styles.leftText}>price</Text>
               <Text style={{...styles.rightText, fontFamily: 'Roboto-Bold'}}>
                 Rs.{' '}
-                {orderData?.status === 0 || orderData?.status === 1
-                  ? orderData?.final_estimated_quote
-                  : orderData?.final_quote}
+                {orderDetails?.final_quote}
               </Text>
             </View>
             <View style={styles.flexBox}>
@@ -311,7 +317,7 @@ const OrderTracking = (props) => {
         <OrderDetailModal
           title={'ORDER DETAILS'}
           onCloseIcon={() => setOrderDetailsVisible(false)}
-          data={orderData?.inventories}
+          data={orderDetails?.inventories}
         />
       </CustomModalAndroid>
       <CustomModalAndroid

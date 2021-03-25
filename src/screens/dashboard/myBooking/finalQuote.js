@@ -9,13 +9,15 @@ import LinearGradient from 'react-native-linear-gradient';
 import LocationDistance from '../../../components/locationDistance';
 import RejectBookingModal from './rejectBookingModal';
 import {useSelector} from 'react-redux';
-import {CustomAlert} from '../../../constant/commonFun';
-import {APICall} from '../../../redux/actions/user';
-import {STORE} from '../../../redux';
+import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
+import {getOrderDetails} from '../../../redux/actions/user';
 
 const FinalQuote = (props) => {
+  const orderData = props?.route?.params?.orderData || {};
   const configData =
     useSelector((state) => state.Login?.configData?.keys) || {};
+  const configDataEnums =
+    useSelector((state) => state.Login?.configData?.enums?.booking) || {};
   const [rejectVisible, setRejectVisible] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [defaultReason, setDefaultReason] = useState([]);
@@ -41,31 +43,31 @@ const FinalQuote = (props) => {
   }, [configData]);
 
   useEffect(() => {
-    // let obj = {
-    //   url: 'bookings/finalquote',
-    //   method: 'get',
-    //   headers: {
-    //     Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
-    //   },
-    //   data: {
-    //     public_booking_id: props?.apiResponse?.public_booking_id,
-    //   },
-    // };
-    // APICall(obj)
-    //   .then((res) => {
-    //     setLoading(false);
-    //     if (res?.data?.status === 'success') {
-    //       setOrderDetails(res?.data?.booking);
-    //     } else {
-    //       CustomAlert(res?.data?.message);
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     setLoading(false);
-    //     CustomAlert(err?.message);
-    //   });
-  });
+    getOrderDetails(orderData?.public_booking_id)
+      .then((res) => {
+        if (res?.data?.status === 'success') {
+          setOrderDetails(res?.data?.data?.booking);
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        CustomConsole(err);
+      });
+  }, []);
 
+  let source_meta =
+    (orderDetails?.source_meta &&
+      JSON.parse(orderDetails?.source_meta?.toString())) ||
+    {};
+  let destination_meta =
+    (orderDetails?.destination_meta &&
+      JSON.parse(orderDetails?.destination_meta?.toString())) ||
+    {};
+  let meta =
+    (orderDetails?.meta && JSON.parse(orderDetails?.meta?.toString())) || {};
+
+  console.log(orderDetails, meta?.distance);
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <View style={styles.container}>
@@ -78,13 +80,19 @@ const FinalQuote = (props) => {
           bounces={false}
           showsVerticalScrollIndicator={false}
           style={{flex: 1}}>
-          <LocationDistance />
+          <LocationDistance
+            from={source_meta?.city}
+            to={destination_meta?.city}
+            finalDistance={meta?.distance}
+          />
           <View style={styles.inputForm}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text style={styles.headerText}>FINAL BIDDING IS HERE</Text>
             </View>
             <View style={styles.circleView}>
-              <Text style={styles.priceText}>Rs. 2,300</Text>
+              <Text style={styles.priceText}>
+                Rs. {orderDetails?.final_quote}
+              </Text>
               <Text style={styles.priceLabel}>Base price</Text>
             </View>
             <Text
@@ -93,7 +101,10 @@ const FinalQuote = (props) => {
                 fontSize: wp(4),
                 color: Colors.inputTextColor,
               }}>
-              Premium
+              {configDataEnums?.booking_type?.economic ==
+              orderDetails?.booking_type
+                ? 'Economic'
+                : 'Premium'}
             </Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <View style={{flex: 1, alignItems: 'flex-end'}}>
@@ -189,8 +200,7 @@ const FinalQuote = (props) => {
             textOnChange={(text) => setRejectData({...rejectData, desc: text})}
             isLoading={isLoading}
             setLoading={(text) => setLoading(text)}
-            // public_booking_id={props?.apiResponse?.public_booking_id}
-            // setApiResponse={props.setApiResponse}
+            public_booking_id={orderDetails?.public_booking_id}
             navigation={props}
           />
         </ScrollView>

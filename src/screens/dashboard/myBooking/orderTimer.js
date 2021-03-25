@@ -1,17 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, Platform, ScrollView} from 'react-native';
+import {View, StyleSheet, Text, ScrollView} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
-import Button from '../../../components/button';
-import {
-  CustomAlert,
-  CustomConsole,
-  resetNavigator,
-  DiffMin,
-} from '../../../constant/commonFun';
-import TimerClock from '../../../assets/svg/timer_clock.svg';
+import {CustomAlert, CustomConsole, DiffMin} from '../../../constant/commonFun';
 import {getOrderDetails} from '../../../redux/actions/user';
-import CountDown from '../../../components/countDown';
 import SimpleHeader from '../../../components/simpleHeader';
+import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 
 const OrderTimer = (props) => {
   const orderData = props?.route?.params?.orderData || {};
@@ -36,6 +29,18 @@ const OrderTimer = (props) => {
         CustomConsole(err);
       });
   }, []);
+  const children = ({remainingTime}) => {
+    return (
+      <Text
+        style={{
+          color: Colors.darkBlue,
+          fontSize: wp(5),
+          fontFamily: 'Roboto-Bold',
+        }}>
+        {new Date(remainingTime * 1000).toISOString().substr(11, 8)}
+      </Text>
+    );
+  };
   return (
     <View style={{flex: 1}}>
       <SimpleHeader
@@ -59,21 +64,17 @@ const OrderTimer = (props) => {
         </Text>
         <View style={styles.inputForm}>
           <View style={{marginVertical: hp(0.8)}}>
-            <TimerClock width={wp(30)} height={wp(30)} />
+            <CountdownCircleTimer
+              isPlaying
+              duration={time * 60}
+              children={children}
+              colors={[
+                [Colors.darkBlue, 0.4],
+                [Colors.btnBG, 0.4],
+                [Colors.red, 0.2],
+              ]}
+            />
           </View>
-          <CountDown
-            until={time}
-            size={18}
-            // digitStyle={{backgroundColor: time === 0 ? 'grey' : 'black'}}
-            onFinish={() => {
-              // props.navigation.navigate('FinalQuote');
-            }}
-            digitTxtStyle={{color: '#000'}}
-            separatorStyle={{color: '#000'}}
-            timeToShow={['M', 'S']}
-            timeLabels={{m: null, s: null}}
-            showSeparator
-          />
           <Text style={styles.mainText}>Time Left</Text>
           <View style={styles.separatorView} />
           <View style={styles.flexView}>

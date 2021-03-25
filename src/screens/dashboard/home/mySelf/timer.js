@@ -12,10 +12,9 @@ import CustomModalAndroid from '../../../../components/customModal';
 import CloseIcon from '../../../../components/closeIcon';
 import {STYLES} from '../../../../constant/commonStyle';
 import Feather from 'react-native-vector-icons/Feather';
-import TimerClock from '../../../../assets/svg/timer_clock.svg';
 import {STORE} from '../../../../redux';
 import {APICall} from '../../../../redux/actions/user';
-import CountDown from '../../../../components/countDown';
+import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 
 const Timer = (props) => {
   const [orderPlacedVisible, setOrderPlacedVisible] = useState(true);
@@ -47,6 +46,18 @@ const Timer = (props) => {
         CustomConsole(err);
       });
   }, []);
+  const children = ({remainingTime}) => {
+    return (
+      <Text
+        style={{
+          color: Colors.darkBlue,
+          fontSize: wp(5),
+          fontFamily: 'Roboto-Bold',
+        }}>
+        {new Date(remainingTime * 1000).toISOString().substr(11, 8)}
+      </Text>
+    );
+  };
   return (
     <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
       <Text
@@ -61,21 +72,17 @@ const Timer = (props) => {
       </Text>
       <View style={styles.inputForm}>
         <View style={{marginVertical: hp(0.8)}}>
-          <TimerClock width={wp(30)} height={wp(30)} />
+          <CountdownCircleTimer
+            isPlaying
+            duration={time * 60}
+            children={children}
+            colors={[
+              [Colors.darkBlue, 0.4],
+              [Colors.btnBG, 0.4],
+              [Colors.red, 0.2],
+            ]}
+          />
         </View>
-        <CountDown
-          until={time}
-          size={18}
-          // digitStyle={{backgroundColor: time === 0 ? 'grey' : 'black'}}
-          onFinish={() => {
-            // props.navigation.navigate('FinalQuote');
-          }}
-          digitTxtStyle={{color: '#000'}}
-          separatorStyle={{color: '#000'}}
-          timeToShow={['M', 'S']}
-          timeLabels={{m: null, s: null}}
-          showSeparator
-        />
         {/*<Text*/}
         {/*  style={{*/}
         {/*    color: Colors.darkBlue,*/}

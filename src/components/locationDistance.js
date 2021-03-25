@@ -65,7 +65,9 @@ const LocationDistance = (props) => {
                   fontSize: wp(5),
                   color: Colors.inputTextColor,
                 }}>
-                {props.distance
+                {props.finalDistance
+                  ? props.finalDistance + ' KM'
+                  : props.distance
                   ? parseInt(props.distance / 1000) + ' KM'
                   : '314KM'}
               </Text>

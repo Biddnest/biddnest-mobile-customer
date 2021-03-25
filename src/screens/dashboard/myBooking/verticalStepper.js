@@ -13,32 +13,32 @@ const VerticalStepper = (props) => {
   };
   return (
     <View style={{marginHorizontal: wp(8), marginVertical: hp(2)}}>
-      {stepHeader('Booked')}
-      <View
-        style={{
-          ...styles.stepBodyView,
-        }}>
-        <Text style={styles.subHeaderText}>confirmed</Text>
-        <View style={styles.inputForm}>
-          <Text
-            style={{
-              fontFamily: 'Roboto-Light',
-              fontSize: wp(3.5),
-              color: Colors.darkBlue,
-            }}>
-            CONFIRMED
-          </Text>
-          <View style={styles.separatorView} />
-          <Text>We have received a request from you for home shifting</Text>
-        </View>
-      </View>
-      {stepHeader('Payment')}
-      <View
-        style={{
-          ...styles.stepBodyView,
-        }}>
-        <Text style={styles.subHeaderText}>Pending</Text>
-      </View>
+      {/*{stepHeader('Booked')}*/}
+      {/*<View*/}
+      {/*  style={{*/}
+      {/*    ...styles.stepBodyView,*/}
+      {/*  }}>*/}
+      {/*  <Text style={styles.subHeaderText}>confirmed</Text>*/}
+      {/*  <View style={styles.inputForm}>*/}
+      {/*    <Text*/}
+      {/*      style={{*/}
+      {/*        fontFamily: 'Roboto-Light',*/}
+      {/*        fontSize: wp(3.5),*/}
+      {/*        color: Colors.darkBlue,*/}
+      {/*      }}>*/}
+      {/*      CONFIRMED*/}
+      {/*    </Text>*/}
+      {/*    <View style={styles.separatorView} />*/}
+      {/*    <Text>We have received a request from you for home shifting</Text>*/}
+      {/*  </View>*/}
+      {/*</View>*/}
+      {/*{stepHeader('Payment')}*/}
+      {/*<View*/}
+      {/*  style={{*/}
+      {/*    ...styles.stepBodyView,*/}
+      {/*  }}>*/}
+      {/*  <Text style={styles.subHeaderText}>Pending</Text>*/}
+      {/*</View>*/}
       {stepHeader('Awaiting pickup')}
       <View
         style={{

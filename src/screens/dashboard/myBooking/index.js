@@ -63,10 +63,10 @@ const MyBooking = (props) => {
   };
 
   const handleOrderClicked = (item) => {
-    if (item?.status === 4) {
+    if (item?.status === 2 || item?.status === 3) {
+      props.navigation.navigate('OrderTimer', {orderData: item});
+    } else if (item?.status === 4) {
       props.navigation.navigate('FinalQuote', {orderData: item});
-    } else if (item?.status === 2) {
-      props.navigation.navigate('Payment', {orderData: item});
     } else if (item?.status === 5) {
       props.navigation.navigate('OrderTracking', {orderData: item});
     }
