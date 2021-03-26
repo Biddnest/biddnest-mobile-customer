@@ -1,15 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {Colors, wp, hp} from '../../../constant/colors';
 import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import Button from '../../../components/button';
 import {STYLES} from '../../../constant/commonStyle';
-import {resetNavigator} from '../../../constant/commonFun';
-import RateUs from './rateUs';
 
 const ReferFriend = (props) => {
-  const [rateUsVisible, setRateUsVisible] = useState(false);
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <SimpleHeader
@@ -37,18 +34,9 @@ const ReferFriend = (props) => {
             spaceTop={wp(4)}
             width={wp(82)}
             spaceBottom={wp(1)}
-            onPress={() => {
-              setRateUsVisible(true);
-            }}
+            onPress={() => {}}
           />
         </View>
-        <RateUs
-          visible={rateUsVisible}
-          onCloseIcon={() => {
-            setRateUsVisible(false);
-            resetNavigator(props, 'Home');
-          }}
-        />
       </View>
     </LinearGradient>
   );

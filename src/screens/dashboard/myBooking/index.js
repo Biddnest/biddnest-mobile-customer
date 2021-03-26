@@ -67,7 +67,12 @@ const MyBooking = (props) => {
       props.navigation.navigate('OrderTimer', {orderData: item});
     } else if (item?.status === 4) {
       props.navigation.navigate('FinalQuote', {orderData: item});
-    } else if (item?.status === 5 || item?.status === 6 || item?.status === 7) {
+    } else if (
+      item?.status === 5 ||
+      item?.status === 6 ||
+      item?.status === 7 ||
+      item?.status === 8
+    ) {
       props.navigation.navigate('OrderTracking', {orderData: item});
     }
   };
@@ -91,7 +96,7 @@ const MyBooking = (props) => {
       <Pressable
         style={styles.inputForm}
         key={index}
-        onPress={() => selectedTab === 0 && handleOrderClicked(item)}>
+        onPress={() => handleOrderClicked(item)}>
         <View
           style={{
             backgroundColor: Colors.white,

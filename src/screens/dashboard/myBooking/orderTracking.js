@@ -29,12 +29,15 @@ import {
   CustomAlert,
   CustomConsole,
   LoadingScreen,
+  resetNavigator,
 } from '../../../constant/commonFun';
 import Button from '../../../components/button';
+import RateUs from '../drawer/rateUs';
 
 const OrderTracking = (props) => {
   const orderData = props?.route?.params?.orderData || {};
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
+  const [rateUsVisible, setRateUsVisible] = useState(false);
   const [orderDetails, setOrderDetails] = useState({});
   const [manageOrderVisible, setManageOrderVisible] = useState(false);
   const [orderDetailsVisible, setOrderDetailsVisible] = useState(false);
@@ -66,6 +69,7 @@ const OrderTracking = (props) => {
   useEffect(() => {
     getOrderDetails(orderData?.public_booking_id)
       .then((res) => {
+        setLoading(false);
         if (res?.data?.status === 'success') {
           setOrderDetails(res?.data?.data?.booking);
         } else {
@@ -73,6 +77,7 @@ const OrderTracking = (props) => {
         }
       })
       .catch((err) => {
+        setLoading(false);
         CustomConsole(err);
       });
   }, []);
@@ -90,7 +95,9 @@ const OrderTracking = (props) => {
   return (
     <View style={styles.container}>
       <SimpleHeader
-        headerText={'ORDER TRACKING'}
+        headerText={
+          orderDetails?.status === 8 ? 'ORDER DETAILS' : 'ORDER TRACKING'
+        }
         navigation={props.navigation}
         onBack={() => props.navigation.goBack()}
       />
@@ -181,6 +188,12 @@ const OrderTracking = (props) => {
                 iconFamily: 'AntDesign',
               },
             ].map((item, index) => {
+              if (
+                item?.title === 'Manage Order' &&
+                orderDetails?.status === 8
+              ) {
+                return null;
+              }
               return (
                 <Pressable
                   onPress={() => {
@@ -223,28 +236,45 @@ const OrderTracking = (props) => {
             })}
           </View>
           <View style={{alignItems: 'center'}}>
-            <View style={{marginTop: hp(3), marginHorizontal: wp(3)}}>
-              <Text
-                style={{
-                  fontFamily: 'Roboto-Italic',
-                  fontSize: wp(3.3),
-                  color: '#99A0A5',
-                  textAlign: 'center',
-                }}>
-                You need to provide start trip pin to your driver.
-              </Text>
-            </View>
-            <Button
-              label={
-                orderDetails?.status === 5
-                  ? 'SHOW START TRIP PIN'
-                  : 'SHOW END TRIP PIN'
-              }
-              onPress={() => setShowPin(true)}
-              width={wp(90)}
-              spaceBottom={0}
-            />
+            {orderDetails?.status === 8 && !orderDetails?.review?.id && (
+              <Button
+                label={'GIVE REVIEW'}
+                spaceTop={wp(4)}
+                width={wp(82)}
+                spaceBottom={wp(1)}
+                onPress={() => {
+                  setRateUsVisible(true);
+                }}
+              />
+            )}
           </View>
+          {(orderDetails?.status === 6 || orderDetails?.status === 7) && (
+            <View style={{alignItems: 'center'}}>
+              <View style={{marginTop: hp(3), marginHorizontal: wp(3)}}>
+                <Text
+                  style={{
+                    fontFamily: 'Roboto-Italic',
+                    fontSize: wp(3.3),
+                    color: '#99A0A5',
+                    textAlign: 'center',
+                  }}>
+                  You need to provide{' '}
+                  {orderDetails?.status === 6 ? 'start' : 'end'} trip pin to
+                  your vendor.
+                </Text>
+              </View>
+              <Button
+                label={
+                  orderDetails?.status === 6
+                    ? 'SHOW START TRIP PIN'
+                    : 'SHOW END TRIP PIN'
+                }
+                onPress={() => setShowPin(true)}
+                width={wp(90)}
+                spaceBottom={0}
+              />
+            </View>
+          )}
           <View
             style={{
               ...styles.inputForm,
@@ -292,6 +322,7 @@ const OrderTracking = (props) => {
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
+                      width: wp(83),
                     }}>
                     <View>
                       <Text style={{...styles.driverContact, marginTop: 10}}>
@@ -532,6 +563,17 @@ const OrderTracking = (props) => {
           />
         )}
       </CustomModalAndroid>
+      <RateUs
+        visible={rateUsVisible}
+        onCloseIcon={() => {
+          setRateUsVisible(false);
+        }}
+        successRedirect={() => {
+          setRateUsVisible(false);
+          props.navigation.navigate('MyBooking');
+        }}
+        public_booking_id={orderData?.public_booking_id}
+      />
     </View>
   );
 };

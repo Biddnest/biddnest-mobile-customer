@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Text, ScrollView} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
-import {CustomAlert, CustomConsole, DiffMin} from '../../../constant/commonFun';
+import {CustomAlert, CustomConsole, DiffMin, LoadingScreen} from '../../../constant/commonFun';
 import {getOrderDetails} from '../../../redux/actions/user';
 import SimpleHeader from '../../../components/simpleHeader';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
@@ -12,9 +12,11 @@ const OrderTimer = (props) => {
   const [time, setTime] = useState(
     DiffMin(new Date(orderData?.bid_result_at)) || 0,
   );
+  const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     getOrderDetails(orderData?.public_booking_id)
       .then((res) => {
+        setLoading(false)
         if (res?.data?.status === 'success') {
           setOrderDetails(res?.data?.data?.booking);
           if (res?.data?.data?.booking?.bid_result_at) {
@@ -28,6 +30,7 @@ const OrderTimer = (props) => {
         }
       })
       .catch((err) => {
+        setLoading(false)
         CustomConsole(err);
       });
   }, []);
@@ -50,6 +53,7 @@ const OrderTimer = (props) => {
         navigation={props.navigation}
         onBack={() => props.navigation.goBack()}
       />
+      {isLoading && <LoadingScreen />}
       <ScrollView
         showsVerticalScrollIndicator={false}
         bounces={false}

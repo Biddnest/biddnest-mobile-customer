@@ -45,14 +45,18 @@ const VerticalStepper = (props) => {
         style={{
           ...styles.stepBodyView,
         }}>
-        <Text style={styles.subHeaderText}>{orderStatus <= 5 ? 'Pending' : 'Completed'}</Text>
+        <Text style={styles.subHeaderText}>
+          {orderStatus <= 5 ? 'Pending' : 'Completed'}
+        </Text>
       </View>
       {stepHeader('In Transit')}
       <View
         style={{
           ...styles.stepBodyView,
         }}>
-        <Text style={styles.subHeaderText}>{orderStatus <= 7 ? 'Pending' : 'Completed'}</Text>
+        <Text style={styles.subHeaderText}>
+          {orderStatus <= 7 ? 'Pending' : 'Completed'}
+        </Text>
       </View>
       {stepHeader('Completed')}
       <View
@@ -60,7 +64,9 @@ const VerticalStepper = (props) => {
           ...styles.stepBodyView,
           borderLeftWidth: 0,
         }}>
-        <Text style={styles.subHeaderText}>{orderStatus <= 8 ? 'Pending' : 'Completed'}</Text>
+        <Text style={styles.subHeaderText}>
+          {orderStatus < 8 ? 'Pending' : 'Completed'}
+        </Text>
       </View>
     </View>
   );

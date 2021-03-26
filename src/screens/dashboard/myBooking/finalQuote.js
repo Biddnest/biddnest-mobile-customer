@@ -47,8 +47,10 @@ const FinalQuote = (props) => {
   }, [configData]);
 
   useEffect(() => {
+    setLoading(true);
     getOrderDetails(orderData?.public_booking_id)
       .then((res) => {
+        setLoading(false);
         if (res?.data?.status === 'success') {
           setOrderDetails(res?.data?.data?.booking);
         } else {
@@ -56,6 +58,7 @@ const FinalQuote = (props) => {
         }
       })
       .catch((err) => {
+        setLoading(false);
         CustomConsole(err);
       });
   }, []);
