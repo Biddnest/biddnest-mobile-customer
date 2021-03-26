@@ -1,14 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import {Colors, hp, wp} from '../../../constant/colors';
+import {Colors, wp} from '../../../constant/colors';
 import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import {STORE} from '../../../redux';
 import {APICall} from '../../../redux/actions/user';
-import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  LoadingScreen,
+} from '../../../constant/commonFun';
+import {Html5Entities} from 'html-entities';
 
 const TermsAndConditions = (props) => {
   const [termsText, setTermsText] = useState('');
+  const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     let obj = {
       url: 'page/terms-and-conditions',
@@ -19,13 +25,17 @@ const TermsAndConditions = (props) => {
     };
     APICall(obj)
       .then((res) => {
+        setLoading(false);
         if (res?.data?.status === 'success') {
-          setTermsText(res?.data?.data?.page?.content);
+          const entities = new Html5Entities();
+          let temp = entities.decode(res?.data?.data?.page?.content);
+          setTermsText(temp);
         } else {
           CustomAlert(res?.data?.message);
         }
       })
       .catch((err) => {
+        setLoading(false);
         CustomConsole(err);
       });
   }, []);
@@ -36,6 +46,7 @@ const TermsAndConditions = (props) => {
         navigation={props.navigation}
         onBack={() => props.navigation.goBack()}
       />
+      {isLoading && <LoadingScreen />}
       <ScrollView
         style={{flex: 1}}
         showsVerticalScrollIndicator={false}

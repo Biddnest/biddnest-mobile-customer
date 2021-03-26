@@ -5,10 +5,16 @@ import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import {STORE} from '../../../redux';
 import {APICall} from '../../../redux/actions/user';
-import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  LoadingScreen,
+} from '../../../constant/commonFun';
+import {Html5Entities} from 'html-entities';
 
 const AboutUs = (props) => {
   const [aboutText, setAboutText] = useState('');
+  const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     let obj = {
       url: 'page/about-us',
@@ -19,13 +25,17 @@ const AboutUs = (props) => {
     };
     APICall(obj)
       .then((res) => {
+        setLoading(false);
         if (res?.data?.status === 'success') {
-          setAboutText(res?.data?.data?.page?.content);
+          const entities = new Html5Entities();
+          let temp = entities.decode(res?.data?.data?.page?.content);
+          setAboutText(temp);
         } else {
           CustomAlert(res?.data?.message);
         }
       })
       .catch((err) => {
+        setLoading(false);
         CustomConsole(err);
       });
   }, []);
@@ -36,6 +46,7 @@ const AboutUs = (props) => {
         navigation={props.navigation}
         onBack={() => props.navigation.goBack()}
       />
+      {isLoading && <LoadingScreen />}
       <ScrollView
         style={{flex: 1}}
         showsVerticalScrollIndicator={false}

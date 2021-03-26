@@ -230,7 +230,7 @@ const Home = (props) => {
         <View style={styles.movementView}>
           <Text
             style={{
-              fontFamily: 'Gilroy-Light',
+              fontFamily: 'Gilroy-Regular',
               fontSize: wp(4),
               color: Colors.inputTextColor,
               textAlign: 'center',
@@ -393,6 +393,7 @@ const Home = (props) => {
           <FlatButton label={'OKAY'} />
         </CustomModalAndroid>
         <CustomModalAndroid
+          paddingTop={hp(0.1)}
           visible={bookingSelectionVisible}
           onPress={() => setBookingSelectionVisible(false)}>
           <CloseIcon
@@ -400,10 +401,12 @@ const Home = (props) => {
             style={{
               position: 'absolute',
               right: 15,
+              top: 15,
             }}
           />
           <Text
             style={{
+              marginTop: 35,
               fontSize: wp(4.5),
               fontFamily: 'Roboto-Regular',
               color: Colors.inputTextColor,

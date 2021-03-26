@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
   Pressable,
+  RefreshControl,
 } from 'react-native';
 import {Colors, hp, SIDE_DRAWER, wp} from '../../../constant/colors';
 import SimpleHeader from '../../../components/simpleHeader';
@@ -15,8 +16,43 @@ import {STYLES} from '../../../constant/commonStyle';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from '../../../components/button';
 import HomeCall from '../../../assets/svg/home_call.svg';
+import {STORE} from '../../../redux';
+import {APICall} from '../../../redux/actions/user';
+import {
+  CustomAlert,
+  CustomConsole,
+  LoadingScreen,
+} from '../../../constant/commonFun';
+import moment from 'moment';
 
 const ContactUs = (props) => {
+  const [recentTicket, setRecentTicket] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+  useEffect(() => {
+    fetchTicket();
+  }, []);
+  const fetchTicket = () => {
+    let obj = {
+      url: 'tickets',
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+    };
+    APICall(obj)
+      .then((res) => {
+        setLoading(false);
+        if (res?.data?.status === 'success') {
+          setRecentTicket(res?.data?.data?.ticket);
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        CustomConsole(err);
+      });
+  };
   const renderItem = ({item, index}) => {
     return (
       <View key={index}>
@@ -28,13 +64,13 @@ const ContactUs = (props) => {
               fontSize: wp(3.8),
               fontFamily: 'Roboto-Medium',
             }}>
-            Not able to reschedule order{' '}
-            <Text
-              style={{
-                fontFamily: 'Roboto-Bold',
-              }}>
-              #123456
-            </Text>
+            {item?.heading}
+            {/*<Text*/}
+            {/*  style={{*/}
+            {/*    fontFamily: 'Roboto-Bold',*/}
+            {/*  }}>*/}
+            {/*  #123456*/}
+            {/*</Text>*/}
           </Text>
           <Text
             style={{
@@ -43,7 +79,7 @@ const ContactUs = (props) => {
               fontFamily: 'Roboto-Light',
               fontSize: wp(3.8),
             }}>
-            31 Jan
+            {moment(item?.created_at).format('D MMM')}
           </Text>
         </View>
         <View
@@ -59,8 +95,7 @@ const ContactUs = (props) => {
                 fontSize: wp(3.8),
               },
             ]}>
-            Not able to reschedule order which I placed last Week and now I want
-            to move the date…
+            {item?.desc}
           </Text>
         </View>
       </View>
@@ -73,7 +108,11 @@ const ContactUs = (props) => {
         navigation={props.navigation}
         onBack={() => props.navigation.goBack()}
       />
+      {isLoading && <LoadingScreen />}
       <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={fetchTicket} />
+        }
         style={{flex: 1}}
         showsVerticalScrollIndicator={false}
         bounces={false}>
@@ -141,7 +180,7 @@ const ContactUs = (props) => {
             <FlatList
               bounces={false}
               showsVerticalScrollIndicator={false}
-              data={[1, 2]}
+              data={recentTicket || []}
               renderItem={renderItem}
               ItemSeparatorComponent={() => (
                 <View style={styles.separatorView} />
@@ -180,7 +219,7 @@ const ContactUs = (props) => {
             backgroundColor={Colors.white}
             label={'RAISE SERVICE REQUEST'}
             spaceBottom={0.1}
-            onPress={() => {}}
+            onPress={() => props.navigation.navigate('RaiseTicket')}
           />
           <Button
             label={'REQUEST A CALL BACK'}

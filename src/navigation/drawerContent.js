@@ -119,6 +119,15 @@ export function DrawerContent(props) {
             <Text numberOfLines={1} style={styles.userText}>
               {userData?.fname} {userData?.lname}
             </Text>
+            <Text
+              numberOfLines={1}
+              style={{
+                color: Colors.white,
+                fontFamily: 'Roboto-Regular',
+                fontSize: wp(3.5),
+              }}>
+              {userData?.phone}
+            </Text>
           </View>
           <View style={{width: wp(15)}}>
             <Pressable

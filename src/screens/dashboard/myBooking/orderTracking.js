@@ -28,6 +28,7 @@ import {APICall, getOrderDetails} from '../../../redux/actions/user';
 import {
   CustomAlert,
   CustomConsole,
+  DiffMin,
   LoadingScreen,
   resetNavigator,
 } from '../../../constant/commonFun';
@@ -169,12 +170,12 @@ const OrderTracking = (props) => {
             {[
               {
                 icon: 'phone-call',
-                title: 'Virtual Assistance',
+                title: 'Support',
                 iconFamily: 'Feather',
               },
               {
                 icon: 'file-text',
-                title: 'Order Details',
+                title: 'Checklist',
                 iconFamily: 'Feather',
               },
               {
@@ -184,22 +185,43 @@ const OrderTracking = (props) => {
               },
               {
                 icon: 'closecircleo',
-                title: 'Manage Order',
+                title: 'Manage',
                 iconFamily: 'AntDesign',
               },
             ].map((item, index) => {
-              if (
-                item?.title === 'Manage Order' &&
-                orderDetails?.status === 8
-              ) {
-                return null;
+              if (item?.title === 'Manage' && orderDetails?.status === 8) {
+                return (
+                  <Pressable
+                    onPress={() => {
+                      // Call Raise Ticket API
+                      props.navigation.navigate('RaiseTicket', {
+                        public_booking_id: orderDetails?.public_booking_id,
+                      });
+                    }}
+                    style={{
+                      marginTop: hp(2),
+                      ...STYLES.common,
+                    }}>
+                    <View
+                      key={index}
+                      style={{
+                        ...styles.btnView,
+                        ...STYLES.common,
+                      }}>
+                      {renderIcon(item)}
+                    </View>
+                    <Text numberOfLines={1} style={styles.btnText}>
+                      Raise Ticket
+                    </Text>
+                  </Pressable>
+                );
               }
               return (
                 <Pressable
                   onPress={() => {
-                    if (item.title === 'Order Details') {
+                    if (item.title === 'Checklist') {
                       setOrderDetailsVisible(true);
-                    } else if (item.title === 'Manage Order') {
+                    } else if (item.title === 'Manage') {
                       setManageOrderVisible(true);
                     } else if (item.title === 'Share') {
                       Share.open({
@@ -213,7 +235,8 @@ const OrderTracking = (props) => {
                         .catch((err) => {
                           err && console.log(err);
                         });
-                    } else if (item.title === 'Virtual Assistance') {
+                    } else if (item.title === 'Support') {
+                      props.navigation.navigate('ContactUs');
                     }
                   }}
                   style={{
@@ -368,7 +391,7 @@ const OrderTracking = (props) => {
                       marginTop: 10,
                       fontFamily: 'Roboto-Regular',
                     }}>
-                    Not Assigned
+                    Driver will be assigned soon
                   </Text>
                 )}
               </View>
@@ -526,24 +549,38 @@ const OrderTracking = (props) => {
               }
             }}
             rightOnPress={() => {
+              setLoading(true);
+              let obj = {
+                method: 'post',
+                headers: {
+                  Authorization:
+                    'Bearer ' + STORE.getState().Login?.loginData?.token,
+                },
+                data: {
+                  public_booking_id: orderData?.public_booking_id,
+                },
+              };
               if (cancelOrder) {
-                setCancelOrder(false);
-                setManageOrderVisible(false);
-                props.navigation.goBack();
+                // Call confirm request cancel api
+                obj.url = 'bookings/request/canceled';
+                APICall(obj)
+                  .then((res) => {
+                    setLoading(false);
+                    if (res?.data?.status === 'success') {
+                      setCancelOrder(false);
+                      setManageOrderVisible(false);
+                      props.navigation.goBack();
+                    } else {
+                      CustomAlert(res?.data?.message);
+                    }
+                  })
+                  .catch((err) => {
+                    setLoading(false);
+                    CustomConsole(err);
+                  });
               } else {
                 // Call reschedule API
-                setLoading(true);
-                let obj = {
-                  url: 'bookings/reschedul',
-                  method: 'post',
-                  headers: {
-                    Authorization:
-                      'Bearer ' + STORE.getState().Login?.loginData?.token,
-                  },
-                  data: {
-                    public_booking_id: orderData?.public_booking_id,
-                  },
-                };
+                obj.url = 'bookings/request/reschedule';
                 APICall(obj)
                   .then((res) => {
                     setLoading(false);

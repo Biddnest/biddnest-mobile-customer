@@ -19,7 +19,12 @@ const CustomModalAndroid = (props) => {
             bounces={false}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{alignItems: 'center'}}
-            style={styles.modalView}>
+            style={[
+              styles.modalView,
+              {
+                paddingTop: props.paddingTop ? props.paddingTop : 35,
+              },
+            ]}>
             {props.children}
           </ScrollView>
         </View>
@@ -41,7 +46,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    paddingTop: 35,
     position: 'absolute',
     bottom: 0,
     width: wp(100),
