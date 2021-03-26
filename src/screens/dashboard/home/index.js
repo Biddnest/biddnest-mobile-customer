@@ -27,10 +27,13 @@ import {
   CustomAlert,
   CustomConsole,
   getLocation,
+  resetNavigator,
 } from '../../../constant/commonFun';
-import {getServices, getSlider} from '../../../redux/actions/user';
+import {APICall, getServices, getSlider} from '../../../redux/actions/user';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
+import {STORE} from '../../../redux';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export const HomeHeader = (props) => {
   return (
@@ -104,6 +107,23 @@ const Home = (props) => {
   const [bookingFor, setBookingFor] = useState('Myself');
   useEffect(() => {
     if (isFocused && userData?.fname) {
+      AsyncStorage.getItem('oneSignalData').then((signalData) => {
+        let player_id = signalData && JSON.parse(signalData).userId;
+        if (player_id) {
+          let obj = {
+            url: 'notification/player',
+            method: 'post',
+            headers: {
+              Authorization:
+                'Bearer ' + STORE.getState().Login?.loginData?.token,
+            },
+            data: {
+              player_id: player_id,
+            },
+          };
+          APICall(obj);
+        }
+      });
       getLocation()
         .then((locationData) => {
           dispatch(getSlider(locationData))
