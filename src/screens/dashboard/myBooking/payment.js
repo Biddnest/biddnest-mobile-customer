@@ -18,7 +18,11 @@ import AddNewCard from './addNewCard';
 import UPIPayment from './UPIPayment';
 import NetBanking from './netBanking';
 import {APICall, getOrderDetails} from '../../../redux/actions/user';
-import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  LoadingScreen,
+} from '../../../constant/commonFun';
 import {STORE} from '../../../redux';
 import RazorpayCheckout from 'react-native-razorpay';
 import {useSelector} from 'react-redux';
@@ -39,8 +43,10 @@ const Payment = (props) => {
   console.log(orderDetails);
 
   useEffect(() => {
+    setLoading(true);
     getOrderDetails(orderData?.public_booking_id)
       .then((res) => {
+        setLoading(false);
         if (res?.data?.status === 'success') {
           setOrderDetails(res?.data?.data?.booking);
         } else {
@@ -48,6 +54,7 @@ const Payment = (props) => {
         }
       })
       .catch((err) => {
+        setLoading(false);
         CustomConsole(err);
       });
     let obj = {
@@ -59,6 +66,7 @@ const Payment = (props) => {
     };
     APICall(obj)
       .then((res) => {
+        setLoading(false);
         if (res?.data?.status === 'success') {
           setPaymentSummery(res?.data?.data?.payment_details);
         } else {
@@ -66,10 +74,12 @@ const Payment = (props) => {
         }
       })
       .catch((err) => {
+        setLoading(false);
         CustomConsole(err);
       });
   }, []);
   const paymentInitiate = () => {
+    setLoading(true);
     let obj = {
       url: 'bookings/payment/initiate',
       method: 'post',
@@ -83,6 +93,7 @@ const Payment = (props) => {
     };
     APICall(obj)
       .then((res) => {
+        setLoading(false);
         if (res?.data?.status === 'success') {
           // Razor pay
           paymentMethod(res?.payment);
@@ -91,29 +102,31 @@ const Payment = (props) => {
         }
       })
       .catch((err) => {
+        setLoading(false);
         CustomConsole(err);
       });
   };
   const paymentMethod = (payment) => {
+    setLoading(true);
     let options = {
       currency: payment?.currency || 'INR',
       key: configData?.razorpay?.rzp_id,
-      amount: payment?.grand_total,
+      amount: paymentSummery?.grand_total,
       order_id: payment?.rzp_order_id,
       theme: {color: Colors.darkBlue},
     };
     RazorpayCheckout.open(options)
       .then((data) => {
-        // handle success
+        setLoading(false);
         props.navigation.pop(1);
         props.navigation.replace('OrderTracking', {
           orderData: orderDetails,
         });
-        alert(`Success: ${data.razorpay_payment_id}`);
       })
       .catch((error) => {
         // handle failure
-        alert(`Error: ${error.code} | ${error.description}`);
+        setLoading(false);
+        CustomAlert(`Error: ${error.code} | ${error.description}`);
       });
   };
   return (
@@ -124,6 +137,7 @@ const Payment = (props) => {
           navigation={props.navigation}
           onBack={() => props.navigation.goBack()}
         />
+        {isLoading && <LoadingScreen />}
         <ScrollView
           bounces={false}
           showsVerticalScrollIndicator={false}

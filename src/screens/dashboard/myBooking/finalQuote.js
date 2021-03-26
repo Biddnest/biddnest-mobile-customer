@@ -9,7 +9,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import LocationDistance from '../../../components/locationDistance';
 import RejectBookingModal from './rejectBookingModal';
 import {useSelector} from 'react-redux';
-import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  LoadingScreen,
+} from '../../../constant/commonFun';
 import {getOrderDetails} from '../../../redux/actions/user';
 
 const FinalQuote = (props) => {
@@ -75,6 +79,7 @@ const FinalQuote = (props) => {
           navigation={props.navigation}
           onBack={() => props.navigation.goBack()}
         />
+        {isLoading && <LoadingScreen />}
         <ScrollView
           bounces={false}
           showsVerticalScrollIndicator={false}
@@ -133,7 +138,16 @@ const FinalQuote = (props) => {
                     {orderDetails?.vehicle?.name},{' '}
                     {orderDetails?.vehicle?.vehicle_type}
                   </Text>
-                  <Text style={styles.leftText}>05</Text>
+                  <Text style={styles.leftText}>
+                    {orderDetails?.movement_specifications?.meta &&
+                      JSON.parse(
+                        orderDetails?.movement_specifications?.meta?.toString(),
+                      ).min_man_power +
+                        '-' +
+                        JSON.parse(
+                          orderDetails?.movement_specifications?.meta?.toString(),
+                        ).max_man_power}
+                  </Text>
                 </View>
               </View>
             )}

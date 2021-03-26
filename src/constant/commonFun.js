@@ -1,8 +1,14 @@
-import {Alert, PermissionsAndroid, Platform} from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  PermissionsAndroid,
+  Platform,
+  View,
+} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-picker';
 import Toast from 'react-native-simple-toast';
-import {IMAGE_OPTIONS} from './colors';
+import {Colors, IMAGE_OPTIONS} from './colors';
 import {
   check,
   openSettings,
@@ -10,6 +16,8 @@ import {
   RESULTS,
 } from 'react-native-permissions';
 import Geolocation from '@react-native-community/geolocation';
+import {STYLES} from './commonStyle';
+import React from 'react';
 
 export const resetNavigator = (props, screenName) => {
   props.navigation.dispatch(
@@ -24,6 +32,24 @@ export const CustomConsole = (msg) => {
   if (__DEV__) {
     console.log(msg);
   }
+};
+
+export const LoadingScreen = () => {
+  return (
+    <View
+      style={{
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        zIndex: 1111,
+        ...STYLES.common,
+      }}>
+      <ActivityIndicator size="large" color={Colors.btnBG} />
+    </View>
+  );
 };
 
 export const secondsToHms = (d) => {

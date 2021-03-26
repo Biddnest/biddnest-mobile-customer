@@ -25,7 +25,11 @@ import Share from 'react-native-share';
 import moment from 'moment';
 import {STORE} from '../../../redux';
 import {APICall, getOrderDetails} from '../../../redux/actions/user';
-import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  LoadingScreen,
+} from '../../../constant/commonFun';
 import Button from '../../../components/button';
 
 const OrderTracking = (props) => {
@@ -90,6 +94,7 @@ const OrderTracking = (props) => {
         navigation={props.navigation}
         onBack={() => props.navigation.goBack()}
       />
+      {isLoading && <LoadingScreen />}
       <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
         <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
           <View
@@ -283,24 +288,47 @@ const OrderTracking = (props) => {
                   </View>
                 )}
                 {(orderDetails?.driver && (
-                  <View>
-                    <Text style={{...styles.driverContact, marginTop: 10}}>
-                      Name{' '}
-                      <Text
-                        style={{
-                          fontFamily: 'Roboto-Regular',
-                          textTransform: 'capitalize',
-                        }}>
-                        {orderDetails?.driver?.fname}{' '}
-                        {orderDetails?.driver?.lname}
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <View>
+                      <Text style={{...styles.driverContact, marginTop: 10}}>
+                        Name{' '}
+                        <Text
+                          style={{
+                            fontFamily: 'Roboto-Regular',
+                            textTransform: 'capitalize',
+                          }}>
+                          {orderDetails?.driver?.fname}{' '}
+                          {orderDetails?.driver?.lname}
+                        </Text>
                       </Text>
-                    </Text>
-                    <Text style={{...styles.driverContact, marginTop: 5}}>
-                      Phone{' '}
-                      <Text style={{fontFamily: 'Roboto-Regular'}}>
-                        {orderDetails?.driver?.phone}
+                      <Text style={{...styles.driverContact, marginTop: 5}}>
+                        Phone{' '}
+                        <Text style={{fontFamily: 'Roboto-Regular'}}>
+                          {orderDetails?.driver?.phone}
+                        </Text>
                       </Text>
-                    </Text>
+                    </View>
+                    <Pressable
+                      onPress={() =>
+                        Linking.openURL(`tel:${orderDetails?.driver?.phone}`)
+                      }
+                      style={{
+                        height: wp(15),
+                        width: wp(15),
+                        borderRadius: wp(7.5),
+                        backgroundColor: '#F2E6FF',
+                        ...STYLES.common,
+                      }}>
+                      <Ionicons
+                        name={'call'}
+                        color={Colors.darkBlue}
+                        size={wp(6)}
+                      />
+                    </Pressable>
                   </View>
                 )) || (
                   <Text
@@ -313,25 +341,6 @@ const OrderTracking = (props) => {
                   </Text>
                 )}
               </View>
-              {orderDetails?.driver && (
-                <Pressable
-                  onPress={() =>
-                    Linking.openURL(`tel:${orderDetails?.driver?.phone}`)
-                  }
-                  style={{
-                    height: wp(15),
-                    width: wp(15),
-                    borderRadius: wp(7.5),
-                    backgroundColor: '#F2E6FF',
-                    ...STYLES.common,
-                  }}>
-                  <Ionicons
-                    name={'call'}
-                    color={Colors.darkBlue}
-                    size={wp(6)}
-                  />
-                </Pressable>
-              )}
             </View>
             {orderDetails?.vehicle && (
               <View>
@@ -351,12 +360,21 @@ const OrderTracking = (props) => {
                 </View>
                 <View style={styles.flexBox}>
                   <Text style={styles.leftText}>man power</Text>
-                  <Text style={styles.rightText}>5</Text>
+                  <Text style={styles.rightText}>
+                    {orderDetails?.movement_specifications?.meta &&
+                      JSON.parse(
+                        orderDetails?.movement_specifications?.meta?.toString(),
+                      ).min_man_power +
+                        '-' +
+                        JSON.parse(
+                          orderDetails?.movement_specifications?.meta?.toString(),
+                        ).max_man_power}
+                  </Text>
                 </View>
               </View>
             )}
           </View>
-          <VerticalStepper />
+          <VerticalStepper orderStatus={orderDetails?.status} />
           <View
             style={{...styles.inputForm, marginTop: 0, marginBottom: hp(2)}}>
             <View style={{...styles.flexBox, marginTop: 0}}>
