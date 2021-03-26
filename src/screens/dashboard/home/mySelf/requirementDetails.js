@@ -55,7 +55,6 @@ const RequirementDetails = (props) => {
   });
   const [subServices, setSubServices] = useState([]);
   const [inventoryItems, setInventoryItems] = useState([]);
-  console.log(addData);
   const handleState = (key, value) => {
     let temp = {...data.meta};
     if (key === 'remarks') {

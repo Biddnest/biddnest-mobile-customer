@@ -1,10 +1,34 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
 import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
+import {STORE} from '../../../redux';
+import {APICall} from '../../../redux/actions/user';
+import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
 
 const AboutUs = (props) => {
+  const [aboutText, setAboutText] = useState('');
+  useEffect(() => {
+    let obj = {
+      url: 'page/about-us',
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+    };
+    APICall(obj)
+      .then((res) => {
+        if (res?.data?.status === 'success') {
+          setAboutText(res?.data?.data?.page?.content);
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        CustomConsole(err);
+      });
+  }, []);
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <SimpleHeader
@@ -12,22 +36,14 @@ const AboutUs = (props) => {
         navigation={props.navigation}
         onBack={() => props.navigation.goBack()}
       />
-      <View style={{flex: 1}}>
+      <ScrollView
+        style={{flex: 1}}
+        showsVerticalScrollIndicator={false}
+        bounces={false}>
         <View style={styles.inputForm}>
-          <Text style={styles.bottomText}>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-            nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-            erat, sed diam voluptua. {'\n\n'}Lorem ipsum dolor sit amet,
-            consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
-            ut labore et dolore magna aliquyam erat, sed diam voluptua. AtLorem
-            ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-            eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
-            diam voluptua. {'\n\n'}Lorem ipsum dolor sit amet, consetetur
-            sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-            et dolore magna aliquyam erat, sed diam voluptua.
-          </Text>
+          <Text style={styles.bottomText}>{aboutText}</Text>
         </View>
-      </View>
+      </ScrollView>
     </LinearGradient>
   );
 };

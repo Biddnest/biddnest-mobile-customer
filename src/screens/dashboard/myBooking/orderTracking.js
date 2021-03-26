@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
   Image,
+  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -12,7 +13,6 @@ import SimpleHeader from '../../../components/simpleHeader';
 import {STYLES} from '../../../constant/commonStyle';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Button from '../../../components/button';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomModalAndroid from '../../../components/customModal';
 import CloseIcon from '../../../components/closeIcon';
@@ -21,12 +21,12 @@ import VerticalStepper from './verticalStepper';
 import OrderDetailModal from './orderDetailModal';
 import FlatButton from '../../../components/flatButton';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {getDistance} from 'geolib';
 import Share from 'react-native-share';
 import moment from 'moment';
 import {STORE} from '../../../redux';
 import {APICall, getOrderDetails} from '../../../redux/actions/user';
 import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
+import Button from '../../../components/button';
 
 const OrderTracking = (props) => {
   const orderData = props?.route?.params?.orderData || {};
@@ -36,6 +36,7 @@ const OrderTracking = (props) => {
   const [orderDetailsVisible, setOrderDetailsVisible] = useState(false);
   const [cancelOrder, setCancelOrder] = useState(false);
   const [resecheduleOrder, setRescheduleOrder] = useState(false);
+  const [showPin, setShowPin] = useState(false);
   let dateArray = [];
   const renderIcon = (item) => {
     switch (item.iconFamily) {
@@ -82,7 +83,6 @@ const OrderTracking = (props) => {
   let meta =
     (orderDetails?.meta && JSON.parse(orderDetails?.meta?.toString())) || {};
 
-  console.log(orderDetails, meta?.distance);
   return (
     <View style={styles.container}>
       <SimpleHeader
@@ -196,7 +196,6 @@ const OrderTracking = (props) => {
                           err && console.log(err);
                         });
                     } else if (item.title === 'Virtual Assistance') {
-                      props.navigation.navigate('FinalQuote');
                     }
                   }}
                   style={{
@@ -219,9 +218,24 @@ const OrderTracking = (props) => {
             })}
           </View>
           <View style={{alignItems: 'center'}}>
+            <View style={{marginTop: hp(3), marginHorizontal: wp(3)}}>
+              <Text
+                style={{
+                  fontFamily: 'Roboto-Italic',
+                  fontSize: wp(3.3),
+                  color: '#99A0A5',
+                  textAlign: 'center',
+                }}>
+                You need to provide start trip pin to your driver.
+              </Text>
+            </View>
             <Button
-              label={'START'}
-              onPress={() => {}}
+              label={
+                orderDetails?.status === 5
+                  ? 'SHOW START TRIP PIN'
+                  : 'SHOW END TRIP PIN'
+              }
+              onPress={() => setShowPin(true)}
               width={wp(90)}
               spaceBottom={0}
             />
@@ -244,49 +258,103 @@ const OrderTracking = (props) => {
                   }}>
                   DRIVER
                 </Text>
-                {/*<Text*/}
-                {/*  style={{*/}
-                {/*    ...styles.driverContact,*/}
-                {/*    marginTop: 10,*/}
-                {/*    fontFamily: 'Roboto-Regular',*/}
-                {/*  }}>*/}
-                {/*  Not Assigned*/}
-                {/*</Text>*/}
-                <Text style={{...styles.driverContact, marginTop: 10}}>
-                  Name{' '}
-                  <Text style={{fontFamily: 'Roboto-Regular'}}>
-                    Omkar patil
+                {showPin && (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      width: wp(83),
+                      marginTop: 10,
+                    }}>
+                    <Text style={{...styles.driverContact}}>
+                      {orderDetails?.status === 5 ? 'Start' : 'End'} Trip Pin{' '}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: 'Roboto-Bold',
+                        fontSize: wp(4),
+                        color: Colors.inputTextColor,
+                      }}>
+                      {orderDetails?.status === 5
+                        ? meta?.start_pin
+                        : meta?.end_pin}
+                    </Text>
+                  </View>
+                )}
+                {(orderDetails?.driver && (
+                  <View>
+                    <Text style={{...styles.driverContact, marginTop: 10}}>
+                      Name{' '}
+                      <Text
+                        style={{
+                          fontFamily: 'Roboto-Regular',
+                          textTransform: 'capitalize',
+                        }}>
+                        {orderDetails?.driver?.fname}{' '}
+                        {orderDetails?.driver?.lname}
+                      </Text>
+                    </Text>
+                    <Text style={{...styles.driverContact, marginTop: 5}}>
+                      Phone{' '}
+                      <Text style={{fontFamily: 'Roboto-Regular'}}>
+                        {orderDetails?.driver?.phone}
+                      </Text>
+                    </Text>
+                  </View>
+                )) || (
+                  <Text
+                    style={{
+                      ...styles.driverContact,
+                      marginTop: 10,
+                      fontFamily: 'Roboto-Regular',
+                    }}>
+                    Not Assigned
                   </Text>
-                </Text>
-                <Text style={{...styles.driverContact, marginTop: 5}}>
-                  Phone{' '}
-                  <Text style={{fontFamily: 'Roboto-Regular'}}>9090909090</Text>
-                </Text>
+                )}
               </View>
-              <View
-                style={{
-                  height: wp(15),
-                  width: wp(15),
-                  borderRadius: wp(7.5),
-                  backgroundColor: '#F2E6FF',
-                  ...STYLES.common,
-                }}>
-                <Ionicons name={'call'} color={Colors.darkBlue} size={wp(6)} />
+              {orderDetails?.driver && (
+                <Pressable
+                  onPress={() =>
+                    Linking.openURL(`tel:${orderDetails?.driver?.phone}`)
+                  }
+                  style={{
+                    height: wp(15),
+                    width: wp(15),
+                    borderRadius: wp(7.5),
+                    backgroundColor: '#F2E6FF',
+                    ...STYLES.common,
+                  }}>
+                  <Ionicons
+                    name={'call'}
+                    color={Colors.darkBlue}
+                    size={wp(6)}
+                  />
+                </Pressable>
+              )}
+            </View>
+            {orderDetails?.vehicle && (
+              <View>
+                <View style={styles.separatorView} />
+                <View style={styles.flexBox}>
+                  <Text style={styles.leftText}>vehicle type</Text>
+                  <Text style={styles.rightText}>
+                    {orderDetails?.vehicle?.name},{' '}
+                    {orderDetails?.vehicle?.vehicle_type}
+                  </Text>
+                </View>
+                <View style={styles.flexBox}>
+                  <Text style={styles.leftText}>vehicle number</Text>
+                  <Text style={styles.rightText}>
+                    {orderDetails?.vehicle?.number}
+                  </Text>
+                </View>
+                <View style={styles.flexBox}>
+                  <Text style={styles.leftText}>man power</Text>
+                  <Text style={styles.rightText}>5</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.separatorView} />
-            <View style={styles.flexBox}>
-              <Text style={styles.leftText}>vehicle type</Text>
-              <Text style={styles.rightText}>Motor-X, Tempo</Text>
-            </View>
-            <View style={styles.flexBox}>
-              <Text style={styles.leftText}>vehicle number</Text>
-              <Text style={styles.rightText}>KA03 B 1678</Text>
-            </View>
-            <View style={styles.flexBox}>
-              <Text style={styles.leftText}>manpower</Text>
-              <Text style={styles.rightText}>5</Text>
-            </View>
+            )}
           </View>
           <VerticalStepper />
           <View
@@ -294,8 +362,7 @@ const OrderTracking = (props) => {
             <View style={{...styles.flexBox, marginTop: 0}}>
               <Text style={styles.leftText}>price</Text>
               <Text style={{...styles.rightText, fontFamily: 'Roboto-Bold'}}>
-                Rs.{' '}
-                {orderDetails?.final_quote}
+                Rs. {orderDetails?.final_quote}
               </Text>
             </View>
             <View style={styles.flexBox}>

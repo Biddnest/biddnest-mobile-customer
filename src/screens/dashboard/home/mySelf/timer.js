@@ -19,7 +19,9 @@ import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 const Timer = (props) => {
   const [orderPlacedVisible, setOrderPlacedVisible] = useState(true);
   const [orderDetails, setOrderDetails] = useState({});
-  const [time, setTime] = useState(300);
+  const [time, setTime] = useState(
+    DiffMin(new Date(props?.apiResponse?.bid_result_at)) || 0,
+  );
   useEffect(() => {
     let obj = {
       url: `bookings?id=${props?.apiResponse?.public_booking_id}`,
@@ -73,8 +75,9 @@ const Timer = (props) => {
       <View style={styles.inputForm}>
         <View style={{marginVertical: hp(0.8)}}>
           <CountdownCircleTimer
+            onComplete={() => resetNavigator(props, 'Dashboard')}
             isPlaying
-            duration={time * 60}
+            duration={Math.abs(time) * 60}
             children={children}
             colors={[
               [Colors.darkBlue, 0.4],
@@ -83,16 +86,6 @@ const Timer = (props) => {
             ]}
           />
         </View>
-        {/*<Text*/}
-        {/*  style={{*/}
-        {/*    color: Colors.darkBlue,*/}
-        {/*    position: 'absolute',*/}
-        {/*    top: wp(28),*/}
-        {/*    fontFamily: 'Roboto-Medium',*/}
-        {/*    fontSize: wp(3.8),*/}
-        {/*  }}>*/}
-        {/*  {DiffMin(new Date(orderDetails?.bid_result_at))}*/}
-        {/*</Text>*/}
         <Text style={styles.mainText}>Time Left</Text>
         <View style={styles.separatorView} />
         <View style={styles.flexView}>

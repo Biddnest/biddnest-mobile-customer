@@ -9,7 +9,9 @@ import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 const OrderTimer = (props) => {
   const orderData = props?.route?.params?.orderData || {};
   const [orderDetails, setOrderDetails] = useState({});
-  const [time, setTime] = useState(300);
+  const [time, setTime] = useState(
+    DiffMin(new Date(orderData?.bid_result_at)) || 0,
+  );
   useEffect(() => {
     getOrderDetails(orderData?.public_booking_id)
       .then((res) => {
@@ -65,8 +67,13 @@ const OrderTimer = (props) => {
         <View style={styles.inputForm}>
           <View style={{marginVertical: hp(0.8)}}>
             <CountdownCircleTimer
+              onComplete={() =>
+                props.navigation.replace('FinalQuote', {
+                  orderData: orderDetails,
+                })
+              }
               isPlaying
-              duration={time * 60}
+              duration={Math.abs(time) * 60}
               children={children}
               colors={[
                 [Colors.darkBlue, 0.4],

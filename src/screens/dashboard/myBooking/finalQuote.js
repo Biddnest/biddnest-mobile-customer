@@ -67,7 +67,6 @@ const FinalQuote = (props) => {
   let meta =
     (orderDetails?.meta && JSON.parse(orderDetails?.meta?.toString())) || {};
 
-  console.log(orderDetails, meta?.distance);
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <View style={styles.container}>
@@ -106,32 +105,38 @@ const FinalQuote = (props) => {
                 ? 'Economic'
                 : 'Premium'}
             </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View style={{flex: 1, alignItems: 'flex-end'}}>
-                <Text
-                  style={[
-                    styles.leftText,
-                    {
-                      textTransform: 'uppercase',
-                    },
-                  ]}>
-                  vehicle type
-                </Text>
-                <Text
-                  style={[
-                    styles.leftText,
-                    {
-                      textTransform: 'uppercase',
-                    },
-                  ]}>
-                  man power
-                </Text>
+            {orderDetails?.vehicle && (
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{flex: 1, alignItems: 'flex-end'}}>
+                  <Text
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    vehicle type
+                  </Text>
+                  <Text
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    man power
+                  </Text>
+                </View>
+                <View style={{flex: 1, marginLeft: 15}}>
+                  <Text
+                    style={[styles.leftText, {textTransform: 'capitalize'}]}>
+                    {orderDetails?.vehicle?.name},{' '}
+                    {orderDetails?.vehicle?.vehicle_type}
+                  </Text>
+                  <Text style={styles.leftText}>05</Text>
+                </View>
               </View>
-              <View style={{flex: 1, marginLeft: 15}}>
-                <Text style={[styles.leftText]}>Movers Truck</Text>
-                <Text style={styles.leftText}>05</Text>
-              </View>
-            </View>
+            )}
           </View>
           <View style={styles.checkBoxView}>
             <CheckBox onPress={() => setAgree(!isAgree)} value={isAgree} />
@@ -183,7 +188,9 @@ const FinalQuote = (props) => {
             />
             <Button
               label={'ACCEPT'}
-              onPress={() => props.navigation.navigate('Payment')}
+              onPress={() =>
+                props.navigation.navigate('Payment', {orderData: orderDetails})
+              }
               spaceBottom={0}
               width={wp(43)}
             />

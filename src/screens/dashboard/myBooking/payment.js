@@ -13,16 +13,19 @@ import {
 } from 'react-native';
 import TextInput from '../../../components/textInput';
 import {STYLES} from '../../../constant/commonStyle';
-import DropDownAndroid from '../../../components/dropDown';
 import Button from '../../../components/button';
 import AddNewCard from './addNewCard';
 import UPIPayment from './UPIPayment';
 import NetBanking from './netBanking';
 import {APICall, getOrderDetails} from '../../../redux/actions/user';
-import {CustomAlert, CustomConsole, DiffMin} from '../../../constant/commonFun';
+import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
 import {STORE} from '../../../redux';
+import RazorpayCheckout from 'react-native-razorpay';
+import {useSelector} from 'react-redux';
 
 const Payment = (props) => {
+  const configData =
+    useSelector((state) => state.Login?.configData?.enums?.payment) || {};
   const [addCardVisible, setCardVisible] = useState(false);
   const [UPIVisible, setUPIVisible] = useState(false);
   const [netBankingVisible, setNetBankingVisible] = useState(false);
@@ -32,6 +35,8 @@ const Payment = (props) => {
   const [coupon_code, setCouponCode] = useState('');
   const [applyButton, setApplyButton] = useState(false);
   const [isLoading, setLoading] = useState(false);
+
+  console.log(orderDetails);
 
   useEffect(() => {
     getOrderDetails(orderData?.public_booking_id)
@@ -64,7 +69,53 @@ const Payment = (props) => {
         CustomConsole(err);
       });
   }, []);
-  console.log(paymentSummery);
+  const paymentInitiate = () => {
+    let obj = {
+      url: 'bookings/payment/initiate',
+      method: 'post',
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+      data: {
+        public_booking_id: orderData?.public_booking_id,
+        coupon_code: coupon_code.length > 0 ? coupon_code : null,
+      },
+    };
+    APICall(obj)
+      .then((res) => {
+        if (res?.data?.status === 'success') {
+          // Razor pay
+          paymentMethod(res?.payment);
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        CustomConsole(err);
+      });
+  };
+  const paymentMethod = (payment) => {
+    let options = {
+      currency: payment?.currency || 'INR',
+      key: configData?.razorpay?.rzp_id,
+      amount: payment?.grand_total,
+      order_id: payment?.rzp_order_id,
+      theme: {color: Colors.darkBlue},
+    };
+    RazorpayCheckout.open(options)
+      .then((data) => {
+        // handle success
+        props.navigation.pop(1);
+        props.navigation.replace('OrderTracking', {
+          orderData: orderDetails,
+        });
+        alert(`Success: ${data.razorpay_payment_id}`);
+      })
+      .catch((error) => {
+        // handle failure
+        alert(`Error: ${error.code} | ${error.description}`);
+      });
+  };
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <View style={styles.container}>
@@ -74,28 +125,27 @@ const Payment = (props) => {
           onBack={() => props.navigation.goBack()}
         />
         <ScrollView
-          // refreshControl={
-          //     <RefreshControl
-          //         refreshing={this.state.refreshing}
-          //         onRefresh={this._onRefresh}
-          //     />
-          // }
           bounces={false}
           showsVerticalScrollIndicator={false}
           style={{flex: 1, padding: hp(2)}}>
           <Text>Payment Summary</Text>
-          <View style={styles.flexBox}>
-            <Text style={styles.leftText}>Item Total</Text>
-            <Text style={styles.leftText}>3900</Text>
-          </View>
-          <View style={styles.flexBox}>
-            <Text style={styles.leftText}>Texes and charges</Text>
-            <Text style={styles.leftText}>100</Text>
-          </View>
+          {Object.keys(paymentSummery).map((item, index) => {
+            if (item === 'grand_total') {
+              return null;
+            }
+            return (
+              <View style={styles.flexBox} key={index}>
+                <Text style={styles.leftText}>{item?.replace('_', ' ')}</Text>
+                <Text style={styles.leftText}>
+                  {Object.values(paymentSummery)[index]}
+                </Text>
+              </View>
+            );
+          })}
           <View style={styles.separatorView} />
           <View style={styles.flexBox}>
             <Text style={styles.totalText}>Grand Total</Text>
-            <Text style={styles.totalText}>4000</Text>
+            <Text style={styles.totalText}>{paymentSummery?.grand_total}</Text>
           </View>
           <View
             style={{
@@ -137,7 +187,7 @@ const Payment = (props) => {
                     },
                     data: {
                       public_booking_id: orderData?.public_booking_id,
-                      coupon_code: coupon_code,
+                      coupon_code: coupon_code || null,
                     },
                   };
                   APICall(obj)
@@ -172,13 +222,13 @@ const Payment = (props) => {
                 fontSize: wp(4),
                 fontFamily: 'Roboto-Regular',
               }}>
-              Total Price{' '}
+              Total Price{'  '}
               <Text
                 style={{
                   fontSize: wp(5.5),
                   fontFamily: 'Roboto-Bold',
                 }}>
-                RS. 4000
+                RS. {paymentSummery?.grand_total}
               </Text>
             </Text>
           </LinearGradient>
@@ -194,13 +244,15 @@ const Payment = (props) => {
                 <View style={styles.movementLinear} key={index}>
                   <Pressable
                     onPress={() => {
-                      alert('Razory pay');
-                      if (item.name === 'UPI Payment') {
-                        // setUPIVisible(true);
-                      } else if (item.name === 'Net Banking') {
-                        // setNetBankingVisible(true);
+                      if (orderDetails?.payment?.rzp_order_id) {
+                        let temp = coupon_code.length > 0 ? coupon_code : null;
+                        if (temp === orderDetails?.payment?.coupon_code) {
+                          paymentMethod(orderDetails?.payment);
+                        } else {
+                          paymentInitiate();
+                        }
                       } else {
-                        // props.navigation.navigate('CardDetails');
+                        paymentInitiate();
                       }
                     }}
                     style={{
@@ -263,6 +315,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Regular',
     fontSize: wp(3.5),
     color: Colors.inputTextColor,
+    textTransform: 'capitalize',
   },
   totalText: {
     fontFamily: 'Roboto-Medium',
