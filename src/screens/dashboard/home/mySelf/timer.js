@@ -77,12 +77,10 @@ const Timer = (props) => {
           <CountdownCircleTimer
             onComplete={() => resetNavigator(props, 'Dashboard')}
             isPlaying
-            duration={Math.abs(time) * 60}
+            duration={time >= 0 ? time * 60 : 0}
             children={children}
             colors={[
-              [Colors.darkBlue, 0.4],
-              [Colors.btnBG, 0.4],
-              [Colors.red, 0.2],
+              [Colors.darkBlue, 0.4]
             ]}
           />
         </View>

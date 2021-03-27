@@ -24,12 +24,38 @@ import {
   LoadingScreen,
 } from '../../../constant/commonFun';
 import moment from 'moment';
+import {useSelector} from 'react-redux';
 
 const ContactUs = (props) => {
+  const configData =
+    useSelector((state) => state.Login?.configData?.contact_us?.details) || {};
   const [recentTicket, setRecentTicket] = useState([]);
+  const [recentOrder, setRecentOrder] = useState({});
   const [isLoading, setLoading] = useState(true);
+  const [requestCallBackLoading, setRequestCallBackLoading] = useState(false);
+  console.log(configData);
   useEffect(() => {
     fetchTicket();
+    let obj = {
+      url: 'bookings/recent',
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+    };
+    APICall(obj)
+      .then((res) => {
+        setLoading(false);
+        if (res?.data?.status === 'success') {
+          setRecentOrder(res?.data?.data?.booking);
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        CustomConsole(err);
+      });
   }, []);
   const fetchTicket = () => {
     let obj = {
@@ -101,6 +127,14 @@ const ContactUs = (props) => {
       </View>
     );
   };
+  let source_meta =
+    (recentOrder?.source_meta &&
+      JSON.parse(recentOrder?.source_meta?.toString())) ||
+    {};
+  let destination_meta =
+    (recentOrder?.destination_meta &&
+      JSON.parse(recentOrder?.destination_meta?.toString())) ||
+    {};
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <SimpleHeader
@@ -131,21 +165,29 @@ const ContactUs = (props) => {
             />
             <View>
               <View style={[styles.flexBox, {width: wp(70)}]}>
-                <Text style={{...styles.locationText, marginTop: 0}}>
-                  CHENNAI
+                <Text
+                  style={{
+                    ...styles.locationText,
+                    marginTop: 0,
+                    textTransform: 'uppercase',
+                    maxWidth: '30%',
+                  }}>
+                  {source_meta?.city}
                 </Text>
                 <Text
                   style={{
                     ...styles.locationText,
                     marginTop: 0,
                     textAlign: 'right',
-                  }}>
+                    maxWidth: '70%',
+                  }}
+                  numberOfLines={1}>
                   ID:{' '}
                   <Text
                     style={{
                       fontFamily: 'Gilroy-Extrabold',
                     }}>
-                    #123456
+                    #{recentOrder?.public_booking_id}
                   </Text>
                 </Text>
               </View>
@@ -154,7 +196,13 @@ const ContactUs = (props) => {
                   ...styles.flexBox,
                   marginTop: hp(1),
                 }}>
-                <Text style={styles.locationText}>BENGALURU</Text>
+                <Text
+                  style={[
+                    styles.locationText,
+                    {textTransform: 'uppercase', maxWidth: '80%'},
+                  ]}>
+                  {destination_meta?.city}
+                </Text>
                 <View
                   style={{
                     height: wp(8),
@@ -203,12 +251,21 @@ const ContactUs = (props) => {
               style={[
                 styles.locationText,
                 {
-                  fontFamily: 'Gilroy-Regular',
                   fontSize: wp(3.8),
                   marginTop: hp(1),
                 },
               ]}>
               Call us at +91-900080000
+            </Text>
+            <Text
+              style={[
+                styles.locationText,
+                {
+                  fontSize: wp(3.8),
+                  marginTop: hp(0.5),
+                },
+              ]}>
+              Email us at test@gmail.com
             </Text>
           </View>
           <HomeCall width={55} height={55} />
@@ -222,8 +279,29 @@ const ContactUs = (props) => {
             onPress={() => props.navigation.navigate('RaiseTicket')}
           />
           <Button
+            isLoading={requestCallBackLoading}
             label={'REQUEST A CALL BACK'}
-            onPress={() => {}}
+            onPress={() => {
+              // call Request a call back api
+              setRequestCallBackLoading(true);
+              let obj = {
+                url: 'tickets/callback',
+                method: 'post',
+                headers: {
+                  Authorization:
+                    'Bearer ' + STORE.getState().Login?.loginData?.token,
+                },
+              };
+              APICall(obj)
+                .then((res) => {
+                  setRequestCallBackLoading(false);
+                  CustomAlert(res?.data?.message);
+                })
+                .catch((err) => {
+                  setRequestCallBackLoading(false);
+                  CustomConsole(err);
+                });
+            }}
             spaceBottom={0}
             width={wp(90)}
           />

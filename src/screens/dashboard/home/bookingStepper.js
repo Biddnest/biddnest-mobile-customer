@@ -29,22 +29,8 @@ import {useDispatch} from 'react-redux';
 import {APICall, getAllInventories} from '../../../redux/actions/user';
 import {STORE} from '../../../redux';
 import {getDistance} from 'geolib';
+import {STYLES} from '../../../constant/commonStyle';
 
-const customStyles = {
-  stepIndicatorSize: 45,
-  currentStepIndicatorSize: 45,
-  separatorStrokeWidth: 1,
-  currentStepStrokeWidth: 1,
-  stepStrokeCurrentColor: Colors.darkBlue,
-  stepStrokeWidth: 1,
-  stepStrokeFinishedColor: Colors.darkBlue,
-  stepStrokeUnFinishedColor: '#DEDEDE',
-  separatorFinishedColor: Colors.darkBlue,
-  separatorUnFinishedColor: '#aaaaaa',
-  stepIndicatorFinishedColor: Colors.white,
-  stepIndicatorUnFinishedColor: '#DEDEDE',
-  stepIndicatorCurrentColor: Colors.darkBlue,
-};
 const BookingStepper = (props) => {
   const dispatch = useDispatch();
   const [currentPosition, setCurrentPosition] = useState(0);
@@ -477,7 +463,7 @@ const BookingStepper = (props) => {
         <View style={{paddingVertical: hp(2)}}>
           <StepIndicator
             stepCount={bookingFor === 'Myself' ? 4 : 5}
-            customStyles={customStyles}
+            customStyles={STYLES.stepperStyle}
             currentPosition={currentPosition}
             onPress={(text) => onPageChange(text)}
             renderStepIndicator={renderStepIndicator}

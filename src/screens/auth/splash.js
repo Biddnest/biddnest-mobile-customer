@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Image, ActivityIndicator, Alert} from 'react-native';
+import {
+  View,
+  Image,
+  ActivityIndicator,
+  Alert,
+  ImageBackground,
+} from 'react-native';
 import OneSignal from 'react-native-onesignal';
 import NetInfo from '@react-native-community/netinfo';
 import {
@@ -11,6 +17,7 @@ import {Colors, hp, wp} from '../../constant/colors';
 import {useDispatch, useSelector} from 'react-redux';
 import {initialConfig} from '../../redux/actions/user';
 import AsyncStorage from '@react-native-community/async-storage';
+import {STYLES} from '../../constant/commonStyle';
 
 const Splash = (props) => {
   const dispatch = useDispatch();
@@ -95,10 +102,13 @@ const Splash = (props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ImageBackground
+      source={require('../../assets/images/logo_background.png')}
+      style={{height: '100%', width: '100%', ...STYLES.common}}
+      resizeMode={'stretch'}>
       {!!isLoading && (
         <View style={{position: 'absolute', bottom: hp(20), zIndex: 111}}>
-          <ActivityIndicator size="large" color={Colors.black} />
+          <ActivityIndicator size="large" color={Colors.btnBG} />
         </View>
       )}
       <Image
@@ -106,17 +116,8 @@ const Splash = (props) => {
         style={{height: hp(50), width: wp(80)}}
         resizeMode={'contain'}
       />
-    </View>
+    </ImageBackground>
   );
 };
 
 export default Splash;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.silver,
-  },
-});

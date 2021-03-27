@@ -422,7 +422,7 @@ const RequirementDetails = (props) => {
             )}
           />
           <Button
-            label={'ADD ANOTHER ITEM'}
+            label={'ADD ITEM'}
             backgroundColor={Colors.white}
             spaceBottom={0}
             onPress={() => {
