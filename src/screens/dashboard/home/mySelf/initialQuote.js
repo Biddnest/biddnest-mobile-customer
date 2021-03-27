@@ -4,29 +4,12 @@ import {
   StyleSheet,
   Text,
   Pressable,
-  Platform,
-  Image,
   ScrollView,
-  FlatList,
 } from 'react-native';
-import {Colors, hp, wp, boxShadow} from '../../../../constant/colors';
-import Button from '../../../../components/button';
+import {Colors, hp, wp} from '../../../../constant/colors';
 import {STYLES} from '../../../../constant/commonStyle';
-import TextInput from '../../../../components/textInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomModalAndroid from '../../../../components/customModal';
-import DropDownAndroid from '../../../../components/dropDown';
-import CheckBox from '../../../../components/checkBox';
-import FlatButton from '../../../../components/flatButton';
-import CloseIcon from '../../../../components/closeIcon';
 import TwoButton from '../../../../components/twoButton';
-import {STORE} from '../../../../redux';
-import {APICall} from '../../../../redux/actions/user';
-import {
-  CustomAlert,
-  CustomConsole,
-  resetNavigator,
-} from '../../../../constant/commonFun';
 import {useSelector} from 'react-redux';
 import RejectBookingModal from '../../myBooking/rejectBookingModal';
 
@@ -61,7 +44,10 @@ const InitialQuote = (props) => {
     ? JSON.parse((props?.apiResponse?.quote_estimate).toString())
     : {};
   return (
-    <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      bounces={false}
+      style={{flex: 1}}>
       <Text
         style={{
           fontFamily: 'Roboto-Italic',
@@ -159,15 +145,23 @@ const InitialQuote = (props) => {
           );
         })}
       </View>
-      <TwoButton
-        leftLabel={'Reject'}
-        rightLabel={'Place order'}
-        leftOnPress={() => setRejectVisible(true)}
-        rightOnPress={() =>
-          props.handleBooking(offerType === 0 ? 'economic' : 'premium')
-        }
-      />
+      <View
+        style={{
+          position: 'relative',
+          width: wp(100),
+          bottom: 0,
+        }}>
+        <TwoButton
+          leftLabel={'Reject'}
+          rightLabel={'Place order'}
+          leftOnPress={() => setRejectVisible(true)}
+          rightOnPress={() =>
+            props.handleBooking(offerType === 0 ? 'economic' : 'premium')
+          }
+        />
+      </View>
       <RejectBookingModal
+        value={rejectData?.reason}
         visible={rejectVisible}
         closeModal={() => setRejectVisible(false)}
         dropDownDefault={defaultReason}

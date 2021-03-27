@@ -213,6 +213,7 @@ const FinalQuote = (props) => {
             />
           </View>
           <RejectBookingModal
+              value={rejectData?.reason}
             visible={rejectVisible}
             closeModal={() => setRejectVisible(false)}
             dropDownDefault={defaultReason}

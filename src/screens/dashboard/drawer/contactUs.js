@@ -8,6 +8,7 @@ import {
   ScrollView,
   Pressable,
   RefreshControl,
+  Linking,
 } from 'react-native';
 import {Colors, hp, SIDE_DRAWER, wp} from '../../../constant/colors';
 import SimpleHeader from '../../../components/simpleHeader';
@@ -27,13 +28,12 @@ import moment from 'moment';
 import {useSelector} from 'react-redux';
 
 const ContactUs = (props) => {
-  const configData =
-    useSelector((state) => state.Login?.configData?.contact_us?.details) || {};
   const [recentTicket, setRecentTicket] = useState([]);
   const [recentOrder, setRecentOrder] = useState({});
   const [isLoading, setLoading] = useState(true);
   const [requestCallBackLoading, setRequestCallBackLoading] = useState(false);
-  console.log(configData);
+  const [contactUs, setContactUs] = useState({});
+
   useEffect(() => {
     fetchTicket();
     let obj = {
@@ -48,6 +48,26 @@ const ContactUs = (props) => {
         setLoading(false);
         if (res?.data?.status === 'success') {
           setRecentOrder(res?.data?.data?.booking);
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        CustomConsole(err);
+      });
+    let obj1 = {
+      url: 'contact-us',
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+    };
+    APICall(obj1)
+      .then((res) => {
+        setLoading(false);
+        if (res?.data?.status === 'success') {
+          setContactUs(res?.data?.data?.details);
         } else {
           CustomAlert(res?.data?.message);
         }
@@ -163,79 +183,84 @@ const ContactUs = (props) => {
               style={{height: wp(15), width: wp(10)}}
               resizeMode={'contain'}
             />
-            <View>
-              <View style={[styles.flexBox, {width: wp(70)}]}>
-                <Text
-                  style={{
-                    ...styles.locationText,
-                    marginTop: 0,
-                    textTransform: 'uppercase',
-                    maxWidth: '30%',
-                  }}>
-                  {source_meta?.city}
-                </Text>
-                <Text
-                  style={{
-                    ...styles.locationText,
-                    marginTop: 0,
-                    textAlign: 'right',
-                    maxWidth: '70%',
-                  }}
-                  numberOfLines={1}>
-                  ID:{' '}
+            <View
+              style={{
+                width: '87%',
+                flexDirection: 'row',
+              }}>
+              <View style={{width: '85%'}}>
+                <View style={[styles.flexBox, {width: wp(70)}]}>
                   <Text
                     style={{
-                      fontFamily: 'Gilroy-Extrabold',
+                      ...styles.locationText,
+                      marginTop: 0,
+                      textTransform: 'uppercase',
+                      maxWidth: '30%',
                     }}>
-                    #{recentOrder?.public_booking_id}
+                    {source_meta?.city}
                   </Text>
-                </Text>
+                  {/*<Text*/}
+                  {/*  style={{*/}
+                  {/*    ...styles.locationText,*/}
+                  {/*    marginTop: 0,*/}
+                  {/*    textAlign: 'right',*/}
+                  {/*    maxWidth: '70%',*/}
+                  {/*  }}*/}
+                  {/*  numberOfLines={1}>*/}
+                  {/*  ID:{' '}*/}
+                  {/*  <Text*/}
+                  {/*    style={{*/}
+                  {/*      fontFamily: 'Gilroy-Extrabold',*/}
+                  {/*    }}>*/}
+                  {/*    #{recentOrder?.public_booking_id}*/}
+                  {/*  </Text>*/}
+                  {/*</Text>*/}
+                </View>
+                <View
+                  style={{
+                    ...styles.flexBox,
+                    marginTop: hp(1),
+                  }}>
+                  <Text
+                    style={[
+                      styles.locationText,
+                      {textTransform: 'uppercase', maxWidth: '80%'},
+                    ]}>
+                    {destination_meta?.city}
+                  </Text>
+                </View>
               </View>
               <View
                 style={{
-                  ...styles.flexBox,
-                  marginTop: hp(1),
+                  height: wp(10),
+                  width: wp(10),
+                  borderRadius: wp(5),
+                  backgroundColor: '#F2E6FF',
+                  alignSelf: 'center',
+                  ...STYLES.common,
                 }}>
-                <Text
-                  style={[
-                    styles.locationText,
-                    {textTransform: 'uppercase', maxWidth: '80%'},
-                  ]}>
-                  {destination_meta?.city}
-                </Text>
-                <View
-                  style={{
-                    height: wp(8),
-                    width: wp(8),
-                    borderRadius: wp(4),
-                    backgroundColor: '#F2E6FF',
-                    ...STYLES.common,
-                  }}>
-                  <Ionicons
-                    name={'call'}
-                    color={Colors.darkBlue}
-                    size={wp(4)}
-                  />
-                </View>
+                <Ionicons name={'call'} color={Colors.darkBlue} size={wp(5)} />
               </View>
             </View>
           </View>
         </View>
-        <View style={styles.inputForm}>
-          <Text style={styles.headerText}>RECENT TICKETS</Text>
-          <View style={styles.separatorView} />
-          <View>
-            <FlatList
-              bounces={false}
-              showsVerticalScrollIndicator={false}
-              data={recentTicket || []}
-              renderItem={renderItem}
-              ItemSeparatorComponent={() => (
-                <View style={styles.separatorView} />
-              )}
-            />
+        {recentTicket.length > 0 && (
+          <View style={styles.inputForm}>
+            <Text style={styles.headerText}>RECENT TICKETS</Text>
+            <View style={styles.separatorView} />
+            <View>
+              <FlatList
+                bounces={false}
+                showsVerticalScrollIndicator={false}
+                data={recentTicket || []}
+                renderItem={renderItem}
+                ItemSeparatorComponent={() => (
+                  <View style={styles.separatorView} />
+                )}
+              />
+            </View>
           </View>
-        </View>
+        )}
         <View style={styles.assistantView}>
           <View>
             <Text
@@ -255,7 +280,10 @@ const ContactUs = (props) => {
                   marginTop: hp(1),
                 },
               ]}>
-              Call us at +91-900080000
+              Call us at{' '}
+              {contactUs?.contact_no?.length > 0 && contactUs.contact_no[0]}{' '}
+              {contactUs?.contact_no?.length > 1 &&
+                'Or \n' + contactUs.contact_no[1]}
             </Text>
             <Text
               style={[
@@ -265,10 +293,22 @@ const ContactUs = (props) => {
                   marginTop: hp(0.5),
                 },
               ]}>
-              Email us at test@gmail.com
+              Email us at{' '}
+              {contactUs?.email_id?.length > 0 && contactUs.email_id[0]}{' '}
+              {contactUs?.email_id?.length > 1 &&
+                'Or \n' + contactUs.email_id[1]}
             </Text>
           </View>
-          <HomeCall width={55} height={55} />
+          <Pressable
+            onPress={() =>
+              Linking.openURL(
+                `tel:${
+                  contactUs?.contact_no?.length > 0 && contactUs.contact_no[0]
+                }`,
+              )
+            }>
+            <HomeCall width={55} height={55} />
+          </Pressable>
         </View>
         <View style={{alignSelf: 'center'}}>
           <Button
@@ -346,7 +386,7 @@ const styles = StyleSheet.create({
     fontSize: wp(3.8),
     color: Colors.inputTextColor,
     textAlign: 'center',
-    marginTop: hp(2),
+    marginTop: hp(1),
   },
   assistantView: {
     marginHorizontal: wp(5),

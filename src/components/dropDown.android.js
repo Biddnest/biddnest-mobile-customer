@@ -28,8 +28,10 @@ const DropDownAndroid = (props) => {
           }
         }>
         <DropDownPicker
+          searchable={true}
+          placeholder={'-Select'}
           items={props.items}
-          defaultValue={props.value || props.items[0]?.value}
+          defaultValue={props.value}
           customArrowUp={() => (
             <MaterialIcons name="arrow-drop-up" size={25} color={'#3B4B58'} />
           )}

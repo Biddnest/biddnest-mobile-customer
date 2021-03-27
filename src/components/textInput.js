@@ -6,11 +6,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 const TextInput = (props) => {
   return (
     <Input
+      autoCapitalize={props.autoCapitalize ? 'characters' : 'none'}
       disabled={props.disable || false}
       keyboardType={props.keyboard || 'default'}
       placeholder={props.placeHolder}
       multiline={!!props.numberOfLines}
-      placeholderStyle={props.placeholderStyle}
       numberOfLines={props.numberOfLines || 1}
       value={props.value}
       onFocus={props.onFocus}
@@ -67,7 +67,11 @@ const TextInput = (props) => {
         borderWidth: 2,
         paddingHorizontal: 15,
         borderRadius: 10,
-        height: props.numberOfLines ? (props.height ? props.height : hp(12)) : hp(6.5),
+        height: props.numberOfLines
+          ? props.height
+            ? props.height
+            : hp(12)
+          : hp(6.5),
         marginTop: hp(1),
         borderColor: props.isRight === false ? Colors.red : Colors.silver,
         backgroundColor: Colors.white,

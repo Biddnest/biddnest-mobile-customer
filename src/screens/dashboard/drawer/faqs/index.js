@@ -1,11 +1,45 @@
-import React from 'react';
-import {FlatList, Pressable, Text, View, StyleSheet} from 'react-native';
-import {Colors, FAQS_OPTION, wp} from '../../../../constant/colors';
+import React, {useEffect, useState} from 'react';
+import {FlatList, Pressable, Text, View, StyleSheet, Image} from 'react-native';
+import {Colors, wp, hp} from '../../../../constant/colors';
 import SimpleHeader from '../../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import RightArrow from '../../../../assets/svg/right_arrow.svg';
+import {STORE} from '../../../../redux';
+import {APICall} from '../../../../redux/actions/user';
+import {
+  CustomAlert,
+  CustomConsole,
+} from '../../../../constant/commonFun';
 
 const FAQS = (props) => {
+  const [faqs, setFaqs] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+  useEffect(() => {
+    fetchData();
+  }, []);
+  const fetchData = () => {
+    setLoading(true);
+    let obj = {
+      url: 'faq/categories',
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+    };
+    APICall(obj)
+      .then((res) => {
+        setLoading(false);
+        if (res?.data?.status === 'success') {
+          setFaqs(res?.data?.data?.faqs?.categories);
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        CustomConsole(err);
+      });
+  };
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <SimpleHeader
@@ -15,22 +49,32 @@ const FAQS = (props) => {
       />
       <View style={{flex: 1, padding: wp(3)}}>
         <FlatList
+          onRefresh={fetchData}
+          refreshing={isLoading}
           numColumns={2}
           showsHorizontalScrollIndicator={false}
-          data={FAQS_OPTION}
+          data={faqs || []}
           bounces={false}
           contentContainerStyle={{justifyContent: 'space-evenly'}}
           renderItem={({item, index}) => {
             return (
               <View style={styles.movementLinear} key={index}>
                 <Pressable
-                  onPress={() => props.navigation.navigate('FAQDetails')}
+                  onPress={() =>
+                    props.navigation.navigate('FAQDetails', {
+                      category: item?.value,
+                    })
+                  }
                   style={{
                     justifyContent: 'center',
                     alignItems: 'center',
                     height: wp(30),
                   }}>
-                  {item.image}
+                  <Image
+                    source={{uri: item?.image}}
+                    resizeMode={'contain'}
+                    style={{height: 50, width: 50}}
+                  />
                 </Pressable>
                 <View style={styles.bottomView}>
                   <Text style={styles.bottomText}>{item.name}</Text>

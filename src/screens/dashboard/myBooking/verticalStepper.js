@@ -1,9 +1,10 @@
 import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
+import moment from 'moment';
 
 const VerticalStepper = (props) => {
-  const {orderStatus} = props;
+  const {orderDetails} = props;
   const stepHeader = (title) => {
     return (
       <View style={{flexDirection: 'row'}}>
@@ -14,58 +15,51 @@ const VerticalStepper = (props) => {
   };
   return (
     <View style={{marginHorizontal: wp(8), marginVertical: hp(2)}}>
-      {/*{stepHeader('Booked')}*/}
-      {/*<View*/}
-      {/*  style={{*/}
-      {/*    ...styles.stepBodyView,*/}
-      {/*  }}>*/}
-      {/*  <Text style={styles.subHeaderText}>confirmed</Text>*/}
-      {/*  <View style={styles.inputForm}>*/}
-      {/*    <Text*/}
-      {/*      style={{*/}
-      {/*        fontFamily: 'Roboto-Light',*/}
-      {/*        fontSize: wp(3.5),*/}
-      {/*        color: Colors.darkBlue,*/}
-      {/*      }}>*/}
-      {/*      CONFIRMED*/}
-      {/*    </Text>*/}
-      {/*    <View style={styles.separatorView} />*/}
-      {/*    <Text>We have received a request from you for home shifting</Text>*/}
-      {/*  </View>*/}
-      {/*</View>*/}
-      {/*{stepHeader('Payment')}*/}
-      {/*<View*/}
-      {/*  style={{*/}
-      {/*    ...styles.stepBodyView,*/}
-      {/*  }}>*/}
-      {/*  <Text style={styles.subHeaderText}>Pending</Text>*/}
-      {/*</View>*/}
+      {stepHeader('Driver Assigned')}
+      <View
+        style={{
+          ...styles.stepBodyView,
+        }}>
+        <Text style={styles.subHeaderText}>
+          {orderDetails?.status <= 7
+            ? 'Pending'
+            : 'Completed at ' +
+              moment(
+                orderDetails?.status_history?.find((item) => item.status == 6)
+                  ?.created_at,
+              ).format('MMMM Do YYYY, h:mm A')}
+        </Text>
+      </View>
       {stepHeader('Awaiting pickup')}
       <View
         style={{
           ...styles.stepBodyView,
         }}>
         <Text style={styles.subHeaderText}>
-          {orderStatus <= 5 ? 'Pending' : 'Completed'}
+          {orderDetails?.status <= 5
+            ? 'Pending'
+            : 'Completed at ' +
+              moment(
+                orderDetails?.status_history?.find((item) => item.status == 7)
+                  ?.created_at,
+              ).format('MMMM Do YYYY, h:mm A')}
         </Text>
       </View>
-      {stepHeader('In Transit')}
-      <View
-        style={{
-          ...styles.stepBodyView,
-        }}>
-        <Text style={styles.subHeaderText}>
-          {orderStatus <= 7 ? 'Pending' : 'Completed'}
-        </Text>
-      </View>
-      {stepHeader('Completed')}
+      {stepHeader(orderDetails?.status === 8 ? 'Completed' : 'In Transit')}
       <View
         style={{
           ...styles.stepBodyView,
           borderLeftWidth: 0,
+          paddingBottom: 0,
         }}>
         <Text style={styles.subHeaderText}>
-          {orderStatus < 8 ? 'Pending' : 'Completed'}
+          {orderDetails?.status < 8
+            ? 'On Going'
+            : 'Completed at ' +
+              moment(
+                orderDetails?.status_history?.find((item) => item.status == 8)
+                  ?.created_at,
+              ).format('MMMM Do YYYY, h:mm A')}
         </Text>
       </View>
     </View>
@@ -114,6 +108,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Regular',
     fontSize: wp(3),
     color: Colors.darkBlue,
-    textTransform: 'capitalize',
+    // textTransform: 'capitalize',
   },
 });

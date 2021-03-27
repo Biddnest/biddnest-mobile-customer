@@ -192,7 +192,11 @@ const EditProfile = (props) => {
               }}>
               <View style={styles.profilePhoto}>
                 <Image
-                  source={{uri: data?.avatar}}
+                  source={{
+                    uri: data?.avatar.includes('data:image/jpeg;base64,')
+                      ? data?.avatar
+                      : data?.avatar + '?' + new Date(),
+                  }}
                   style={{height: '100%', width: '100%'}}
                   resizeMode={'contain'}
                 />

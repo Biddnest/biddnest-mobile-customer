@@ -6,13 +6,7 @@ import CloseIcon from '../../../components/closeIcon';
 import {Rating, AirbnbRating} from 'react-native-elements';
 import TwoButton from '../../../components/twoButton';
 import TextInput from '../../../components/textInput';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {STYLES} from '../../../constant/commonStyle';
-import {
-  CustomAlert,
-  CustomConsole,
-  resetNavigator,
-} from '../../../constant/commonFun';
+import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
 import {useSelector} from 'react-redux';
 import FlatButton from '../../../components/flatButton';
 import {STORE} from '../../../redux';
@@ -58,7 +52,7 @@ const RateUs = (props) => {
             fontFamily: 'Roboto-Regular',
             color: Colors.inputTextColor,
           }}>
-          RATE US!
+          RATE US
         </Text>
         <CloseIcon
           onPress={() => {
@@ -101,12 +95,18 @@ const RateUs = (props) => {
           }}
         />
       )) || (
-        <TextInput
-          label={''}
-          numberOfLines={4}
-          onChange={(text) => setSuggestion(text)}
-          value={suggestion}
-        />
+        <View
+          style={{
+            width: '90%',
+          }}>
+          <TextInput
+            placeHolder={'Your suggestion help us improve better'}
+            label={''}
+            numberOfLines={4}
+            onChange={(text) => setSuggestion(text)}
+            value={suggestion}
+          />
+        </View>
       )}
       {(currentStep === 0 && (
         <View style={{marginTop: hp(2)}}>
@@ -121,7 +121,7 @@ const RateUs = (props) => {
         <TwoButton
           isLoading={isLoading}
           leftLabel={'PREVIOUS'}
-          rightLabel={currentStep === configData.length - 1 ? 'SURE!' : 'NEXT'}
+          rightLabel={currentStep === configData.length - 1 ? 'SUBMIT' : 'NEXT'}
           leftOnPress={() => {
             setCurrentStep(currentStep - 1);
           }}
@@ -139,7 +139,7 @@ const RateUs = (props) => {
                 data: {
                   public_booking_id: props?.public_booking_id,
                   review: review,
-                  suggestion: 'ABC',
+                  suggestion: suggestion,
                 },
               };
               APICall(obj)

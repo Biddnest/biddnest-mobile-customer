@@ -3,6 +3,7 @@ import {
   Image,
   Linking,
   Pressable,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -43,6 +44,7 @@ const OrderTracking = (props) => {
   const [manageOrderVisible, setManageOrderVisible] = useState(false);
   const [orderDetailsVisible, setOrderDetailsVisible] = useState(false);
   const [cancelOrder, setCancelOrder] = useState(false);
+  const [privacyPolicy, setPrivacyPolicy] = useState(false);
   const [resecheduleOrder, setRescheduleOrder] = useState(false);
   const [showPin, setShowPin] = useState(false);
   let dateArray = [];
@@ -68,6 +70,10 @@ const OrderTracking = (props) => {
     dateArray.push(moment(item.date).format('D MMM yyyy'));
   });
   useEffect(() => {
+    fetchOrderDetails();
+  }, []);
+  const fetchOrderDetails = () => {
+    setLoading(true);
     getOrderDetails(orderData?.public_booking_id)
       .then((res) => {
         setLoading(false);
@@ -81,7 +87,7 @@ const OrderTracking = (props) => {
         setLoading(false);
         CustomConsole(err);
       });
-  }, []);
+  };
   let source_meta =
     (orderDetails?.source_meta &&
       JSON.parse(orderDetails?.source_meta?.toString())) ||
@@ -104,7 +110,15 @@ const OrderTracking = (props) => {
       />
       {isLoading && <LoadingScreen />}
       <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
-        <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={fetchOrderDetails}
+            />
+          }>
           <View
             style={{
               backgroundColor: Colors.white,
@@ -122,7 +136,6 @@ const OrderTracking = (props) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 flex: 1,
-                alignItems: 'center',
               }}>
               <View>
                 <Text
@@ -138,7 +151,7 @@ const OrderTracking = (props) => {
                   {destination_meta?.city}
                 </Text>
               </View>
-              <View style={{alignItems: 'flex-end'}}>
+              <View style={{alignItems: 'flex-end', marginTop: 0}}>
                 <Text style={{...styles.locationText, marginTop: 0}}>
                   ID:{' '}
                   <Text
@@ -326,7 +339,7 @@ const OrderTracking = (props) => {
                       marginTop: 10,
                     }}>
                     <Text style={{...styles.driverContact}}>
-                      {orderDetails?.status === 5 ? 'Start' : 'End'} Trip Pin{' '}
+                      {orderDetails?.status === 6 ? 'Start' : 'End'} Trip Pin{' '}
                     </Text>
                     <Text
                       style={{
@@ -334,7 +347,7 @@ const OrderTracking = (props) => {
                         fontSize: wp(4),
                         color: Colors.inputTextColor,
                       }}>
-                      {orderDetails?.status === 5
+                      {orderDetails?.status === 6
                         ? meta?.start_pin
                         : meta?.end_pin}
                     </Text>
@@ -428,7 +441,7 @@ const OrderTracking = (props) => {
               </View>
             )}
           </View>
-          <VerticalStepper orderStatus={orderDetails?.status} />
+          <VerticalStepper orderDetails={orderDetails} />
           <View
             style={{...styles.inputForm, marginTop: 0, marginBottom: hp(2)}}>
             <View style={{...styles.flexBox, marginTop: 0}}>
@@ -454,17 +467,18 @@ const OrderTracking = (props) => {
       </LinearGradient>
       <CustomModalAndroid visible={orderDetailsVisible}>
         <OrderDetailModal
-          title={'ORDER DETAILS'}
+          title={'CHECKLIST'}
           onCloseIcon={() => setOrderDetailsVisible(false)}
           data={orderDetails?.inventories}
         />
       </CustomModalAndroid>
       <CustomModalAndroid
-        visible={manageOrderVisible || cancelOrder}
+        visible={manageOrderVisible || cancelOrder || privacyPolicy}
         onPress={() => {
           setRescheduleOrder(false);
           setCancelOrder(false);
           setManageOrderVisible(false);
+          setPrivacyPolicy(false);
         }}>
         <View
           style={{
@@ -481,6 +495,8 @@ const OrderTracking = (props) => {
             }}>
             {cancelOrder
               ? 'CANCEL ORDER'
+              : privacyPolicy
+              ? 'Terms & Conditions'
               : resecheduleOrder
               ? 'RESCHEDULE'
               : 'MANAGE ORDER'}
@@ -490,6 +506,7 @@ const OrderTracking = (props) => {
               setRescheduleOrder(false);
               setCancelOrder(false);
               setManageOrderVisible(false);
+              setPrivacyPolicy(false);
             }}
             style={{position: 'absolute', right: 0}}
           />
@@ -499,32 +516,42 @@ const OrderTracking = (props) => {
           style={{
             marginTop: hp(4),
             marginBottom: hp(2),
-            marginHorizontal: cancelOrder ? wp(6) : wp(20),
+            marginHorizontal: cancelOrder
+              ? wp(6)
+              : privacyPolicy
+              ? wp(6)
+              : wp(20),
           }}>
-          {/*{cancelOrder && (*/}
-          {/*  <Text*/}
-          {/*    style={{*/}
-          {/*      textAlign: 'center',*/}
-          {/*      fontFamily: 'Roboto-Regular',*/}
-          {/*      fontSize: wp(4),*/}
-          {/*      color: Colors.inputTextColor,*/}
-          {/*      marginBottom: hp(2),*/}
-          {/*    }}>*/}
-          {/*    Terms & Conditions*/}
-          {/*  </Text>*/}
-          {/*)}*/}
-          {/*  '1. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. \n\n 2. AtLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 3. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.'*/}
-          <Text
-            style={{
-              ...styles.manageOrderText,
-              textAlign: cancelOrder ? 'left' : 'center',
-            }}>
-            {cancelOrder
-              ? 'Are you sure you want to cancel this order?'
-              : resecheduleOrder
-              ? 'Our Virtual Assistant will get in touch with you shortly'
-              : 'How would you like to manage your order?'}
-          </Text>
+          {(privacyPolicy && (
+            <Text
+              style={{
+                fontFamily: 'Roboto-Regular',
+                fontSize: wp(4),
+                color: Colors.inputTextColor,
+                marginBottom: hp(2),
+              }}>
+              1. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+              diam nonumy eirmod tempor invidunt ut labore et dolore magna
+              aliquyam erat, sed diam voluptua. {'\n\n'} 2. AtLorem ipsum dolor
+              sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
+              tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
+              voluptua. 3. Lorem ipsum dolor sit amet, consetetur sadipscing
+              elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+              magna aliquyam erat, sed diam voluptua.
+            </Text>
+          )) || (
+            <Text
+              style={{
+                ...styles.manageOrderText,
+                textAlign: cancelOrder ? 'left' : 'center',
+              }}>
+              {cancelOrder
+                ? 'Are you sure you want to cancel this order?'
+                : resecheduleOrder
+                ? 'Our Virtual Assistant will get in touch with you shortly'
+                : 'How would you like to manage your order?'}
+            </Text>
+          )}
         </View>
         {(resecheduleOrder && (
           <FlatButton
@@ -537,15 +564,22 @@ const OrderTracking = (props) => {
           />
         )) || (
           <TwoButton
-            leftLabel={cancelOrder ? 'No' : 'CANCEL & REFUND'}
-            rightLabel={cancelOrder ? 'Yes' : 'RESCHEDULE'}
+            leftLabel={
+              cancelOrder ? 'No' : privacyPolicy ? 'No' : 'CANCEL & REFUND'
+            }
+            rightLabel={
+              cancelOrder ? 'Yes' : privacyPolicy ? 'Yes' : 'RESCHEDULE'
+            }
             isLoading={isLoading}
             leftOnPress={() => {
               if (cancelOrder) {
                 setCancelOrder(false);
                 setManageOrderVisible(false);
+                setManageOrderVisible(false);
+              } else if (privacyPolicy) {
+                setPrivacyPolicy(false);
               } else {
-                setCancelOrder(true);
+                setPrivacyPolicy(true);
               }
             }}
             rightOnPress={() => {
@@ -578,6 +612,10 @@ const OrderTracking = (props) => {
                     setLoading(false);
                     CustomConsole(err);
                   });
+              } else if (privacyPolicy) {
+                setLoading(false);
+                setPrivacyPolicy(false);
+                setCancelOrder(true);
               } else {
                 // Call reschedule API
                 obj.url = 'bookings/request/reschedule';

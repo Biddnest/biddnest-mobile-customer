@@ -67,19 +67,23 @@ const renderImage = (uri, size = 50) => {
 export const PAYMENT_OPTION = [
   {
     image: <CreditCard width={40} height={40} />,
-    name: 'Credit Card',
+    name: 'Cards',
+    value: 'card',
   },
   {
     image: <DebitCard width={40} height={40} />,
-    name: 'Debit Card',
+    name: 'Wallets',
+    value: 'wallet',
   },
   {
     image: <NetBanking width={40} height={40} />,
     name: 'Net Banking',
+    value: 'netbanking',
   },
   {
     image: renderImage(require('../assets/images/upipayment.png')),
     name: 'UPI Payment',
+    value: 'upi',
   },
 ];
 

@@ -25,10 +25,6 @@ import {useDispatch, useSelector} from 'react-redux';
 export function DrawerContent(props) {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.Login?.loginData?.user) || {};
-  useEffect(() => {
-    // let buildNumber = DeviceInfo.getBuildNumber(); // 1
-    let buildNumber = DeviceInfo.getReadableVersion(); // 1.0.1
-  }, []);
   const renderIcon = (item) => {
     switch (item.iconFamily) {
       case 'FontAwesome5':
@@ -62,7 +58,10 @@ export function DrawerContent(props) {
   const renderItem = ({item, index}) => {
     return (
       <Pressable
-        style={styles.menuView}
+        style={[
+          styles.menuView,
+          {borderBottomWidth: SIDE_DRAWER.length - 1 === index ? 0 : 1},
+        ]}
         key={index}
         onPress={() => {
           props.navigation.navigate(item.navigate);
@@ -110,7 +109,7 @@ export function DrawerContent(props) {
           </Pressable>
           <View style={styles.profilePhoto}>
             <Image
-              source={{uri: userData?.avatar}}
+              source={{uri: userData?.avatar + '?' + new Date()}}
               style={{height: '100%', width: '100%'}}
               resizeMode={'contain'}
             />
@@ -153,6 +152,17 @@ export function DrawerContent(props) {
           showsVerticalScrollIndicator={false}
           data={SIDE_DRAWER}
           renderItem={renderItem}
+          ListFooterComponent={() => (
+            <Text
+              style={{
+                color: Colors.inputTextColor,
+                marginLeft: wp(3),
+                fontSize: wp(3.5),
+                fontFamily: 'Roboto-Light',
+              }}>
+              V: {DeviceInfo.getReadableVersion()}
+            </Text>
+          )}
         />
       </View>
     </LinearGradient>

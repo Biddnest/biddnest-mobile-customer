@@ -22,6 +22,7 @@ import {
   CustomAlert,
   CustomConsole,
   LoadingScreen,
+  resetNavigator,
 } from '../../../constant/commonFun';
 import {STORE} from '../../../redux';
 import RazorpayCheckout from 'react-native-razorpay';
@@ -39,8 +40,8 @@ const Payment = (props) => {
   const [coupon_code, setCouponCode] = useState('');
   const [applyButton, setApplyButton] = useState(false);
   const [isLoading, setLoading] = useState(false);
-
-  console.log(orderDetails);
+  const userData = useSelector((state) => state.Login?.loginData?.user) || {};
+  const [couponApplied, setCouponApplied] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -57,6 +58,9 @@ const Payment = (props) => {
         setLoading(false);
         CustomConsole(err);
       });
+    fetchPaymentSummery();
+  }, []);
+  const fetchPaymentSummery = () => {
     let obj = {
       url: `bookings/payment/summary?public_booking_id=${orderData?.public_booking_id}`,
       method: 'get',
@@ -77,8 +81,8 @@ const Payment = (props) => {
         setLoading(false);
         CustomConsole(err);
       });
-  }, []);
-  const paymentInitiate = () => {
+  };
+  const paymentInitiate = (cardType) => {
     setLoading(true);
     let obj = {
       url: 'bookings/payment/initiate',
@@ -96,7 +100,7 @@ const Payment = (props) => {
         setLoading(false);
         if (res?.data?.status === 'success') {
           // Razor pay
-          paymentMethod(res?.payment);
+          paymentMethod(res?.payment, cardType);
         } else {
           CustomAlert(res?.data?.message);
         }
@@ -106,27 +110,58 @@ const Payment = (props) => {
         CustomConsole(err);
       });
   };
-  const paymentMethod = (payment) => {
+  const paymentMethod = (payment, cardType) => {
     setLoading(true);
     let options = {
       currency: payment?.currency || 'INR',
       key: configData?.razorpay?.rzp_id,
-      amount: paymentSummery?.grand_total,
+      amount: parseFloat(paymentSummery?.grand_total).toFixed(2) * 100,
       order_id: payment?.rzp_order_id,
-      theme: {color: Colors.darkBlue},
+      theme: {color: Colors.darkBlue, hide_topbar: true},
+      name: 'test',
+      description: 'Credits towards consultation',
+      image: 'https://i.imgur.com/3g7nmJC.png',
+      prefill: {
+        email: userData?.email,
+        contact: userData?.phone,
+        name: userData?.fname + ' ' + userData?.lname,
+        method: cardType,
+      },
     };
     RazorpayCheckout.open(options)
       .then((data) => {
-        setLoading(false);
-        props.navigation.pop(1);
-        props.navigation.replace('OrderTracking', {
-          orderData: orderDetails,
-        });
+        let obj = {
+          url: 'bookings/payment/status/complete',
+          method: 'post',
+          headers: {
+            Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+          },
+          data: {
+            public_booking_id: orderData?.public_booking_id,
+            payment_id: data?.razorpay_payment_id,
+          },
+        };
+        APICall(obj)
+          .then((res) => {
+            setLoading(false);
+            if (res?.data?.status === 'success') {
+              props.navigation.pop(1);
+              props.navigation.replace('OrderTracking', {
+                orderData: orderDetails,
+              });
+            } else {
+              CustomAlert(res?.data?.message);
+            }
+          })
+          .catch((err) => {
+            setLoading(false);
+            CustomConsole(err);
+          });
       })
       .catch((error) => {
         // handle failure
         setLoading(false);
-        CustomAlert(`Error: ${error.code} | ${error.description}`);
+        // CustomAlert(`Error: ${error.code} | ${error.description}`);
       });
   };
   return (
@@ -151,7 +186,8 @@ const Payment = (props) => {
               <View style={styles.flexBox} key={index}>
                 <Text style={styles.leftText}>{item?.replace('_', ' ')}</Text>
                 <Text style={styles.leftText}>
-                  {Object.values(paymentSummery)[index]}
+                  {item === 'discount' ? '- ' : ''}₹{' '}
+                  {parseFloat(Object.values(paymentSummery)[index]).toFixed(2)}
                 </Text>
               </View>
             );
@@ -159,7 +195,9 @@ const Payment = (props) => {
           <View style={styles.separatorView} />
           <View style={styles.flexBox}>
             <Text style={styles.totalText}>Grand Total</Text>
-            <Text style={styles.totalText}>{paymentSummery?.grand_total}</Text>
+            <Text style={styles.totalText}>
+              ₹ {parseFloat(paymentSummery?.grand_total).toFixed(2)}
+            </Text>
           </View>
           <View
             style={{
@@ -170,6 +208,8 @@ const Payment = (props) => {
             }}>
             <TextInput
               label={''}
+              disable={couponApplied}
+              autoCapitalize={true}
               value={coupon_code}
               placeHolder={'Enter Coupon Code if any'}
               onChange={(text) => setCouponCode(text)}
@@ -186,36 +226,41 @@ const Payment = (props) => {
             />
             {applyButton && (
               <Button
-                label={'Apply'}
+                label={couponApplied ? 'Remove' : 'Apply'}
                 isLoading={isLoading}
                 width={wp(25)}
                 onPress={() => {
                   // Verify coupon API
                   setLoading(true);
-                  let obj = {
-                    url: 'coupon/verify',
-                    method: 'post',
-                    headers: {
-                      Authorization:
-                        'Bearer ' + STORE.getState().Login?.loginData?.token,
-                    },
-                    data: {
-                      public_booking_id: orderData?.public_booking_id,
-                      coupon_code: coupon_code || null,
-                    },
-                  };
-                  APICall(obj)
-                    .then((res) => {
-                      setLoading(false);
-                      if (res?.data?.status === 'success') {
-                      } else {
-                        CustomAlert(res?.data?.message);
-                      }
-                    })
-                    .catch((err) => {
-                      setLoading(false);
-                      CustomConsole(err);
-                    });
+                  if (couponApplied) {
+                    setCouponApplied(false);
+                    setApplyButton(false);
+                    fetchPaymentSummery();
+                  } else {
+                    let obj = {
+                      url: 'coupon/verify',
+                      method: 'post',
+                      headers: {
+                        Authorization:
+                          'Bearer ' + STORE.getState().Login?.loginData?.token,
+                      },
+                      data: {
+                        public_booking_id: orderData?.public_booking_id,
+                        coupon_code: coupon_code || null,
+                      },
+                    };
+                    APICall(obj)
+                      .then((res) => {
+                        setLoading(false);
+                        setCouponApplied(true);
+                        setPaymentSummery(res?.data?.data?.payment_details);
+                        CustomAlert('Coupon has been applied successfully');
+                      })
+                      .catch((err) => {
+                        setLoading(false);
+                        CustomConsole(err);
+                      });
+                  }
                 }}
               />
             )}
@@ -242,7 +287,7 @@ const Payment = (props) => {
                   fontSize: wp(5.5),
                   fontFamily: 'Roboto-Bold',
                 }}>
-                RS. {paymentSummery?.grand_total}
+                ₹{paymentSummery?.grand_total}
               </Text>
             </Text>
           </LinearGradient>
@@ -251,7 +296,7 @@ const Payment = (props) => {
             showsHorizontalScrollIndicator={false}
             data={PAYMENT_OPTION}
             bounces={false}
-            style={{marginTop: hp(2)}}
+            style={{marginTop: hp(2), marginBottom: hp(4)}}
             contentContainerStyle={{justifyContent: 'space-evenly'}}
             renderItem={({item, index}) => {
               return (
@@ -261,12 +306,12 @@ const Payment = (props) => {
                       if (orderDetails?.payment?.rzp_order_id) {
                         let temp = coupon_code.length > 0 ? coupon_code : null;
                         if (temp === orderDetails?.payment?.coupon_code) {
-                          paymentMethod(orderDetails?.payment);
+                          paymentMethod(orderDetails?.payment, item.value);
                         } else {
-                          paymentInitiate();
+                          paymentInitiate(item.value);
                         }
                       } else {
-                        paymentInitiate();
+                        paymentInitiate(item.value);
                       }
                     }}
                     style={{

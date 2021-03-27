@@ -9,7 +9,7 @@ import {
   SERVICE_DATA,
   SLIDER_DATA,
 } from '../types';
-import {CustomAlert, resetNavigator} from '../../constant/commonFun';
+import {CustomAlert} from '../../constant/commonFun';
 import {STORE} from '../index';
 
 export const APICall = (obj) => {

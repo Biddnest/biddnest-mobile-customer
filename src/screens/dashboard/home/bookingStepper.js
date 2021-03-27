@@ -465,7 +465,6 @@ const BookingStepper = (props) => {
             stepCount={bookingFor === 'Myself' ? 4 : 5}
             customStyles={STYLES.stepperStyle}
             currentPosition={currentPosition}
-            onPress={(text) => onPageChange(text)}
             renderStepIndicator={renderStepIndicator}
           />
         </View>

@@ -23,6 +23,7 @@ const DropDownAndroid = (props) => {
       </Text>
       <View>
         <DropDownPicker
+          searchable={true}
           items={props.items}
           defaultValue={props.items[0]?.value}
           customArrowUp={() => (

@@ -427,15 +427,9 @@ const RequirementDetails = (props) => {
             spaceBottom={0}
             onPress={() => {
               setAddData({
-                name:
-                  defaultInventories.length > 0
-                    ? defaultInventories[0].name
-                    : '',
-                material:
-                  defaultInventories.length > 0
-                    ? JSON.parse(defaultInventories[0].material.toString())[0]
-                    : '',
-                size: 'small',
+                name: null,
+                material: null,
+                size: null,
                 quantity:
                   configData?.inventory_quantity_type.range ===
                   movementType?.inventory_quantity_type
@@ -564,7 +558,7 @@ const RequirementDetails = (props) => {
       </View>
       <CustomModalAndroid visible={confirmationModalVisible}>
         <OrderDetailModal
-            from={'RequirementDetails'}
+          from={'RequirementDetails'}
           isLoading={isLoading}
           data={data?.inventory_items}
           title={'CONFIRM ITEM LIST'}
@@ -671,11 +665,8 @@ const RequirementDetails = (props) => {
             } else {
               setAddData({
                 name: text,
-                material:
-                  defaultInventories.length > 0
-                    ? JSON.parse(defaultInventories[0].material.toString())[0]
-                    : '',
-                size: 'small',
+                material: null,
+                size: null,
                 quantity:
                   configData?.inventory_quantity_type.range ===
                   movementType?.inventory_quantity_type
@@ -852,22 +843,33 @@ const RequirementDetails = (props) => {
         <FlatButton
           onPress={() => {
             let temp = [...inventoryItems];
+            let error = [];
             if (editItem) {
               let index = temp.findIndex(
                 (ele) => ele.inventory_id === editData.inventory_id,
               );
               temp[index] = editData;
+              handleStateChange('inventory_items', temp);
+              setInventoryItems(temp);
+              setEditItem(false);
+              setEditData({});
             } else {
-              addData.inventory_id = selectedInventory.id;
-              addData.image = selectedInventory.image;
-              temp.push(addData);
+              if (
+                addData.name !== null &&
+                addData.material !== null &&
+                addData.size !== null
+              ) {
+                addData.inventory_id = selectedInventory.id;
+                addData.image = selectedInventory.image;
+                temp.push(addData);
+                handleStateChange('inventory_items', temp);
+                setInventoryItems(temp);
+                setAddData({});
+                setAddItem(false);
+              } else {
+                CustomAlert('All Fields are mendatory');
+              }
             }
-            handleStateChange('inventory_items', temp);
-            setInventoryItems(temp);
-            setAddData({});
-            setAddItem(false);
-            setEditItem(false);
-            setEditData({});
           }}
           label={editItem ? 'SAVE' : 'ADD ITEM'}
         />

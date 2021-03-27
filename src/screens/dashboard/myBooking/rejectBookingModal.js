@@ -38,6 +38,7 @@ const RejectBookingModal = (props) => {
       />
       <DropDownAndroid
         label={''}
+        value={props.value}
         width={wp(90)}
         items={props.dropDownDefault}
         onChangeItem={(text) => props.dropDownChange(text)}

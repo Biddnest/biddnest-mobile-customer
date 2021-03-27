@@ -34,7 +34,7 @@ const MyProfile = (props) => {
           resizeMode={'cover'}>
           <View style={styles.profilePhoto}>
             <Image
-              source={{uri: userData?.avatar}}
+              source={{uri: userData?.avatar + '?' + new Date()}}
               style={{height: '100%', width: '100%'}}
               resizeMode={'contain'}
             />

@@ -89,9 +89,12 @@ const OrderDetailModal = (props) => {
             </Text>
             <View style={[styles.textBox, {maxWidth: '30%'}]}>
               <Text
-                style={[styles.subText, {paddingHorizontal: 10}]}
+                style={[
+                  styles.subText,
+                  {paddingHorizontal: 10, textTransform: 'none'},
+                ]}
                 numberOfLines={1}>
-                {quantity}
+                x{quantity}
               </Text>
             </View>
           </View>
@@ -158,8 +161,9 @@ export default OrderDetailModal;
 
 const styles = StyleSheet.create({
   subText: {
-    fontFamily: 'Roboto-Light',
     fontSize: wp(3.5),
+    fontFamily: 'Roboto-Regular',
+    textTransform: 'capitalize',
   },
   textBox: {
     width: '30%',

@@ -27,6 +27,7 @@ import {
   CustomAlert,
   CustomConsole,
   getLocation,
+  LoadingScreen,
   resetNavigator,
 } from '../../../constant/commonFun';
 import {APICall, getServices, getSlider} from '../../../redux/actions/user';
@@ -105,6 +106,7 @@ const Home = (props) => {
   const [bookingSelectionVisible, setBookingSelectionVisible] = useState(false);
   const [movementType, setMovementType] = useState();
   const [bookingFor, setBookingFor] = useState('Myself');
+  const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     if (isFocused && userData?.fname) {
       AsyncStorage.getItem('oneSignalData').then((signalData) => {
@@ -126,6 +128,7 @@ const Home = (props) => {
       });
       getLocation()
         .then((locationData) => {
+          setLoading(false);
           dispatch(getSlider(locationData))
             .then((res) => {
               if (res.status === 'success' && res?.data) {
@@ -135,10 +138,12 @@ const Home = (props) => {
               }
             })
             .catch((err) => {
+              setLoading(false);
               CustomAlert(err?.data?.message);
             });
           dispatch(getServices(locationData))
             .then((res) => {
+              setLoading(false);
               if (res.status === 'success' && res?.data?.services) {
                 setServiceData(res?.data?.services);
               } else {
@@ -146,6 +151,7 @@ const Home = (props) => {
               }
             })
             .catch((err) => {
+              setLoading(false);
               CustomAlert(err?.data?.message);
             });
         })
@@ -188,6 +194,7 @@ const Home = (props) => {
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <HomeHeader navigation={props.navigation} />
+      {isLoading && <LoadingScreen />}
       <ScrollView
         style={{flex: 1}}
         showsVerticalScrollIndicator={false}
