@@ -21,11 +21,11 @@ const VerticalStepper = (props) => {
           ...styles.stepBodyView,
         }}>
         <Text style={styles.subHeaderText}>
-          {orderDetails?.status <= 7
+          {orderDetails?.status <= 5
             ? 'Pending'
             : 'Completed at ' +
               moment(
-                orderDetails?.status_history?.find((item) => item.status == 6)
+                orderDetails?.status_history?.find((item) => item.status == 5)
                   ?.created_at,
               ).format('MMMM Do YYYY, h:mm A')}
         </Text>
@@ -36,11 +36,11 @@ const VerticalStepper = (props) => {
           ...styles.stepBodyView,
         }}>
         <Text style={styles.subHeaderText}>
-          {orderDetails?.status <= 5
+          {orderDetails?.status <= 6
             ? 'Pending'
             : 'Completed at ' +
               moment(
-                orderDetails?.status_history?.find((item) => item.status == 7)
+                orderDetails?.status_history?.find((item) => item.status == 6)
                   ?.created_at,
               ).format('MMMM Do YYYY, h:mm A')}
         </Text>
@@ -53,7 +53,9 @@ const VerticalStepper = (props) => {
           paddingBottom: 0,
         }}>
         <Text style={styles.subHeaderText}>
-          {orderDetails?.status < 8
+          {orderDetails?.status < 7
+            ? 'Pending'
+            : orderDetails?.status === 7
             ? 'On Going'
             : 'Completed at ' +
               moment(

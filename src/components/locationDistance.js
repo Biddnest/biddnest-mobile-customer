@@ -28,10 +28,10 @@ const LocationDistance = (props) => {
         }}>
         <View>
           <Text style={[styles.locationText, {marginTop: 0}]}>
-            {props.from ? props.from : 'CHENNAI'}
+            {props.from ? props.from : ''}
           </Text>
           <Text style={styles.locationText}>
-            {props.to ? props.to : 'BENGALURU'}
+            {props.to ? props.to : ''}
           </Text>
         </View>
         {(props.inTransit && (

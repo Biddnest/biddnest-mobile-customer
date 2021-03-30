@@ -613,13 +613,17 @@ const OrderTracking = (props) => {
           />
         )}
       </CustomModalAndroid>
-      <CustomModalAndroid visible={showPin} onPress={() => setShowPin(false)}>
+      <CustomModalAndroid
+        visible={showPin}
+        paddingTop={hp(0.1)}
+        onPress={() => setShowPin(false)}>
         <CloseIcon
           onPress={() => setShowPin(false)}
-          style={{position: 'absolute', right: 15}}
+          style={{position: 'absolute', right: 15, top: 15}}
         />
         <Text
           style={{
+            marginTop: 35,
             fontSize: wp(4.5),
             fontFamily: 'Roboto-Regular',
             color: Colors.inputTextColor,

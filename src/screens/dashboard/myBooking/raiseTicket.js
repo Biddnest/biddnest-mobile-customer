@@ -79,6 +79,7 @@ const RaiseTicket = (props) => {
               APICall(obj)
                 .then((res) => {
                   if (res?.data?.status === 'success') {
+                    CustomAlert('Ticket Raised Successfully');
                     props.navigation.goBack();
                   } else {
                     CustomAlert(res?.data?.message);

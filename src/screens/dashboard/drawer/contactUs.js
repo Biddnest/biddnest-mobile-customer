@@ -200,27 +200,11 @@ const ContactUs = (props) => {
                       }}>
                       {source_meta?.city}
                     </Text>
-                    {/*<Text*/}
-                    {/*  style={{*/}
-                    {/*    ...styles.locationText,*/}
-                    {/*    marginTop: 0,*/}
-                    {/*    textAlign: 'right',*/}
-                    {/*    maxWidth: '70%',*/}
-                    {/*  }}*/}
-                    {/*  numberOfLines={1}>*/}
-                    {/*  ID:{' '}*/}
-                    {/*  <Text*/}
-                    {/*    style={{*/}
-                    {/*      fontFamily: 'Gilroy-Extrabold',*/}
-                    {/*    }}>*/}
-                    {/*    #{recentOrder?.public_booking_id}*/}
-                    {/*  </Text>*/}
-                    {/*</Text>*/}
                   </View>
                   <View
                     style={{
                       ...styles.flexBox,
-                      marginTop: hp(1),
+                      marginTop: hp(1.5),
                     }}>
                     <Text
                       style={[
@@ -287,9 +271,14 @@ const ContactUs = (props) => {
                 },
               ]}>
               Call us at{' '}
-              {contactUs?.contact_no?.length > 0 && contactUs.contact_no[0]}{' '}
-              {contactUs?.contact_no?.length > 1 &&
-                'Or \n' + contactUs.contact_no[1]}
+              <Text
+                style={{
+                  fontFamily: 'Gilroy-Bold',
+                }}>
+                {contactUs?.contact_no?.length > 0 && contactUs.contact_no[0]}{' '}
+                {contactUs?.contact_no?.length > 1 &&
+                  'Or \n' + contactUs.contact_no[1]}
+              </Text>
             </Text>
             <Text
               style={[
@@ -300,9 +289,14 @@ const ContactUs = (props) => {
                 },
               ]}>
               Email us at{' '}
-              {contactUs?.email_id?.length > 0 && contactUs.email_id[0]}{' '}
-              {contactUs?.email_id?.length > 1 &&
-                'Or \n' + contactUs.email_id[1]}
+              <Text
+                style={{
+                  fontFamily: 'Gilroy-Bold',
+                }}>
+                {contactUs?.email_id?.length > 0 && contactUs.email_id[0]}{' '}
+                {contactUs?.email_id?.length > 1 &&
+                  'Or \n' + contactUs.email_id[1]}{' '}
+              </Text>
             </Text>
           </View>
           <Pressable

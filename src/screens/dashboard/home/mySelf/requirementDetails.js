@@ -41,6 +41,7 @@ const RequirementDetails = (props) => {
     useSelector((state) => state.Login?.inventoriesData?.inventories) || [],
   );
   const [isLoading, setLoading] = useState(false);
+  const [isWait, setWait] = useState(false);
   const [selectedInventory, setSelectedInventory] = useState({});
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [addItem, setAddItem] = useState(false);
@@ -109,6 +110,7 @@ const RequirementDetails = (props) => {
     }
   }, [defaultInventories]);
   const getInventories = (id) => {
+    setWait(true);
     let obj = {
       url: `inventories?subservice_id=${id}`,
       method: 'get',
@@ -140,12 +142,17 @@ const RequirementDetails = (props) => {
             });
             setInventoryItems(temp);
             handleStateChange('inventory_items', temp);
+          } else {
+            setInventoryItems([]);
+            handleStateChange('inventory_items', []);
           }
         } else {
           CustomAlert(res?.data?.message);
         }
+        setWait(false);
       })
       .catch((err) => {
+        setWait(false);
         CustomConsole(err);
       });
   };
@@ -389,7 +396,7 @@ const RequirementDetails = (props) => {
         ]}>
         <Text style={[STYLES.textHeader, {textTransform: 'uppercase'}]}>
           {movementType?.id === 1
-            ? `${selectedSubCategory?.id} BHK ITEM LIST`
+            ? `${selectedSubCategory?.name} ITEM LIST`
             : `${movementType?.name} ITEM LIST`}
         </Text>
         <View style={{marginTop: hp(3)}}>
@@ -407,6 +414,8 @@ const RequirementDetails = (props) => {
                 }}
               />
             )}
+            onRefresh={() => {}}
+            refreshing={isWait}
             ListEmptyComponent={() => (
               <Text
                 style={{

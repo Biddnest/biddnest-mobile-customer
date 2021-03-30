@@ -80,40 +80,37 @@ const RejectBookingModal = (props) => {
             props.setLoading(false);
           } else {
             setError(true);
-            if (props.setApiResponse) {
-              // From Requirement Details screen
-              let obj = {
-                url: 'bookings/cancel',
-                method: 'delete',
-                headers: {
-                  Authorization:
-                    'Bearer ' + STORE.getState().Login?.loginData?.token,
-                },
-                data: {
-                  ...props.rejectData,
-                  public_booking_id: props?.public_booking_id,
-                },
-              };
-              APICall(obj)
-                .then((res) => {
-                  props.setLoading(false);
-                  if (res?.data?.status === 'success') {
-                    props.setApiResponse &&
-                      props.setApiResponse(res?.data?.booking);
-                    props.closeModal();
-                    resetNavigator(props.navigation, 'Dashboard');
-                  } else {
-                    CustomAlert(res?.data?.message);
-                  }
-                })
-                .catch((err) => {
-                  props.setLoading(false);
-                  CustomConsole(err);
-                });
-            } else {
-              // From Final Quote screen
-              props.setLoading(false);
-            }
+            // From Requirement Details screen
+            let obj = {
+              url: props.setApiResponse
+                ? 'bookings/cancel'
+                : 'bookings/request/canceled',
+              method: props.setApiResponse ? 'delete' : 'post',
+              headers: {
+                Authorization:
+                  'Bearer ' + STORE.getState().Login?.loginData?.token,
+              },
+              data: {
+                ...props.rejectData,
+                public_booking_id: props?.public_booking_id,
+              },
+            };
+            APICall(obj)
+              .then((res) => {
+                props.setLoading(false);
+                if (res?.data?.status === 'success') {
+                  props.setApiResponse &&
+                    props.setApiResponse(res?.data?.booking);
+                  props.closeModal();
+                  resetNavigator(props.navigation, 'Dashboard');
+                } else {
+                  CustomAlert(res?.data?.message);
+                }
+              })
+              .catch((err) => {
+                props.setLoading(false);
+                CustomConsole(err);
+              });
           }
         }}
       />

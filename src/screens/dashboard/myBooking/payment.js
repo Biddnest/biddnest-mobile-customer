@@ -302,18 +302,7 @@ const Payment = (props) => {
               return (
                 <View style={styles.movementLinear} key={index}>
                   <Pressable
-                    onPress={() => {
-                      if (orderDetails?.payment?.rzp_order_id) {
-                        let temp = coupon_code.length > 0 ? coupon_code : null;
-                        if (temp === orderDetails?.payment?.coupon_code) {
-                          paymentMethod(orderDetails?.payment, item.value);
-                        } else {
-                          paymentInitiate(item.value);
-                        }
-                      } else {
-                        paymentInitiate(item.value);
-                      }
-                    }}
+                    onPress={() => paymentInitiate(item.value)}
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',

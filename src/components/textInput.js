@@ -87,6 +87,7 @@ const TextInput = (props) => {
         backgroundColor: Colors.textBG,
         color: Colors.inputTextColor,
         height: '99%',
+        textAlignVertical: 'top',
       }}
     />
   );

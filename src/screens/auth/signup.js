@@ -156,9 +156,9 @@ const Signup = (props) => {
                     data.email,
                   )
                 );
-                tempError.referral_code = !(
-                  !data.referral_code || data.referral_code.length === 0
-                );
+                // tempError.referral_code = !(
+                //   !data.referral_code || data.referral_code.length === 0
+                // );
                 if (!isAgree) {
                   CustomAlert('Agree to the Terms & Conditions');
                   tempError.isAgree = false;
