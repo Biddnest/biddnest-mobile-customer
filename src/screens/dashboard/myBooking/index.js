@@ -80,7 +80,7 @@ const MyBooking = (props) => {
     let ind = Object.values(configData?.status).findIndex(
       (ele) => ele === item?.status,
     );
-    let status = Object.keys(configData?.status)[ind].replace('_', ' ');
+    let status = Object.keys(configData?.status)[ind]?.replace('_', ' ');
     let source_meta =
       (item?.source_meta && JSON.parse(item?.source_meta?.toString())) || {};
     let destination_meta =
@@ -89,7 +89,7 @@ const MyBooking = (props) => {
       {};
     let meta = (item?.meta && JSON.parse(item?.meta?.toString())) || {};
     let dateArray = [];
-    item?.movement_dates.forEach((i) => {
+    item?.movement_dates?.forEach((i) => {
       dateArray.push(moment(i.date).format('D MMM yyyy'));
     });
     return (

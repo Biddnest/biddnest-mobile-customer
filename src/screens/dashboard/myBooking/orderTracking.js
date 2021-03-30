@@ -29,12 +29,11 @@ import {APICall, getOrderDetails} from '../../../redux/actions/user';
 import {
   CustomAlert,
   CustomConsole,
-  DiffMin,
   LoadingScreen,
-  resetNavigator,
 } from '../../../constant/commonFun';
 import Button from '../../../components/button';
 import RateUs from '../drawer/rateUs';
+import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 const OrderTracking = (props) => {
   const orderData = props?.route?.params?.orderData || {};
@@ -66,7 +65,7 @@ const OrderTracking = (props) => {
         break;
     }
   };
-  orderData?.movement_dates.forEach((item) => {
+  orderData?.movement_dates?.forEach((item) => {
     dateArray.push(moment(item.date).format('D MMM yyyy'));
   });
   useEffect(() => {
@@ -329,30 +328,6 @@ const OrderTracking = (props) => {
                   }}>
                   DRIVER
                 </Text>
-                {showPin && (
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      width: wp(83),
-                      marginTop: 10,
-                    }}>
-                    <Text style={{...styles.driverContact}}>
-                      {orderDetails?.status === 6 ? 'Start' : 'End'} Trip Pin{' '}
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: 'Roboto-Bold',
-                        fontSize: wp(4),
-                        color: Colors.inputTextColor,
-                      }}>
-                      {orderDetails?.status === 6
-                        ? meta?.start_pin
-                        : meta?.end_pin}
-                    </Text>
-                  </View>
-                )}
                 {(orderDetails?.driver && (
                   <View
                     style={{
@@ -638,6 +613,39 @@ const OrderTracking = (props) => {
           />
         )}
       </CustomModalAndroid>
+      <CustomModalAndroid visible={showPin} onPress={() => setShowPin(false)}>
+        <CloseIcon
+          onPress={() => setShowPin(false)}
+          style={{position: 'absolute', right: 15}}
+        />
+        <Text
+          style={{
+            fontSize: wp(4.5),
+            fontFamily: 'Roboto-Regular',
+            color: Colors.inputTextColor,
+            textTransform: 'uppercase',
+          }}>
+          {orderDetails?.status === 6 ? 'Start' : 'End'} trip pin
+        </Text>
+        <View
+          style={{
+            height: hp(7),
+            marginTop: hp(2),
+            marginBottom: hp(5),
+            width: '60%',
+          }}>
+          <OTPInputView
+            pinCount={4}
+            editable={false}
+            code={
+              orderDetails?.status === 6
+                ? meta?.start_pin?.toString()
+                : meta?.end_pin?.toString()
+            }
+            codeInputFieldStyle={styles.textInput}
+          />
+        </View>
+      </CustomModalAndroid>
       <RateUs
         visible={rateUsVisible}
         onCloseIcon={() => {
@@ -724,5 +732,14 @@ const styles = StyleSheet.create({
     color: Colors.inputTextColor,
     fontSize: wp(4),
     textAlign: 'center',
+  },
+  textInput: {
+    borderWidth: 2,
+    borderRadius: 10,
+    height: '99%',
+    marginTop: hp(1),
+    borderColor: Colors.silver,
+    color: Colors.textLabelColor,
+    fontSize: hp(3),
   },
 });

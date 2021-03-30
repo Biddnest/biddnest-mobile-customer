@@ -170,80 +170,86 @@ const ContactUs = (props) => {
         style={{flex: 1}}
         showsVerticalScrollIndicator={false}
         bounces={false}>
-        <View style={styles.inputForm}>
-          <Text style={styles.headerText}>recent order</Text>
-          <View style={styles.separatorView} />
-          <View
-            style={{
-              backgroundColor: Colors.white,
-              flexDirection: 'row',
-            }}>
-            <Image
-              source={require('../../../assets/images/pin_distance.png')}
-              style={{height: wp(15), width: wp(10)}}
-              resizeMode={'contain'}
-            />
+        {destination_meta?.city && (
+          <View style={styles.inputForm}>
+            <Text style={styles.headerText}>recent order</Text>
+            <View style={styles.separatorView} />
             <View
               style={{
-                width: '87%',
+                backgroundColor: Colors.white,
                 flexDirection: 'row',
               }}>
-              <View style={{width: '85%'}}>
-                <View style={[styles.flexBox, {width: wp(70)}]}>
-                  <Text
+              <Image
+                source={require('../../../assets/images/pin_distance.png')}
+                style={{height: wp(15), width: wp(10)}}
+                resizeMode={'contain'}
+              />
+              <View
+                style={{
+                  width: '87%',
+                  flexDirection: 'row',
+                }}>
+                <View style={{width: '85%'}}>
+                  <View style={[styles.flexBox, {width: wp(70)}]}>
+                    <Text
+                      style={{
+                        ...styles.locationText,
+                        marginTop: 0,
+                        textTransform: 'uppercase',
+                        maxWidth: '30%',
+                      }}>
+                      {source_meta?.city}
+                    </Text>
+                    {/*<Text*/}
+                    {/*  style={{*/}
+                    {/*    ...styles.locationText,*/}
+                    {/*    marginTop: 0,*/}
+                    {/*    textAlign: 'right',*/}
+                    {/*    maxWidth: '70%',*/}
+                    {/*  }}*/}
+                    {/*  numberOfLines={1}>*/}
+                    {/*  ID:{' '}*/}
+                    {/*  <Text*/}
+                    {/*    style={{*/}
+                    {/*      fontFamily: 'Gilroy-Extrabold',*/}
+                    {/*    }}>*/}
+                    {/*    #{recentOrder?.public_booking_id}*/}
+                    {/*  </Text>*/}
+                    {/*</Text>*/}
+                  </View>
+                  <View
                     style={{
-                      ...styles.locationText,
-                      marginTop: 0,
-                      textTransform: 'uppercase',
-                      maxWidth: '30%',
+                      ...styles.flexBox,
+                      marginTop: hp(1),
                     }}>
-                    {source_meta?.city}
-                  </Text>
-                  {/*<Text*/}
-                  {/*  style={{*/}
-                  {/*    ...styles.locationText,*/}
-                  {/*    marginTop: 0,*/}
-                  {/*    textAlign: 'right',*/}
-                  {/*    maxWidth: '70%',*/}
-                  {/*  }}*/}
-                  {/*  numberOfLines={1}>*/}
-                  {/*  ID:{' '}*/}
-                  {/*  <Text*/}
-                  {/*    style={{*/}
-                  {/*      fontFamily: 'Gilroy-Extrabold',*/}
-                  {/*    }}>*/}
-                  {/*    #{recentOrder?.public_booking_id}*/}
-                  {/*  </Text>*/}
-                  {/*</Text>*/}
+                    <Text
+                      style={[
+                        styles.locationText,
+                        {textTransform: 'uppercase', maxWidth: '80%'},
+                      ]}>
+                      {destination_meta?.city}
+                    </Text>
+                  </View>
                 </View>
                 <View
                   style={{
-                    ...styles.flexBox,
-                    marginTop: hp(1),
+                    height: wp(10),
+                    width: wp(10),
+                    borderRadius: wp(5),
+                    backgroundColor: '#F2E6FF',
+                    alignSelf: 'center',
+                    ...STYLES.common,
                   }}>
-                  <Text
-                    style={[
-                      styles.locationText,
-                      {textTransform: 'uppercase', maxWidth: '80%'},
-                    ]}>
-                    {destination_meta?.city}
-                  </Text>
+                  <Ionicons
+                    name={'call'}
+                    color={Colors.darkBlue}
+                    size={wp(5)}
+                  />
                 </View>
-              </View>
-              <View
-                style={{
-                  height: wp(10),
-                  width: wp(10),
-                  borderRadius: wp(5),
-                  backgroundColor: '#F2E6FF',
-                  alignSelf: 'center',
-                  ...STYLES.common,
-                }}>
-                <Ionicons name={'call'} color={Colors.darkBlue} size={wp(5)} />
               </View>
             </View>
           </View>
-        </View>
+        )}
         {recentTicket.length > 0 && (
           <View style={styles.inputForm}>
             <Text style={styles.headerText}>RECENT TICKETS</Text>
