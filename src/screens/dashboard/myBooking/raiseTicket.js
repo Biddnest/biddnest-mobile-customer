@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import SimpleHeader from '../../../components/simpleHeader';
 import {
   CustomAlert,
@@ -41,6 +41,10 @@ const RaiseTicket = (props) => {
           placeholderStyle={{color: 'red'}}
           onChange={(text) => setHeading(text)}
         />
+        {(error?.heading === false && (
+          <Text style={styles.errorText}>Minimun 15 character required</Text>
+        )) ||
+          null}
         <TextInput
           isRight={error?.desc}
           label={'Description'}
@@ -50,6 +54,9 @@ const RaiseTicket = (props) => {
           value={desc}
           onChange={(text) => setDesc(text)}
         />
+        {error?.desc === false && (
+          <Text style={styles.errorText}>Minimun 50 character required</Text>
+        )}
         <Button
           label={'SUBMIT'}
           isLoading={isLoading}
@@ -104,5 +111,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.pageBG,
+  },
+  errorText: {
+    position: 'relative',
+    top: -hp(3),
+    alignSelf: 'flex-end',
+    right: wp(5),
+    color: Colors.red,
+    fontSize: wp(3.5),
+    fontFamily: 'Roboto-Regular',
   },
 });

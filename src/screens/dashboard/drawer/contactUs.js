@@ -339,7 +339,7 @@ const ContactUs = (props) => {
               APICall(obj)
                 .then((res) => {
                   setRequestCallBackLoading(false);
-                  CustomAlert(res?.data?.message);
+                  CustomAlert('Request a Call Back Successfully');
                 })
                 .catch((err) => {
                   setRequestCallBackLoading(false);
