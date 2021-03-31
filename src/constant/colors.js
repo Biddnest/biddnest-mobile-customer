@@ -14,6 +14,8 @@ import CreditCard from '../assets/svg/credit_card.svg';
 import DebitCard from '../assets/svg/debit_card.svg';
 import NetBanking from '../assets/svg/netbanking.svg';
 
+export const MapConstantDelta = 0.01;
+
 export const Colors = {
   white: '#FFFFFF',
   black: '#000000',

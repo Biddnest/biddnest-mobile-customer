@@ -1,14 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {View, StyleSheet, Text, Pressable, Platform} from 'react-native';
 import {
-  View,
-  StyleSheet,
-  Text,
-  Pressable,
-  Platform,
-  Image,
-  Keyboard,
-} from 'react-native';
-import {Colors, hp, wp, boxShadow} from '../../../../constant/colors';
+  Colors,
+  hp,
+  wp,
+  boxShadow,
+  MapConstantDelta,
+} from '../../../../constant/colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import TextInput from '../../../../components/textInput';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -29,6 +27,7 @@ import {
   pad_with_zeroes,
 } from '../../../../constant/commonFun';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+navigator.geolocation = require('@react-native-community/geolocation');
 
 const MovingForm = (props) => {
   const mapRef = useRef(null);
@@ -56,8 +55,8 @@ const MovingForm = (props) => {
   const [region, setRegion] = useState({
     latitude: 10.780889,
     longitude: 106.629271,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
+    latitudeDelta: MapConstantDelta,
+    longitudeDelta: MapConstantDelta,
   });
   const [address, setAddress] = useState('');
   let source = data?.source || {};
@@ -78,14 +77,14 @@ const MovingForm = (props) => {
     mapRef?.current?.animateToRegion({
       latitude: regionData?.latitude,
       longitude: regionData?.longitude,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
+      latitudeDelta: MapConstantDelta,
+      longitudeDelta: MapConstantDelta,
     });
     setRegion({
       latitude: regionData?.latitude,
       longitude: regionData?.longitude,
-      latitudeDelta: regionData?.latitudeDelta || 0.0922,
-      longitudeDelta: regionData?.longitudeDelta || 0.0421,
+      latitudeDelta: MapConstantDelta,
+      longitudeDelta: MapConstantDelta,
     });
     setPanding(false);
     fetch(
@@ -95,11 +94,9 @@ const MovingForm = (props) => {
       .then((responseJson) => {
         let temp = JSON.parse(JSON.stringify(responseJson));
         if (temp?.results && temp?.results?.length > 0) {
-          if (temp?.results[0]?.formatted_address !== address) {
-            googlePlaceRef?.current?.setAddressText(
-              temp?.results[0]?.formatted_address,
-            );
-          }
+          googlePlaceRef?.current?.setAddressText(
+            temp?.results[0]?.formatted_address,
+          );
           setAddress(temp?.results[0]?.formatted_address);
           temp?.results[0].address_components.forEach((item, index) => {
             if (
@@ -418,8 +415,8 @@ const MovingForm = (props) => {
               initialRegion={{
                 latitude: region.latitude,
                 longitude: region.longitude,
-                latitudeDelta: region.latitudeDelta,
-                longitudeDelta: region.longitudeDelta,
+                latitudeDelta: MapConstantDelta,
+                longitudeDelta: MapConstantDelta,
               }}>
               <Marker
                 ref={markerRef}
@@ -485,8 +482,8 @@ const MovingForm = (props) => {
               }}
               keyboardShouldPersistTaps={'handled'}
               fetchDetails={true}
-              // currentLocation={true}
-              // currentLocationLabel={'Current location'}
+              currentLocation={true}
+              currentLocationLabel={'Current location'}
               query={{
                 key: 'AIzaSyCvVaeoUidYMQ8cdIJ_cEvrZNJeBeMpC-4',
                 language: 'en',
