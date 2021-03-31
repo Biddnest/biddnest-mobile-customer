@@ -4,6 +4,7 @@ import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {STYLES} from '../constant/commonStyle';
 import EditPen from '../assets/svg/edit_pen.svg';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 const LocationDistance = (props) => {
   return (
@@ -27,10 +28,22 @@ const LocationDistance = (props) => {
           alignItems: 'center',
         }}>
         <View>
-          <Text style={[styles.locationText, {marginTop: 0}]}>
+          <Text
+            style={[
+              styles.locationText,
+              {
+                marginTop: 0,
+                fontFamily: 'Gilroy-SemiBold',
+                textTransform: 'capitalize',
+              },
+            ]}>
             {props.from ? props.from : ''}
           </Text>
-          <Text style={styles.locationText}>
+          <Text
+            style={[
+              styles.locationText,
+              {fontFamily: 'Gilroy-SemiBold', textTransform: 'capitalize'},
+            ]}>
             {props.to ? props.to : ''}
           </Text>
         </View>
@@ -73,7 +86,11 @@ const LocationDistance = (props) => {
               </Text>
               {props.onEditClick && (
                 <Pressable style={{marginLeft: 10}} onPress={props.onEditClick}>
-                  <EditPen width={30} height={30} />
+                  <SimpleLineIcons
+                    name={'pencil'}
+                    size={16}
+                    color={Colors.darkBlue}
+                  />
                 </Pressable>
               )}
             </View>

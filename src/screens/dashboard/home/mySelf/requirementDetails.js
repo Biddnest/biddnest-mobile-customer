@@ -132,10 +132,10 @@ const RequirementDetails = (props) => {
                   configData?.inventory_quantity_type.range ===
                   movementType?.inventory_quantity_type
                     ? {
-                        min: item?.quantity?.min,
-                        max: item?.quantity?.max,
+                        min: parseInt(item?.quantity?.min),
+                        max: parseInt(item?.quantity?.max),
                       }
-                    : item?.quantity,
+                    : parseInt(item?.quantity),
                 name: item?.meta?.name,
                 image: item?.meta?.image,
               });
@@ -215,9 +215,9 @@ const RequirementDetails = (props) => {
         }}>
         <Text
           style={{
-            fontFamily: 'Roboto-Bold',
+            fontFamily: 'Gilroy-Bold',
             color: Colors.inputTextColor,
-            fontSize: wp(4),
+            fontSize: wp(4.5),
           }}>
           {item.name}
         </Text>
@@ -335,7 +335,11 @@ const RequirementDetails = (props) => {
                 ...styles.backgroundCircle,
                 ...STYLES.common,
               }}>
-              <Ionicons name={'trash'} size={20} color={Colors.darkBlue} />
+              <Ionicons
+                name={'trash-outline'}
+                size={20}
+                color={Colors.darkBlue}
+              />
             </Pressable>
           </View>
         </View>
@@ -376,9 +380,12 @@ const RequirementDetails = (props) => {
               <Text
                 numberOfLines={1}
                 style={{
-                  fontFamily: 'Gilroy-Light',
-                  color: Colors.inputTextColor,
-                  fontSize: wp(4),
+                  fontFamily: 'Gilroy-Bold',
+                  color:
+                    selectedSubCategory.id === item.id
+                      ? Colors.darkBlue
+                      : Colors.inputTextColor,
+                  fontSize: wp(3.5),
                 }}>
                 {item?.name}
               </Text>
@@ -394,7 +401,7 @@ const RequirementDetails = (props) => {
             borderWidth: error.inventory === false ? 2 : 1,
           },
         ]}>
-        <Text style={[STYLES.textHeader, {textTransform: 'uppercase'}]}>
+        <Text style={STYLES.textHeader}>
           {movementType?.id === 1
             ? `${selectedSubCategory?.name} ITEM LIST`
             : `${movementType?.name} ITEM LIST`}
@@ -529,15 +536,17 @@ const RequirementDetails = (props) => {
           </ScrollView>
         </View>
       </View>
-      <View style={styles.inputForm}>
+      <View style={[styles.inputForm, {paddingTop: hp(2), paddingBottom: 0}]}>
         <Text style={STYLES.textHeader}>COMMENTS IF ANY</Text>
-        <TextInput
-          label={''}
-          placeHolder={'Comments if any'}
-          numberOfLines={4}
-          value={data?.meta?.customer?.remarks}
-          onChange={(text) => handleState('remarks', text)}
-        />
+        <View style={{marginTop: hp(2), marginBottom: 0}}>
+          <TextInput
+            label={''}
+            placeHolder={'Comments if any'}
+            numberOfLines={4}
+            value={data?.meta?.customer?.remarks}
+            onChange={(text) => handleState('remarks', text)}
+          />
+        </View>
       </View>
       <View style={{alignSelf: 'center'}}>
         <Button
@@ -614,29 +623,15 @@ const RequirementDetails = (props) => {
           setEditItem(false);
           setEditData({});
         }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            width: '85%',
-          }}>
-          <Text>{editItem ? 'EDIT ITEM' : 'ADD ITEM'}</Text>
-          <CloseIcon
-            onPress={() => {
-              setAddItem(false);
-              setAddData({});
-              setEditItem(false);
-              setEditData({});
-            }}
-          />
-        </View>
-        <View
-          style={{
-            borderWidth: 0.8,
-            borderColor: Colors.silver,
-            width: '85%',
-            marginVertical: hp(2),
+        <Text style={STYLES.modalHeader}>
+          {editItem ? 'EDIT ITEM' : 'ADD ITEM'}
+        </Text>
+        <CloseIcon
+          onPress={() => {
+            setAddItem(false);
+            setAddData({});
+            setEditItem(false);
+            setEditData({});
           }}
         />
         <DropDownAndroid

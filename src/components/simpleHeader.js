@@ -28,11 +28,11 @@ const SimpleHeader = (props) => {
       <View style={{width: wp(87), height: '100%', ...styles.common}}>
         <Text
           style={{
-            fontFamily: 'Gilroy-Medium',
+            fontFamily: 'Gilroy-Bold',
             fontSize: wp(5),
             color: Colors.inputTextColor,
             marginRight: wp(13),
-            textTransform: 'uppercase',
+            textTransform: 'capitalize',
           }}>
           {props.headerText}
         </Text>

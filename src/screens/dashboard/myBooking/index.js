@@ -119,11 +119,16 @@ const MyBooking = (props) => {
                 style={{
                   ...styles.locationText,
                   marginTop: 0,
-                  textTransform: 'uppercase',
+                  textTransform: 'capitalize',
+                  fontFamily: 'Gilroy-SemiBold',
                 }}>
                 {source_meta?.city}
               </Text>
-              <Text style={[styles.locationText, {textTransform: 'uppercase'}]}>
+              <Text
+                style={[
+                  styles.locationText,
+                  {textTransform: 'capitalize', fontFamily: 'Gilroy-SemiBold'},
+                ]}>
                 {destination_meta?.city}
               </Text>
             </View>
@@ -139,7 +144,7 @@ const MyBooking = (props) => {
                 }}>
                 <Text
                   style={{
-                    fontFamily: 'Roboto-Bold',
+                    fontFamily: 'Gilroy-Bold',
                     fontSize: wp(4.5),
                     color: Colors.inputTextColor,
                   }}>
@@ -285,10 +290,10 @@ const styles = StyleSheet.create({
     marginTop: hp(2),
   },
   leftText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Gilroy-Bold',
     fontSize: wp(4.5),
     color: Colors.inputTextColor,
-    textTransform: 'uppercase',
+    textTransform: 'capitalize',
   },
   rightText: {
     fontFamily: 'Roboto-Bold',

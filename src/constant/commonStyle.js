@@ -2,10 +2,11 @@ import {Colors, wp} from './colors';
 
 export const STYLES = {
   textHeader: {
-    fontFamily: 'Gilroy-Light',
     fontSize: wp(3.5),
     color: Colors.inputTextColor,
     textAlign: 'center',
+    textTransform: 'uppercase',
+    fontFamily: 'Gilroy-Bold',
   },
   common: {
     alignItems: 'center',
@@ -25,5 +26,13 @@ export const STYLES = {
     stepIndicatorFinishedColor: Colors.white,
     stepIndicatorUnFinishedColor: '#DEDEDE',
     stepIndicatorCurrentColor: Colors.darkBlue,
+  },
+  modalHeader: {
+    fontFamily: 'Gilroy-Bold',
+    color: Colors.inputTextColor,
+    fontSize: wp(4),
+    marginTop: 25,
+    marginBottom: 10,
+    textTransform: 'uppercase',
   },
 };

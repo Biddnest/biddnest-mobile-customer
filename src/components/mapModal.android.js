@@ -5,7 +5,7 @@ import {wp, hp, Colors} from '../constant/colors';
 const MapModalAndroid = (props) => {
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={props.visible}
       onRequestClose={() => {
@@ -16,6 +16,7 @@ const MapModalAndroid = (props) => {
       <SafeAreaView style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.5)'}}>
         <View style={styles.centeredView}>
           <ScrollView
+            keyboardShouldPersistTaps={'handled'}
             bounces={false}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{alignItems: 'center'}}

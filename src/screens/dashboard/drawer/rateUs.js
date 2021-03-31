@@ -11,6 +11,7 @@ import {useSelector} from 'react-redux';
 import FlatButton from '../../../components/flatButton';
 import {STORE} from '../../../redux';
 import {APICall} from '../../../redux/actions/user';
+import {STYLES} from '../../../constant/commonStyle';
 
 const RateUs = (props) => {
   const configData =
@@ -40,28 +41,13 @@ const RateUs = (props) => {
         setCurrentStep(0);
         props.onCloseIcon();
       }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          width: '85%',
-          justifyContent: 'space-between',
-        }}>
-        <Text
-          style={{
-            textAlign: 'center',
-            fontFamily: 'Roboto-Regular',
-            color: Colors.inputTextColor,
-          }}>
-          RATE US
-        </Text>
-        <CloseIcon
-          onPress={() => {
-            setCurrentStep(0);
-            props.onCloseIcon();
-          }}
-        />
-      </View>
-      <View style={{...styles.separatorView, width: '85%'}} />
+      <Text style={STYLES.modalHeader}>RATE US</Text>
+      <CloseIcon
+        onPress={() => {
+          setCurrentStep(0);
+          props.onCloseIcon();
+        }}
+      />
       {/*{currentStep === 4 && (*/}
       {/*  <View*/}
       {/*    style={{*/}

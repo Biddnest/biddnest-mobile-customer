@@ -54,7 +54,7 @@ const Timer = (props) => {
         style={{
           color: Colors.darkBlue,
           fontSize: wp(5),
-          fontFamily: 'Roboto-Bold',
+          fontFamily: 'Gilroy-Bold',
         }}>
         {new Date(remainingTime * 1000).toISOString().substr(11, 8)}
       </Text>
@@ -79,16 +79,14 @@ const Timer = (props) => {
             isPlaying
             duration={time >= 0 ? time * 60 : 0}
             children={children}
-            colors={[
-              [Colors.darkBlue, 0.4]
-            ]}
+            colors={[[Colors.darkBlue, 0.4]]}
           />
         </View>
         <Text style={styles.mainText}>Time Left</Text>
         <View style={styles.separatorView} />
         <View style={styles.flexView}>
           <Text style={styles.orderID}>ORDER ID</Text>
-          <Text style={styles.orderNo}>#{orderDetails?.public_booking_id}</Text>
+          <Text style={styles.orderNo}>{orderDetails?.public_booking_id}</Text>
         </View>
         <Button
           spaceBottom={0}
@@ -99,14 +97,7 @@ const Timer = (props) => {
       <CustomModalAndroid
         visible={orderPlacedVisible}
         onPress={() => setOrderPlacedVisible(false)}>
-        <CloseIcon
-          onPress={() => setOrderPlacedVisible(false)}
-          style={{
-            position: 'absolute',
-            right: 15,
-            top: Platform.OS === 'android' ? 0 : -10,
-          }}
-        />
+        <CloseIcon onPress={() => setOrderPlacedVisible(false)} />
         <View
           style={{
             ...styles.circleView,
@@ -133,7 +124,7 @@ const Timer = (props) => {
             },
           ]}>
           <Text style={styles.orderID}>ORDER ID</Text>
-          <Text style={styles.orderNo}>#{orderDetails?.public_booking_id}</Text>
+          <Text style={styles.orderNo}>{orderDetails?.public_booking_id}</Text>
         </View>
       </CustomModalAndroid>
     </ScrollView>
@@ -171,7 +162,7 @@ const styles = StyleSheet.create({
     width: '90%',
   },
   orderID: {
-    fontFamily: 'Gilroy-Light',
+    fontFamily: 'Gilroy-Bold',
     fontSize: wp(3.5),
     color: Colors.inputTextColor,
   },
@@ -183,6 +174,7 @@ const styles = StyleSheet.create({
   circleView: {
     height: wp(25),
     width: wp(25),
+    marginTop: 35,
     borderRadius: wp(12.5),
     backgroundColor: Colors.white,
     borderWidth: 4,

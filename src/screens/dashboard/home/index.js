@@ -8,9 +8,9 @@ import {
   FlatList,
   ScrollView,
   Platform,
+  Linking,
 } from 'react-native';
 import {Colors, hp, wp, boxShadow} from '../../../constant/colors';
-import Shimmer from '../../../components/shimmer';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomModalAndroid from '../../../components/customModal';
 import FlatButton from '../../../components/flatButton';
@@ -35,6 +35,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import {STORE} from '../../../redux';
 import AsyncStorage from '@react-native-community/async-storage';
+import Shimmer from 'react-native-shimmer';
 
 export const HomeHeader = (props) => {
   return (
@@ -61,10 +62,11 @@ export const HomeHeader = (props) => {
         {(props.title && (
           <Text
             style={{
-              fontFamily: 'Gilroy-Semibold',
+              fontFamily: 'Gilroy-Bold',
               color: Colors.inputTextColor,
-              fontSize: wp(4.5),
+              fontSize: wp(5),
               marginRight: props.edit ? wp(0) : wp(13),
+              textTransform: 'capitalize',
             }}>
             {props.title}
           </Text>
@@ -107,6 +109,8 @@ const Home = (props) => {
   const [movementType, setMovementType] = useState();
   const [bookingFor, setBookingFor] = useState('Myself');
   const [isLoading, setLoading] = useState(true);
+  const [contactUs, setContactUs] = useState({});
+
   useEffect(() => {
     if (isFocused && userData?.fname) {
       AsyncStorage.getItem('oneSignalData').then((signalData) => {
@@ -158,19 +162,37 @@ const Home = (props) => {
         .catch((err) => {
           CustomConsole(err);
         });
+      let obj1 = {
+        url: 'contact-us',
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+      };
+      APICall(obj1)
+        .then((res) => {
+          setLoading(false);
+          if (res?.data?.status === 'success') {
+            setContactUs(res?.data?.data?.details);
+          } else {
+            CustomAlert(res?.data?.message);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          CustomConsole(err);
+        });
     }
   }, [isFocused]);
   const renderItem = ({item, index}) => {
     return (
-      <Shimmer
+      <View
         key={index}
-        autoRun={true}
         style={{
           height: hp(15),
           width: wp(70),
           marginRight: wp(4),
-        }}
-        visible={true}>
+        }}>
         <View
           style={[
             styles.topScroll,
@@ -188,7 +210,7 @@ const Home = (props) => {
             key={index}
           />
         </View>
-      </Shimmer>
+      </View>
     );
   };
   return (
@@ -237,7 +259,7 @@ const Home = (props) => {
         <View style={styles.movementView}>
           <Text
             style={{
-              fontFamily: 'Gilroy-Regular',
+              fontFamily: 'Gilroy-Bold',
               fontSize: wp(4),
               color: Colors.inputTextColor,
               textAlign: 'center',
@@ -282,6 +304,7 @@ const Home = (props) => {
                         fontFamily: 'Roboto-Medium',
                         color: Colors.white,
                         fontSize: wp(3.8),
+                        textAlign: 'center',
                       }}>
                       {item.name}
                     </Text>
@@ -295,15 +318,15 @@ const Home = (props) => {
           <View>
             <Text
               style={{
-                fontFamily: 'Roboto-Bold',
-                fontSize: wp(5),
+                fontFamily: 'Gilroy-Bold',
+                fontSize: wp(6),
                 color: Colors.darkBlue,
               }}>
-              NEED ASSISTANCE?
+              Need Assistance?
             </Text>
             <Text
               style={{
-                fontFamily: 'Roboto-Regular',
+                fontFamily: 'Roboto-Medium',
                 color: '#434343',
                 fontSize: wp(3.6),
                 marginTop: hp(2),
@@ -311,7 +334,16 @@ const Home = (props) => {
               We are just a call away! {'\n'}(9123445566)
             </Text>
           </View>
-          <HomeCall width={55} height={55} />
+          <Pressable
+            onPress={() => {
+              Linking.openURL(
+                `tel:${
+                  contactUs?.contact_no?.length > 0 && contactUs.contact_no[0]
+                }`,
+              );
+            }}>
+            <HomeCall width={55} height={55} />
+          </Pressable>
         </View>
         {sliderData.map((item, index) => {
           if (
@@ -370,23 +402,9 @@ const Home = (props) => {
         <CustomModalAndroid
           visible={couponVisible}
           onPress={() => setCouponVisible(false)}>
-          <CloseIcon
-            onPress={() => setCouponVisible(false)}
-            style={{
-              position: 'absolute',
-              right: 15,
-              top: Platform.OS === 'android' ? 0 : -10,
-            }}
-          />
+          <CloseIcon onPress={() => setCouponVisible(false)} />
           <Coupon width={hp(25)} height={hp(25)} />
-          <Text
-            style={{
-              marginTop: hp(3),
-              fontSize: wp(5),
-              ...styles.textStyle,
-            }}>
-            DISCOUNT COUPON
-          </Text>
+          <Text style={STYLES.modalHeader}>DISCOUNT COUPON</Text>
           <Text
             style={{
               fontSize: wp(4),
@@ -400,26 +418,10 @@ const Home = (props) => {
           <FlatButton label={'OKAY'} />
         </CustomModalAndroid>
         <CustomModalAndroid
-          paddingTop={hp(0.1)}
           visible={bookingSelectionVisible}
           onPress={() => setBookingSelectionVisible(false)}>
-          <CloseIcon
-            onPress={() => setBookingSelectionVisible(false)}
-            style={{
-              position: 'absolute',
-              right: 15,
-              top: 15,
-            }}
-          />
-          <Text
-            style={{
-              marginTop: 35,
-              fontSize: wp(4.5),
-              fontFamily: 'Roboto-Regular',
-              color: Colors.inputTextColor,
-            }}>
-            WHOM ARE YOU BOOKING FOR?
-          </Text>
+          <Text style={STYLES.modalHeader}>WHOM ARE YOU BOOKING FOR?</Text>
+          <CloseIcon onPress={() => setBookingSelectionVisible(false)} />
           <View
             style={{
               flexDirection: 'row',
@@ -453,7 +455,7 @@ const Home = (props) => {
                 ]}>
                 <Friends width={60} height={60} />
               </Pressable>
-              <Text style={styles.selectionText}>Others</Text>
+              <Text style={styles.selectionText}>Somebody Else</Text>
             </View>
           </View>
           <Pressable
@@ -543,7 +545,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.darkBlue,
   },
   selectionText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Gilroy-SemiBold',
     fontSize: wp(4),
     color: '#3B4B58',
     marginTop: hp(1),

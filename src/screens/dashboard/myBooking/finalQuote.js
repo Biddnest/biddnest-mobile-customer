@@ -47,20 +47,22 @@ const FinalQuote = (props) => {
   }, [configData]);
 
   useEffect(() => {
-    setLoading(true);
-    getOrderDetails(orderData?.public_booking_id)
-      .then((res) => {
-        setLoading(false);
-        if (res?.data?.status === 'success') {
-          setOrderDetails(res?.data?.data?.booking);
-        } else {
-          CustomAlert(res?.data?.message);
-        }
-      })
-      .catch((err) => {
-        setLoading(false);
-        CustomConsole(err);
-      });
+    if (orderData?.public_booking_id) {
+      setLoading(true);
+      getOrderDetails(orderData?.public_booking_id)
+        .then((res) => {
+          setLoading(false);
+          if (res?.data?.status === 'success') {
+            setOrderDetails(res?.data?.data?.booking);
+          } else {
+            CustomAlert(res?.data?.message);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          CustomConsole(err);
+        });
+    }
   }, []);
 
   let source_meta =
@@ -213,7 +215,7 @@ const FinalQuote = (props) => {
             />
           </View>
           <RejectBookingModal
-              value={rejectData?.reason}
+            value={rejectData?.reason}
             visible={rejectVisible}
             closeModal={() => setRejectVisible(false)}
             dropDownDefault={defaultReason}

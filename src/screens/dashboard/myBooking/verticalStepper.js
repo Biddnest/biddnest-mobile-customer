@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.darkBlue,
   },
   stepHeaderText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Gilroy-SemiBold',
     color: Colors.darkBlue,
     fontSize: wp(4),
     marginLeft: 10,

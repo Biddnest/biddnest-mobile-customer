@@ -5,7 +5,7 @@ import {wp, hp} from '../constant/colors';
 const CustomModalAndroid = (props) => {
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={props.visible}
       onRequestClose={() => {
@@ -22,7 +22,8 @@ const CustomModalAndroid = (props) => {
             style={[
               styles.modalView,
               {
-                paddingTop: props.paddingTop ? props.paddingTop : 35,
+                // paddingTop: props.paddingTop ? props.paddingTop : 35,
+                paddingTop: 0,
               },
             ]}>
             {props.children}

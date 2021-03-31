@@ -34,6 +34,7 @@ import {
 import Button from '../../../components/button';
 import RateUs from '../drawer/rateUs';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import Shimmer from 'react-native-shimmer';
 
 const OrderTracking = (props) => {
   const orderData = props?.route?.params?.orderData || {};
@@ -72,20 +73,22 @@ const OrderTracking = (props) => {
     fetchOrderDetails();
   }, []);
   const fetchOrderDetails = () => {
-    setLoading(true);
-    getOrderDetails(orderData?.public_booking_id)
-      .then((res) => {
-        setLoading(false);
-        if (res?.data?.status === 'success') {
-          setOrderDetails(res?.data?.data?.booking);
-        } else {
-          CustomAlert(res?.data?.message);
-        }
-      })
-      .catch((err) => {
-        setLoading(false);
-        CustomConsole(err);
-      });
+    if (orderData?.public_booking_id) {
+      setLoading(true);
+      getOrderDetails(orderData?.public_booking_id)
+        .then((res) => {
+          setLoading(false);
+          if (res?.data?.status === 'success') {
+            setOrderDetails(res?.data?.data?.booking);
+          } else {
+            CustomAlert(res?.data?.message);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          CustomConsole(err);
+        });
+    }
   };
   let source_meta =
     (orderDetails?.source_meta &&
@@ -141,23 +144,32 @@ const OrderTracking = (props) => {
                   style={{
                     ...styles.locationText,
                     marginTop: 0,
-                    textTransform: 'uppercase',
+                    textTransform: 'capitalize',
+                    fontFamily: 'Gilroy-Bold',
                   }}>
                   {source_meta?.city}
                 </Text>
                 <Text
-                  style={[styles.locationText, {textTransform: 'uppercase'}]}>
+                  style={[
+                    styles.locationText,
+                    {textTransform: 'capitalize', fontFamily: 'Gilroy-Bold'},
+                  ]}>
                   {destination_meta?.city}
                 </Text>
               </View>
               <View style={{alignItems: 'flex-end', marginTop: 0}}>
-                <Text style={{...styles.locationText, marginTop: 0}}>
+                <Text
+                  style={{
+                    ...styles.locationText,
+                    marginTop: 0,
+                    fontFamily: 'Gilroy-Bold',
+                  }}>
                   ID:{' '}
                   <Text
                     style={{
-                      fontFamily: 'Gilroy-Extrabold',
+                      fontFamily: 'Gilroy-SemiBold',
                     }}>
-                    #{orderData?.public_booking_id}
+                    {orderData?.public_booking_id}
                   </Text>
                 </Text>
                 <View
@@ -324,7 +336,7 @@ const OrderTracking = (props) => {
                 <Text
                   style={{
                     ...styles.driverContact,
-                    fontFamily: 'Roboto-Medium',
+                    fontFamily: 'Gilroy-Bold',
                   }}>
                   DRIVER
                 </Text>
@@ -455,38 +467,23 @@ const OrderTracking = (props) => {
           setManageOrderVisible(false);
           setPrivacyPolicy(false);
         }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '85%',
-          }}>
-          <Text
-            style={{
-              textAlign: 'center',
-              fontFamily: 'Roboto-Regular',
-              color: Colors.inputTextColor,
-            }}>
-            {cancelOrder
-              ? 'CANCEL ORDER'
-              : privacyPolicy
-              ? 'Terms & Conditions'
-              : resecheduleOrder
-              ? 'RESCHEDULE'
-              : 'MANAGE ORDER'}
-          </Text>
-          <CloseIcon
-            onPress={() => {
-              setRescheduleOrder(false);
-              setCancelOrder(false);
-              setManageOrderVisible(false);
-              setPrivacyPolicy(false);
-            }}
-            style={{position: 'absolute', right: 0}}
-          />
-        </View>
-        <View style={{...styles.separatorView, width: '85%'}} />
+        <Text style={STYLES.modalHeader}>
+          {cancelOrder
+            ? 'CANCEL ORDER'
+            : privacyPolicy
+            ? 'Terms & Conditions'
+            : resecheduleOrder
+            ? 'RESCHEDULE'
+            : 'MANAGE ORDER'}
+        </Text>
+        <CloseIcon
+          onPress={() => {
+            setRescheduleOrder(false);
+            setCancelOrder(false);
+            setManageOrderVisible(false);
+            setPrivacyPolicy(false);
+          }}
+        />
         <View
           style={{
             marginTop: hp(4),
@@ -617,18 +614,8 @@ const OrderTracking = (props) => {
         visible={showPin}
         paddingTop={hp(0.1)}
         onPress={() => setShowPin(false)}>
-        <CloseIcon
-          onPress={() => setShowPin(false)}
-          style={{position: 'absolute', right: 15, top: 15}}
-        />
-        <Text
-          style={{
-            marginTop: 35,
-            fontSize: wp(4.5),
-            fontFamily: 'Roboto-Regular',
-            color: Colors.inputTextColor,
-            textTransform: 'uppercase',
-          }}>
+        <CloseIcon onPress={() => setShowPin(false)} />
+        <Text style={STYLES.modalHeader}>
           {orderDetails?.status === 6 ? 'Start' : 'End'} trip pin
         </Text>
         <View
@@ -721,7 +708,7 @@ const styles = StyleSheet.create({
     marginTop: hp(1),
   },
   leftText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Gilroy-SemiBold',
     fontSize: wp(4),
     color: Colors.inputTextColor,
     textTransform: 'uppercase',

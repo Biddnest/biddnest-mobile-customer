@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     ...STYLES.common,
   },
   headerText: {
-    fontFamily: 'Roboto-Light',
+    fontFamily: 'Gilroy-Bold',
     fontSize: wp(3.8),
     color: Colors.inputTextColor,
     marginBottom: 10,

@@ -109,23 +109,16 @@ const OrderDetailModal = (props) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <View
+      <Text
         style={{
-          flexDirection: 'row',
-          width: '90%',
-          justifyContent: 'space-between',
+          marginTop: 35,
+          textAlign: 'center',
+          fontFamily: 'Gilroy-Bold',
+          color: Colors.inputTextColor,
         }}>
-        <Text
-          style={{
-            textAlign: 'center',
-            fontFamily: 'Roboto-Regular',
-            color: Colors.inputTextColor,
-          }}>
-          {props.title}
-        </Text>
-        <CloseIcon onPress={props.onCloseIcon} />
-      </View>
-      <View style={{...styles.separatorView, width: '90%'}} />
+        {props.title}
+      </Text>
+      <CloseIcon onPress={props.onCloseIcon} />
       <FlatList
         bounces={false}
         data={props.data}

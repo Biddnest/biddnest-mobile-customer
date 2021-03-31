@@ -1,11 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Text, ScrollView} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
-import {
-  CustomAlert,
-  CustomConsole,
-  DiffMin,
-} from '../../../constant/commonFun';
+import {CustomAlert, CustomConsole, DiffMin} from '../../../constant/commonFun';
 import {getOrderDetails} from '../../../redux/actions/user';
 import SimpleHeader from '../../../components/simpleHeader';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
@@ -28,23 +24,25 @@ const OrderTimer = (props) => {
   );
   const [timeOver, setTimeOver] = useState(false);
   useEffect(() => {
-    getOrderDetails(orderData?.public_booking_id)
-      .then((res) => {
-        if (res?.data?.status === 'success') {
-          setOrderDetails(res?.data?.data?.booking);
-          if (res?.data?.data?.booking?.bid_result_at) {
-            let temp = DiffMin(
-              new Date(res?.data?.data?.booking?.bid_result_at),
-            );
-            setTime(temp);
+    if (orderData?.public_booking_id) {
+      getOrderDetails(orderData?.public_booking_id)
+        .then((res) => {
+          if (res?.data?.status === 'success') {
+            setOrderDetails(res?.data?.data?.booking);
+            if (res?.data?.data?.booking?.bid_result_at) {
+              let temp = DiffMin(
+                new Date(res?.data?.data?.booking?.bid_result_at),
+              );
+              setTime(temp);
+            }
+          } else {
+            CustomAlert(res?.data?.message);
           }
-        } else {
-          CustomAlert(res?.data?.message);
-        }
-      })
-      .catch((err) => {
-        CustomConsole(err);
-      });
+        })
+        .catch((err) => {
+          CustomConsole(err);
+        });
+    }
   }, []);
   const children = ({remainingTime}) => {
     return (
@@ -52,7 +50,7 @@ const OrderTimer = (props) => {
         style={{
           color: Colors.darkBlue,
           fontSize: wp(5),
-          fontFamily: 'Roboto-Bold',
+          fontFamily: 'Gilroy-Bold',
         }}>
         {new Date(remainingTime * 1000).toISOString().substr(11, 8)}
       </Text>
@@ -191,7 +189,7 @@ const OrderTimer = (props) => {
             <View style={styles.flexView}>
               <Text style={styles.orderID}>ORDER ID</Text>
               <Text style={styles.orderNo}>
-                #{orderDetails?.public_booking_id}
+                {orderDetails?.public_booking_id}
               </Text>
             </View>
           </View>
@@ -232,7 +230,7 @@ const styles = StyleSheet.create({
     width: '90%',
   },
   orderID: {
-    fontFamily: 'Gilroy-Light',
+    fontFamily: 'Gilroy-Bold',
     fontSize: wp(3.5),
     color: Colors.inputTextColor,
   },

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Input, Text} from 'react-native-elements';
+import {Input} from 'react-native-elements';
 import {hp, Colors, wp} from '../constant/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -15,40 +15,7 @@ const TextInput = (props) => {
       value={props.value}
       onFocus={props.onFocus}
       onBlur={props.onBlur}
-      label={() => {
-        if (props.smallLabel) {
-          return (
-            <Text
-              style={{
-                fontFamily: 'Roboto-Bold',
-                color: Colors.textLabelColor,
-                fontSize: wp(4),
-              }}>
-              {props.label}
-              {'  '}
-              <Text
-                style={{
-                  fontFamily: 'Roboto-Regular',
-                  color: Colors.textLabelColor,
-                  fontSize: wp(3),
-                }}>
-                {props.smallLabel}
-              </Text>
-            </Text>
-          );
-        } else {
-          return (
-            <Text
-              style={{
-                fontFamily: 'Roboto-Bold',
-                color: Colors.textLabelColor,
-                fontSize: wp(4),
-              }}>
-              {props.label}
-            </Text>
-          );
-        }
-      }}
+      label={props.label}
       rightIcon={() => {
         if (props.isRight === true) {
           return (
@@ -83,11 +50,12 @@ const TextInput = (props) => {
         fontSize: wp(4),
       }}
       inputStyle={{
+        fontFamily: 'Gilroy-SemiBold',
         fontSize: wp(4),
         backgroundColor: Colors.textBG,
         color: Colors.inputTextColor,
         height: '99%',
-        textAlignVertical: 'top',
+        textAlignVertical: props.numberOfLines ? 'top' : 'center',
       }}
     />
   );

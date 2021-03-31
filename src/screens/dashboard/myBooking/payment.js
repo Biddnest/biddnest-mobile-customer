@@ -44,20 +44,22 @@ const Payment = (props) => {
   const [couponApplied, setCouponApplied] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-    getOrderDetails(orderData?.public_booking_id)
-      .then((res) => {
-        setLoading(false);
-        if (res?.data?.status === 'success') {
-          setOrderDetails(res?.data?.data?.booking);
-        } else {
-          CustomAlert(res?.data?.message);
-        }
-      })
-      .catch((err) => {
-        setLoading(false);
-        CustomConsole(err);
-      });
+    if (orderData?.public_booking_id) {
+      setLoading(true);
+      getOrderDetails(orderData?.public_booking_id)
+        .then((res) => {
+          setLoading(false);
+          if (res?.data?.status === 'success') {
+            setOrderDetails(res?.data?.data?.booking);
+          } else {
+            CustomAlert(res?.data?.message);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          CustomConsole(err);
+        });
+    }
     fetchPaymentSummery();
   }, []);
   const fetchPaymentSummery = () => {
@@ -100,7 +102,7 @@ const Payment = (props) => {
         setLoading(false);
         if (res?.data?.status === 'success') {
           // Razor pay
-          paymentMethod(res?.payment, cardType);
+          paymentMethod(res?.data?.data?.payment, cardType);
         } else {
           CustomAlert(res?.data?.message);
         }

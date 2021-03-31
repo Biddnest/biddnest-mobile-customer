@@ -116,15 +116,15 @@ export const FAQS_OPTION = [
 
 export const SIDE_DRAWER = [
   {
-    iconFamily: 'FontAwesome5',
-    icon: 'list-ul',
+    iconFamily: 'Ionicons',
+    icon: 'home-outline',
     topText: 'Home',
     bottomText: 'Explore Biddnest',
     navigate: 'Home',
   },
   {
-    iconFamily: 'MaterialCommunityIcons',
-    icon: 'clock-time-four-outline',
+    iconFamily: 'Ionicons',
+    icon: 'calendar-outline',
     topText: 'My Bookings',
     bottomText: 'Everything you need to know',
     navigate: 'MyBooking',
@@ -137,8 +137,8 @@ export const SIDE_DRAWER = [
     navigate: 'AboutUs',
   },
   {
-    iconFamily: 'AntDesign',
-    icon: 'copyright',
+    iconFamily: 'Ionicons',
+    icon: 'document-text-outline',
     topText: 'Terms and Conditions',
     bottomText: 'Read more about our terms',
     navigate: 'TermsAndConditions',
@@ -152,8 +152,8 @@ export const SIDE_DRAWER = [
   },
   {
     iconFamily: 'Ionicons',
-    icon: 'call-outline',
-    topText: 'Contact us',
+    icon: 'help-buoy-outline',
+    topText: 'Get Support',
     bottomText: 'Get in touch with us',
     navigate: 'ContactUs',
   },

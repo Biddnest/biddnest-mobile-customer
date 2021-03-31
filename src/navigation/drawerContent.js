@@ -49,7 +49,7 @@ export function DrawerContent(props) {
         );
       case 'Ionicons':
         return (
-          <Ionicons name={item.icon} color={Colors.darkBlue} size={wp(6)} />
+          <Ionicons name={item.icon} color={Colors.darkBlue} size={wp(7)} />
         );
       default:
         break;
@@ -60,7 +60,7 @@ export function DrawerContent(props) {
       <Pressable
         style={[
           styles.menuView,
-          {borderBottomWidth: SIDE_DRAWER.length - 1 === index ? 0 : 1},
+          // {borderBottomWidth: SIDE_DRAWER.length - 1 === index ? 0 : 0},
         ]}
         key={index}
         onPress={() => {
@@ -122,7 +122,7 @@ export function DrawerContent(props) {
               numberOfLines={1}
               style={{
                 color: Colors.white,
-                fontFamily: 'Roboto-Regular',
+                fontFamily: 'Gilroy-SemiBold',
                 fontSize: wp(3.5),
               }}>
               {userData?.phone}
@@ -152,18 +152,20 @@ export function DrawerContent(props) {
           showsVerticalScrollIndicator={false}
           data={SIDE_DRAWER}
           renderItem={renderItem}
-          ListFooterComponent={() => (
-            <Text
-              style={{
-                color: Colors.inputTextColor,
-                marginLeft: wp(3),
-                fontSize: wp(3.5),
-                fontFamily: 'Roboto-Light',
-              }}>
-              V: {DeviceInfo.getReadableVersion()}
-            </Text>
-          )}
         />
+        <View>
+          <Text
+            style={{
+              color: Colors.inputTextColor,
+              marginLeft: wp(3),
+              fontSize: wp(3.1),
+              fontFamily: 'Gilroy-Regular',
+              textAlign: 'center',
+              latterSpacing: 1,
+            }}>
+            App Version: v{DeviceInfo.getReadableVersion()}
+          </Text>
+        </View>
       </View>
     </LinearGradient>
   );
@@ -195,26 +197,27 @@ const styles = StyleSheet.create({
   },
   userText: {
     color: Colors.white,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Gilroy-SemiBold',
     fontSize: wp(4),
   },
   bottomView: {
     borderTopLeftRadius: wp(8),
     borderTopRightRadius: wp(8),
     backgroundColor: Colors.white,
-    padding: wp(3),
+    paddingHorizontal: wp(3),
+    paddingTop: wp(3),
     flex: 1,
   },
   menuView: {
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderColor: Colors.silver,
+    // borderBottomWidth: 1,
+    // borderColor: Colors.silver,
     paddingVertical: 20,
     marginHorizontal: wp(3),
     alignItems: 'center',
   },
   topText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Gilroy-SemiBold',
     color: Colors.darkBlue,
     fontSize: wp(4),
   },

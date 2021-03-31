@@ -1,5 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, Pressable, Platform, Image} from 'react-native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Pressable,
+  Platform,
+  Image,
+  Keyboard,
+} from 'react-native';
 import {Colors, hp, wp, boxShadow} from '../../../../constant/colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import TextInput from '../../../../components/textInput';
@@ -8,9 +16,9 @@ import Switch from '../../../../components/switch';
 import Button from '../../../../components/button';
 import MapModalAndroid from '../../../../components/mapModal';
 import MapView, {
-  Marker,
   PROVIDER_GOOGLE,
   PROVIDER_DEFAULT,
+  Marker,
 } from 'react-native-maps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CloseIcon from '../../../../components/closeIcon';
@@ -20,11 +28,17 @@ import {
   getLocation,
   pad_with_zeroes,
 } from '../../../../constant/commonFun';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
 const MovingForm = (props) => {
+  const mapRef = useRef(null);
+  const markerRef = useRef(null);
+  const googlePlaceRef = useRef(null);
+  const [isMapReady, setMapReady] = useState(false);
   const {data, handleStateChange} = props;
   const [mapVisible, setMapVisible] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [isPanding, setPanding] = useState(false);
   const [error, setError] = useState({
     address: undefined,
     pincode: undefined,
@@ -39,33 +53,54 @@ const MovingForm = (props) => {
     pincode: '',
     address: '',
   });
+  const [region, setRegion] = useState({
+    latitude: 10.780889,
+    longitude: 106.629271,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+  const [address, setAddress] = useState('');
   let source = data?.source || {};
   let destination = data?.destination || {};
 
   useEffect(() => {
     getLocation()
       .then((res) => {
-        fetchLocationString(res.latitude, res.longitude);
+        fetchLocationString(res);
       })
       .catch((err) => {
         CustomAlert(err);
       });
   }, [mapVisible]);
 
-  const fetchLocationString = (latitude, longitude) => {
+  const fetchLocationString = (regionData) => {
     let t1 = {...mapData};
+    mapRef?.current?.animateToRegion({
+      latitude: regionData?.latitude,
+      longitude: regionData?.longitude,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    });
+    setRegion({
+      latitude: regionData?.latitude,
+      longitude: regionData?.longitude,
+      latitudeDelta: regionData?.latitudeDelta || 0.0922,
+      longitudeDelta: regionData?.longitudeDelta || 0.0421,
+    });
+    setPanding(false);
     fetch(
-      'https://maps.googleapis.com/maps/api/geocode/json?address=' +
-        latitude +
-        ',' +
-        longitude +
-        '&key=' +
-        'AIzaSyCvVaeoUidYMQ8cdIJ_cEvrZNJeBeMpC-4',
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${regionData.latitude},${regionData.longitude}&key=AIzaSyCvVaeoUidYMQ8cdIJ_cEvrZNJeBeMpC-4`,
     )
       .then((response) => response.json())
       .then((responseJson) => {
         let temp = JSON.parse(JSON.stringify(responseJson));
         if (temp?.results && temp?.results?.length > 0) {
+          if (temp?.results[0]?.formatted_address !== address) {
+            googlePlaceRef?.current?.setAddressText(
+              temp?.results[0]?.formatted_address,
+            );
+          }
+          setAddress(temp?.results[0]?.formatted_address);
           temp?.results[0].address_components.forEach((item, index) => {
             if (
               item?.types?.findIndex(
@@ -85,14 +120,12 @@ const MovingForm = (props) => {
               t1.state = item?.long_name;
             }
           });
-          t1.address = temp?.results[0]?.formatted_address;
         }
       });
-    t1.latitude = latitude;
-    t1.longitude = longitude;
+    t1.latitude = regionData?.latitude;
+    t1.longitude = regionData?.longitude;
     setMapData(t1);
   };
-
   const handleState = (key, value) => {
     if (props.movingFrom) {
       let temp = {...destination};
@@ -105,6 +138,17 @@ const MovingForm = (props) => {
     }
   };
 
+  const onPanDrag = () => {
+    if (isPanding) {
+      return;
+    }
+    setPanding(true);
+  };
+
+  const handleMapReady = useCallback(() => {
+    setMapReady(true);
+  }, [mapRef, setMapReady]);
+
   return (
     <KeyboardAwareScrollView
       enableOnAndroid={false}
@@ -113,7 +157,7 @@ const MovingForm = (props) => {
       contentContainerStyle={styles.inputForm}>
       <Text
         style={{
-          fontFamily: 'Roboto-Regular',
+          fontFamily: 'Gilroy-Bold',
           fontSize: wp(4),
           color: Colors.inputTextColor,
           textAlign: 'center',
@@ -129,7 +173,7 @@ const MovingForm = (props) => {
             value={
               props.movingFrom ? destination?.meta?.city : source?.meta?.city
             }
-            placeHolder={'Chennai'}
+            placeHolder={'Choose on map'}
           />
         </Pressable>
         <TextInput
@@ -316,7 +360,6 @@ const MovingForm = (props) => {
                 Object.values(tempError).findIndex((item) => item === false) ===
                 -1
               ) {
-                setLoading(false);
                 setError({
                   address: undefined,
                   pincode: undefined,
@@ -331,6 +374,7 @@ const MovingForm = (props) => {
                   pincode: '',
                   address: '',
                 });
+                setLoading(false);
                 if (props.movingFrom) {
                   if (props.bookingFor === 'Others') {
                     props.onPageChange(2);
@@ -352,29 +396,48 @@ const MovingForm = (props) => {
           onPress={() => setMapVisible(false)}>
           <View style={styles.mapView}>
             <MapView
+              ref={mapRef}
+              rotateEnabled={false}
+              onMapReady={handleMapReady}
+              showsUserLocation
+              showsMyLocationButton
+              // onRegionChangeComplete={fetchLocationString}
+              zoomControlEnabled={false}
               provider={
                 Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
               }
               onPress={(event) => {
-                fetchLocationString(
-                  event?.nativeEvent?.coordinate?.latitude,
-                  event?.nativeEvent?.coordinate?.longitude,
-                );
+                fetchLocationString({
+                  latitude: event?.nativeEvent?.coordinate?.latitude,
+                  longitude: event?.nativeEvent?.coordinate?.longitude,
+                });
               }}
-              style={{flex: 1}}
+              style={
+                isMapReady ? {flex: 1, marginBottom: 0} : {marginBottom: 1}
+              }
               initialRegion={{
-                latitude: mapData.latitude,
-                longitude: mapData.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
+                latitude: region.latitude,
+                longitude: region.longitude,
+                latitudeDelta: region.latitudeDelta,
+                longitudeDelta: region.longitudeDelta,
               }}>
               <Marker
+                ref={markerRef}
                 coordinate={{
-                  latitude: mapData.latitude,
-                  longitude: mapData.longitude,
+                  latitude: region.latitude,
+                  longitude: region.longitude,
                 }}
               />
             </MapView>
+            {/*<View*/}
+            {/*  style={[styles.markerFixed, isPanding ? styles.isPanding : null]}*/}
+            {/*  pointerEvents="none">*/}
+            {/*  <Image*/}
+            {/*    style={styles.marker}*/}
+            {/*    resizeMode="contain"*/}
+            {/*    source={require('../../../../assets/images/map_marker.png')}*/}
+            {/*  />*/}
+            {/*</View>*/}
           </View>
           <CloseIcon
             onPress={() => setMapVisible(false)}
@@ -387,19 +450,75 @@ const MovingForm = (props) => {
                 height: 40,
                 width: 40,
                 borderRadius: 20,
+                zIndex: 5000,
                 backgroundColor: Colors.white,
                 ...styles.common,
               },
             ]}
           />
-          <View style={{marginTop: hp(3), width: wp(95)}}>
-            <TextInput
-              label={'Location'}
-              value={mapData?.address?.toString()}
-              smallLabel={'(Drag the map to move the pointer)'}
-              placeHolder={'Location'}
-              onChange={(text) => setMapData({...mapData, address: text})}
+          <View style={{marginTop: hp(3), width: wp(90)}}>
+            <Text
+              style={{
+                fontFamily: 'Roboto-Bold',
+                color: Colors.textLabelColor,
+                fontSize: wp(4),
+              }}>
+              Location
+              {'  '}
+              <Text
+                style={{
+                  fontFamily: 'Roboto-Regular',
+                  color: Colors.textLabelColor,
+                  fontSize: wp(3),
+                }}>
+                (Choose on map or Search Landmark below)
+              </Text>
+            </Text>
+            <GooglePlacesAutocomplete
+              ref={googlePlaceRef}
+              placeholder="Search"
+              onPress={(data1, details = null) => {
+                fetchLocationString({
+                  latitude: details?.geometry?.location?.lat,
+                  longitude: details?.geometry?.location?.lng,
+                });
+              }}
+              keyboardShouldPersistTaps={'handled'}
+              fetchDetails={true}
+              // currentLocation={true}
+              // currentLocationLabel={'Current location'}
+              query={{
+                key: 'AIzaSyCvVaeoUidYMQ8cdIJ_cEvrZNJeBeMpC-4',
+                language: 'en',
+              }}
+              styles={{
+                textInputContainer: {
+                  borderWidth: 2,
+                  paddingHorizontal: 10,
+                  borderRadius: 10,
+                  height: hp(6.5),
+                  marginTop: hp(1),
+                  borderColor: Colors.silver,
+                  backgroundColor: Colors.white,
+                  borderBottomWidth: 2,
+                },
+                textInput: {
+                  fontSize: wp(4),
+                  backgroundColor: Colors.textBG,
+                  color: Colors.inputTextColor,
+                  height: '99%',
+                  textAlignVertical: 'center',
+                  fontFamily: 'Gilroy-SemiBold',
+                },
+              }}
             />
+            {/*<TextInput*/}
+            {/*  label={'Location'}*/}
+            {/*  value={address}*/}
+            {/*  smallLabel={'(Drag the map to move the pointer)'}*/}
+            {/*  placeHolder={'Location'}*/}
+            {/*  onChange={(text) => setAddress(text)}*/}
+            {/*/>*/}
           </View>
           <View style={{marginTop: hp(2)}}>
             <FlatButton
@@ -466,5 +585,22 @@ const styles = StyleSheet.create({
   common: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  markerFixed: {
+    left: '50%',
+    marginLeft: -24,
+    marginTop: -48,
+    position: 'absolute',
+    top: '50%',
+    zIndex: 2,
+    height: 48,
+    width: 48,
+  },
+  isPanding: {
+    marginTop: -60,
+  },
+  marker: {
+    height: 30,
+    width: 30,
   },
 });

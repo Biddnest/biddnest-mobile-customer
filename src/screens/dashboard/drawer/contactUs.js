@@ -25,7 +25,6 @@ import {
   LoadingScreen,
 } from '../../../constant/commonFun';
 import moment from 'moment';
-import {useSelector} from 'react-redux';
 
 const ContactUs = (props) => {
   const [recentTicket, setRecentTicket] = useState([]);
@@ -195,8 +194,9 @@ const ContactUs = (props) => {
                       style={{
                         ...styles.locationText,
                         marginTop: 0,
-                        textTransform: 'uppercase',
-                        maxWidth: '30%',
+                        textTransform: 'capitalize',
+                        maxWidth: '80%',
+                        fontFamily: 'Roboto-SemiBold',
                       }}>
                       {source_meta?.city}
                     </Text>
@@ -209,7 +209,11 @@ const ContactUs = (props) => {
                     <Text
                       style={[
                         styles.locationText,
-                        {textTransform: 'uppercase', maxWidth: '80%'},
+                        {
+                          textTransform: 'capitalize',
+                          maxWidth: '80%',
+                          fontFamily: 'Roboto-SemiBold',
+                        },
                       ]}>
                       {destination_meta?.city}
                     </Text>
@@ -382,7 +386,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     textTransform: 'uppercase',
-    fontFamily: 'Gilroy-Semibold',
+    fontFamily: 'Gilroy-Bold',
     fontSize: wp(3.8),
     color: Colors.inputTextColor,
     textAlign: 'center',

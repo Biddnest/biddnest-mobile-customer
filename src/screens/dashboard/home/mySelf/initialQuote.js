@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Pressable,
-  ScrollView,
-} from 'react-native';
+import {View, StyleSheet, Text, Pressable, ScrollView} from 'react-native';
 import {Colors, hp, wp} from '../../../../constant/colors';
 import {STYLES} from '../../../../constant/commonStyle';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -85,7 +79,7 @@ const InitialQuote = (props) => {
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
                   style={{
-                    fontFamily: 'Roboto-Bold',
+                    fontFamily: 'Gilroy-Bold',
                     fontSize: wp(4),
                     color: Colors.inputTextColor,
                     marginRight: 5,
@@ -110,7 +104,7 @@ const InitialQuote = (props) => {
                 }}>
                 <Text
                   style={{
-                    fontFamily: 'Roboto-Bold',
+                    fontFamily: 'Gilroy-Bold',
                     fontSize: wp(4.7),
                     color:
                       index === offerType

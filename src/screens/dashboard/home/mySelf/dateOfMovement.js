@@ -9,6 +9,7 @@ import CustomModalAndroid from '../../../../components/customModal';
 import {Calendar} from 'react-native-calendars';
 import FlatButton from '../../../../components/flatButton';
 import CloseIcon from '../../../../components/closeIcon';
+import {STYLES} from '../../../../constant/commonStyle';
 
 const DateOfMovement = (props) => {
   const {data, handleStateChange} = props;
@@ -41,7 +42,7 @@ const DateOfMovement = (props) => {
         contentContainerStyle={styles.inputForm}>
         <Text
           style={{
-            fontFamily: 'Gilroy-Light',
+            fontFamily: 'Gilroy-Bold',
             fontSize: wp(3.5),
             color: Colors.inputTextColor,
             textAlign: 'center',
@@ -102,12 +103,12 @@ const DateOfMovement = (props) => {
           onPress={() => {
             setCalender(false);
           }}>
+          <Text style={STYLES.modalHeader}>Choose Date</Text>
           <CloseIcon
             onPress={() => {
               setDefaultSelectedDates();
               setCalender(false);
             }}
-            style={{marginTop: 0, width: '90%', alignItems: 'flex-end'}}
           />
           <Calendar
             markedDates={dateArray}

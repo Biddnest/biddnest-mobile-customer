@@ -64,7 +64,7 @@ const TabNavigation = (props: any) => {
           return (
             <Text
               style={{
-                fontFamily: 'Roboto-Bold',
+                fontFamily: 'Gilroy-Bold',
                 fontSize: wp(3.5),
                 color: focused ? Colors.darkBlue : '#9D9CC5',
               }}>

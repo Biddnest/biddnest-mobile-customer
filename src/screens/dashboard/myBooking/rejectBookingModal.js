@@ -14,28 +14,15 @@ import {
 } from '../../../constant/commonFun';
 import CustomModalAndroid from '../../../components/customModal';
 import React, {useState} from 'react';
+import {STYLES} from '../../../constant/commonStyle';
 
 const RejectBookingModal = (props) => {
   const [error, setError] = useState(undefined);
   const [isAgree, setAgree] = useState(true);
   return (
     <CustomModalAndroid visible={props.visible} onPress={props.closeModal}>
-      <Text
-        style={{
-          fontFamily: 'Roboto-Regular',
-          color: Colors.inputTextColor,
-          fontSize: wp(3.5),
-        }}>
-        REASON FOR REJECTION
-      </Text>
-      <CloseIcon
-        onPress={props.closeModal}
-        style={{
-          position: 'absolute',
-          right: 15,
-          top: Platform.OS === 'android' ? -4 : -10,
-        }}
-      />
+      <Text style={STYLES.modalHeader}>REASON FOR REJECTION</Text>
+      <CloseIcon onPress={props.closeModal} />
       <DropDownAndroid
         label={''}
         value={props.value}

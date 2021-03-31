@@ -43,7 +43,7 @@ const FriendsDetails = (props) => {
         contentContainerStyle={styles.inputForm}>
         <Text
           style={{
-            fontFamily: 'Roboto-Regular',
+            fontFamily: 'Gilroy-Bold',
             fontSize: wp(4),
             color: Colors.inputTextColor,
             textAlign: 'center',

@@ -6,7 +6,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 const MapModalAndroid = (props) => {
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={props.visible}
       onRequestClose={() => {
