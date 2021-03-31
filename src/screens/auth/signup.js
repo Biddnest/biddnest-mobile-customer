@@ -99,6 +99,7 @@ const Signup = (props) => {
                 Platform.OS !== 'android' && {zIndex: 5001},
               ]}>
               <DropDownAndroid
+                value={'male'}
                 label={'Gender'}
                 items={configData?.gender}
                 onChangeItem={(text) => handleState('gender', text)}

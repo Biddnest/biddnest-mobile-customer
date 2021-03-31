@@ -54,7 +54,10 @@ const TextInput = (props) => {
         fontSize: wp(4),
         backgroundColor: Colors.textBG,
         color: Colors.inputTextColor,
-        height: '99%',
+        height: '98%',
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderColor: props.isRight === false ? Colors.red : Colors.silver,
         textAlignVertical: props.numberOfLines ? 'top' : 'center',
       }}
     />
