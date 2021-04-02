@@ -15,7 +15,7 @@ import {
   PERMISSIONS,
   RESULTS,
 } from 'react-native-permissions';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import {STYLES} from './commonStyle';
 import React from 'react';
 
@@ -168,16 +168,20 @@ export const locationPermission = async () => {
 
 export const getLocation = () => {
   return new Promise((resolve, reject) => {
-    Geolocation.getCurrentPosition(
-      (position) => {
-        resolve(position.coords);
-      },
-      (error) => reject(error.message),
-      {
-        // enableHighAccuracy: false,
-        timeout: 20000,
-        // maximumAge: 1000,
-      },
-    );
+    try {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          resolve(position.coords);
+        },
+        (error) => reject(error.message),
+        {
+          // enableHighAccuracy: false,
+          timeout: 20000,
+          // maximumAge: 1000,
+        },
+      );
+    } catch (e) {
+      CustomAlert(e);
+    }
   });
 };
