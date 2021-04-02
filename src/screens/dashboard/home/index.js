@@ -205,7 +205,7 @@ const Home = (props) => {
               height: '100%',
               width: '100%',
             }}
-            source={require('../../../assets/images/top_home_scroll.png')}
+            source={{uri: item?.image}}
             resizeMode={'cover'}
             key={index}
           />
@@ -230,21 +230,7 @@ const Home = (props) => {
                 bounces={false}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                // data={item.banner}
-                data={[
-                  {
-                    id: 5,
-                    slider_id: 2,
-                    image:
-                      'http://127.0.0.1:8000/storage/slide-banners/banner-banner1-604b088c1953e.png',
-                    name: 'banner1',
-                    url: 'http://banner1.com',
-                    from_date: '2015-03-02',
-                    to_date: '2021-03-12',
-                    order: 0,
-                    status: 1,
-                  },
-                ]}
+                data={item?.banners}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => index}
                 contentContainerStyle={{

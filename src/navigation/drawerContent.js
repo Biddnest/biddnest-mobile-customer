@@ -123,7 +123,8 @@ export function DrawerContent(props) {
               style={{
                 color: Colors.white,
                 fontFamily: 'Gilroy-SemiBold',
-                fontSize: wp(3.5),
+                fontSize: wp(3.6),
+                marginTop: 5,
               }}>
               {userData?.phone}
             </Text>

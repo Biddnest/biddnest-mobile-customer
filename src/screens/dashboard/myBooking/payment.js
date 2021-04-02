@@ -231,6 +231,7 @@ const Payment = (props) => {
                 label={couponApplied ? 'Remove' : 'Apply'}
                 isLoading={isLoading}
                 width={wp(25)}
+                spaceTop={hp(0.1)}
                 onPress={() => {
                   // Verify coupon API
                   setLoading(true);

@@ -230,7 +230,7 @@ const RequirementDetails = (props) => {
                 color: Colors.inputTextColor,
                 fontSize: wp(3.5),
               }}>
-              {item.material}
+              {item?.material}, {item?.size}
             </Text>
           </View>
           {(configData?.inventory_quantity_type.range ===

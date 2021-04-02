@@ -116,18 +116,25 @@ const MyBooking = (props) => {
             }}>
             <View>
               <Text
+                numberOfLines={1}
                 style={{
                   ...styles.locationText,
                   marginTop: 0,
                   textTransform: 'capitalize',
                   fontFamily: 'Gilroy-SemiBold',
+                  maxWidth: wp(40),
                 }}>
                 {source_meta?.city}
               </Text>
               <Text
+                numberOfLines={1}
                 style={[
                   styles.locationText,
-                  {textTransform: 'capitalize', fontFamily: 'Gilroy-SemiBold'},
+                  {
+                    textTransform: 'capitalize',
+                    fontFamily: 'Gilroy-SemiBold',
+                    maxWidth: wp(40),
+                  },
                 ]}>
                 {destination_meta?.city}
               </Text>
@@ -143,10 +150,12 @@ const MyBooking = (props) => {
                   marginTop: hp(1),
                 }}>
                 <Text
+                  numberOfLines={1}
                   style={{
                     fontFamily: 'Gilroy-Bold',
                     fontSize: wp(4.5),
                     color: Colors.inputTextColor,
+                    maxWidth: wp(28),
                   }}>
                   {meta?.distance} KM
                 </Text>

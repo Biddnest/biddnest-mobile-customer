@@ -89,33 +89,6 @@ export const PAYMENT_OPTION = [
   },
 ];
 
-export const FAQS_OPTION = [
-  {
-    image: <Delivery width={50} height={50} />,
-    name: 'Delivery',
-  },
-  {
-    image: <Packaging width={50} height={50} />,
-    name: 'Packaging',
-  },
-  {
-    image: <Vendor width={50} height={50} />,
-    name: 'Vendor',
-  },
-  {
-    image: <Bidding width={50} height={50} />,
-    name: 'Bidding',
-  },
-  {
-    image: <Safety width={50} height={50} />,
-    name: 'Safety',
-  },
-  {
-    image: <Pricing width={50} height={50} />,
-    name: 'Pricing',
-  },
-];
-
 export const SIDE_DRAWER = [
   {
     iconFamily: 'Ionicons',
