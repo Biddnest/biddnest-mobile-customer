@@ -132,7 +132,7 @@ const Home = (props) => {
       });
       getLocation()
         .then((locationData) => {
-          setLoading(false);
+          setLoading(true);
           dispatch(getSlider(locationData))
             .then((res) => {
               if (res.status === 'success' && res?.data) {
@@ -142,7 +142,6 @@ const Home = (props) => {
               }
             })
             .catch((err) => {
-              setLoading(false);
               CustomAlert(err?.data?.message);
             });
           dispatch(getServices(locationData))
@@ -341,39 +340,30 @@ const Home = (props) => {
                 bounces={false}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                data={[1, 2]}
+                data={item?.banners}
                 keyExtractor={(item, index) => index}
                 renderItem={({item, index}) => {
                   return (
-                    <Shimmer
+                    <View
                       key={index}
-                      autoRun={true}
-                      style={{
-                        height: hp(25),
-                        width: wp(60),
-                        marginRight: wp(4),
-                      }}
-                      visible={true}>
-                      <View
-                        style={[
-                          styles.topScroll,
-                          {
-                            width: wp(60),
-                            height: hp(25),
-                            ...styles.common,
-                          },
-                        ]}>
-                        <Image
-                          style={{
-                            height: '100%',
-                            width: '100%',
-                          }}
-                          source={require('../../../assets/images/top_home_scroll.png')}
-                          resizeMode={'cover'}
-                          key={index}
-                        />
-                      </View>
-                    </Shimmer>
+                      style={[
+                        styles.topScroll,
+                        {
+                          width: wp(60),
+                          height: hp(25),
+                          ...styles.common,
+                        },
+                      ]}>
+                      <Image
+                        style={{
+                          height: '100%',
+                          width: '100%',
+                        }}
+                        source={{uri: item?.image}}
+                        resizeMode={'cover'}
+                        key={index}
+                      />
+                    </View>
                   );
                 }}
                 contentContainerStyle={{
@@ -382,94 +372,95 @@ const Home = (props) => {
                 }}
               />
             );
+          } else {
+            return null;
           }
-          return null;
         })}
-        <CustomModalAndroid
-          visible={couponVisible}
-          onPress={() => setCouponVisible(false)}>
-          <CloseIcon onPress={() => setCouponVisible(false)} />
-          <Coupon width={hp(25)} height={hp(25)} />
-          <Text style={STYLES.modalHeader}>DISCOUNT COUPON</Text>
+      </ScrollView>
+      <CustomModalAndroid
+        visible={couponVisible}
+        onPress={() => setCouponVisible(false)}>
+        <CloseIcon onPress={() => setCouponVisible(false)} />
+        <Coupon width={hp(25)} height={hp(25)} />
+        <Text style={STYLES.modalHeader}>DISCOUNT COUPON</Text>
+        <Text
+          style={{
+            fontSize: wp(4),
+            marginTop: hp(1),
+            textAlign: 'center',
+            ...styles.textStyle,
+          }}>
+          Get 20% off on your first order! {'\n'}So what are you waiting for, go
+          ahead and proceed!
+        </Text>
+        <FlatButton label={'OKAY'} />
+      </CustomModalAndroid>
+      <CustomModalAndroid
+        visible={bookingSelectionVisible}
+        onPress={() => setBookingSelectionVisible(false)}>
+        <Text style={STYLES.modalHeader}>WHOM ARE YOU BOOKING FOR?</Text>
+        <CloseIcon onPress={() => setBookingSelectionVisible(false)} />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            marginTop: hp(3),
+            width: wp(100),
+          }}>
+          <View style={styles.common}>
+            <Pressable
+              style={[
+                styles.selectionView,
+                {
+                  borderWidth: bookingFor === 'Myself' ? 2 : 0,
+                  ...STYLES.common,
+                },
+              ]}
+              onPress={() => setBookingFor('Myself')}>
+              <MySelf width={60} height={60} />
+            </Pressable>
+            <Text style={styles.selectionText}>Myself</Text>
+          </View>
+          <View style={styles.common}>
+            <Pressable
+              onPress={() => setBookingFor('Others')}
+              style={[
+                styles.selectionView,
+                {
+                  borderWidth: bookingFor === 'Others' ? 2 : 0,
+                  ...STYLES.common,
+                },
+              ]}>
+              <Friends width={60} height={60} />
+            </Pressable>
+            <Text style={styles.selectionText}>Somebody Else</Text>
+          </View>
+        </View>
+        <Pressable
+          onPress={() => {
+            setBookingSelectionVisible(false);
+            props.navigation.navigate('BookingStepper', {
+              bookingFor,
+              movementType,
+            });
+          }}
+          style={{
+            height: hp(7),
+            backgroundColor: Colors.btnBG,
+            width: wp(100),
+            marginTop: hp(5),
+            ...styles.common,
+          }}>
           <Text
             style={{
-              fontSize: wp(4),
-              marginTop: hp(1),
-              textAlign: 'center',
-              ...styles.textStyle,
+              fontFamily: 'Roboto-Bold',
+              color: Colors.white,
+              fontSize: wp(5),
             }}>
-            Get 20% off on your first order! {'\n'}So what are you waiting for,
-            go ahead and proceed!
+            CONFIRM
           </Text>
-          <FlatButton label={'OKAY'} />
-        </CustomModalAndroid>
-        <CustomModalAndroid
-          visible={bookingSelectionVisible}
-          onPress={() => setBookingSelectionVisible(false)}>
-          <Text style={STYLES.modalHeader}>WHOM ARE YOU BOOKING FOR?</Text>
-          <CloseIcon onPress={() => setBookingSelectionVisible(false)} />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
-              marginTop: hp(3),
-              width: wp(100),
-            }}>
-            <View style={styles.common}>
-              <Pressable
-                style={[
-                  styles.selectionView,
-                  {
-                    borderWidth: bookingFor === 'Myself' ? 2 : 0,
-                    ...STYLES.common,
-                  },
-                ]}
-                onPress={() => setBookingFor('Myself')}>
-                <MySelf width={60} height={60} />
-              </Pressable>
-              <Text style={styles.selectionText}>Myself</Text>
-            </View>
-            <View style={styles.common}>
-              <Pressable
-                onPress={() => setBookingFor('Others')}
-                style={[
-                  styles.selectionView,
-                  {
-                    borderWidth: bookingFor === 'Others' ? 2 : 0,
-                    ...STYLES.common,
-                  },
-                ]}>
-                <Friends width={60} height={60} />
-              </Pressable>
-              <Text style={styles.selectionText}>Somebody Else</Text>
-            </View>
-          </View>
-          <Pressable
-            onPress={() => {
-              setBookingSelectionVisible(false);
-              props.navigation.navigate('BookingStepper', {
-                bookingFor,
-                movementType,
-              });
-            }}
-            style={{
-              height: hp(7),
-              backgroundColor: Colors.btnBG,
-              width: wp(100),
-              marginTop: hp(5),
-              ...styles.common,
-            }}>
-            <Text
-              style={{
-                fontFamily: 'Roboto-Bold',
-                color: Colors.white,
-                fontSize: wp(5),
-              }}>
-              CONFIRM
-            </Text>
-          </Pressable>
-        </CustomModalAndroid>
-      </ScrollView>
+        </Pressable>
+      </CustomModalAndroid>
     </LinearGradient>
   );
 };
