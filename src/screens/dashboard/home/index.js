@@ -192,7 +192,12 @@ const Home = (props) => {
           width: wp(70),
           marginRight: wp(4),
         }}>
-        <View
+        <Pressable
+          onPress={() => {
+            if (item?.url) {
+              Linking.openURL(item?.url);
+            }
+          }}
           style={[
             styles.topScroll,
             {
@@ -208,7 +213,7 @@ const Home = (props) => {
             resizeMode={'cover'}
             key={index}
           />
-        </View>
+        </Pressable>
       </View>
     );
   };

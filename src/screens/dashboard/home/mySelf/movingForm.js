@@ -116,6 +116,7 @@ const MovingForm = (props) => {
             ) {
               t1.state = item?.long_name;
             }
+            t1.geocode = temp?.results[0]?.formatted_address;
           });
         }
       });
@@ -301,6 +302,7 @@ const MovingForm = (props) => {
             alignItems: 'center',
             justifyContent: 'space-between',
             marginHorizontal: wp(3),
+            marginTop: hp(1),
           }}>
           <View
             style={{
@@ -346,11 +348,6 @@ const MovingForm = (props) => {
                 !pageData.pincode ||
                 pageData?.pincode?.length !== 6 ||
                 !/^[0-9]+$/.test(pageData?.pincode)
-              );
-              tempError.floor = !(
-                !pageData.floor ||
-                pageData.floor.length === 0 ||
-                !/^[0-9]+$/.test(pageData?.floor)
               );
               setError(tempError);
               if (
@@ -527,6 +524,7 @@ const MovingForm = (props) => {
                   temp.meta.city = mapData.city;
                   temp.meta.pincode = mapData.pincode;
                   temp.meta.state = mapData.state;
+                  temp.meta.geocode = mapData.geocode;
                   temp.lat = mapData.latitude;
                   temp.lng = mapData.longitude;
                   handleStateChange('destination', temp);
@@ -536,6 +534,7 @@ const MovingForm = (props) => {
                   temp.meta.city = mapData.city;
                   temp.meta.pincode = mapData.pincode;
                   temp.meta.state = mapData.state;
+                  temp.meta.geocode = mapData.geocode;
                   temp.lat = mapData.latitude;
                   temp.lng = mapData.longitude;
                   handleStateChange('source', temp);

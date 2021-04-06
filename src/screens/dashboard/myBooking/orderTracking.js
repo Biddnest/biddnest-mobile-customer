@@ -139,26 +139,34 @@ const OrderTracking = (props) => {
                 justifyContent: 'space-between',
                 flex: 1,
               }}>
-              <View>
+              <View style={{width: '40%'}}>
                 <Text
+                  numberOfLines={1}
                   style={{
                     ...styles.locationText,
                     marginTop: 0,
                     textTransform: 'capitalize',
                     fontFamily: 'Gilroy-Bold',
                   }}>
-                  {source_meta?.city}
+                  {source_meta?.city === destination_meta?.city
+                    ? source_meta?.address
+                    : source_meta?.city}
                 </Text>
                 <Text
+                  numberOfLines={1}
                   style={[
                     styles.locationText,
                     {textTransform: 'capitalize', fontFamily: 'Gilroy-Bold'},
                   ]}>
-                  {destination_meta?.city}
+                  {destination_meta?.city === source_meta?.city
+                    ? destination_meta?.address
+                    : destination_meta?.city}
                 </Text>
               </View>
-              <View style={{alignItems: 'flex-end', marginTop: 0}}>
+              <View
+                style={{alignItems: 'flex-end', marginTop: 0, width: '58%'}}>
                 <Text
+                  numberOfLines={1}
                   style={{
                     ...styles.locationText,
                     marginTop: 0,
@@ -179,6 +187,7 @@ const OrderTracking = (props) => {
                     marginTop: hp(1),
                   }}>
                   <Text
+                    numberOfLines={1}
                     style={{
                       fontFamily: 'Gilroy-Extrabold',
                       fontSize: wp(4.5),

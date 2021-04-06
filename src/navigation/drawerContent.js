@@ -159,6 +159,7 @@ export function DrawerContent(props) {
             style={{
               color: Colors.inputTextColor,
               marginLeft: wp(3),
+              marginVertical: wp(3),
               fontSize: wp(3.1),
               fontFamily: 'Gilroy-Regular',
               textAlign: 'center',

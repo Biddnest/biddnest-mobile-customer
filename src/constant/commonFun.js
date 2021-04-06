@@ -18,6 +18,7 @@ import {
 import Geolocation from 'react-native-geolocation-service';
 import {STYLES} from './commonStyle';
 import React from 'react';
+import moment from 'moment';
 
 export const resetNavigator = (props, screenName) => {
   props.navigation.dispatch(
@@ -59,7 +60,7 @@ export const secondsToHms = (d) => {
 };
 
 export const DiffMin = (dt1) => {
-  let dif = dt1 - new Date();
+  let dif = moment(dt1) - moment();
   dif = Math.round(dif / 1000 / 60);
   return dif;
 };

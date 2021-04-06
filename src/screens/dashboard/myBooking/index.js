@@ -63,7 +63,9 @@ const MyBooking = (props) => {
   };
 
   const handleOrderClicked = (item) => {
-    if (item?.status === 2 || item?.status === 3) {
+    if (item?.status === 0) {
+      props.navigation.navigate('PlacedOrder', {orderData: item});
+    } else if (item?.status === 2 || item?.status === 3) {
       props.navigation.navigate('OrderTimer', {orderData: item});
     } else if (item?.status === 4) {
       props.navigation.navigate('FinalQuote', {orderData: item});
@@ -124,7 +126,9 @@ const MyBooking = (props) => {
                   fontFamily: 'Gilroy-SemiBold',
                   maxWidth: wp(40),
                 }}>
-                {source_meta?.city}
+                {source_meta?.city === destination_meta?.city
+                  ? source_meta?.address
+                  : source_meta?.city}
               </Text>
               <Text
                 numberOfLines={1}
@@ -136,7 +140,9 @@ const MyBooking = (props) => {
                     maxWidth: wp(40),
                   },
                 ]}>
-                {destination_meta?.city}
+                {destination_meta?.city === source_meta?.city
+                  ? destination_meta?.address
+                  : destination_meta?.city}
               </Text>
             </View>
             <View style={{alignItems: 'flex-end'}}>

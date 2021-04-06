@@ -72,7 +72,8 @@ const MyProfile = (props) => {
           <View style={styles.textWrapper}>
             <Text style={styles.headerText}>Date of Birth</Text>
             <Text style={styles.bodyText}>
-              {moment(userData?.dob).format('D MMM yyyy')}
+              {(userData?.dob && moment(userData?.dob).format('D MMM yyyy')) ||
+                'DD/MM/YYYY'}
             </Text>
           </View>
         </View>

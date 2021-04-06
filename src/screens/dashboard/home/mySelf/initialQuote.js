@@ -146,6 +146,7 @@ const InitialQuote = (props) => {
           bottom: 0,
         }}>
         <TwoButton
+          isLoading={isLoading}
           leftLabel={'Reject'}
           rightLabel={'Place order'}
           leftOnPress={() => setRejectVisible(true)}

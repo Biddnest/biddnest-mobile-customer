@@ -48,7 +48,7 @@ const BookingStepper = (props) => {
       lng: 72.8311,
       meta: {
         geocode: '',
-        floor: 1,
+        floor: 0,
         address: '',
         city: '',
         state: '',
@@ -62,7 +62,7 @@ const BookingStepper = (props) => {
       lng: 72.8311,
       meta: {
         geocode: '',
-        floor: 1,
+        floor: 0,
         address: '',
         city: '',
         state: '',
@@ -449,15 +449,26 @@ const BookingStepper = (props) => {
           (bookingFor === 'Myself' && currentPosition > 0)) && (
           <LocationDistance
             onEditClick={() => setCurrentPosition(0)}
-            from={data?.source?.meta?.city}
-            to={data?.destination?.meta?.city}
-            distance={getDistance(
-              {latitude: data?.source?.lat, longitude: data?.source?.lng},
-              {
-                latitude: data?.destination?.lat,
-                longitude: data?.destination?.lng,
+            from={
+              data?.source?.meta?.city === data?.destination?.meta?.city
+                ? data?.source?.meta?.address
+                : data?.source?.meta?.city
+            }
+            to={
+              data?.source?.meta?.city === data?.destination?.meta?.city
+                ? data?.destination?.meta?.address
+                : data?.destination?.meta?.city
+            }
+            distance={{
+              source: {
+                lat: data?.source?.lat,
+                lng: data?.source?.lng,
               },
-            )}
+              destination: {
+                lat: data?.destination?.lat,
+                lng: data?.destination?.lng,
+              },
+            }}
           />
         )}
         <View style={{paddingVertical: hp(2)}}>

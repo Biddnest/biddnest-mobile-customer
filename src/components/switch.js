@@ -22,11 +22,11 @@ const Switch = (props) => {
       <Pressable
         onPress={() => props.onChange(props.value == 0 ? 1 : 0)}
         style={{
-          height: 20,
+          height: 22,
           width: 45,
           backgroundColor: switchValue ? Colors.darkBlue : '#98A0A6',
           marginHorizontal: 5,
-          borderRadius: 5,
+          borderRadius: 3,
           justifyContent: 'center',
         }}>
         <Animated.View
@@ -35,7 +35,7 @@ const Switch = (props) => {
             width: 17,
             backgroundColor: Colors.white,
             marginHorizontal: 3,
-            borderRadius: 5,
+            borderRadius: 2,
             transform: [
               {
                 translateX: switchValue ? 21 : 0,

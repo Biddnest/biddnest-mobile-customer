@@ -1,12 +1,41 @@
 import {Colors, hp, wp} from '../constant/colors';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {STYLES} from '../constant/commonStyle';
-import EditPen from '../assets/svg/edit_pen.svg';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import {STORE} from '../redux';
+import {APICall} from '../redux/actions/user';
+import {CustomAlert, CustomConsole} from '../constant/commonFun';
 
 const LocationDistance = (props) => {
+  const [cDistance, setCDistance] = useState('');
+  useEffect(() => {
+    if (props.distance) {
+      calculateDistance(props.distance);
+    }
+  }, []);
+  const calculateDistance = async (body) => {
+    let obj = {
+      url: 'bookings/distance',
+      method: 'post',
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+      data: body,
+    };
+    APICall(obj)
+      .then((res) => {
+        if (res?.data?.status === 'success') {
+          setCDistance(res?.data?.data?.distance);
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        CustomConsole(err);
+      });
+  };
   return (
     <View
       style={{
@@ -27,8 +56,9 @@ const LocationDistance = (props) => {
           flex: 1,
           alignItems: 'center',
         }}>
-        <View>
+        <View style={{width: '50%'}}>
           <Text
+            numberOfLines={1}
             style={[
               styles.locationText,
               {
@@ -40,6 +70,7 @@ const LocationDistance = (props) => {
             {props.from ? props.from : ''}
           </Text>
           <Text
+            numberOfLines={1}
             style={[
               styles.locationText,
               {fontFamily: 'Gilroy-SemiBold', textTransform: 'capitalize'},
@@ -64,7 +95,7 @@ const LocationDistance = (props) => {
             </View>
           </View>
         )) || (
-          <View style={{alignItems: 'center'}}>
+          <View style={{alignItems: 'center', maxWidth: '45%'}}>
             <Text style={[styles.locationText, {marginTop: 0}]}>DISTANCE</Text>
             <View
               style={{
@@ -73,6 +104,7 @@ const LocationDistance = (props) => {
                 marginTop: hp(1),
               }}>
               <Text
+                numberOfLines={1}
                 style={{
                   fontFamily: 'Roboto-Bold',
                   fontSize: wp(5),
@@ -81,7 +113,7 @@ const LocationDistance = (props) => {
                 {props.finalDistance
                   ? props.finalDistance + ' KM'
                   : props.distance
-                  ? parseInt(props.distance / 1000) + ' KM'
+                  ? cDistance + ' KM'
                   : '314KM'}
               </Text>
               {props.onEditClick && (

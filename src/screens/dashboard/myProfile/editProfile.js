@@ -28,6 +28,7 @@ const EditProfile = (props) => {
     fname: undefined,
     lname: undefined,
     email: undefined,
+    dob: undefined,
   });
   const handleState = (key, value) => {
     setData({
@@ -122,7 +123,7 @@ const EditProfile = (props) => {
                 // paddingHorizontal: 15,
                 borderRadius: 10,
                 height: hp(6.5),
-                borderColor: Colors.silver,
+                borderColor: error?.dob === false ? Colors.red : Colors.silver,
                 backgroundColor: Colors.white,
               }}>
               <DatePicker
@@ -131,9 +132,9 @@ const EditProfile = (props) => {
                   height: '100%',
                   justifyContent: 'center',
                 }}
-                date={moment(data?.dob).format('D MMM yyyy')}
+                date={data?.dob && moment(data?.dob).format('D MMM yyyy')}
                 mode="date"
-                placeholder="select date"
+                placeholder="Select date"
                 format="D MMM yyyy"
                 maxDate={new Date()}
                 confirmBtnText="Confirm"
@@ -270,6 +271,11 @@ const EditProfile = (props) => {
                   tempError.email = false;
                 } else {
                   tempError.email = true;
+                }
+                if (!data.dob) {
+                  tempError.dob = false;
+                } else {
+                  tempError.dob = true;
                 }
                 setError(tempError);
                 if (

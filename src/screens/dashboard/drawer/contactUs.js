@@ -198,7 +198,9 @@ const ContactUs = (props) => {
                         maxWidth: '80%',
                         fontFamily: 'Roboto-SemiBold',
                       }}>
-                      {source_meta?.city}
+                      {source_meta?.city === destination_meta?.city
+                        ? source_meta?.address
+                        : source_meta?.city}
                     </Text>
                   </View>
                   <View
@@ -215,7 +217,9 @@ const ContactUs = (props) => {
                           fontFamily: 'Roboto-SemiBold',
                         },
                       ]}>
-                      {destination_meta?.city}
+                      {destination_meta?.city === source_meta?.city
+                        ? destination_meta?.address
+                        : destination_meta?.city}
                     </Text>
                   </View>
                 </View>

@@ -17,10 +17,10 @@ import {APICall} from '../../../../redux/actions/user';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 
 const Timer = (props) => {
-  const [orderPlacedVisible, setOrderPlacedVisible] = useState(true);
+  const [orderPlacedVisible, setOrderPlacedVisible] = useState(false);
   const [orderDetails, setOrderDetails] = useState({});
   const [time, setTime] = useState(
-    DiffMin(new Date(props?.apiResponse?.bid_result_at)) || 0,
+    DiffMin(props?.apiResponse?.bid_result_at) || 0,
   );
   useEffect(() => {
     let obj = {
@@ -34,10 +34,9 @@ const Timer = (props) => {
       .then((res) => {
         if (res?.data?.status === 'success') {
           setOrderDetails(res?.data?.data?.booking);
+          setOrderPlacedVisible(true);
           if (res?.data?.data?.booking?.bid_result_at) {
-            let temp = DiffMin(
-              new Date(res?.data?.data?.booking?.bid_result_at),
-            );
+            let temp = DiffMin(res?.data?.data?.booking?.bid_result_at);
             setTime(temp);
           }
         } else {

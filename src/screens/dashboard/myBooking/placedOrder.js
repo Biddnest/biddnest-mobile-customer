@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Text, ScrollView} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
 import {CustomAlert, CustomConsole, DiffMin} from '../../../constant/commonFun';
-import {getOrderDetails} from '../../../redux/actions/user';
+import {APICall, getOrderDetails} from '../../../redux/actions/user';
 import SimpleHeader from '../../../components/simpleHeader';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 import LinearGradient from 'react-native-linear-gradient';
@@ -15,8 +15,10 @@ import FinishCalender from '../../../assets/svg/finish_calender.svg';
 import FinishBed from '../../../assets/svg/finish_bed.svg';
 import ActiveRs from '../../../assets/svg/active_rs.svg';
 import InActiveRs from '../../../assets/svg/inactive_rs.svg';
+import InitialQuote from '../home/mySelf/initialQuote';
+import {STORE} from '../../../redux';
 
-const OrderTimer = (props) => {
+const PlacedOrder = (props) => {
   const orderData = props?.route?.params?.orderData || {};
   const [orderDetails, setOrderDetails] = useState({});
   const [timeOver, setTimeOver] = useState(false);
@@ -153,58 +155,50 @@ const OrderTimer = (props) => {
               renderStepIndicator={renderStepIndicator}
             />
           </View>
-          <Text
-            style={{
-              fontFamily: 'Roboto-Italic',
-              fontSize: wp(3.5),
-              color: '#99A0A5',
-              textAlign: 'center',
-              marginHorizontal: wp(6),
-            }}>
-            You’ll get the estimated price once the time is up
-          </Text>
-          <View style={styles.inputForm}>
-            <View style={{marginVertical: hp(0.8)}}>
-              <CountdownCircleTimer
-                onComplete={() => {
-                  setTimeOver(true);
-                  // props.navigation.replace('FinalQuote', {
-                  //   orderData: orderDetails,
-                  // })
-                }}
-                isPlaying
-                duration={
-                  DiffMin(
-                    orderDetails?.bid_result_at || orderData?.bid_result_at,
-                  ) > 0
-                    ? DiffMin(
-                        orderDetails?.bid_result_at || orderData?.bid_result_at,
-                      ) * 60
-                    : 0
-                }
-                children={children}
-                colors={[[Colors.darkBlue, 0.4]]}
-              />
-            </View>
-            <Text style={styles.mainText}>Time Left</Text>
-            {timeOver && (
-              <Text style={styles.mainText}>
-                Your result will be displayed soon
-              </Text>
-            )}
-            <View style={styles.separatorView} />
-            <View style={styles.flexView}>
-              <Text style={styles.orderID}>ORDER ID</Text>
-              <Text style={styles.orderNo}>{orderData?.public_booking_id}</Text>
-            </View>
-          </View>
+          <InitialQuote
+            apiResponse={orderData}
+            // setApiResponse={setApiResponse}
+            // data={data}
+            // handleStateChange={handleStateChange}
+            handleBooking={(service_type) => {
+              let obj = {
+                url: 'bookings/confirm',
+                method: 'post',
+                headers: {
+                  Authorization:
+                    'Bearer ' + STORE.getState().Login?.loginData?.token,
+                },
+                data: {
+                  service_type: service_type,
+                  public_booking_id: orderDetails?.public_booking_id,
+                },
+              };
+              APICall(obj)
+                .then((res) => {
+                  if (res?.data?.status === 'success') {
+                    props.navigation.replace('OrderTimer', {
+                      orderData: orderDetails,
+                    });
+                  } else {
+                    CustomAlert(res?.data?.message);
+                  }
+                })
+                .catch((err) => {
+                  CustomConsole(err);
+                });
+            }}
+            // bookingFor={bookingFor}
+            // movementType={movementType}
+            navigation={props.navigation}
+            // onPageChange={onPageChange}
+          />
         </LinearGradient>
       </ScrollView>
     </View>
   );
 };
 
-export default OrderTimer;
+export default PlacedOrder;
 
 const styles = StyleSheet.create({
   inputForm: {
