@@ -7,6 +7,7 @@ import Splash from '../screens/auth/splash';
 import Login from '../screens/auth/login';
 import Signup from '../screens/auth/signup';
 import DrawerNavigation from './drawerNavigation';
+import {navigationRef} from './RootNavigation';
 
 const Stack = createStackNavigator();
 
@@ -16,7 +17,7 @@ const App = () => {
     Text.defaultProps.allowFontScaling = false;
   }, []);
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator initialRouteName="Splash" headerMode={false}>
         <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="Login" component={Login} />

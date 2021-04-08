@@ -92,6 +92,7 @@ const FAQDetails = (props) => {
       />
       <View style={{flex: 1}}>
         <FlatList
+          keyExtractor={(item, index) => index.toString()}
           onRefresh={fetchData}
           refreshing={isLoading}
           bounces={false}

@@ -6,13 +6,18 @@ import Header from './header';
 import TextInput from '../../components/textInput';
 import Button from '../../components/button';
 import CheckBox from '../../components/checkBox';
-import {CustomAlert, resetNavigator} from '../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  resetNavigator,
+} from '../../constant/commonFun';
 import DropDownAndroid from '../../components/dropDown';
 import LinearGradient from 'react-native-linear-gradient';
 import {signUP} from '../../redux/actions/user';
 import {useDispatch, useSelector} from 'react-redux';
 import {LOGIN_USER_DATA} from '../../redux/types';
 import {STORE} from '../../redux';
+import OneSignal from 'react-native-onesignal';
 
 const Signup = (props) => {
   const dispatch = useDispatch();
@@ -178,6 +183,10 @@ const Signup = (props) => {
                           type: LOGIN_USER_DATA,
                           payload: {...userData, ...res?.data},
                         });
+                        OneSignal.setExternalUserId(
+                          res?.data?.user?.id?.toString(),
+                          (results) => {},
+                        );
                         resetNavigator(props, 'Dashboard');
                       } else {
                         CustomAlert(res.message);

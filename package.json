@@ -33,6 +33,7 @@
     "react-native": "0.63.4",
     "react-native-calendars": "^1.1254.0",
     "react-native-countdown-circle-timer": "^2.5.0",
+    "react-native-custom-tabs": "^0.1.7",
     "react-native-datepicker": "^1.7.2",
     "react-native-device-info": "^8.0.1",
     "react-native-dropdown-picker": "^4.0.2",

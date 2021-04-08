@@ -408,6 +408,7 @@ const RequirementDetails = (props) => {
         </Text>
         <View style={{marginTop: hp(3)}}>
           <FlatList
+            keyExtractor={(item, index) => index.toString()}
             bounces={false}
             data={inventoryItems}
             extraData={inventoryItems}

@@ -120,6 +120,7 @@ const OrderDetailModal = (props) => {
       </Text>
       <CloseIcon onPress={props.onCloseIcon} />
       <FlatList
+        keyExtractor={(item, index) => index.toString()}
         bounces={false}
         data={props.data}
         extraData={props.data}

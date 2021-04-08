@@ -230,6 +230,7 @@ const MyBooking = (props) => {
       <View style={{flex: 1}}>
         <FlatList
           bounces={false}
+          keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
           data={
             selectedTab === 0

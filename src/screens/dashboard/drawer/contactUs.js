@@ -248,6 +248,7 @@ const ContactUs = (props) => {
             <View style={styles.separatorView} />
             <View>
               <FlatList
+                keyExtractor={(item, index) => index.toString()}
                 bounces={false}
                 showsVerticalScrollIndicator={false}
                 data={recentTicket || []}

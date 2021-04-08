@@ -11,6 +11,7 @@ import {
 } from '../types';
 import {CustomAlert} from '../../constant/commonFun';
 import {STORE} from '../index';
+import {CommonActions} from '@react-navigation/native';
 
 export const APICall = (obj) => {
   return new Promise((resolve, reject) => {
@@ -19,7 +20,19 @@ export const APICall = (obj) => {
         resolve(res);
       })
       .catch((err) => {
-        if (err?.response) {
+        if (err?.response?.status === 401) {
+          CustomAlert('Try to login again');
+          // Logout
+          // dispatch({
+          //   type: RESET_STORE,
+          // });
+          // navigation.dispatch(
+          //   CommonActions.reset({
+          //     index: 0,
+          //     routes: [{name: 'Login'}],
+          //   }),
+          // );
+        } else if (err?.response) {
           reject(err.response);
         } else {
           CustomAlert('Server Down');

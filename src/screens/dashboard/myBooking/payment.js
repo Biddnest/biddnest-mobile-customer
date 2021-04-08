@@ -295,6 +295,7 @@ const Payment = (props) => {
             </Text>
           </LinearGradient>
           <FlatList
+            keyExtractor={(item, index) => index.toString()}
             numColumns={2}
             showsHorizontalScrollIndicator={false}
             data={PAYMENT_OPTION}

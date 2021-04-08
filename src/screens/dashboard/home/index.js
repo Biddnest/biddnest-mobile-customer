@@ -35,7 +35,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import {STORE} from '../../../redux';
 import AsyncStorage from '@react-native-community/async-storage';
+import {CustomTabs} from 'react-native-custom-tabs';
 import Shimmer from 'react-native-shimmer';
+import {RESET_STORE} from '../../../redux/types';
 
 export const HomeHeader = (props) => {
   return (
@@ -113,6 +115,28 @@ const Home = (props) => {
 
   useEffect(() => {
     if (isFocused && userData?.fname) {
+      let obj = {
+        url: 'auth/verify',
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+      };
+      APICall(obj)
+        .then((res) => {
+          setLoading(false);
+          if (res?.data?.status === 'fail') {
+            CustomAlert(res?.data?.message);
+            dispatch({
+              type: RESET_STORE,
+            });
+            resetNavigator(props, 'Login');
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          CustomConsole(err);
+        });
       AsyncStorage.getItem('oneSignalData').then((signalData) => {
         let player_id = signalData && JSON.parse(signalData).userId;
         if (player_id) {
@@ -133,7 +157,7 @@ const Home = (props) => {
       getLocation()
         .then((locationData) => {
           setLoading(true);
-          dispatch(getSlider(locationData))
+          dispatch(getSlider(locationData, props))
             .then((res) => {
               if (res.status === 'success' && res?.data) {
                 setSliderData(res?.data?.sliders);
@@ -144,7 +168,7 @@ const Home = (props) => {
             .catch((err) => {
               CustomAlert(err?.data?.message);
             });
-          dispatch(getServices(locationData))
+          dispatch(getServices(locationData, props))
             .then((res) => {
               setLoading(false);
               if (res.status === 'success' && res?.data?.services) {
@@ -194,8 +218,12 @@ const Home = (props) => {
         }}>
         <Pressable
           onPress={() => {
-            if (item?.url) {
-              Linking.openURL(item?.url);
+            if (item?.url && item.url !== '') {
+              CustomTabs.openURL(item?.url)
+                .then(() => {})
+                .catch((err) => {
+                  console.log(err);
+                });
             }
           }}
           style={[
@@ -236,7 +264,7 @@ const Home = (props) => {
                 showsHorizontalScrollIndicator={false}
                 data={item?.banners}
                 renderItem={renderItem}
-                keyExtractor={(item, index) => index}
+                keyExtractor={(item, index) => index.toString()}
                 contentContainerStyle={{
                   padding: wp(4),
                   paddingRight: 0,
@@ -263,7 +291,7 @@ const Home = (props) => {
             showsHorizontalScrollIndicator={false}
             data={serviceData}
             extraData={serviceData}
-            keyExtractor={(item, index) => index}
+            keyExtractor={(item, index) => index.toString()}
             style={{marginTop: hp(2)}}
             contentContainerStyle={{justifyContent: 'space-evenly'}}
             renderItem={({item, index}) => {
@@ -346,7 +374,7 @@ const Home = (props) => {
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 data={item?.banners}
-                keyExtractor={(item, index) => index}
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => {
                   return (
                     <View

@@ -6,10 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import RightArrow from '../../../../assets/svg/right_arrow.svg';
 import {STORE} from '../../../../redux';
 import {APICall} from '../../../../redux/actions/user';
-import {
-  CustomAlert,
-  CustomConsole,
-} from '../../../../constant/commonFun';
+import {CustomAlert, CustomConsole} from '../../../../constant/commonFun';
 
 const FAQS = (props) => {
   const [faqs, setFaqs] = useState([]);
@@ -49,6 +46,7 @@ const FAQS = (props) => {
       />
       <View style={{flex: 1, padding: wp(3)}}>
         <FlatList
+          keyExtractor={(item, index) => index.toString()}
           onRefresh={fetchData}
           refreshing={isLoading}
           numColumns={2}

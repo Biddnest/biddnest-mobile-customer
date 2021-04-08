@@ -18,10 +18,15 @@ import {useDispatch, useSelector} from 'react-redux';
 import {initialConfig} from '../../redux/actions/user';
 import AsyncStorage from '@react-native-community/async-storage';
 import {STYLES} from '../../constant/commonStyle';
+import {CustomTabs} from 'react-native-custom-tabs';
 
 const Splash = (props) => {
   const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(false);
+  const notificationData =
+    useSelector(
+      (state) => state.Login?.configData?.enums?.notification?.type,
+    ) || {};
   const userData = useSelector((state) => state.Login?.loginData?.user);
   useEffect(() => {
     OneSignal.setLogLevel(6, 0);
@@ -48,10 +53,38 @@ const Splash = (props) => {
   }
 
   function onOpened(openResult) {
-    console.log('Message: ', openResult.notification.payload.body);
-    console.log('Data: ', openResult.notification.payload.additionalData);
-    console.log('isActive: ', openResult.notification.isAppInFocus);
-    console.log('openResult: ', openResult);
+    console.log('Data: ', openResult);
+    let temp = openResult?.notification?.payload?.additionalData || {};
+    if (temp?.type === notificationData?.booking) {
+      if (temp?.booking_status === 0) {
+        props.navigation.navigate('PlacedOrder', {
+          orderData: {public_booking_id: temp.public_booking_id},
+        });
+      } else if (temp?.booking_status === 2 || temp?.booking_status === 3) {
+        props.navigation.navigate('OrderTimer', {
+          orderData: {public_booking_id: temp.public_booking_id},
+        });
+      } else if (temp?.booking_status === 4) {
+        props.navigation.navigate('FinalQuote', {
+          orderData: {public_booking_id: temp.public_booking_id},
+        });
+      } else if (
+        temp?.booking_status === 5 ||
+        temp?.booking_status === 6 ||
+        temp?.booking_status === 7 ||
+        temp?.booking_status === 8
+      ) {
+        props.navigation.navigate('OrderTracking', {
+          orderData: {public_booking_id: temp.public_booking_id},
+        });
+      }
+    } else if (temp?.type === notificationData?.link) {
+      CustomTabs.openURL(temp?.url)
+        .then(() => {})
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
   function onIds(device) {
     if (device && device.userId) {

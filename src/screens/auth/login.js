@@ -8,10 +8,15 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Header from './header';
 import CheckBox from '../../components/checkBox';
 import LinearGradient from 'react-native-linear-gradient';
-import {CustomAlert, resetNavigator} from '../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  resetNavigator,
+} from '../../constant/commonFun';
 import {useDispatch} from 'react-redux';
 import {sendOTP, verifyOTP} from '../../redux/actions/user';
 import {LOGIN_USER_DATA} from '../../redux/types';
+import OneSignal from 'react-native-onesignal';
 
 const Login = (props) => {
   const dispatch = useDispatch();
@@ -179,6 +184,10 @@ const Login = (props) => {
                               phone,
                             });
                           } else {
+                            OneSignal.setExternalUserId(
+                              res?.data?.user?.id?.toString(),
+                              (results) => {},
+                            );
                             resetNavigator(props, 'Dashboard');
                           }
                         } else {
