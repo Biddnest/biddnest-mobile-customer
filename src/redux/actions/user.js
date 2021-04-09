@@ -22,6 +22,7 @@ export const APICall = (obj) => {
       })
       .catch((err) => {
         if (err?.response?.status === 401) {
+          CustomAlert('Try to login again');
           navigationRef.current?.dispatch(
             CommonActions.reset({
               index: 0,
@@ -147,7 +148,6 @@ export const updateProfile = (data) => {
 
 export const signOut = () => {
   return (dispatch) => {
-    CustomAlert('Try to login again');
     dispatch({
       type: RESET_STORE,
     });
