@@ -76,7 +76,7 @@ const Timer = (props) => {
           <CountdownCircleTimer
             onComplete={() => resetNavigator(props, 'Dashboard')}
             isPlaying
-            duration={time >= 0 ? time * 60 : 0}
+            duration={time}
             children={children}
             colors={[[Colors.darkBlue, 0.4]]}
           />

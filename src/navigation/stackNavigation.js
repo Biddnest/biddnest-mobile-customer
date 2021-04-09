@@ -17,7 +17,6 @@ import FAQs from '../screens/dashboard/drawer/faqs';
 import FAQDetails from '../screens/dashboard/drawer/faqs/faqDetails';
 import OrderTimer from '../screens/dashboard/myBooking/orderTimer';
 import RaiseTicket from '../screens/dashboard/myBooking/raiseTicket';
-import PlacedOrder from '../screens/dashboard/myBooking/placedOrder';
 
 const Stack = createStackNavigator();
 
@@ -55,7 +54,6 @@ const MyBookingStackNavigator = () => {
       <Stack.Screen name="CardDetails" component={CardDetails} />
       <Stack.Screen name="FinalQuote" component={FinalQuote} />
       <Stack.Screen name="OrderTimer" component={OrderTimer} />
-      <Stack.Screen name="PlacedOrder" component={PlacedOrder} />
       <Stack.Screen name="RaiseTicket" component={RaiseTicket} />
     </Stack.Navigator>
   );

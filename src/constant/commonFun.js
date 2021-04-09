@@ -61,8 +61,8 @@ export const secondsToHms = (d) => {
 
 export const DiffMin = (dt1) => {
   let dif = moment(dt1) - moment();
-  dif = Math.round(dif / 1000 / 60);
-  return dif;
+  dif = Math.round(dif / 1000);
+  return dif > 0 ? dif : 0;
 };
 
 export const CustomAlert = (msg = '') => {

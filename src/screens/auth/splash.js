@@ -56,11 +56,7 @@ const Splash = (props) => {
     console.log('Data: ', openResult);
     let temp = openResult?.notification?.payload?.additionalData || {};
     if (temp?.type === notificationData?.booking) {
-      if (temp?.booking_status === 0) {
-        props.navigation.navigate('PlacedOrder', {
-          orderData: {public_booking_id: temp.public_booking_id},
-        });
-      } else if (temp?.booking_status === 2 || temp?.booking_status === 3) {
+      if (temp?.booking_status === 2 || temp?.booking_status === 3) {
         props.navigation.navigate('OrderTimer', {
           orderData: {public_booking_id: temp.public_booking_id},
         });

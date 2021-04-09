@@ -173,15 +173,9 @@ const OrderTimer = (props) => {
                   // })
                 }}
                 isPlaying
-                duration={
-                  DiffMin(
-                    orderDetails?.bid_result_at || orderData?.bid_result_at,
-                  ) > 0
-                    ? DiffMin(
-                        orderDetails?.bid_result_at || orderData?.bid_result_at,
-                      ) * 60
-                    : 0
-                }
+                duration={DiffMin(
+                  orderDetails?.bid_result_at || orderData?.bid_result_at,
+                )}
                 children={children}
                 colors={[[Colors.darkBlue, 0.4]]}
               />
