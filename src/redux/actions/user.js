@@ -12,6 +12,7 @@ import {
 import {CustomAlert} from '../../constant/commonFun';
 import {STORE} from '../index';
 import {CommonActions} from '@react-navigation/native';
+import {navigationRef} from '../../navigation/RootNavigation';
 
 export const APICall = (obj) => {
   return new Promise((resolve, reject) => {
@@ -21,17 +22,7 @@ export const APICall = (obj) => {
       })
       .catch((err) => {
         if (err?.response?.status === 401) {
-          CustomAlert('Try to login again');
-          // Logout
-          // dispatch({
-          //   type: RESET_STORE,
-          // });
-          // navigation.dispatch(
-          //   CommonActions.reset({
-          //     index: 0,
-          //     routes: [{name: 'Login'}],
-          //   }),
-          // );
+          signOut();
         } else if (err?.response) {
           reject(err.response);
         } else {
@@ -149,22 +140,18 @@ export const updateProfile = (data) => {
   };
 };
 
-export const signOut = (data) => {
+export const signOut = () => {
   return (dispatch) => {
-    return new Promise((resolve, reject) => {
-      APICall(data)
-        .then((res) => {
-          if (res && res.data && res.data.status === 'success') {
-            dispatch({
-              type: RESET_STORE,
-            });
-          }
-          resolve(res.data);
-        })
-        .catch((err) => {
-          reject(err);
-        });
+    CustomAlert('Try to login again');
+    dispatch({
+      type: RESET_STORE,
     });
+    navigationRef.current?.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'Login'}],
+      }),
+    );
   };
 };
 

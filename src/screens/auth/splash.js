@@ -22,7 +22,7 @@ import {CustomTabs} from 'react-native-custom-tabs';
 
 const Splash = (props) => {
   const dispatch = useDispatch();
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const notificationData =
     useSelector(
       (state) => state.Login?.configData?.enums?.notification?.type,
@@ -93,7 +93,6 @@ const Splash = (props) => {
     console.log('Device info: ', device);
   }
   const callServiceAPI = () => {
-    setLoading(true);
     locationPermission();
     dispatch(initialConfig())
       .then((res) => {

@@ -125,17 +125,10 @@ const Home = (props) => {
       APICall(obj)
         .then((res) => {
           setLoading(false);
-          if (res?.data?.status === 'fail') {
-            CustomAlert(res?.data?.message);
-            dispatch({
-              type: RESET_STORE,
-            });
-            resetNavigator(props, 'Login');
-          }
         })
         .catch((err) => {
           setLoading(false);
-          CustomConsole(err);
+          CustomAlert(err?.data?.message);
         });
       AsyncStorage.getItem('oneSignalData').then((signalData) => {
         let player_id = signalData && JSON.parse(signalData).userId;
