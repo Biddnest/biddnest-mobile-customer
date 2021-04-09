@@ -198,15 +198,6 @@ export const getServices = (data) => {
           resolve(res.data);
         })
         .catch((err) => {
-          if (err.status === 401) {
-            // dispatch({
-            //   type: RESET_STORE,
-            // });
-            // CommonActions.reset({
-            //   index: 0,
-            //   routes: [{name: 'Login'}],
-            // });
-          }
           CustomAlert(err?.data?.message);
           reject(err);
         });
@@ -233,15 +224,6 @@ export const getAllInventories = () => {
           resolve(res.data);
         })
         .catch((err) => {
-          if (err.status === 401) {
-            // dispatch({
-            //   type: RESET_STORE,
-            // });
-            // CommonActions.reset({
-            //   index: 0,
-            //   routes: [{name: 'Login'}],
-            // });
-          }
           CustomAlert(err?.data?.message);
           reject(err);
         });
@@ -268,15 +250,6 @@ export const getLiveOrders = () => {
           resolve(res.data);
         })
         .catch((err) => {
-          if (err.status === 401) {
-            // dispatch({
-            //   type: RESET_STORE,
-            // });
-            // CommonActions.reset({
-            //   index: 0,
-            //   routes: [{name: 'Login'}],
-            // });
-          }
           CustomAlert(err?.data?.message);
           reject(err);
         });
@@ -303,15 +276,6 @@ export const getPastOrders = () => {
           resolve(res.data);
         })
         .catch((err) => {
-          if (err.status === 401) {
-            // dispatch({
-            //   type: RESET_STORE,
-            // });
-            // CommonActions.reset({
-            //   index: 0,
-            //   routes: [{name: 'Login'}],
-            // });
-          }
           CustomAlert(err?.data?.message);
           reject(err);
         });
@@ -333,15 +297,6 @@ export const getOrderDetails = (id) => {
         resolve(res);
       })
       .catch((err) => {
-        if (err.status === 401) {
-          // dispatch({
-          //   type: RESET_STORE,
-          // });
-          // CommonActions.reset({
-          //   index: 0,
-          //   routes: [{name: 'Login'}],
-          // });
-        }
         CustomAlert(err?.data?.message);
         reject(err);
       });
