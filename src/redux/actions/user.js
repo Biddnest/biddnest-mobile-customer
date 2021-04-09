@@ -22,7 +22,12 @@ export const APICall = (obj) => {
       })
       .catch((err) => {
         if (err?.response?.status === 401) {
-          signOut();
+          navigationRef.current?.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'Login'}],
+            }),
+          );
         } else if (err?.response) {
           reject(err.response);
         } else {
@@ -146,12 +151,6 @@ export const signOut = () => {
     dispatch({
       type: RESET_STORE,
     });
-    navigationRef.current?.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{name: 'Login'}],
-      }),
-    );
   };
 };
 

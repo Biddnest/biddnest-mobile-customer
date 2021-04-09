@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Colors, hp, wp} from '../../constant/colors';
@@ -8,13 +8,9 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Header from './header';
 import CheckBox from '../../components/checkBox';
 import LinearGradient from 'react-native-linear-gradient';
-import {
-  CustomAlert,
-  CustomConsole,
-  resetNavigator,
-} from '../../constant/commonFun';
+import {CustomAlert, resetNavigator} from '../../constant/commonFun';
 import {useDispatch} from 'react-redux';
-import {sendOTP, verifyOTP} from '../../redux/actions/user';
+import {sendOTP, signOut, verifyOTP} from '../../redux/actions/user';
 import {LOGIN_USER_DATA} from '../../redux/types';
 import OneSignal from 'react-native-onesignal';
 
@@ -27,6 +23,10 @@ const Login = (props) => {
   const [isAgree, setAgree] = React.useState(true);
   const [isLoading, setLoading] = useState(false);
   const [otpResponse, setOtpResponse] = useState({});
+
+  useEffect(() => {
+    dispatch(signOut());
+  }, []);
 
   const sendOTPFun = () => {
     setLoading(true);
