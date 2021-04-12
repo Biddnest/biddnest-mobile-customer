@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 const TextInput = (props) => {
   return (
     <Input
+      autoFocus={props.autoFocus || false}
       autoCapitalize={props.autoCapitalize ? 'characters' : 'none'}
       disabled={props.disable || false}
       keyboardType={props.keyboard || 'default'}

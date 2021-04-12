@@ -11,18 +11,10 @@ const Switch = (props) => {
 
   return (
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
-      <Text
-        style={{
-          fontFamily: 'Roboto-Regular',
-          color: !switchValue ? '#3B4B58' : '#99A0A5',
-          fontSize: wp(3.8),
-        }}>
-        No
-      </Text>
       <Pressable
         onPress={() => props.onChange(props.value == 0 ? 1 : 0)}
         style={{
-          height: 22,
+          height: 24,
           width: 45,
           backgroundColor: switchValue ? Colors.darkBlue : '#98A0A6',
           marginHorizontal: 5,
@@ -31,27 +23,19 @@ const Switch = (props) => {
         }}>
         <Animated.View
           style={{
-            height: 13,
+            height: 15,
             width: 17,
             backgroundColor: Colors.white,
             marginHorizontal: 3,
             borderRadius: 2,
             transform: [
               {
-                translateX: switchValue ? 21 : 0,
+                translateX: switchValue ? 20 : 2,
               },
             ],
           }}
         />
       </Pressable>
-      <Text
-        style={{
-          fontFamily: 'Roboto-Regular',
-          color: switchValue ? '#3B4B58' : '#99A0A5',
-          fontSize: wp(3.8),
-        }}>
-        Yes
-      </Text>
     </View>
   );
 };

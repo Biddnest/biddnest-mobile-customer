@@ -261,6 +261,7 @@ const Home = (props) => {
                 contentContainerStyle={{
                   padding: wp(4),
                   paddingRight: 0,
+                  paddingBottom: 0,
                 }}
               />
             );

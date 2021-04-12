@@ -29,7 +29,7 @@ const DropDownAndroid = (props) => {
         }>
         <DropDownPicker
           searchable={true}
-          placeholder={'-Select'}
+          placeholder={'-Select-'}
           items={props.items}
           defaultValue={props.value}
           customArrowUp={() => (
@@ -44,6 +44,9 @@ const DropDownAndroid = (props) => {
             // borderRadius: 10,
             // borderColor: Colors.silver,
           }}
+          scrollViewProps={{
+            showsVerticalScrollIndicator: true,
+          }}
           style={[
             styles.customDropDown,
             {
@@ -52,12 +55,14 @@ const DropDownAndroid = (props) => {
               borderTopRightRadius: 10,
               borderBottomLeftRadius: 10,
               borderBottomRightRadius: 10,
+              ...props.customDropDown,
             },
           ]}
           labelStyle={{
             fontSize: wp(4),
             backgroundColor: Colors.textBG,
             color: Colors.inputTextColor,
+            textTransform: 'capitalize',
           }}
           selectedLabelLength={props.width ? props.width : wp(45)}
           itemStyle={{

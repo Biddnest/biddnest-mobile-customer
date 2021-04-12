@@ -21,11 +21,7 @@ import MapView, {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CloseIcon from '../../../../components/closeIcon';
 import FlatButton from '../../../../components/flatButton';
-import {
-  CustomAlert,
-  getLocation,
-  pad_with_zeroes,
-} from '../../../../constant/commonFun';
+import {CustomAlert, getLocation} from '../../../../constant/commonFun';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 navigator.geolocation = require('@react-native-community/geolocation');
 
@@ -39,18 +35,22 @@ const MovingForm = (props) => {
   const [isLoading, setLoading] = useState(false);
   const [isPanding, setPanding] = useState(false);
   const [error, setError] = useState({
-    address: undefined,
+    address_line1: undefined,
+    address_line2: undefined,
     pincode: undefined,
     floor: undefined,
     city: undefined,
+    geocode: undefined,
   });
   const [mapData, setMapData] = useState({
     latitude: 21.1702,
     longitude: 72.8311,
     city: '',
     state: '',
+    geocode: '',
     pincode: '',
-    address: '',
+    address_line1: '',
+    address_line2: '',
   });
   const [region, setRegion] = useState({
     latitude: 10.780889,
@@ -58,9 +58,11 @@ const MovingForm = (props) => {
     latitudeDelta: MapConstantDelta,
     longitudeDelta: MapConstantDelta,
   });
+  const scrollViewRef = useRef(null);
   const [address, setAddress] = useState('');
   let source = data?.source || {};
   let destination = data?.destination || {};
+  let movingFromData = props.movingFrom ? destination?.meta : source?.meta;
 
   useEffect(() => {
     getLocation()
@@ -149,6 +151,7 @@ const MovingForm = (props) => {
 
   return (
     <KeyboardAwareScrollView
+      ref={scrollViewRef}
       enableOnAndroid={false}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
@@ -166,25 +169,57 @@ const MovingForm = (props) => {
         <Pressable onPress={() => setMapVisible(true)}>
           <TextInput
             disable={true}
-            label={props.movingFrom ? 'To City' : 'From City'}
-            isRight={error.city}
+            label={'From'}
+            isRight={error?.geocode}
             value={
-              props.movingFrom ? destination?.meta?.city : source?.meta?.city
+              props.movingFrom
+                ? destination?.meta?.geocode
+                : source?.meta?.geocode
             }
             placeHolder={'Choose on map'}
           />
         </Pressable>
+        {/*<TextInput*/}
+        {/*  label={'Address'}*/}
+        {/*  isRight={error.address}*/}
+        {/*  placeHolder={'Select building or nearest landmark'}*/}
+        {/*  numberOfLines={4}*/}
+        {/*  value={*/}
+        {/*    props.movingFrom*/}
+        {/*      ? destination?.meta?.address*/}
+        {/*      : source?.meta?.address*/}
+        {/*  }*/}
+        {/*  onChange={(text) => handleState('address', text)}*/}
+        {/*/>*/}
         <TextInput
-          label={'Address'}
-          isRight={error.address}
-          placeHolder={'Select building or nearest landmark'}
-          numberOfLines={4}
+          label={'Address Line 1'}
+          isRight={error.address_line1}
+          placeHolder={'Flat no, Street no'}
           value={
             props.movingFrom
-              ? destination?.meta?.address
-              : source?.meta?.address
+              ? destination?.meta?.address_line1
+              : source?.meta?.address_line1
           }
-          onChange={(text) => handleState('address', text)}
+          onChange={(text) => handleState('address_line1', text)}
+        />
+        <TextInput
+          label={'Address Line 2'}
+          isRight={error.address_line2}
+          placeHolder={'Landmark, Area'}
+          value={
+            props.movingFrom
+              ? destination?.meta?.address_line2
+              : source?.meta?.address_line2
+          }
+          onChange={(text) => handleState('address_line2', text)}
+        />
+        <TextInput
+          label={'City'}
+          isRight={error.city}
+          value={
+            props.movingFrom ? destination?.meta?.city : source?.meta?.city
+          }
+          placeHolder={'Choose on map'}
         />
         <TextInput
           label={'Pincode'}
@@ -209,9 +244,10 @@ const MovingForm = (props) => {
             isRight={error.floor}
             value={
               props.movingFrom
-                ? pad_with_zeroes(destination?.meta?.floor, 2).toString()
-                : pad_with_zeroes(source?.meta?.floor, 2).toString()
+                ? destination?.meta?.floor.toString()
+                : source?.meta?.floor.toString()
             }
+            keyboard={'decimal-pad'}
             placeHolder={'Floor'}
             onChange={(text) => handleState('floor', text)}
           />
@@ -239,24 +275,14 @@ const MovingForm = (props) => {
               marginLeft: wp(2),
             }}
             onPress={() => {
-              if (
+              handleState(
+                'floor',
                 parseInt(
                   props.movingFrom
                     ? destination?.meta?.floor
                     : source?.meta?.floor,
-                ) -
-                  1 >=
-                0
-              ) {
-                handleState(
-                  'floor',
-                  parseInt(
-                    props.movingFrom
-                      ? destination?.meta?.floor
-                      : source?.meta?.floor,
-                  ) - 1 || 0,
-                );
-              }
+                ) - 1 || 0,
+              );
             }}>
             <MaterialIcons
               name="arrow-drop-down"
@@ -281,8 +307,11 @@ const MovingForm = (props) => {
             <Ionicons name={'information-circle'} size={25} color={'#99A0A5'} />
             <Text
               style={{
-                color: '#99A0A5',
-                fontFamily: 'Roboto-Regular',
+                color:
+                  movingFromData?.lift === true || movingFromData?.lift == 1
+                    ? Colors.textLabelColor
+                    : '#99A0A5',
+                fontFamily: 'Roboto-Bold',
                 fontSize: wp(4),
                 marginLeft: 5,
               }}>
@@ -302,7 +331,7 @@ const MovingForm = (props) => {
             alignItems: 'center',
             justifyContent: 'space-between',
             marginHorizontal: wp(3),
-            marginTop: hp(1),
+            marginTop: hp(2),
           }}>
           <View
             style={{
@@ -313,8 +342,12 @@ const MovingForm = (props) => {
             <Ionicons name={'information-circle'} size={25} color={'#99A0A5'} />
             <Text
               style={{
-                color: '#99A0A5',
-                fontFamily: 'Roboto-Regular',
+                color:
+                  movingFromData?.shared_service === true ||
+                  movingFromData?.shared_service == 1
+                    ? Colors.textLabelColor
+                    : '#99A0A5',
+                fontFamily: 'Roboto-Bold',
                 fontSize: wp(4),
                 marginLeft: 5,
               }}>
@@ -336,26 +369,35 @@ const MovingForm = (props) => {
             isLoading={isLoading}
             onPress={() => {
               setLoading(true);
+              scrollViewRef?.current?.scrollToPosition(0, 0, true);
               let tempError = {};
               let pageData = props.movingFrom
                 ? destination?.meta
                 : source?.meta;
               tempError.city = !(!pageData.city || pageData.city.length === 0);
-              tempError.address = !(
-                !pageData.address || pageData.address.length === 0
+              tempError.geocode = !(
+                !pageData.geocode || pageData.geocode.length === 0
+              );
+              tempError.address_line1 = !(
+                !pageData.address_line1 || pageData.address_line1.length === 0
+              );
+              tempError.address_line2 = !(
+                !pageData.address_line2 || pageData.address_line2.length === 0
               );
               tempError.pincode = !(
                 !pageData.pincode ||
                 pageData?.pincode?.length !== 6 ||
                 !/^[0-9]+$/.test(pageData?.pincode)
               );
+              tempError.floor = !(pageData?.floor?.toString()?.length === 0);
               setError(tempError);
               if (
                 Object.values(tempError).findIndex((item) => item === false) ===
                 -1
               ) {
                 setError({
-                  address: undefined,
+                  address_line1: undefined,
+                  address_line2: undefined,
                   pincode: undefined,
                   floor: undefined,
                   city: undefined,
@@ -366,7 +408,8 @@ const MovingForm = (props) => {
                   city: '',
                   state: '',
                   pincode: '',
-                  address: '',
+                  address_line1: '',
+                  address_line2: '',
                 });
                 setLoading(false);
                 if (props.movingFrom) {
@@ -520,7 +563,8 @@ const MovingForm = (props) => {
               onPress={() => {
                 if (props.movingFrom) {
                   let temp = {...destination};
-                  temp.meta.address = mapData.address;
+                  temp.meta.address_line1 = mapData.address_line1;
+                  temp.meta.address_line2 = mapData.address_line2;
                   temp.meta.city = mapData.city;
                   temp.meta.pincode = mapData.pincode;
                   temp.meta.state = mapData.state;
@@ -530,7 +574,8 @@ const MovingForm = (props) => {
                   handleStateChange('destination', temp);
                 } else {
                   let temp = {...source};
-                  temp.meta.address = mapData.address;
+                  temp.meta.address_line1 = mapData.address_line1;
+                  temp.meta.address_line2 = mapData.address_line2;
                   temp.meta.city = mapData.city;
                   temp.meta.pincode = mapData.pincode;
                   temp.meta.state = mapData.state;

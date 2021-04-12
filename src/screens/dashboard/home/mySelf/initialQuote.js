@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderColor: '#DEE6ED',
     marginTop: hp(2),
-    width: wp(42),
+    width: wp(44),
     alignItems: 'center',
   },
   common: {

@@ -21,7 +21,7 @@ export const APICall = (obj) => {
         resolve(res);
       })
       .catch((err) => {
-        if (err?.response?.status === 401 && obj?.url !== 'auth/verify') {
+        if (err?.response?.status === 401) {
           CustomAlert('Try to login again');
           navigationRef.current?.dispatch(
             CommonActions.reset({

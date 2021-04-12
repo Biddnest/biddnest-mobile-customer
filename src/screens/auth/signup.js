@@ -29,7 +29,7 @@ const Signup = (props) => {
     fname: '',
     lname: '',
     email: '',
-    gender: 'male',
+    gender: '',
     referral_code: '',
     phone: props?.route?.params?.phone || 0,
   });
@@ -78,7 +78,8 @@ const Signup = (props) => {
                 <TextInput
                   label={'First Name'}
                   isRight={error.fname}
-                  placeHolder={'First Name'}
+                  value={data?.fname}
+                  placeHolder={'John'}
                   onChange={(text) => handleState('fname', text)}
                 />
               </View>
@@ -86,15 +87,17 @@ const Signup = (props) => {
                 <TextInput
                   label={'Last Name'}
                   isRight={error.lname}
-                  placeHolder={'Last Name'}
+                  value={data?.lname}
+                  placeHolder={'Doe'}
                   onChange={(text) => handleState('lname', text)}
                 />
               </View>
             </View>
             <TextInput
               label={'Email'}
-              placeHolder={'Email'}
+              placeHolder={'example@domain.com'}
               isRight={error.email}
+              value={data?.email}
               keyboard={'email-address'}
               onChange={(text) => handleState('email', text)}
             />
@@ -104,16 +107,25 @@ const Signup = (props) => {
                 Platform.OS !== 'android' && {zIndex: 5001},
               ]}>
               <DropDownAndroid
-                value={'male'}
+                customDropDown={
+                  error?.gender === false
+                    ? {
+                        borderColor: 'red',
+                        borderWidth: 2,
+                      }
+                    : {}
+                }
+                value={data?.gender}
                 label={'Gender'}
                 items={configData?.gender}
                 onChangeItem={(text) => handleState('gender', text)}
               />
               <View style={{width: wp(45)}}>
                 <TextInput
+                  value={data?.referral_code}
                   label={'Referral Code'}
                   isRight={error.referral_code}
-                  placeHolder={'Referral Code'}
+                  placeHolder={'ABC123'}
                   onChange={(text) => handleState('referral_code', text)}
                 />
               </View>
@@ -155,6 +167,7 @@ const Signup = (props) => {
                   data.lname.length === 0 ||
                   /[^a-zA-Z]/.test(data.lname)
                 );
+                tempError.gender = !!data?.gender;
                 tempError.email = !(
                   !data.email ||
                   data.email.length === 0 ||

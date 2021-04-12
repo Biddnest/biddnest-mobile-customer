@@ -17,6 +17,7 @@ const DateOfMovement = (props) => {
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState(undefined);
   const [dateArray, setDateArray] = useState({});
+  let date = new Date();
 
   useEffect(() => {
     setDefaultSelectedDates();
@@ -114,7 +115,8 @@ const DateOfMovement = (props) => {
             markedDates={dateArray}
             style={{width: wp(90), height: hp(50)}}
             current={new Date()}
-            minDate={new Date()}
+            minDate={date.setDate(date.getDate() + 1)}
+            maxDate={date.setDate(date.getDate() + 13)}
             onDayPress={(day) => {
               let temp = {...dateArray};
               if (day.dateString in temp) {

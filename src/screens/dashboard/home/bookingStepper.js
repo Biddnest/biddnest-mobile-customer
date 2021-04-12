@@ -49,12 +49,13 @@ const BookingStepper = (props) => {
       meta: {
         geocode: '',
         floor: 0,
-        address: '',
         city: '',
         state: '',
         pincode: '',
         lift: 0,
         shared_service: true,
+        address_line1: '',
+        address_line2: '',
       },
     },
     destination: {
@@ -63,12 +64,13 @@ const BookingStepper = (props) => {
       meta: {
         geocode: '',
         floor: 0,
-        address: '',
         city: '',
         state: '',
         pincode: '',
         lift: 1,
         shared_service: false,
+        address_line1: '',
+        address_line2: '',
       },
     },
     contact_details: {
@@ -451,12 +453,12 @@ const BookingStepper = (props) => {
             onEditClick={() => setCurrentPosition(0)}
             from={
               data?.source?.meta?.city === data?.destination?.meta?.city
-                ? data?.source?.meta?.address
+                ? data?.source?.meta?.geocode
                 : data?.source?.meta?.city
             }
             to={
               data?.source?.meta?.city === data?.destination?.meta?.city
-                ? data?.destination?.meta?.address
+                ? data?.source?.meta?.geocode
                 : data?.destination?.meta?.city
             }
             distance={{

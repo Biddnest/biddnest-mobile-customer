@@ -12,15 +12,30 @@ import {APICall} from '../../../redux/actions/user';
 import LinearGradient from 'react-native-linear-gradient';
 import TextInput from '../../../components/textInput';
 import Button from '../../../components/button';
+import {useSelector} from 'react-redux';
+import DropDownAndroid from '../../../components/dropDown';
 
 const RaiseTicket = (props) => {
   const public_booking_id = props?.route?.params?.public_booking_id || null;
+  const configData =
+    useSelector((state) => state.Login?.configData?.enums?.ticket?.type) || {};
   const [isLoading, setLoading] = useState(false);
-  const [heading, setHeading] = useState('');
-  const [desc, setDesc] = useState('');
+  const [data, setData] = useState({
+    category: '',
+    heading: '',
+    desc: '',
+  });
   const [error, setError] = useState({
+    category: undefined,
     heading: undefined,
     desc: undefined,
+  });
+  let dropdownDefault = [];
+  Object.keys(configData).forEach((item, index) => {
+    dropdownDefault.push({
+      label: item.replace('_', ' '),
+      value: Object.values(configData)[index],
+    });
   });
   return (
     <View style={styles.container}>
@@ -33,13 +48,29 @@ const RaiseTicket = (props) => {
       <LinearGradient
         colors={[Colors.pageBG, Colors.white]}
         style={{flex: 1, padding: wp(5), alignItems: 'center'}}>
+        <View style={{marginBottom: hp(3)}}>
+          <DropDownAndroid
+            customDropDown={
+              error?.category === false
+                ? {
+                    borderColor: 'red',
+                    borderWidth: 2,
+                  }
+                : {}
+            }
+            width={wp(90)}
+            label={'Category'}
+            items={dropdownDefault}
+            onChangeItem={(text) => setData({...data, category: text})}
+          />
+        </View>
         <TextInput
           isRight={error?.heading}
           label={'Subject'}
           placeHolder={'Subject'}
-          value={heading}
+          value={data?.heading}
           placeholderStyle={{color: 'red'}}
-          onChange={(text) => setHeading(text)}
+          onChange={(text) => setData({...data, heading: text})}
         />
         {(error?.heading === false && (
           <Text style={styles.errorText}>Minimun 15 character required</Text>
@@ -51,11 +82,11 @@ const RaiseTicket = (props) => {
           placeHolder={'Description'}
           numberOfLines={8}
           height={hp(20)}
-          value={desc}
-          onChange={(text) => setDesc(text)}
+          value={data?.desc}
+          onChange={(text) => setData({...data, desc: text})}
         />
         {error?.desc === false && (
-          <Text style={styles.errorText}>Minimun 50 character required</Text>
+          <Text style={styles.errorText}>Minimun 15 character required</Text>
         )}
         <Button
           label={'SUBMIT'}
@@ -63,8 +94,9 @@ const RaiseTicket = (props) => {
           onPress={() => {
             setLoading(true);
             let tempError = {};
-            tempError.heading = !(!heading || heading.length < 15);
-            tempError.desc = !(!desc || desc.length < 50);
+            tempError.category = !!data?.category;
+            tempError.heading = !(!data?.heading || data?.heading.length < 15);
+            tempError.desc = !(!data?.desc || data?.desc.length < 15);
             setError(tempError);
             if (
               Object.values(tempError).findIndex((item) => item === false) ===
@@ -78,13 +110,13 @@ const RaiseTicket = (props) => {
                     'Bearer ' + STORE.getState().Login?.loginData?.token,
                 },
                 data: {
+                  ...data,
                   public_booking_id: public_booking_id,
-                  heading: heading,
-                  desc: desc,
                 },
               };
               APICall(obj)
                 .then((res) => {
+                  setLoading(false);
                   if (res?.data?.status === 'success') {
                     CustomAlert('Ticket Raised Successfully');
                     props.navigation.goBack();
@@ -93,6 +125,7 @@ const RaiseTicket = (props) => {
                   }
                 })
                 .catch((err) => {
+                  setLoading(false);
                   CustomConsole(err);
                 });
             } else {

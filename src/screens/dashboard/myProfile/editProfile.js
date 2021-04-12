@@ -136,7 +136,8 @@ const EditProfile = (props) => {
                 mode="date"
                 placeholder="Select date"
                 format="D MMM yyyy"
-                maxDate={new Date()}
+                minDate={moment().subtract(60, 'years')}
+                maxDate={moment().subtract(18, 'years')}
                 confirmBtnText="Confirm"
                 cancelBtnText="Cancel"
                 iconComponent={
