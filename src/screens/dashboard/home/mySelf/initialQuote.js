@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import TwoButton from '../../../../components/twoButton';
 import {useSelector} from 'react-redux';
 import RejectBookingModal from '../../myBooking/rejectBookingModal';
+import InformationPopUp from '../../../../components/informationPopUp';
 
 const InitialQuote = (props) => {
   const configData =
@@ -18,6 +19,8 @@ const InitialQuote = (props) => {
   const [defaultReason, setDefaultReason] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [rejectVisible, setRejectVisible] = useState(false);
+  const [economicInfo, setEconomicInfo] = useState(false);
+  const [premiumInfo, setPremiumInfo] = useState(false);
 
   useEffect(() => {
     let temp = [];
@@ -86,11 +89,20 @@ const InitialQuote = (props) => {
                   }}>
                   {item.title}
                 </Text>
-                <Ionicons
-                  name={'information-circle'}
-                  size={25}
-                  color={'#DEE6ED'}
-                />
+                <Pressable
+                  onPress={() => {
+                    if (item.title === 'Economy') {
+                      setEconomicInfo(true);
+                    } else {
+                      setPremiumInfo(true);
+                    }
+                  }}>
+                  <Ionicons
+                    name={'information-circle'}
+                    size={25}
+                    color={'#DEE6ED'}
+                  />
+                </Pressable>
               </View>
               <View
                 style={{
@@ -169,6 +181,22 @@ const InitialQuote = (props) => {
         public_booking_id={props?.apiResponse?.public_booking_id}
         setApiResponse={props.setApiResponse}
         navigation={props}
+      />
+      <InformationPopUp
+        visible={economicInfo || premiumInfo}
+        title={economicInfo ? 'Economic Pricing' : 'Premium Pricing'}
+        label={
+          economicInfo
+            ? 'Economic pricing only includes the cost of moving your items to the destination'
+            : 'Premium pricing includes the cost of packaging and moving your items to the destination'
+        }
+        onCloseIcon={() => {
+          if (economicInfo) {
+            setEconomicInfo(false);
+          } else {
+            setPremiumInfo(false);
+          }
+        }}
       />
     </ScrollView>
   );

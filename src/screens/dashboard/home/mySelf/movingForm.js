@@ -23,6 +23,7 @@ import CloseIcon from '../../../../components/closeIcon';
 import FlatButton from '../../../../components/flatButton';
 import {CustomAlert, getLocation} from '../../../../constant/commonFun';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import InformationPopUp from '../../../../components/informationPopUp';
 navigator.geolocation = require('@react-native-community/geolocation');
 
 const MovingForm = (props) => {
@@ -34,6 +35,8 @@ const MovingForm = (props) => {
   const [mapVisible, setMapVisible] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isPanding, setPanding] = useState(false);
+  const [liftInfo, setLiftInfo] = useState(false);
+  const [sharedInfo, setSharedInfo] = useState(false);
   const [error, setError] = useState({
     address_line1: undefined,
     address_line2: undefined,
@@ -304,7 +307,13 @@ const MovingForm = (props) => {
               alignItems: 'center',
               width: wp(52),
             }}>
-            <Ionicons name={'information-circle'} size={25} color={'#99A0A5'} />
+            <Pressable onPress={() => setLiftInfo(true)}>
+              <Ionicons
+                name={'information-circle'}
+                size={25}
+                color={'#99A0A5'}
+              />
+            </Pressable>
             <Text
               style={{
                 color:
@@ -339,7 +348,13 @@ const MovingForm = (props) => {
               alignItems: 'center',
               width: wp(52),
             }}>
-            <Ionicons name={'information-circle'} size={25} color={'#99A0A5'} />
+            <Pressable onPress={() => setSharedInfo(true)}>
+              <Ionicons
+                name={'information-circle'}
+                size={25}
+                color={'#99A0A5'}
+              />
+            </Pressable>
             <Text
               style={{
                 color:
@@ -589,6 +604,22 @@ const MovingForm = (props) => {
             />
           </View>
         </MapModalAndroid>
+        <InformationPopUp
+          visible={liftInfo || sharedInfo}
+          label={
+            liftInfo
+              ? 'Mentioning this helps up being better prepaid for your moment'
+              : 'If checked, out vendors will move your items along with other items in a shared vehicle \n\n Checking this option will effectively reduce the movement cost, else A dedicated vehicle will be used.'
+          }
+          title={liftInfo ? 'lift' : 'Shared Service'}
+          onCloseIcon={() => {
+            if (liftInfo) {
+              setLiftInfo(false);
+            } else {
+              setSharedInfo(false);
+            }
+          }}
+        />
       </View>
     </KeyboardAwareScrollView>
   );

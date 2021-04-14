@@ -10,6 +10,7 @@ import {Calendar} from 'react-native-calendars';
 import FlatButton from '../../../../components/flatButton';
 import CloseIcon from '../../../../components/closeIcon';
 import {STYLES} from '../../../../constant/commonStyle';
+import moment from 'moment';
 
 const DateOfMovement = (props) => {
   const {data, handleStateChange} = props;
@@ -17,11 +18,21 @@ const DateOfMovement = (props) => {
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState(undefined);
   const [dateArray, setDateArray] = useState({});
+  const [dateArrayDisplay, setDateArrayDisplay] = useState([]);
   let date = new Date();
 
   useEffect(() => {
     setDefaultSelectedDates();
+    dateFormat();
   }, [data]);
+
+  const dateFormat = () => {
+    let temp = [];
+    data?.movement_dates?.forEach((item) => {
+      temp.push(moment(item).format('Do MMM'));
+    });
+    setDateArrayDisplay(temp);
+  };
 
   const setDefaultSelectedDates = () => {
     let temp = {};
@@ -67,7 +78,9 @@ const DateOfMovement = (props) => {
             placeholder={'Choose Date'}
             disabled={true}
             label={'Choose Date'}
-            value={data?.movement_dates?.join('\n')}
+            value={
+              dateArrayDisplay?.join(', ') || data?.movement_dates?.join(', ')
+            }
             rightIcon={() => {
               return (
                 <MaterialIcons
@@ -140,6 +153,11 @@ const DateOfMovement = (props) => {
             label={'OKAY'}
             onPress={() => {
               handleStateChange('movement_dates', Object.keys(dateArray));
+              let temp = [];
+              Object.keys(dateArray).forEach((item) => {
+                temp.push(moment(item).format('Do MMM'));
+              });
+              setDateArrayDisplay(temp);
               setCalender(false);
             }}
           />

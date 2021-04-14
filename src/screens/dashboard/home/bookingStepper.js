@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import {View, BackHandler, Text} from 'react-native';
 import SimpleHeader from '../../../components/simpleHeader';
 import {Colors, hp} from '../../../constant/colors';
 import LinearGradient from 'react-native-linear-gradient';
@@ -28,8 +28,10 @@ import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
 import {useDispatch} from 'react-redux';
 import {APICall, getAllInventories} from '../../../redux/actions/user';
 import {STORE} from '../../../redux';
-import {getDistance} from 'geolib';
 import {STYLES} from '../../../constant/commonStyle';
+import CloseIcon from '../../../components/closeIcon';
+import CustomModalAndroid from '../../../components/customModal';
+import TwoButton from '../../../components/twoButton';
 
 const BookingStepper = (props) => {
   const dispatch = useDispatch();
@@ -90,6 +92,7 @@ const BookingStepper = (props) => {
     inventory_items: [],
   });
   const [apiResponse, setApiResponse] = useState({});
+  const [confirmationVisible, setConfirmationVisible] = useState(false);
 
   useEffect(() => {
     dispatch(getAllInventories());
@@ -144,6 +147,19 @@ const BookingStepper = (props) => {
       }
     }
   }, [currentPosition, apiResponse, movingFrom]);
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', backButtonHandler);
+
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', backButtonHandler);
+    };
+  }, []);
+
+  const backButtonHandler = () => {
+    setConfirmationVisible(true);
+    return true;
+  };
 
   const onPageChange = (position) => {
     // if (currentPosition > position) {
@@ -479,10 +495,33 @@ const BookingStepper = (props) => {
             customStyles={STYLES.stepperStyle}
             currentPosition={currentPosition}
             renderStepIndicator={renderStepIndicator}
+            // onPress={onPageChange}
           />
         </View>
         {renderComponent()}
       </LinearGradient>
+      <CustomModalAndroid
+        visible={confirmationVisible}
+        onPress={() => setConfirmationVisible(false)}>
+        <Text style={STYLES.modalHeader}>CONFIRMATION</Text>
+        <CloseIcon
+          onPress={() => {
+            setConfirmationVisible(false);
+          }}
+        />
+        <Text style={STYLES.simpleText}>
+          Are you sure want to close this form? All your progress will be lost.
+        </Text>
+        <TwoButton
+          leftLabel={'cancel'}
+          rightLabel={'ok'}
+          leftOnPress={() => setConfirmationVisible(false)}
+          rightOnPress={() => {
+            setConfirmationVisible(false);
+            props.navigation.goBack();
+          }}
+        />
+      </CustomModalAndroid>
     </View>
   );
 };
