@@ -137,7 +137,8 @@ const ContactUs = (props) => {
             style={{
               width: '28%',
               backgroundColor:
-                ticketStatus?.open === item?.status
+                ticketStatus?.open === item?.status ||
+                ticketStatus?.resolved === item?.status
                   ? Colors.lightGreen
                   : Colors.error,
               height: hp(4),
@@ -229,6 +230,7 @@ const ContactUs = (props) => {
                 <View style={{width: '85%'}}>
                   <View style={[styles.flexBox, {width: wp(70)}]}>
                     <Text
+                      numberOfLines={1}
                       style={{
                         ...styles.locationText,
                         marginTop: 0,
@@ -237,7 +239,7 @@ const ContactUs = (props) => {
                         fontFamily: 'Roboto-SemiBold',
                       }}>
                       {source_meta?.city === destination_meta?.city
-                        ? source_meta?.address
+                        ? source_meta?.geocode
                         : source_meta?.city}
                     </Text>
                   </View>
@@ -247,6 +249,7 @@ const ContactUs = (props) => {
                       marginTop: hp(1.5),
                     }}>
                     <Text
+                      numberOfLines={1}
                       style={[
                         styles.locationText,
                         {
@@ -256,7 +259,7 @@ const ContactUs = (props) => {
                         },
                       ]}>
                       {destination_meta?.city === source_meta?.city
-                        ? destination_meta?.address
+                        ? destination_meta?.geocode
                         : destination_meta?.city}
                     </Text>
                   </View>

@@ -7,7 +7,6 @@ import {
   Pressable,
   FlatList,
   ScrollView,
-  Platform,
   Linking,
 } from 'react-native';
 import {Colors, hp, wp, boxShadow} from '../../../constant/colors';
@@ -16,7 +15,6 @@ import CustomModalAndroid from '../../../components/customModal';
 import FlatButton from '../../../components/flatButton';
 import {STYLES} from '../../../constant/commonStyle';
 import CloseIcon from '../../../components/closeIcon';
-import LocationDistance from '../../../components/locationDistance';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Friends from '../../../assets/svg/friends.svg';
 import MenuIcon from '../../../assets/svg/menu_icon.svg';
@@ -28,7 +26,6 @@ import {
   CustomConsole,
   getLocation,
   LoadingScreen,
-  resetNavigator,
 } from '../../../constant/commonFun';
 import {APICall, getServices, getSlider} from '../../../redux/actions/user';
 import {useDispatch, useSelector} from 'react-redux';
@@ -36,8 +33,6 @@ import {useIsFocused} from '@react-navigation/native';
 import {STORE} from '../../../redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {CustomTabs} from 'react-native-custom-tabs';
-import Shimmer from 'react-native-shimmer';
-import {RESET_STORE} from '../../../redux/types';
 
 export const HomeHeader = (props) => {
   return (
@@ -99,6 +94,8 @@ const Home = (props) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const userData = useSelector((state) => state.Login?.loginData?.user) || {};
+  const sliderSize =
+    useSelector((state) => state.Login?.configData?.enums?.slider) || {};
   const configData = useSelector((state) => state.Login?.configData) || {};
   const [serviceData, setServiceData] = useState(
     useSelector((state) => state.Login?.serviceData?.services),
@@ -201,43 +198,46 @@ const Home = (props) => {
     }
   }, [isFocused]);
   const renderItem = ({item, index}) => {
+    let mainSize = [];
+    Object.values(sliderSize.size).forEach((i, ind) => {
+      if (i === item?.banner_size) {
+        mainSize =
+          sliderSize?.banner_dimensions[Object.keys(sliderSize.size)[ind]];
+      }
+    });
     return (
-      <View
+      <Pressable
         key={index}
-        style={{
-          height: hp(15),
-          width: wp(70),
-          marginRight: wp(4),
-        }}>
-        <Pressable
-          onPress={() => {
-            if (item?.url && item.url !== '') {
-              CustomTabs.openURL(item?.url, {
-                toolbarColor: Colors.darkBlue,
-              })
-                .then(() => {})
-                .catch((err) => {
-                  console.log(err);
-                });
-            }
+        onPress={() => {
+          if (item?.url && item.url !== '') {
+            CustomTabs.openURL(item?.url, {
+              toolbarColor: Colors.darkBlue,
+            })
+              .then(() => {})
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        }}
+        style={[
+          styles.topScroll,
+          {
+            ...styles.common,
+            height: mainSize.length > 0 && mainSize[1],
+            width: mainSize.length > 0 && mainSize[0],
+            marginBottom: wp(4),
+          },
+        ]}>
+        <Image
+          style={{
+            height: '100%',
+            width: '100%',
           }}
-          style={[
-            styles.topScroll,
-            {
-              ...styles.common,
-            },
-          ]}>
-          <Image
-            style={{
-              height: '100%',
-              width: '100%',
-            }}
-            source={{uri: item?.image}}
-            resizeMode={'cover'}
-            key={index}
-          />
-        </Pressable>
-      </View>
+          source={{uri: item?.image}}
+          resizeMode={'contain'}
+          key={index}
+        />
+      </Pressable>
     );
   };
   return (
@@ -372,15 +372,35 @@ const Home = (props) => {
                 data={item?.banners}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => {
+                  let bottomSize = [];
+                  Object.values(sliderSize.size).forEach((i, ind) => {
+                    if (i === item?.banner_size) {
+                      bottomSize =
+                        sliderSize?.banner_dimensions[
+                          Object.keys(sliderSize.size)[ind]
+                        ];
+                    }
+                  });
                   return (
-                    <View
+                    <Pressable
+                      onPress={() => {
+                        if (item?.url && item.url !== '') {
+                          CustomTabs.openURL(item?.url, {
+                            toolbarColor: Colors.darkBlue,
+                          })
+                            .then(() => {})
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                        }
+                      }}
                       key={index}
                       style={[
                         styles.topScroll,
                         {
-                          width: wp(60),
-                          height: hp(25),
                           ...styles.common,
+                          height: bottomSize.length > 0 && bottomSize[1],
+                          width: bottomSize.length > 0 && bottomSize[0],
                         },
                       ]}>
                       <Image
@@ -389,10 +409,10 @@ const Home = (props) => {
                           width: '100%',
                         }}
                         source={{uri: item?.image}}
-                        resizeMode={'cover'}
+                        resizeMode={'contain'}
                         key={index}
                       />
-                    </View>
+                    </Pressable>
                   );
                 }}
                 contentContainerStyle={{
@@ -502,8 +522,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   topScroll: {
-    height: hp(15),
-    width: wp(70),
     borderRadius: 10,
     backgroundColor: Colors.silver,
     marginRight: wp(4),

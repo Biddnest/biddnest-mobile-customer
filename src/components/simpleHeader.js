@@ -2,6 +2,7 @@ import React from 'react';
 import {Image, Pressable, View, Text, StyleSheet} from 'react-native';
 import {boxShadow, Colors, hp, wp} from '../constant/colors';
 import BackArrow from '../assets/svg/back_arrow.svg';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const SimpleHeader = (props) => {
   return (
@@ -23,7 +24,9 @@ const SimpleHeader = (props) => {
         onPress={() => {
           props.onBack();
         }}>
-        <BackArrow width={100} height={100} />
+        {(props.closeIcon && (
+          <Ionicons name="close-sharp" size={25} color={Colors.black} />
+        )) || <BackArrow width={100} height={100} />}
       </Pressable>
       <View style={{width: wp(87), height: '100%', ...styles.common}}>
         <Text

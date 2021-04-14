@@ -149,7 +149,7 @@ const OrderTracking = (props) => {
                     fontFamily: 'Gilroy-Bold',
                   }}>
                   {source_meta?.city === destination_meta?.city
-                    ? source_meta?.address
+                    ? source_meta?.geocode
                     : source_meta?.city}
                 </Text>
                 <Text
@@ -159,7 +159,7 @@ const OrderTracking = (props) => {
                     {textTransform: 'capitalize', fontFamily: 'Gilroy-Bold'},
                   ]}>
                   {destination_meta?.city === source_meta?.city
-                    ? destination_meta?.address
+                    ? destination_meta?.geocode
                     : destination_meta?.city}
                 </Text>
               </View>
@@ -455,7 +455,10 @@ const OrderTracking = (props) => {
                   maxWidth: '60%',
                   textAlign: 'right',
                 }}>
-                {dateArray.join('\n')}
+                {orderDetails?.bid?.meta &&
+                  moment(
+                    JSON.parse(orderDetails?.bid?.meta?.toString()).moving_date,
+                  ).format('D MMM yyyy')}
               </Text>
             </View>
           </View>
@@ -645,6 +648,7 @@ const OrderTracking = (props) => {
             codeInputFieldStyle={styles.textInput}
           />
         </View>
+        <FlatButton label={'OKAY'} onPress={() => setShowPin(false)} />
       </CustomModalAndroid>
       <RateUs
         visible={rateUsVisible}

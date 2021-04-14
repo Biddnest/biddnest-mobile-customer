@@ -90,7 +90,13 @@ const SingleTicket = (props) => {
               {item?.admin?.lname?.slice(0, 1)}
             </Text>
           </View>
-          <View style={styles.messageWrapper}>
+          <View
+            style={[
+              styles.messageWrapper,
+              {
+                width: wp(67),
+              },
+            ]}>
             <Text style={styles.userText}>{item?.admin?.fname}</Text>
             <Text style={styles.timeText}>
               {moment(item?.created_at).fromNow()}
@@ -115,6 +121,7 @@ const SingleTicket = (props) => {
                 marginLeft: 0,
                 marginRight: wp(1),
                 backgroundColor: Colors.silver,
+                width: wp(67),
               },
             ]}>
             <Text style={[styles.userText, {textAlign: 'right'}]}>You</Text>
@@ -154,7 +161,8 @@ const SingleTicket = (props) => {
               style={{
                 width: '28%',
                 backgroundColor:
-                  ticketStatus?.open === ticket?.status
+                  ticketStatus?.open === ticket?.status ||
+                  ticketStatus?.resolved === ticket?.status
                     ? Colors.lightGreen
                     : Colors.error,
                 height: hp(4),
@@ -197,7 +205,19 @@ const SingleTicket = (props) => {
             {moment(ticket?.created_at).format('D MMM')}
           </Text>
         </View>
-        {replies?.length > 0 && <Text style={styles.repliesText}>Replies</Text>}
+        <Text style={styles.repliesText}>Replies</Text>
+        {replies?.length === 0 && (
+          <Text
+            style={{
+              fontFamily: 'Roboto-Italic',
+              fontSize: wp(3.5),
+              color: '#99A0A5',
+              textAlign: 'center',
+              marginHorizontal: 20,
+            }}>
+            No replies yet
+          </Text>
+        )}
         <View
           style={{
             flex: 1,
@@ -349,11 +369,11 @@ const styles = StyleSheet.create({
   },
   messageWrapper: {
     backgroundColor: Colors.white,
-    marginTop: wp(4),
+    // marginTop: wp(4),
     marginLeft: wp(1),
     maxWidth: wp(79),
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 8,
     borderColor: '#DEE6ED',
     padding: wp(3),
   },

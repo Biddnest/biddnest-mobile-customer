@@ -42,6 +42,9 @@ const BookingStepper = (props) => {
     bookingFor === 'Myself' ? 'MOVING TO' : '',
   );
   const [movingFrom, setMovingFrom] = useState(false);
+  const [confirmationText, setConfirmationText] = useState(
+    'Are you sure want to close this form? All your progress will be lost.',
+  );
   const [data, setData] = useState({
     booking_id: null,
     service_id: movementType?.id,
@@ -449,15 +452,23 @@ const BookingStepper = (props) => {
     <View style={{flex: 1, backgroundColor: Colors.pageBG}}>
       <SimpleHeader
         headerText={headerText}
+        closeIcon={!!apiResponse?.public_booking_id}
         navigation={props.navigation}
         onBack={() => {
-          if (headerText === 'MOVING TO') {
-            setMovingFrom(false);
+          if (apiResponse?.public_booking_id) {
+            setConfirmationText(
+              'Are you sure want to cancel? All your progress will be lost & you will be taken back to home screen.',
+            );
+            setConfirmationVisible(true);
           } else {
-            if (currentPosition > 0) {
-              setCurrentPosition(currentPosition - 1);
+            if (headerText === 'MOVING TO') {
+              setMovingFrom(false);
             } else {
-              props.navigation.goBack();
+              if (currentPosition > 0) {
+                setCurrentPosition(currentPosition - 1);
+              } else {
+                props.navigation.goBack();
+              }
             }
           }
         }}
@@ -509,9 +520,7 @@ const BookingStepper = (props) => {
             setConfirmationVisible(false);
           }}
         />
-        <Text style={STYLES.simpleText}>
-          Are you sure want to close this form? All your progress will be lost.
-        </Text>
+        <Text style={STYLES.simpleText}>{confirmationText}</Text>
         <TwoButton
           leftLabel={'cancel'}
           rightLabel={'ok'}
