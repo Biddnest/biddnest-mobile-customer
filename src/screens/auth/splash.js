@@ -75,7 +75,9 @@ const Splash = (props) => {
         });
       }
     } else if (temp?.type === notificationData?.link) {
-      CustomTabs.openURL(temp?.url)
+      CustomTabs.openURL(temp?.url, {
+        toolbarColor: Colors.darkBlue,
+      })
         .then(() => {})
         .catch((err) => {
           console.log(err);

@@ -10,7 +10,7 @@ import {
   RefreshControl,
   Linking,
 } from 'react-native';
-import {Colors, hp, SIDE_DRAWER, wp} from '../../../constant/colors';
+import {Colors, hp, wp} from '../../../constant/colors';
 import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import {STYLES} from '../../../constant/commonStyle';
@@ -25,6 +25,7 @@ import {
   LoadingScreen,
 } from '../../../constant/commonFun';
 import moment from 'moment';
+import {useSelector} from 'react-redux';
 
 const ContactUs = (props) => {
   const [recentTicket, setRecentTicket] = useState([]);
@@ -32,7 +33,9 @@ const ContactUs = (props) => {
   const [isLoading, setLoading] = useState(true);
   const [requestCallBackLoading, setRequestCallBackLoading] = useState(false);
   const [contactUs, setContactUs] = useState({});
-
+  const ticketStatus =
+    useSelector((state) => state.Login?.configData?.enums?.ticket?.status) ||
+    {};
   useEffect(() => {
     fetchTicket();
     let obj = {
@@ -99,8 +102,20 @@ const ContactUs = (props) => {
       });
   };
   const renderItem = ({item, index}) => {
+    let status = '';
+    Object.values(ticketStatus).forEach((i, ind) => {
+      if (i === item.status) {
+        status = Object.keys(ticketStatus)[ind];
+      }
+    });
     return (
-      <View key={index}>
+      <Pressable
+        key={index}
+        onPress={() =>
+          props.navigation.navigate('SingleTicket', {
+            ticket: item,
+          })
+        }>
         <View style={styles.flexBox}>
           <Text
             style={{
@@ -108,6 +123,7 @@ const ContactUs = (props) => {
               marginTop: 0,
               fontSize: wp(3.8),
               fontFamily: 'Roboto-Medium',
+              width: '70%',
             }}>
             {item?.heading}
             {/*<Text*/}
@@ -117,20 +133,32 @@ const ContactUs = (props) => {
             {/*  #123456*/}
             {/*</Text>*/}
           </Text>
-          <Text
+          <View
             style={{
-              ...styles.locationText,
-              marginTop: 0,
-              fontFamily: 'Roboto-Light',
-              fontSize: wp(3.8),
+              width: '28%',
+              backgroundColor:
+                ticketStatus?.open === item?.status
+                  ? Colors.lightGreen
+                  : Colors.error,
+              height: hp(4),
+              borderRadius: hp(2),
+              ...STYLES.common,
             }}>
-            {moment(item?.created_at).format('D MMM')}
-          </Text>
+            <Text
+              style={{
+                color: Colors.white,
+                fontSize: wp(3.8),
+                fontFamily: 'Gilroy-SemiBold',
+                textTransform: 'capitalize',
+              }}>
+              {status}
+            </Text>
+          </View>
         </View>
         <View
           style={{
             ...styles.flexBox,
-            marginTop: hp(1.5),
+            marginTop: hp(1),
           }}>
           <Text
             style={[
@@ -143,7 +171,17 @@ const ContactUs = (props) => {
             {item?.desc}
           </Text>
         </View>
-      </View>
+        <Text
+          style={{
+            ...styles.locationText,
+            marginTop: 0,
+            fontFamily: 'Roboto-Light',
+            fontSize: wp(3.8),
+            textAlign: 'right',
+          }}>
+          {moment(item?.created_at).format('D MMM')}
+        </Text>
+      </Pressable>
     );
   };
   let source_meta =

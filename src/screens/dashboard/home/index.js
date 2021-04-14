@@ -212,7 +212,9 @@ const Home = (props) => {
         <Pressable
           onPress={() => {
             if (item?.url && item.url !== '') {
-              CustomTabs.openURL(item?.url)
+              CustomTabs.openURL(item?.url, {
+                toolbarColor: Colors.darkBlue,
+              })
                 .then(() => {})
                 .catch((err) => {
                   console.log(err);

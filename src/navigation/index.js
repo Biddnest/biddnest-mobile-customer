@@ -8,6 +8,7 @@ import Login from '../screens/auth/login';
 import Signup from '../screens/auth/signup';
 import DrawerNavigation from './drawerNavigation';
 import {navigationRef} from './RootNavigation';
+import SingleTicket from '../screens/dashboard/drawer/singleTicket';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ const App = () => {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="Dashboard" component={DrawerNavigation} />
+        <Stack.Screen name="SingleTicket" component={SingleTicket} />
       </Stack.Navigator>
     </NavigationContainer>
   );

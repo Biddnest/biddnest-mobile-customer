@@ -30,6 +30,7 @@ export const Colors = {
   lightGreen: '#83C373',
   darkBlue: '#0F0C75',
   pageBG: '#EFEFF4',
+  error: '#FB787A',
 };
 
 export const boxShadow = {
