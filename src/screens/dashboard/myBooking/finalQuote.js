@@ -123,9 +123,7 @@ const FinalQuote = (props) => {
                 ? 'Economic'
                 : 'Premium'}
             </Text>
-            {
-              console.log(orderDetails)
-            }
+            {console.log(orderDetails)}
             {orderDetails?.vehicle && (
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View style={{flex: 1, alignItems: 'flex-end'}}>
@@ -187,9 +185,15 @@ const FinalQuote = (props) => {
             />
             <Button
               label={'ACCEPT'}
-              onPress={() =>
-                props.navigation.navigate('Payment', {orderData: orderDetails})
-              }
+              onPress={() => {
+                if (isAgree) {
+                  props.navigation.navigate('Payment', {
+                    orderData: orderDetails,
+                  });
+                } else {
+                  CustomAlert('Please accept Terms & Conditions');
+                }
+              }}
               spaceBottom={0}
               width={wp(43)}
             />
