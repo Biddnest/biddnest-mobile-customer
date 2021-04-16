@@ -28,7 +28,7 @@ const DropDownAndroid = (props) => {
           }
         }>
         <DropDownPicker
-          searchable={true}
+          searchable={props.searchable !== false}
           placeholder={'-Select-'}
           items={props.items}
           defaultValue={props.value}

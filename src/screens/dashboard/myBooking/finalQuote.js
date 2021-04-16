@@ -123,6 +123,9 @@ const FinalQuote = (props) => {
                 ? 'Economic'
                 : 'Premium'}
             </Text>
+            {
+              console.log(orderDetails)
+            }
             {orderDetails?.vehicle && (
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View style={{flex: 1, alignItems: 'flex-end'}}>
@@ -175,37 +178,6 @@ const FinalQuote = (props) => {
               I agree to the Terms & conditions
             </Text>
           </View>
-          {/*<View*/}
-          {/*  style={[*/}
-          {/*    styles.inputForm,*/}
-          {/*    {*/}
-          {/*      flexDirection: 'row',*/}
-          {/*      alignItems: 'center',*/}
-          {/*    },*/}
-          {/*  ]}>*/}
-          {/*  <Image*/}
-          {/*    source={require('../../../assets/images/coupon.png')}*/}
-          {/*    style={{height: wp(10), width: wp(10), marginLeft: 10}}*/}
-          {/*    resizeMode={'contain'}*/}
-          {/*  />*/}
-          {/*  <Text*/}
-          {/*    style={{*/}
-          {/*      width: wp(70),*/}
-          {/*      marginLeft: 10,*/}
-          {/*      fontFamily: 'Roboto-Italic',*/}
-          {/*      fontSize: wp(3.5),*/}
-          {/*      color: '#99A0A5',*/}
-          {/*    }}>*/}
-          {/*    use coupon code{' '}*/}
-          {/*    <Text*/}
-          {/*      style={{*/}
-          {/*        color: Colors.btnBG,*/}
-          {/*      }}>*/}
-          {/*      “NEW2021”*/}
-          {/*    </Text>{' '}*/}
-          {/*    to avail 20% off on your first order. Tap to copy code.*/}
-          {/*  </Text>*/}
-          {/*</View>*/}
           <View style={styles.btnWrapper}>
             <Button
               width={wp(43)}

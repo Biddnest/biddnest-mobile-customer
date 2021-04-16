@@ -101,6 +101,11 @@ const OrderTracking = (props) => {
   let meta =
     (orderDetails?.meta && JSON.parse(orderDetails?.meta?.toString())) || {};
 
+  let inventoryText = '';
+  orderDetails?.inventories?.forEach((item) => {
+    let text = item?.name + ' - ' + item?.size + ', ' + item?.material;
+    inventoryText = inventoryText + '\n' + text;
+  });
   return (
     <View style={styles.container}>
       <SimpleHeader
@@ -259,8 +264,37 @@ const OrderTracking = (props) => {
                     } else if (item.title === 'Share') {
                       Share.open({
                         title: 'Share via',
-                        message: 'some message',
-                        url: 'https://www.google.com/',
+                        message: `Hey there,
+                           \nI am shifting from ${
+                             source_meta?.city === destination_meta?.city
+                               ? source_meta?.geocode
+                               : source_meta?.city
+                           } to ${
+                          destination_meta?.city === source_meta?.city
+                            ? destination_meta?.geocode
+                            : destination_meta?.city
+                        } on ${
+                          orderDetails?.bid?.meta &&
+                          JSON.parse(orderDetails?.bid?.meta?.toString())
+                            ?.moving_date
+                        }. Here are the details:
+                            \nVendor: ${orderDetails?.organization?.org_name}
+                            ${
+                              orderDetails?.driver
+                                ? '\nDriver Name: ' +
+                                  orderDetails?.driver?.fname +
+                                  orderDetails?.driver?.lname
+                                : ''
+                            }
+                            ${
+                              orderDetails?.driver
+                                ? '\nDriver Phone: ' +
+                                  orderDetails?.driver?.phone
+                                : ''
+                            }
+                            \nList of Items:
+                            ${inventoryText}\n`,
+                        url: 'https://play.google.com/store',
                       })
                         .then((res) => {
                           console.log(res);
@@ -441,6 +475,32 @@ const OrderTracking = (props) => {
           <View
             style={{...styles.inputForm, marginTop: 0, marginBottom: hp(2)}}>
             <View style={{...styles.flexBox, marginTop: 0}}>
+              <Text style={styles.leftText}>assigned vendor</Text>
+              <Text
+                style={{
+                  ...styles.rightText,
+                  fontFamily: 'Roboto-Bold',
+                  maxWidth: '50%',
+                }}>
+                {orderDetails?.organization?.org_name}{' '}
+                {orderDetails?.organization?.org_type}
+              </Text>
+            </View>
+            <View style={{...styles.flexBox}}>
+              <Text style={styles.leftText}>address</Text>
+              <Text
+                style={{
+                  ...styles.rightText,
+                  fontFamily: 'Roboto-Bold',
+                  maxWidth: '50%',
+                }}>
+                {orderDetails?.organization?.meta &&
+                  JSON.parse(orderDetails?.organization?.meta?.toString())
+                    ?.address}{' '}
+                asdjs djsd saj djksad s djkasd sk jks dkjsajk dkja sdjas
+              </Text>
+            </View>
+            <View style={{...styles.flexBox}}>
               <Text style={styles.leftText}>price</Text>
               <Text style={{...styles.rightText, fontFamily: 'Roboto-Bold'}}>
                 Rs. {orderDetails?.final_quote}
@@ -740,7 +800,8 @@ const styles = StyleSheet.create({
   textInput: {
     borderWidth: 2,
     borderRadius: 10,
-    height: '99%',
+    height: hp(6),
+    width: hp(6),
     marginTop: hp(1),
     borderColor: Colors.silver,
     color: Colors.textLabelColor,

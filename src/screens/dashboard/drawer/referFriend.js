@@ -5,8 +5,12 @@ import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import Button from '../../../components/button';
 import {STYLES} from '../../../constant/commonStyle';
+import Share from 'react-native-share';
+import {useSelector} from 'react-redux';
 
 const ReferFriend = (props) => {
+  const userData =
+    useSelector((state) => state.Login?.loginData?.user?.meta) || '';
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <SimpleHeader
@@ -22,19 +26,35 @@ const ReferFriend = (props) => {
             resizeMode={'contain'}
           />
           <Text style={styles.text}>
-            When your friends sign up using the referral code, they get{' '}
-            <Text style={{fontFamily: 'Roboto-Bold'}}>INR 100 </Text>
-            and you get <Text style={{fontFamily: 'Roboto-Bold'}}>INR 200</Text>
+            When your friends sign up, you and them both get
+            <Text style={{fontFamily: 'Roboto-Bold'}}> ₹100 </Text>
+            off on next booking .
           </Text>
           <View style={styles.referralView}>
-            <Text style={styles.referralText}>MovDavid123</Text>
+            <Text style={styles.referralText}>
+              {JSON.parse(userData)?.refferal_code}
+            </Text>
           </View>
           <Button
             label={'SEND INVITE'}
             spaceTop={wp(4)}
             width={wp(82)}
             spaceBottom={wp(1)}
-            onPress={() => {}}
+            onPress={() => {
+              Share.open({
+                title: 'Share via',
+                message: `Hey there, \nI invite you to install this application using my refferal code - ${
+                  JSON.parse(userData)?.refferal_code
+                } to get ₹100 off on your first booking. \nclick here to install \n`,
+                url: 'https://play.google.com/store',
+              })
+                .then((res) => {
+                  console.log(res);
+                })
+                .catch((err) => {
+                  err && console.log(err);
+                });
+            }}
           />
         </View>
       </View>

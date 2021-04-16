@@ -94,7 +94,7 @@ const Signup = (props) => {
               </View>
             </View>
             <TextInput
-              label={'Email'}
+              label={'Email ID'}
               placeHolder={'example@domain.com'}
               isRight={error.email}
               value={data?.email}
@@ -107,6 +107,7 @@ const Signup = (props) => {
                 Platform.OS !== 'android' && {zIndex: 5001},
               ]}>
               <DropDownAndroid
+                searchable={false}
                 customDropDown={
                   error?.gender === false
                     ? {

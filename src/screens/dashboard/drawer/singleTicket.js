@@ -159,13 +159,13 @@ const SingleTicket = (props) => {
             <Text style={styles.locationText}>{ticket?.heading}</Text>
             <View
               style={{
-                width: '28%',
                 backgroundColor:
                   ticketStatus?.open === ticket?.status ||
                   ticketStatus?.resolved === ticket?.status
                     ? Colors.lightGreen
                     : Colors.error,
-                height: hp(4),
+                height: hp(3.5),
+                paddingHorizontal: wp(3),
                 borderRadius: hp(2),
                 ...STYLES.common,
               }}>

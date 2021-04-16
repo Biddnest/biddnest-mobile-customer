@@ -80,7 +80,7 @@ const MyBooking = (props) => {
     let ind = Object.values(configData?.status).findIndex(
       (ele) => ele === item?.status,
     );
-    let status = Object.keys(configData?.status)[ind]?.replace('_', ' ');
+    let status = Object.keys(configData?.status)[ind]?.replaceAll('_', ' ');
     let source_meta =
       (item?.source_meta && JSON.parse(item?.source_meta?.toString())) || {};
     let destination_meta =
@@ -183,12 +183,10 @@ const MyBooking = (props) => {
             {dateArray.join('\n')}
           </Text>
         </View>
-        {meta?.subcategory && (
-          <View style={styles.flexBox}>
-            <Text style={styles.leftText}>category</Text>
-            <Text style={styles.rightText}>{meta?.subcategory}</Text>
-          </View>
-        )}
+        <View style={styles.flexBox}>
+          <Text style={styles.leftText}>category</Text>
+          <Text style={styles.rightText}>{item?.service?.name}</Text>
+        </View>
         <View style={styles.flexBox}>
           <Text style={styles.leftText}>status</Text>
           <Text style={[styles.rightText, {textTransform: 'capitalize'}]}>

@@ -33,6 +33,7 @@ import {useIsFocused} from '@react-navigation/native';
 import {STORE} from '../../../redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {CustomTabs} from 'react-native-custom-tabs';
+import Shimmer from 'react-native-shimmer';
 
 export const HomeHeader = (props) => {
   return (
@@ -225,7 +226,6 @@ const Home = (props) => {
             ...styles.common,
             height: mainSize.length > 0 && mainSize[1],
             width: mainSize.length > 0 && mainSize[0],
-            marginBottom: wp(4),
           },
         ]}>
         <Image
@@ -249,6 +249,17 @@ const Home = (props) => {
         showsVerticalScrollIndicator={false}
         bounces={false}>
         {/*<LocationDistance inTransit={true} />*/}
+        {sliderData.length === 0 && (
+          <Shimmer
+            style={{
+              height: hp(18),
+              width: wp(90),
+              backgroundColor: Colors.silver,
+              alignSelf: 'center',
+              marginVertical: hp(2),
+            }}
+          />
+        )}
         {sliderData.map((item, index) => {
           if (configData?.enums?.slider?.position?.main === item.position) {
             return (
@@ -417,6 +428,7 @@ const Home = (props) => {
                 }}
                 contentContainerStyle={{
                   padding: wp(4),
+                    paddingTop: 0,
                   paddingRight: 0,
                 }}
               />
@@ -535,6 +547,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     width: wp(92),
     alignSelf: 'center',
+    marginTop: hp(2),
   },
   movementLinear: {
     flex: 1,
@@ -547,7 +560,7 @@ const styles = StyleSheet.create({
   assistantView: {
     flexDirection: 'row',
     padding: wp(5),
-    marginTop: hp(2),
+    marginVertical: hp(2),
     justifyContent: 'space-between',
     alignItems: 'center',
     borderRadius: 10,

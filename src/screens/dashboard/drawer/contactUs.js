@@ -135,14 +135,14 @@ const ContactUs = (props) => {
           </Text>
           <View
             style={{
-              width: '28%',
               backgroundColor:
                 ticketStatus?.open === item?.status ||
                 ticketStatus?.resolved === item?.status
                   ? Colors.lightGreen
                   : Colors.error,
-              height: hp(4),
+              height: hp(3.5),
               borderRadius: hp(2),
+              paddingHorizontal: wp(3),
               ...STYLES.common,
             }}>
             <Text

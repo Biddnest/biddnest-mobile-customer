@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors, hp, wp, PAYMENT_OPTION} from '../../../constant/colors';
@@ -22,13 +22,16 @@ import {
   CustomAlert,
   CustomConsole,
   LoadingScreen,
-  resetNavigator,
 } from '../../../constant/commonFun';
 import {STORE} from '../../../redux';
 import RazorpayCheckout from 'react-native-razorpay';
 import {useSelector} from 'react-redux';
+import Clipboard from '@react-native-community/clipboard';
+import RightArrow from '../../../assets/svg/right_arrow.svg';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const Payment = (props) => {
+  const inputCode = useRef(null);
   const configData =
     useSelector((state) => state.Login?.configData?.enums?.payment) || {};
   const [addCardVisible, setCardVisible] = useState(false);
@@ -42,6 +45,7 @@ const Payment = (props) => {
   const [isLoading, setLoading] = useState(false);
   const userData = useSelector((state) => state.Login?.loginData?.user) || {};
   const [couponApplied, setCouponApplied] = useState(false);
+  const [coupons, setCoupons] = useState([]);
 
   useEffect(() => {
     if (orderData?.public_booking_id) {
@@ -57,6 +61,24 @@ const Payment = (props) => {
         })
         .catch((err) => {
           setLoading(false);
+          CustomConsole(err);
+        });
+      let obj = {
+        url: `coupon/get?public_booking_id=${orderData?.public_booking_id}`,
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+      };
+      APICall(obj)
+        .then((res) => {
+          if (res?.data?.status === 'success') {
+            setCoupons(res?.data?.data?.coupons);
+          } else {
+            CustomAlert(res?.data?.message);
+          }
+        })
+        .catch((err) => {
           CustomConsole(err);
         });
     }
@@ -186,7 +208,9 @@ const Payment = (props) => {
             }
             return (
               <View style={styles.flexBox} key={index}>
-                <Text style={styles.leftText}>{item?.replace('_', ' ')}</Text>
+                <Text style={styles.leftText}>
+                  {item?.replaceAll('_', ' ')}
+                </Text>
                 <Text style={styles.leftText}>
                   {item === 'discount' ? '- ' : ''}₹{' '}
                   {parseFloat(Object.values(paymentSummery)[index]).toFixed(2)}
@@ -209,6 +233,7 @@ const Payment = (props) => {
               alignSelf: applyButton ? 'flex-start' : 'center',
             }}>
             <TextInput
+              ref={inputCode}
               label={''}
               disable={couponApplied}
               autoCapitalize={true}
@@ -255,9 +280,13 @@ const Payment = (props) => {
                     APICall(obj)
                       .then((res) => {
                         setLoading(false);
-                        setCouponApplied(true);
-                        setPaymentSummery(res?.data?.data?.payment_details);
-                        CustomAlert('Coupon has been applied successfully');
+                        if (res?.data?.status === 'success') {
+                          setCouponApplied(true);
+                          setPaymentSummery(res?.data?.data?.payment_details);
+                          CustomAlert('Coupon has been applied successfully');
+                        } else {
+                          CustomAlert(res?.data?.message);
+                        }
                       })
                       .catch((err) => {
                         setLoading(false);
@@ -268,11 +297,97 @@ const Payment = (props) => {
               />
             )}
           </View>
+          {coupons?.length > 0 && (
+            <Text
+              style={{
+                color: Colors.textLabelColor,
+                fontSize: wp(4),
+                fontFamily: 'Gilroy-SemiBold',
+                marginBottom: hp(2),
+              }}>
+              Applied Coupons
+            </Text>
+          )}
+          <FlatList
+            keyExtractor={(item, index) => index.toString()}
+            refreshing={isLoading}
+            showsVerticalScrollIndicator={false}
+            data={coupons}
+            extraData={coupons}
+            bounces={false}
+            renderItem={({item, index}) => {
+              return (
+                <View
+                  style={[
+                    styles.inputForm,
+                    {
+                      marginTop: index === 0 ? 0 : hp(1),
+                    },
+                  ]}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginVertical: wp(1),
+                    }}>
+                    <View
+                      style={{
+                        borderWidth: 1.5,
+                        height: hp(5),
+                        borderRadius: 6,
+                        borderStyle: 'dashed',
+                        borderColor: Colors.btnBG,
+                        backgroundColor: Colors.white,
+                        width: '75%',
+                        ...STYLES.common,
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: 'Roboto-Bold',
+                          fontSize: wp(3.5),
+                          color: Colors.inputTextColor,
+                        }}>
+                        {coupons[index]?.code}
+                      </Text>
+                    </View>
+                    <Pressable
+                      style={{width: '15%', alignItems: 'flex-end'}}
+                      onPress={() => {
+                        if (!applyButton) {
+                          setApplyButton(true);
+                        }
+                        setCouponCode(coupons[index].code);
+                        CustomAlert('Tap apply to get discount');
+                      }}>
+                      <MaterialIcons
+                        name={'content-copy'}
+                        size={25}
+                        color={Colors.darkBlue}
+                      />
+                    </Pressable>
+                  </View>
+                  <Text
+                    style={{
+                      width: wp(70),
+                      fontFamily: 'Roboto-Regular',
+                      fontSize: wp(3.5),
+                      color: '#99A0A5',
+                      marginTop: hp(1),
+                      textAlign: 'center',
+                    }}>
+                    {coupons[index].desc}
+                  </Text>
+                </View>
+              );
+            }}
+          />
           <LinearGradient
             colors={[Colors.darkBlue, '#462F97']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
             style={{
+              marginTop: coupons?.length > 0 ? hp(1) : 0,
               borderRadius: 10,
               height: hp(6.5),
               backgroundColor: Colors.darkBlue,
@@ -389,5 +504,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: Colors.silver,
     backgroundColor: Colors.white,
+  },
+  inputForm: {
+    paddingVertical: hp(2),
+    paddingHorizontal: wp(2),
+    borderWidth: 1,
+    borderRadius: 6,
+    backgroundColor: '#FFFDF4',
+    borderColor: Colors.btnBG,
+    marginBottom: hp(1),
+    marginHorizontal: hp(2),
+    alignItems: 'center',
   },
 });

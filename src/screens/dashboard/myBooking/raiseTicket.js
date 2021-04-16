@@ -33,7 +33,7 @@ const RaiseTicket = (props) => {
   let dropdownDefault = [];
   Object.keys(configData).forEach((item, index) => {
     dropdownDefault.push({
-      label: item.replace('_', ' '),
+      label: item.replaceAll('_', ' '),
       value: Object.values(configData)[index],
     });
   });
