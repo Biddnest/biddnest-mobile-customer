@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     marginTop: hp(1),
     borderColor: Colors.silver,
     color: Colors.textLabelColor,
-    fontSize: hp(3),
+    fontSize: wp(5),
   },
   checkBoxView: {
     height: 20,

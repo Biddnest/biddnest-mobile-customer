@@ -15,12 +15,37 @@ const VerticalStepper = (props) => {
   };
   return (
     <View style={{marginHorizontal: wp(8), marginVertical: hp(2)}}>
-      {stepHeader('Driver Assigned')}
+      <View style={{flexDirection: 'row'}}>
+        <View
+          style={[
+            styles.dotView,
+            {
+              backgroundColor:
+                orderDetails?.status <= 5 ? '#9E9DC9' : Colors.darkBlue,
+            },
+          ]}
+        />
+        <Text
+          style={[
+            styles.stepHeaderText,
+            {
+              opacity: orderDetails?.status <= 5 ? 0.8 : 1,
+            },
+          ]}>
+          {'Driver Assigned'}
+        </Text>
+      </View>
       <View
         style={{
           ...styles.stepBodyView,
         }}>
-        <Text style={styles.subHeaderText}>
+        <Text
+          style={[
+            styles.subHeaderText,
+            {
+              opacity: orderDetails?.status <= 5 ? 0.8 : 1,
+            },
+          ]}>
           {orderDetails?.status <= 5
             ? 'Pending'
             : 'Completed at ' +
@@ -30,12 +55,37 @@ const VerticalStepper = (props) => {
               ).format('MMMM Do YYYY, h:mm A')}
         </Text>
       </View>
-      {stepHeader('Awaiting pickup')}
+      <View style={{flexDirection: 'row'}}>
+        <View
+          style={[
+            styles.dotView,
+            {
+              backgroundColor:
+                orderDetails?.status <= 6 ? '#9E9DC9' : Colors.darkBlue,
+            },
+          ]}
+        />
+        <Text
+          style={[
+            styles.stepHeaderText,
+            {
+              opacity: orderDetails?.status <= 6 ? 0.8 : 1,
+            },
+          ]}>
+          {'Awaiting pickup'}
+        </Text>
+      </View>
       <View
         style={{
           ...styles.stepBodyView,
         }}>
-        <Text style={styles.subHeaderText}>
+        <Text
+          style={[
+            styles.subHeaderText,
+            {
+              opacity: orderDetails?.status <= 6 ? 0.8 : 1,
+            },
+          ]}>
           {orderDetails?.status <= 6
             ? 'Pending'
             : 'Completed at ' +
@@ -45,14 +95,39 @@ const VerticalStepper = (props) => {
               ).format('MMMM Do YYYY, h:mm A')}
         </Text>
       </View>
-      {stepHeader(orderDetails?.status === 8 ? 'Completed' : 'In Transit')}
+      <View style={{flexDirection: 'row'}}>
+        <View
+          style={[
+            styles.dotView,
+            {
+              backgroundColor:
+                orderDetails?.status === 8 ? Colors.darkBlue : '#9E9DC9',
+            },
+          ]}
+        />
+        <Text
+          style={[
+            styles.stepHeaderText,
+            {
+              opacity: orderDetails?.status === 8 ? 1 : 0.8,
+            },
+          ]}>
+          {orderDetails?.status === 8 ? 'Completed' : 'In Transit'}
+        </Text>
+      </View>
       <View
         style={{
           ...styles.stepBodyView,
           borderLeftWidth: 0,
           paddingBottom: 0,
         }}>
-        <Text style={styles.subHeaderText}>
+        <Text
+          style={[
+            styles.subHeaderText,
+            {
+              opacity: orderDetails?.status === 8 ? 1 : 0.8,
+            },
+          ]}>
           {orderDetails?.status < 7
             ? 'Pending'
             : orderDetails?.status === 7

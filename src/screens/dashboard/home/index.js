@@ -321,7 +321,7 @@ const Home = (props) => {
                     }}>
                     <Image
                       source={{uri: item.image}}
-                      style={{height: '50%', width: '50%'}}
+                      style={{height: 40, width: 40}}
                       resizeMode={'contain'}
                     />
                     <Text
@@ -330,6 +330,7 @@ const Home = (props) => {
                         color: Colors.white,
                         fontSize: wp(3.8),
                         textAlign: 'center',
+                        marginTop: 5,
                       }}>
                       {item.name}
                     </Text>
@@ -428,7 +429,7 @@ const Home = (props) => {
                 }}
                 contentContainerStyle={{
                   padding: wp(4),
-                    paddingTop: 0,
+                  paddingTop: 0,
                   paddingRight: 0,
                 }}
               />

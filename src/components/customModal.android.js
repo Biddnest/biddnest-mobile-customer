@@ -1,5 +1,12 @@
 import React from 'react';
-import {Modal, View, StyleSheet, ScrollView, SafeAreaView} from 'react-native';
+import {
+  Modal,
+  View,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  Pressable,
+} from 'react-native';
 import {wp, hp} from '../constant/colors';
 
 const CustomModalAndroid = (props) => {
@@ -14,7 +21,13 @@ const CustomModalAndroid = (props) => {
         }
       }}>
       <SafeAreaView style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.5)'}}>
-        <View style={styles.centeredView}>
+        <Pressable
+          style={styles.centeredView}
+          onPress={() => {
+            if (props.onPress) {
+              props.onPress();
+            }
+          }}>
           <ScrollView
             bounces={false}
             showsVerticalScrollIndicator={false}
@@ -28,7 +41,7 @@ const CustomModalAndroid = (props) => {
             ]}>
             {props.children}
           </ScrollView>
-        </View>
+        </Pressable>
       </SafeAreaView>
     </Modal>
   );

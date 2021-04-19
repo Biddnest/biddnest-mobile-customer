@@ -497,7 +497,6 @@ const OrderTracking = (props) => {
                 {orderDetails?.organization?.meta &&
                   JSON.parse(orderDetails?.organization?.meta?.toString())
                     ?.address}{' '}
-                asdjs djsd saj djksad s djkasd sk jks dkjsajk dkja sdjas
               </Text>
             </View>
             <View style={{...styles.flexBox}}>
@@ -805,6 +804,6 @@ const styles = StyleSheet.create({
     marginTop: hp(1),
     borderColor: Colors.silver,
     color: Colors.textLabelColor,
-    fontSize: hp(3),
+    fontSize: wp(5),
   },
 });

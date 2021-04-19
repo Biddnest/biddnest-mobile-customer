@@ -172,7 +172,7 @@ const MovingForm = (props) => {
         <Pressable onPress={() => setMapVisible(true)}>
           <TextInput
             disable={true}
-            label={'From'}
+            label={props.movingFrom ? 'To' : 'From'}
             isRight={error?.geocode}
             value={
               props.movingFrom
