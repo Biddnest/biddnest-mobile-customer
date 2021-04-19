@@ -80,7 +80,7 @@ const MyBooking = (props) => {
     let ind = Object.values(configData?.status).findIndex(
       (ele) => ele === item?.status,
     );
-    let status = Object.keys(configData?.status)[ind]?.replaceAll('_', ' ');
+    let status = Object.keys(configData?.status)[ind]?.split('_').join(' ');
     let source_meta =
       (item?.source_meta && JSON.parse(item?.source_meta?.toString())) || {};
     let destination_meta =

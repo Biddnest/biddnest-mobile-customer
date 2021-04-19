@@ -209,7 +209,7 @@ const Payment = (props) => {
             return (
               <View style={styles.flexBox} key={index}>
                 <Text style={styles.leftText}>
-                  {item?.replaceAll('_', ' ')}
+                  {item?.split('_').join(' ')}
                 </Text>
                 <Text style={styles.leftText}>
                   {item === 'discount' ? '- ' : ''}₹{' '}

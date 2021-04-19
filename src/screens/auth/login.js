@@ -250,7 +250,8 @@ const styles = StyleSheet.create({
   textInput: {
     borderWidth: 2,
     borderRadius: 10,
-    height: '99%',
+    height: hp(6),
+    width: hp(6),
     marginTop: hp(1),
     borderColor: Colors.silver,
     color: Colors.textLabelColor,
