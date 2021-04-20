@@ -133,7 +133,7 @@ const Splash = (props) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/logo_background.png')}
+      source={require('../../assets/images/yellow_back.png')}
       style={{height: '100%', width: '100%', ...STYLES.common}}
       resizeMode={'stretch'}>
       {!!isLoading && (
@@ -142,8 +142,8 @@ const Splash = (props) => {
         </View>
       )}
       <Image
-        source={require('../../assets/images/logo.png')}
-        style={{height: hp(50), width: wp(80)}}
+        source={require('../../assets/images/splash_logo.png')}
+        style={{height: hp(50), width: wp(70)}}
         resizeMode={'contain'}
       />
     </ImageBackground>

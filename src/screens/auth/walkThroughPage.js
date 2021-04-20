@@ -1,20 +1,35 @@
 import React, {Component, useState} from 'react';
-import {View, Alert, StyleSheet, Text, Pressable} from 'react-native';
+import {View, Alert, StyleSheet, Text, Pressable, Image} from 'react-native';
 import {resetNavigator} from '../../constant/commonFun';
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import {Colors, hp, wp} from '../../constant/colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const data = [
-  {title: 'tomato', desc: 'asdasd'},
-  {title: 'tomato', desc: ''},
-  {title: 'tomato', desc: ''},
-  {title: 'tomato', desc: ''},
+  {
+    title: 'select destination',
+    desc:
+      "Lorem ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.",
+  },
+  {
+    title: 'Share Requirement',
+    desc:
+      "Lorem ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.",
+  },
+  {
+    title: 'Schedule & Confirm',
+    desc:
+      "Lorem ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.",
+  },
+  {
+    title: 'Get Moving!',
+    desc:
+      "Lorem ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.",
+  },
 ];
 
 const WalkThroughPage = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  console.log(selectedIndex);
   return (
     <View style={{flex: 1}}>
       <SwiperFlatList
@@ -23,7 +38,7 @@ const WalkThroughPage = (props) => {
         data={data}
         extraData={selectedIndex}
         paginationStyle={{
-          bottom: hp(15),
+          bottom: hp(10),
         }}
         paginationDefaultColor={'#FFE672'}
         onChangeIndex={({index}) => {
@@ -31,6 +46,16 @@ const WalkThroughPage = (props) => {
         }}
         renderItem={({item}) => (
           <View style={[styles.child]}>
+            <Image
+              source={require('../../assets/images/coupon.png')}
+              style={{
+                height: wp(70),
+                width: wp(70),
+                alignSelf: 'center',
+                marginBottom: hp(8),
+              }}
+              resizeMode={'contain'}
+            />
             <Text style={styles.textTitle}>{item?.title}</Text>
             <Text style={styles.textDesc}>{item?.desc}</Text>
           </View>
@@ -92,11 +117,12 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
   textDesc: {
-    fontSize: wp(5),
+    fontSize: wp(4.5),
     textAlign: 'center',
-    fontFamily: 'Gilroy-SemiBold',
+    fontFamily: 'Gilroy-Regular',
     color: Colors.white,
     textTransform: 'capitalize',
     marginTop: hp(2),
+    marginHorizontal: wp(5.5),
   },
 });
