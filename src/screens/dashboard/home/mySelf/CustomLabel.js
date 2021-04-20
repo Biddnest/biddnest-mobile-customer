@@ -39,6 +39,7 @@ function LabelBase(props) {
               // {scale: scaleValue.current},
               {translateY: -width},
             ],
+            top: props.right ? -hp(1.7) : hp(5),
           },
         ]}>
         <Text style={styles.sliderLabelText}>{value}</Text>
@@ -64,12 +65,14 @@ export default function CustomLabel(props) {
         value={oneMarkerValue}
         leftDiff={leftDiff}
         pressed={oneMarkerPressed}
+        right={false}
       />
       <LabelBase
         position={twoMarkerLeftPosition}
         value={twoMarkerValue}
         leftDiff={leftDiff}
         pressed={twoMarkerPressed}
+        right={true}
       />
     </View>
   );
