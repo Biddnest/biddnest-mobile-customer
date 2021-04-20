@@ -148,6 +148,9 @@ const DateOfMovement = (props) => {
             onPressArrowRight={(addMonth) => addMonth()}
             disableAllTouchEventsForDisabledDays={true}
             enableSwipeMonths={true}
+            theme={{
+              arrowColor: Colors.btnBG,
+            }}
           />
           <FlatButton
             label={'OKAY'}

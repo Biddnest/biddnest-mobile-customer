@@ -346,50 +346,52 @@ const MovingForm = (props) => {
             }
           />
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginHorizontal: wp(3),
-            marginTop: hp(2),
-          }}>
+        {!props.movingFrom && (
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              width: wp(52),
+              justifyContent: 'space-between',
+              marginHorizontal: wp(3),
+              marginTop: hp(2),
             }}>
-            <Pressable onPress={() => setSharedInfo(true)}>
-              <Ionicons
-                name={'information-circle'}
-                size={25}
-                color={'#99A0A5'}
-              />
-            </Pressable>
-            <Text
+            <View
               style={{
-                color:
-                  movingFromData?.shared_service === true ||
-                  movingFromData?.shared_service == 1
-                    ? Colors.textLabelColor
-                    : '#99A0A5',
-                fontFamily: 'Roboto-Bold',
-                fontSize: wp(4),
-                marginLeft: 5,
+                flexDirection: 'row',
+                alignItems: 'center',
+                width: wp(52),
               }}>
-              Interested in shared services?
-            </Text>
+              <Pressable onPress={() => setSharedInfo(true)}>
+                <Ionicons
+                  name={'information-circle'}
+                  size={25}
+                  color={'#99A0A5'}
+                />
+              </Pressable>
+              <Text
+                style={{
+                  color:
+                    movingFromData?.shared_service === true ||
+                    movingFromData?.shared_service == 1
+                      ? Colors.textLabelColor
+                      : '#99A0A5',
+                  fontFamily: 'Roboto-Bold',
+                  fontSize: wp(4),
+                  marginLeft: 5,
+                }}>
+                Interested in shared services?
+              </Text>
+            </View>
+            <Switch
+              onChange={(text) => handleState('shared_service', text === 1)}
+              value={
+                props.movingFrom
+                  ? destination?.meta?.shared_service || false
+                  : source?.meta?.shared_service || false
+              }
+            />
           </View>
-          <Switch
-            onChange={(text) => handleState('shared_service', text === 1)}
-            value={
-              props.movingFrom
-                ? destination?.meta?.shared_service || false
-                : source?.meta?.shared_service || false
-            }
-          />
-        </View>
+        )}
         <View style={{marginHorizontal: wp(3)}}>
           <Button
             label={'NEXT'}

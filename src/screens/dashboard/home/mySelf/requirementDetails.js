@@ -761,9 +761,9 @@ const RequirementDetails = (props) => {
                 customMarker={() => (
                   <View
                     style={{
-                      height: 20,
-                      width: 20,
-                      borderRadius: 10,
+                      height: 15,
+                      width: 15,
+                      borderRadius: 7.5,
                       backgroundColor: Colors.white,
                       borderColor: '#B6DFFF',
                       borderWidth: 0.8,

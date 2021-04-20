@@ -138,7 +138,7 @@ const Splash = (props) => {
       resizeMode={'stretch'}>
       {!!isLoading && (
         <View style={{position: 'absolute', bottom: hp(20), zIndex: 111}}>
-          <ActivityIndicator size="large" color={Colors.btnBG} />
+          <ActivityIndicator size="large" color={Colors.darkBlue} />
         </View>
       )}
       <Image
