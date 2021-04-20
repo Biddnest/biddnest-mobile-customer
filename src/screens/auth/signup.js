@@ -201,6 +201,7 @@ const Signup = (props) => {
                           res?.data?.user?.id?.toString(),
                           (results) => {},
                         );
+                        // resetNavigator(props, 'WalkThroughPage');
                         resetNavigator(props, 'Dashboard');
                       } else {
                         CustomAlert(res.message);

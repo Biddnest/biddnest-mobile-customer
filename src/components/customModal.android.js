@@ -6,6 +6,7 @@ import {
   ScrollView,
   SafeAreaView,
   Pressable,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {wp, hp} from '../constant/colors';
 
@@ -28,10 +29,8 @@ const CustomModalAndroid = (props) => {
               props.onPress();
             }
           }}>
-          <ScrollView
-            bounces={false}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{alignItems: 'center'}}
+          <View
+            onStartShouldSetResponder={() => true}
             style={[
               styles.modalView,
               {
@@ -39,8 +38,13 @@ const CustomModalAndroid = (props) => {
                 paddingTop: 0,
               },
             ]}>
-            {props.children}
-          </ScrollView>
+            <ScrollView
+              bounces={false}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{alignItems: 'center'}}>
+              {props.children}
+            </ScrollView>
+          </View>
         </Pressable>
       </SafeAreaView>
     </Modal>

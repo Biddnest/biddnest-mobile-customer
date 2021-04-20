@@ -9,6 +9,7 @@ import Signup from '../screens/auth/signup';
 import DrawerNavigation from './drawerNavigation';
 import {navigationRef} from './RootNavigation';
 import SingleTicket from '../screens/dashboard/drawer/singleTicket';
+import WalkThroughPage from '../screens/auth/walkThroughPage';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ const App = () => {
         <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="WalkThroughPage" component={WalkThroughPage} />
         <Stack.Screen name="Dashboard" component={DrawerNavigation} />
         <Stack.Screen name="SingleTicket" component={SingleTicket} />
       </Stack.Navigator>

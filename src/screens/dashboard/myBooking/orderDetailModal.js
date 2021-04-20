@@ -94,7 +94,7 @@ const OrderDetailModal = (props) => {
                   {paddingHorizontal: 10, textTransform: 'none'},
                 ]}
                 numberOfLines={1}>
-                x{quantity}
+                x{typeof quantity === 'string' ? quantity : quantity?.toString()}
               </Text>
             </View>
           </View>
