@@ -1,5 +1,5 @@
 import {
-  CONFIG_DATA,
+  CONFIG_DATA, GET_ZONES,
   INVENTORY_DATA,
   LIVE_ORDERS,
   LOGIN_USER_DATA,
@@ -32,6 +32,9 @@ export default (state = INITIAL_STATE, action) => {
     }
     case PAST_ORDERS: {
       return {...state, pastOrders: action.payload};
+    }
+    case GET_ZONES: {
+      return {...state, zones: action.payload};
     }
     default:
       return state;

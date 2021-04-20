@@ -1,6 +1,7 @@
 import instance from '../../constant/baseService';
 import {
   CONFIG_DATA,
+  GET_ZONES,
   INVENTORY_DATA,
   LIVE_ORDERS,
   LOGIN_USER_DATA,
@@ -272,6 +273,32 @@ export const getPastOrders = () => {
           dispatch({
             type: PAST_ORDERS,
             payload: res?.data?.data || {},
+          });
+          resolve(res.data);
+        })
+        .catch((err) => {
+          CustomAlert(err?.data?.message);
+          reject(err);
+        });
+    });
+  };
+};
+
+export const getZones = () => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      let obj = {
+        url: 'zone',
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+      };
+      APICall(obj)
+        .then((res) => {
+          dispatch({
+            type: GET_ZONES,
+            payload: res?.data?.data?.zones || [],
           });
           resolve(res.data);
         })

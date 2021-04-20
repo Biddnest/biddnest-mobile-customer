@@ -6,4 +6,5 @@ export const LoginData = {
   inventoriesData: {},
   liveOrders: {},
   pastOrders: {},
+  zones: [],
 };

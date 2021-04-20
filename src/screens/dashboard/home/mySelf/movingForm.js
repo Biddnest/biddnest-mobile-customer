@@ -17,6 +17,7 @@ import MapView, {
   PROVIDER_GOOGLE,
   PROVIDER_DEFAULT,
   Marker,
+  Circle,
 } from 'react-native-maps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CloseIcon from '../../../../components/closeIcon';
@@ -24,9 +25,13 @@ import FlatButton from '../../../../components/flatButton';
 import {CustomAlert, getLocation} from '../../../../constant/commonFun';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import InformationPopUp from '../../../../components/informationPopUp';
+import {useDispatch, useSelector} from 'react-redux';
+import {getZones} from '../../../../redux/actions/user';
+import {getDistance} from 'geolib';
 navigator.geolocation = require('@react-native-community/geolocation');
 
 const MovingForm = (props) => {
+  const dispatch = useDispatch();
   const mapRef = useRef(null);
   const markerRef = useRef(null);
   const googlePlaceRef = useRef(null);
@@ -61,11 +66,15 @@ const MovingForm = (props) => {
     latitudeDelta: MapConstantDelta,
     longitudeDelta: MapConstantDelta,
   });
+  const zones = useSelector((state) => state.Login?.zones) || [];
   const scrollViewRef = useRef(null);
   const [address, setAddress] = useState('');
   let source = data?.source || {};
   let destination = data?.destination || {};
   let movingFromData = props.movingFrom ? destination?.meta : source?.meta;
+  useEffect(() => {
+    dispatch(getZones());
+  }, []);
 
   useEffect(() => {
     getLocation()
@@ -78,56 +87,77 @@ const MovingForm = (props) => {
   }, [mapVisible]);
 
   const fetchLocationString = (regionData) => {
-    let t1 = {...mapData};
-    mapRef?.current?.animateToRegion({
-      latitude: regionData?.latitude,
-      longitude: regionData?.longitude,
-      latitudeDelta: MapConstantDelta,
-      longitudeDelta: MapConstantDelta,
-    });
-    setRegion({
-      latitude: regionData?.latitude,
-      longitude: regionData?.longitude,
-      latitudeDelta: MapConstantDelta,
-      longitudeDelta: MapConstantDelta,
-    });
-    setPanding(false);
-    fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${regionData.latitude},${regionData.longitude}&key=AIzaSyCvVaeoUidYMQ8cdIJ_cEvrZNJeBeMpC-4`,
-    )
-      .then((response) => response.json())
-      .then((responseJson) => {
-        let temp = JSON.parse(JSON.stringify(responseJson));
-        if (temp?.results && temp?.results?.length > 0) {
-          googlePlaceRef?.current?.setAddressText(
-            temp?.results[0]?.formatted_address,
-          );
-          setAddress(temp?.results[0]?.formatted_address);
-          temp?.results[0].address_components.forEach((item, index) => {
-            if (
-              item?.types?.findIndex(
-                (ele) => ele === 'administrative_area_level_2',
-              ) !== -1
-            ) {
-              t1.city = item?.long_name;
-            } else if (
-              item?.types?.findIndex((ele) => ele === 'postal_code') !== -1
-            ) {
-              t1.pincode = item?.long_name;
-            } else if (
-              item?.types?.findIndex(
-                (ele) => ele === 'administrative_area_level_1',
-              ) !== -1
-            ) {
-              t1.state = item?.long_name;
-            }
-            t1.geocode = temp?.results[0]?.formatted_address;
-          });
+    setLoading(true);
+    let count = props.movingFrom ? 1 : 0;
+    if (!props.movingFrom) {
+      zones.forEach((item, index) => {
+        let temp = getDistance(
+          {latitude: regionData?.latitude, longitude: regionData?.longitude},
+          {latitude: item?.lat, longitude: item?.lng},
+        );
+        if (temp <= item?.service_radius * 1000) {
+          count = count + 1;
         }
       });
-    t1.latitude = regionData?.latitude;
-    t1.longitude = regionData?.longitude;
-    setMapData(t1);
+    }
+    if (count > 0) {
+      let t1 = {...mapData};
+      mapRef?.current?.animateToRegion({
+        latitude: regionData?.latitude,
+        longitude: regionData?.longitude,
+        latitudeDelta: MapConstantDelta,
+        longitudeDelta: MapConstantDelta,
+      });
+      setRegion({
+        latitude: regionData?.latitude,
+        longitude: regionData?.longitude,
+        latitudeDelta: MapConstantDelta,
+        longitudeDelta: MapConstantDelta,
+      });
+      setPanding(false);
+      fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${regionData.latitude},${regionData.longitude}&key=AIzaSyCvVaeoUidYMQ8cdIJ_cEvrZNJeBeMpC-4`,
+      )
+        .then((response) => response.json())
+        .then((responseJson) => {
+          let temp = JSON.parse(JSON.stringify(responseJson));
+          if (temp?.results && temp?.results?.length > 0) {
+            googlePlaceRef?.current?.setAddressText(
+              temp?.results[0]?.formatted_address,
+            );
+            setAddress(temp?.results[0]?.formatted_address);
+            temp?.results[0].address_components.forEach((item, index) => {
+              if (
+                item?.types?.findIndex(
+                  (ele) => ele === 'administrative_area_level_2',
+                ) !== -1
+              ) {
+                t1.city = item?.long_name;
+              } else if (
+                item?.types?.findIndex((ele) => ele === 'postal_code') !== -1
+              ) {
+                t1.pincode = item?.long_name;
+              } else if (
+                item?.types?.findIndex(
+                  (ele) => ele === 'administrative_area_level_1',
+                ) !== -1
+              ) {
+                t1.state = item?.long_name;
+              }
+              t1.geocode = temp?.results[0]?.formatted_address;
+            });
+          }
+        });
+      t1.latitude = regionData?.latitude;
+      t1.longitude = regionData?.longitude;
+      setLoading(false);
+      setMapData(t1);
+    } else {
+      CustomAlert(
+        'Your location is not currently serviceable by biddnest. We will be expanding soon.',
+      );
+      setLoading(false);
+    }
   };
   const handleState = (key, value) => {
     if (props.movingFrom) {
@@ -480,6 +510,21 @@ const MovingForm = (props) => {
                   longitude: region.longitude,
                 }}
               />
+              {zones.map((item, index) => {
+                return (
+                  <MapView.Circle
+                    key={index}
+                    center={{
+                      latitude: item?.lat,
+                      longitude: item?.lng,
+                    }}
+                    radius={item?.service_radius * 1000}
+                    strokeWidth={1}
+                    strokeColor={Colors.darkBlue}
+                    fillColor={'rgba(230,238,255,0.5)'}
+                  />
+                );
+              })}
             </MapView>
             {/*<View*/}
             {/*  style={[styles.markerFixed, isPanding ? styles.isPanding : null]}*/}
