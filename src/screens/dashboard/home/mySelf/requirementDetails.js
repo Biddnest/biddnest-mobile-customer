@@ -346,6 +346,8 @@ const RequirementDetails = (props) => {
       </View>
     );
   };
+  let imageData = [...data?.meta?.images];
+  imageData.push('Plus');
   return (
     <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
       <ScrollView
@@ -464,15 +466,46 @@ const RequirementDetails = (props) => {
       <View style={styles.inputForm}>
         <Text style={STYLES.textHeader}>UPLOAD PHOTOS</Text>
         <View style={{marginTop: hp(3)}}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
+          <FlatList
             bounces={false}
-            contentContainerStyle={{
+            numColumns={4}
+            showsHorizontalScrollIndicator={false}
+            data={imageData}
+            extraData={imageData}
+            keyExtractor={(item, index) => index.toString()}
+            style={{
               paddingHorizontal: wp(5),
-              paddingVertical: hp(1),
-            }}>
-            {data?.meta?.images.map((item, index) => {
+              paddingBottom: hp(1),
+            }}
+            contentContainerStyle={{justifyContent: 'space-evenly'}}
+            renderItem={({item, index}) => {
+              if (item === 'Plus') {
+                return (
+                  <Pressable
+                    onPress={() =>
+                      ImageSelection()
+                        .then((res) => {
+                          handleState('images', res);
+                        })
+                        .catch((err) => {})
+                    }
+                    style={{
+                      height: wp(16),
+                      width: wp(16),
+                      borderRadius: wp(3),
+                      backgroundColor: Colors.btnBG,
+                      marginRight: wp(3),
+                      marginTop: hp(1),
+                      ...STYLES.common,
+                    }}>
+                    <MaterialCommunityIcons
+                      name={'plus'}
+                      size={35}
+                      color={Colors.white}
+                    />
+                  </Pressable>
+                );
+              }
               return (
                 <Pressable
                   key={index}
@@ -483,6 +516,7 @@ const RequirementDetails = (props) => {
                     borderRadius: wp(3),
                     backgroundColor: Colors.silver,
                     marginRight: wp(3),
+                    marginTop: hp(1),
                   }}>
                   <Image
                     source={{uri: item}}
@@ -511,30 +545,8 @@ const RequirementDetails = (props) => {
                   </Pressable>
                 </Pressable>
               );
-            })}
-            <Pressable
-              onPress={() =>
-                ImageSelection()
-                  .then((res) => {
-                    handleState('images', res);
-                  })
-                  .catch((err) => {})
-              }
-              style={{
-                height: wp(16),
-                width: wp(16),
-                borderRadius: wp(3),
-                backgroundColor: Colors.btnBG,
-                marginRight: wp(3),
-                ...STYLES.common,
-              }}>
-              <MaterialCommunityIcons
-                name={'plus'}
-                size={35}
-                color={Colors.white}
-              />
-            </Pressable>
-          </ScrollView>
+            }}
+          />
         </View>
       </View>
       <View style={[styles.inputForm, {paddingTop: hp(2), paddingBottom: 0}]}>
