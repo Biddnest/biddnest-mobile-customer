@@ -77,87 +77,69 @@ const MovingForm = (props) => {
   }, []);
 
   useEffect(() => {
-    getLocation()
-      .then((res) => {
-        fetchLocationString(res);
-      })
-      .catch((err) => {
-        CustomAlert(err);
-      });
+    if (mapVisible) {
+      getLocation()
+        .then((res) => {
+          fetchLocationString(res);
+        })
+        .catch((err) => {
+          CustomAlert(err);
+        });
+    }
   }, [mapVisible]);
 
   const fetchLocationString = (regionData) => {
-    setLoading(true);
-    let count = props.movingFrom ? 1 : 0;
-    if (!props.movingFrom) {
-      zones.forEach((item, index) => {
-        let temp = getDistance(
-          {latitude: regionData?.latitude, longitude: regionData?.longitude},
-          {latitude: item?.lat, longitude: item?.lng},
-        );
-        if (temp <= item?.service_radius * 1000) {
-          count = count + 1;
+    let t1 = {...mapData};
+    mapRef?.current?.animateToRegion({
+      latitude: regionData?.latitude,
+      longitude: regionData?.longitude,
+      latitudeDelta: MapConstantDelta,
+      longitudeDelta: MapConstantDelta,
+    });
+    setRegion({
+      latitude: regionData?.latitude,
+      longitude: regionData?.longitude,
+      latitudeDelta: MapConstantDelta,
+      longitudeDelta: MapConstantDelta,
+    });
+    setPanding(false);
+    fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${regionData.latitude},${regionData.longitude}&key=AIzaSyCvVaeoUidYMQ8cdIJ_cEvrZNJeBeMpC-4`,
+    )
+      .then((response) => response.json())
+      .then((responseJson) => {
+        let temp = JSON.parse(JSON.stringify(responseJson));
+        if (temp?.results && temp?.results?.length > 0) {
+          googlePlaceRef?.current?.setAddressText(
+            temp?.results[0]?.formatted_address,
+          );
+          setAddress(temp?.results[0]?.formatted_address);
+          temp?.results[0].address_components.forEach((item, index) => {
+            if (
+              item?.types?.findIndex(
+                (ele) => ele === 'administrative_area_level_2',
+              ) !== -1
+            ) {
+              t1.city = item?.long_name;
+            } else if (
+              item?.types?.findIndex((ele) => ele === 'postal_code') !== -1
+            ) {
+              t1.pincode = item?.long_name;
+            } else if (
+              item?.types?.findIndex(
+                (ele) => ele === 'administrative_area_level_1',
+              ) !== -1
+            ) {
+              t1.state = item?.long_name;
+            }
+            t1.geocode = temp?.results[0]?.formatted_address;
+          });
         }
       });
-    }
-    if (count > 0) {
-      let t1 = {...mapData};
-      mapRef?.current?.animateToRegion({
-        latitude: regionData?.latitude,
-        longitude: regionData?.longitude,
-        latitudeDelta: MapConstantDelta,
-        longitudeDelta: MapConstantDelta,
-      });
-      setRegion({
-        latitude: regionData?.latitude,
-        longitude: regionData?.longitude,
-        latitudeDelta: MapConstantDelta,
-        longitudeDelta: MapConstantDelta,
-      });
-      setPanding(false);
-      fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${regionData.latitude},${regionData.longitude}&key=AIzaSyCvVaeoUidYMQ8cdIJ_cEvrZNJeBeMpC-4`,
-      )
-        .then((response) => response.json())
-        .then((responseJson) => {
-          let temp = JSON.parse(JSON.stringify(responseJson));
-          if (temp?.results && temp?.results?.length > 0) {
-            googlePlaceRef?.current?.setAddressText(
-              temp?.results[0]?.formatted_address,
-            );
-            setAddress(temp?.results[0]?.formatted_address);
-            temp?.results[0].address_components.forEach((item, index) => {
-              if (
-                item?.types?.findIndex(
-                  (ele) => ele === 'administrative_area_level_2',
-                ) !== -1
-              ) {
-                t1.city = item?.long_name;
-              } else if (
-                item?.types?.findIndex((ele) => ele === 'postal_code') !== -1
-              ) {
-                t1.pincode = item?.long_name;
-              } else if (
-                item?.types?.findIndex(
-                  (ele) => ele === 'administrative_area_level_1',
-                ) !== -1
-              ) {
-                t1.state = item?.long_name;
-              }
-              t1.geocode = temp?.results[0]?.formatted_address;
-            });
-          }
-        });
-      t1.latitude = regionData?.latitude;
-      t1.longitude = regionData?.longitude;
-      setLoading(false);
-      setMapData(t1);
-    } else {
-      CustomAlert(
-        'Your location is not currently serviceable by biddnest. We will be expanding soon.',
-      );
-      setLoading(false);
-    }
+    t1.latitude = regionData?.latitude;
+    t1.longitude = regionData?.longitude;
+    setLoading(false);
+    setMapData(t1);
   };
   const handleState = (key, value) => {
     if (props.movingFrom) {
@@ -510,21 +492,22 @@ const MovingForm = (props) => {
                   longitude: region.longitude,
                 }}
               />
-              {zones.map((item, index) => {
-                return (
-                  <MapView.Circle
-                    key={index}
-                    center={{
-                      latitude: item?.lat,
-                      longitude: item?.lng,
-                    }}
-                    radius={item?.service_radius * 1000}
-                    strokeWidth={1}
-                    strokeColor={Colors.darkBlue}
-                    fillColor={'rgba(230,238,255,0.5)'}
-                  />
-                );
-              })}
+              {!props.movingFrom &&
+                zones.map((item, index) => {
+                  return (
+                    <MapView.Circle
+                      key={index}
+                      center={{
+                        latitude: item?.lat,
+                        longitude: item?.lng,
+                      }}
+                      radius={item?.service_radius * 1000}
+                      strokeWidth={1}
+                      strokeColor={Colors.darkBlue}
+                      fillColor={'rgba(230,238,255,0.5)'}
+                    />
+                  );
+                })}
             </MapView>
             {/*<View*/}
             {/*  style={[styles.markerFixed, isPanding ? styles.isPanding : null]}*/}
@@ -632,19 +615,40 @@ const MovingForm = (props) => {
                   temp.lat = mapData.latitude;
                   temp.lng = mapData.longitude;
                   handleStateChange('destination', temp);
+                  setMapVisible(false);
                 } else {
-                  let temp = {...source};
-                  temp.meta.address_line1 = mapData.address_line1;
-                  temp.meta.address_line2 = mapData.address_line2;
-                  temp.meta.city = mapData.city;
-                  temp.meta.pincode = mapData.pincode;
-                  temp.meta.state = mapData.state;
-                  temp.meta.geocode = mapData.geocode;
-                  temp.lat = mapData.latitude;
-                  temp.lng = mapData.longitude;
-                  handleStateChange('source', temp);
+                  let count = 0;
+                  zones.forEach((item, index) => {
+                    let temp = getDistance(
+                      {
+                        latitude: mapData?.latitude,
+                        longitude: mapData?.longitude,
+                      },
+                      {latitude: item?.lat, longitude: item?.lng},
+                    );
+                    if (temp <= item?.service_radius * 1000) {
+                      count = count + 1;
+                    }
+                  });
+
+                  if (count > 0) {
+                    let temp = {...source};
+                    temp.meta.address_line1 = mapData.address_line1;
+                    temp.meta.address_line2 = mapData.address_line2;
+                    temp.meta.city = mapData.city;
+                    temp.meta.pincode = mapData.pincode;
+                    temp.meta.state = mapData.state;
+                    temp.meta.geocode = mapData.geocode;
+                    temp.lat = mapData.latitude;
+                    temp.lng = mapData.longitude;
+                    handleStateChange('source', temp);
+                    setMapVisible(false);
+                  } else {
+                    CustomAlert(
+                      'Your location is not currently serviceable by biddnest. We will be expanding soon.',
+                    );
+                  }
                 }
-                setMapVisible(false);
               }}
             />
           </View>
