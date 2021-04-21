@@ -13,6 +13,7 @@ import {useDispatch} from 'react-redux';
 import {sendOTP, signOut, verifyOTP} from '../../redux/actions/user';
 import {LOGIN_USER_DATA} from '../../redux/types';
 import OneSignal from 'react-native-onesignal';
+import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 
 const Login = (props) => {
   const dispatch = useDispatch();
@@ -143,14 +144,15 @@ const Login = (props) => {
                       marginTop: hp(1),
                       marginBottom: hp(2),
                     }}>
-                    <OTPInputView
-                      pinCount={6}
-                      onCodeChanged={(code) => setOTP(code)}
-                      codeInputFieldStyle={styles.textInput}
-                      codeInputHighlightStyle={[
-                        styles.textInput,
-                        {borderColor: '#243C99'},
-                      ]}
+                    <SmoothPinCodeInput
+                      codeLength={6}
+                      value={otp}
+                      onTextChange={(code) => setOTP(code)}
+                      cellStyle={styles.textInput}
+                      cellStyleFocused={{
+                        borderColor: Colors.darkBlue,
+                      }}
+                      cellSpacing={wp(2)}
                     />
                   </View>
                 </View>
