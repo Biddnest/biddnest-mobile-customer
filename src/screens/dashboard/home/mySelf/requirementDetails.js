@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -32,6 +32,7 @@ import CustomLabel from './CustomLabel';
 import {APICall} from '../../../../redux/actions/user';
 import {STORE} from '../../../../redux';
 import {useSelector} from 'react-redux';
+import {Picker} from '@react-native-picker/picker';
 
 const RequirementDetails = (props) => {
   const {data, handleStateChange, movementType} = props;
@@ -647,55 +648,86 @@ const RequirementDetails = (props) => {
             setEditData({});
           }}
         />
-        <DropDownAndroid
-          value={editItem ? editData?.name : addData?.name}
-          label={'Item Name'}
-          width={wp(90)}
-          items={defaultInventories}
-          onChangeItem={(text, item) => {
-            let temp = {...item};
+        <View
+          style={{
+            width: wp(90),
+            paddingHorizontal: 10,
+          }}>
+          <Text
+            style={{
+              fontFamily: 'Roboto-Bold',
+              color: Colors.textLabelColor,
+              fontSize: wp(4),
+              marginBottom: hp(1),
+            }}>
+            {'Item Name'}
+          </Text>
+          <View
+            style={{
+              borderWidth: 2,
+              paddingHorizontal: 15,
+              borderRadius: 10,
+              height: hp(6.5),
+              borderColor: Colors.silver,
+              backgroundColor: Colors.white,
+              borderBottomWidth: 2,
+              ...STYLES.common,
+            }}>
+            <Picker
+              style={{
+                height: '99%',
+                width: '100%',
+              }}
+              selectedValue={editItem ? editData?.name : addData?.name}
+              onValueChange={(itemValue, itemIndex) => {
+                let item = defaultInventories[itemIndex];
+                let temp = {...item};
+                temp.material = JSON.parse(item.material.toString());
+                temp.size = JSON.parse(item.size.toString());
 
-            temp.material = JSON.parse(item.material.toString());
-            temp.size = JSON.parse(item.size.toString());
-
-            temp.label = item.name;
-            temp.value = item.name;
-            let materialAry = [];
-            let sizeAry = [];
-            temp.material.forEach((i) => {
-              materialAry.push({
-                label: i,
-                value: i,
-              });
-            });
-            temp.size.forEach((i) => {
-              sizeAry.push({
-                label: i,
-                value: i,
-              });
-            });
-            temp.material = materialAry;
-            temp.size = sizeAry;
-            setSelectedInventory(temp);
-            if (editItem) {
-              setEditData({...editData, name: text});
-            } else {
-              setAddData({
-                name: text,
-                material: null,
-                size: null,
-                quantity:
-                  configData?.inventory_quantity_type.range ===
-                  movementType?.inventory_quantity_type
-                    ? {
-                        min: 200,
-                        max: 750,
-                      }
-                    : 1,
-              });
-            }
-          }}
-        />
+                temp.label = item.name;
+                temp.value = item.name;
+                let materialAry = [];
+                let sizeAry = [];
+                temp.material.forEach((i) => {
+                  materialAry.push({
+                    label: i,
+                    value: i,
+                  });
+                });
+                temp.size.forEach((i) => {
+                  sizeAry.push({
+                    label: i,
+                    value: i,
+                  });
+                });
+                temp.material = materialAry;
+                temp.size = sizeAry;
+                setSelectedInventory(temp);
+                if (editItem) {
+                  setEditData({...editData, name: itemValue});
+                } else {
+                  setAddData({
+                    name: itemValue,
+                    material: null,
+                    size: null,
+                    quantity:
+                      configData?.inventory_quantity_type.range ===
+                      movementType?.inventory_quantity_type
+                        ? {
+                            min: 200,
+                            max: 750,
+                          }
+                        : 1,
+                  });
+                }
+              }}>
+              {defaultInventories.map((item, index) => {
+                return <Picker.Item label={item?.label} value={item?.value} />;
+              })}
+            </Picker>
+          </View>
+        </View>
         <View
           style={[
             {flexDirection: 'row', marginTop: hp(2)},
