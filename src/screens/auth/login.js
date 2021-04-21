@@ -153,6 +153,12 @@ const Login = (props) => {
                         borderColor: Colors.darkBlue,
                       }}
                       cellSpacing={wp(2)}
+                      textStyle={{
+                        fontFamily: 'Gilroy-SemiBold',
+                        fontSize: wp(5),
+                        backgroundColor: Colors.textBG,
+                        color: Colors.inputTextColor,
+                      }}
                     />
                   </View>
                 </View>
