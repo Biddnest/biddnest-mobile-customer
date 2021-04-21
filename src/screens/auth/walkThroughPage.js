@@ -5,26 +5,85 @@ import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import {Colors, hp, wp} from '../../constant/colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
+const styles = StyleSheet.create({
+  container: {flex: 1, backgroundColor: 'white'},
+  child: {
+    width: wp(100),
+    justifyContent: 'center',
+    backgroundColor: '#FDC403',
+  },
+  textTitle: {
+    fontSize: wp(6),
+    textAlign: 'center',
+    fontFamily: 'Gilroy-Bold',
+    color: Colors.white,
+    textTransform: 'capitalize',
+  },
+  textDesc: {
+    fontSize: wp(4.5),
+    textAlign: 'center',
+    fontFamily: 'Gilroy-Regular',
+    color: Colors.white,
+    textTransform: 'capitalize',
+    marginTop: hp(2),
+    marginHorizontal: wp(5.5),
+  },
+  imageStyle: {
+    height: wp(70),
+    width: wp(70),
+    alignSelf: 'center',
+    marginBottom: hp(8),
+  },
+});
+
 const data = [
   {
     title: 'select destination',
     desc:
       "Lorem ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.",
+    image: (
+      <Image
+        source={require('../../assets/images/1.gif')}
+        style={styles.imageStyle}
+        resizeMode={'contain'}
+      />
+    ),
   },
   {
     title: 'Share Requirement',
     desc:
       "Lorem ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.",
+    image: (
+      <Image
+        source={require('../../assets/images/2.gif')}
+        style={styles.imageStyle}
+        resizeMode={'contain'}
+      />
+    ),
   },
   {
     title: 'Schedule & Confirm',
     desc:
       "Lorem ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.",
+    image: (
+      <Image
+        source={require('../../assets/images/3.gif')}
+        style={styles.imageStyle}
+        resizeMode={'contain'}
+      />
+    ),
   },
   {
     title: 'Get Moving!',
     desc:
       "Lorem ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.",
+    image: (
+      <Image
+        source={require('../../assets/images/4.gif')}
+        style={styles.imageStyle}
+        resizeMode={'contain'}
+      />
+    ),
   },
 ];
 
@@ -46,16 +105,7 @@ const WalkThroughPage = (props) => {
         }}
         renderItem={({item}) => (
           <View style={[styles.child]}>
-            <Image
-              source={require('../../assets/images/coupon.png')}
-              style={{
-                height: wp(70),
-                width: wp(70),
-                alignSelf: 'center',
-                marginBottom: hp(8),
-              }}
-              resizeMode={'contain'}
-            />
+            {item?.image}
             <Text style={styles.textTitle}>{item?.title}</Text>
             <Text style={styles.textDesc}>{item?.desc}</Text>
           </View>
@@ -86,43 +136,19 @@ const WalkThroughPage = (props) => {
           bottom: hp(5),
           right: wp(10),
         }}>
-        {(selectedIndex === 3 && (
-          <Text style={styles.textTitle}>Done</Text>
-        )) || (
-          <MaterialIcons
-            name={'arrow-forward-ios'}
-            size={30}
-            color={Colors.white}
-          />
-        )}
+        {
+          selectedIndex === 3 && <Text style={styles.textTitle}>Done</Text>
+          // || (
+          //   <MaterialIcons
+          //     name={'arrow-forward-ios'}
+          //     size={30}
+          //     color={Colors.white}
+          //   />
+          // )
+        }
       </Pressable>
     </View>
   );
 };
 
 export default WalkThroughPage;
-
-const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: 'white'},
-  child: {
-    width: wp(100),
-    justifyContent: 'center',
-    backgroundColor: Colors.btnBG,
-  },
-  textTitle: {
-    fontSize: wp(6),
-    textAlign: 'center',
-    fontFamily: 'Gilroy-Bold',
-    color: Colors.white,
-    textTransform: 'capitalize',
-  },
-  textDesc: {
-    fontSize: wp(4.5),
-    textAlign: 'center',
-    fontFamily: 'Gilroy-Regular',
-    color: Colors.white,
-    textTransform: 'capitalize',
-    marginTop: hp(2),
-    marginHorizontal: wp(5.5),
-  },
-});
