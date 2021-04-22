@@ -31,7 +31,7 @@ import Button from '../../../components/button';
 const SingleTicket = (props) => {
   const flatlistRef = useRef(null);
   const userData = useSelector((state) => state.Login?.loginData?.user) || {};
-  const ticket = props?.route?.params?.ticket || {};
+  const [ticket, setTicket] = useState(props?.route?.params?.ticket || {});
   const [isLoading, setLoading] = useState(false);
   const [replies, setReplies] = useState([]);
   const [reply, setReply] = useState('');
@@ -49,6 +49,7 @@ const SingleTicket = (props) => {
     fetchReplies();
   }, []);
   const fetchReplies = () => {
+    setLoading(true);
     let obj = {
       url: `tickets/details?id=${ticket?.id}`,
       method: 'get',
@@ -61,6 +62,7 @@ const SingleTicket = (props) => {
         setLoading(false);
         if (res?.data?.status === 'success') {
           setReplies(res?.data?.data?.ticket?.reply);
+          setTicket(res?.data?.data?.ticket);
           flatlistRef?.current?.scrollToEnd();
         } else {
           CustomAlert(res?.data?.message);

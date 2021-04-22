@@ -16,16 +16,16 @@ const styles = StyleSheet.create({
     fontSize: wp(6),
     textAlign: 'center',
     fontFamily: 'Gilroy-Bold',
-    color: Colors.white,
+    color: Colors.darkBlue,
     textTransform: 'capitalize',
   },
   textDesc: {
-    fontSize: wp(4.5),
+    fontSize: wp(4.2),
     textAlign: 'center',
     fontFamily: 'Gilroy-Regular',
-    color: Colors.white,
+    color: Colors.inputTextColor,
     textTransform: 'capitalize',
-    marginTop: hp(2),
+    marginTop: hp(1.5),
     marginHorizontal: wp(5.5),
   },
   imageStyle: {
@@ -119,6 +119,8 @@ const WalkThroughPage = (props) => {
             bottom: hp(5),
             left: wp(10),
             ...styles.textTitle,
+            color: Colors.white,
+            fontSize: wp(5),
           }}>
           Skip
         </Text>

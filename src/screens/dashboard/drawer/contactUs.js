@@ -113,7 +113,7 @@ const ContactUs = (props) => {
         key={index}
         onPress={() =>
           props.navigation.navigate('SingleTicket', {
-            ticket: item,
+            ticket: {id: item?.id},
           })
         }>
         <View style={styles.flexBox}>
