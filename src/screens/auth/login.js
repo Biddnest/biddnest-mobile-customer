@@ -147,12 +147,14 @@ const Login = (props) => {
                     }}>
                     <SmoothPinCodeInput
                       codeLength={6}
+                      restrictToNumbers={true}
                       value={otp}
                       onTextChange={(code) => setOTP(code)}
                       cellStyle={styles.textInput}
                       cellStyleFocused={{
                         borderColor: Colors.darkBlue,
                       }}
+                      keyboardType={'number-pad'}
                       cellSpacing={wp(2)}
                       textStyle={{
                         fontFamily: 'Gilroy-SemiBold',
