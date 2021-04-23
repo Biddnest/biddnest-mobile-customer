@@ -99,6 +99,12 @@ const WalkThroughPage = (props) => {
         paginationStyle={{
           bottom: hp(10),
         }}
+        paginationStyleItem={{
+          height: 10,
+          width: 10,
+          borderRadius: 5,
+          marginRight: 2,
+        }}
         paginationDefaultColor={'#FFE672'}
         onChangeIndex={({index}) => {
           setSelectedIndex(index);
@@ -113,7 +119,7 @@ const WalkThroughPage = (props) => {
       />
       {selectedIndex !== 3 && (
         <Text
-          onPress={() => resetNavigator(props, 'Dashboard')}
+          onPress={() => resetNavigator(props, 'Login')}
           style={{
             position: 'absolute',
             bottom: hp(5),
@@ -128,7 +134,7 @@ const WalkThroughPage = (props) => {
       <Pressable
         onPress={() => {
           if (selectedIndex === 3) {
-            resetNavigator(props, 'Dashboard');
+            resetNavigator(props, 'Login');
           } else {
             setSelectedIndex(selectedIndex + 1);
           }
@@ -139,7 +145,18 @@ const WalkThroughPage = (props) => {
           right: wp(10),
         }}>
         {
-          selectedIndex === 3 && <Text style={styles.textTitle}>Done</Text>
+          selectedIndex === 3 && (
+            <Text
+              style={[
+                styles.textTitle,
+                {
+                  color: Colors.white,
+                  fontSize: wp(5),
+                },
+              ]}>
+              Done
+            </Text>
+          )
           // || (
           //   <MaterialIcons
           //     name={'arrow-forward-ios'}

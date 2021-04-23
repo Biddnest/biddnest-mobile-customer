@@ -1,7 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Text, ScrollView} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
-import {CustomAlert, CustomConsole, DiffMin} from '../../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  DiffMin,
+  LoadingScreen,
+} from '../../../constant/commonFun';
 import {getOrderDetails} from '../../../redux/actions/user';
 import SimpleHeader from '../../../components/simpleHeader';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
@@ -20,6 +25,7 @@ const OrderTimer = (props) => {
   const orderData = props?.route?.params?.orderData || {};
   const [orderDetails, setOrderDetails] = useState({});
   const [timeOver, setTimeOver] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     if (orderData?.public_booking_id) {
       getOrderDetails(orderData?.public_booking_id)
@@ -29,10 +35,14 @@ const OrderTimer = (props) => {
           } else {
             CustomAlert(res?.data?.message);
           }
+          setLoading(false);
         })
         .catch((err) => {
           CustomConsole(err);
+          setLoading(false);
         });
+    } else {
+      setLoading(false);
     }
   }, []);
   const children = ({remainingTime}) => {
@@ -125,6 +135,7 @@ const OrderTimer = (props) => {
         navigation={props.navigation}
         onBack={() => props.navigation.goBack()}
       />
+      {isLoading && <LoadingScreen />}
       <ScrollView
         showsVerticalScrollIndicator={false}
         bounces={false}
@@ -135,12 +146,12 @@ const OrderTimer = (props) => {
           <LocationDistance
             from={
               source_meta?.city === destination_meta?.city
-                ? source_meta?.geocode
+                ? source_meta?.address
                 : source_meta?.city
             }
             to={
               source_meta?.city === destination_meta?.city
-                ? destination_meta?.geocode
+                ? destination_meta?.address
                 : destination_meta?.city
             }
             finalDistance={meta?.distance}

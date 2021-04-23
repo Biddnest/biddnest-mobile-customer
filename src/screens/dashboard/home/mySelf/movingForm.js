@@ -465,8 +465,7 @@ const MovingForm = (props) => {
               ref={mapRef}
               rotateEnabled={false}
               onMapReady={handleMapReady}
-              showsUserLocation
-              showsMyLocationButton
+              // showsUserLocation
               // onRegionChangeComplete={fetchLocationString}
               zoomControlEnabled={false}
               provider={
@@ -659,8 +658,8 @@ const MovingForm = (props) => {
           visible={liftInfo || sharedInfo}
           label={
             liftInfo
-              ? 'Mentioning this helps up being better prepaid for your moment'
-              : 'If checked, out vendors will move your items along with other items in a shared vehicle \n\n Checking this option will effectively reduce the movement cost, else A dedicated vehicle will be used.'
+              ? 'Mentioning this helps us being better prepaid for your moment'
+              : 'If checked, our vendors will move your items along with other items in a shared vehicle \n\n Checking this option will effectively reduce the movement cost, else A dedicated vehicle will be used.'
           }
           title={liftInfo ? 'lift' : 'Shared Service'}
           onCloseIcon={() => {

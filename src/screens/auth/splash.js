@@ -99,7 +99,7 @@ const Splash = (props) => {
           if (userData?.fname) {
             resetNavigator(props, 'Dashboard');
           } else {
-            resetNavigator(props, 'Login');
+            resetNavigator(props, 'WalkThroughPage');
           }
         }
       })

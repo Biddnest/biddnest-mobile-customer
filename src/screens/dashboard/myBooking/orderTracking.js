@@ -154,7 +154,7 @@ const OrderTracking = (props) => {
                     fontFamily: 'Gilroy-Bold',
                   }}>
                   {source_meta?.city === destination_meta?.city
-                    ? source_meta?.geocode
+                    ? source_meta?.address
                     : source_meta?.city}
                 </Text>
                 <Text
@@ -164,7 +164,7 @@ const OrderTracking = (props) => {
                     {textTransform: 'capitalize', fontFamily: 'Gilroy-Bold'},
                   ]}>
                   {destination_meta?.city === source_meta?.city
-                    ? destination_meta?.geocode
+                    ? destination_meta?.address
                     : destination_meta?.city}
                 </Text>
               </View>
@@ -267,11 +267,11 @@ const OrderTracking = (props) => {
                         message: `Hey there,
                            \nI am shifting from ${
                              source_meta?.city === destination_meta?.city
-                               ? source_meta?.geocode
+                               ? source_meta?.address
                                : source_meta?.city
                            } to ${
                           destination_meta?.city === source_meta?.city
-                            ? destination_meta?.geocode
+                            ? destination_meta?.address
                             : destination_meta?.city
                         } on ${
                           orderDetails?.bid?.meta &&
@@ -598,7 +598,8 @@ const OrderTracking = (props) => {
         </View>
         {(resecheduleOrder && (
           <FlatButton
-            label={'OKEY'}
+            isLoading={isLoading}
+            label={'OKAY'}
             onPress={() => {
               setRescheduleOrder(false);
               setCancelOrder(false);
@@ -699,6 +700,7 @@ const OrderTracking = (props) => {
           <OTPInputView
             pinCount={4}
             editable={false}
+            autoFocusOnLoad={false}
             code={
               orderDetails?.status === 6
                 ? meta?.start_pin?.toString()
@@ -707,7 +709,11 @@ const OrderTracking = (props) => {
             codeInputFieldStyle={styles.textInput}
           />
         </View>
-        <FlatButton label={'OKAY'} onPress={() => setShowPin(false)} />
+        <FlatButton
+          label={'OKAY'}
+          isLoading={isLoading}
+          onPress={() => setShowPin(false)}
+        />
       </CustomModalAndroid>
       <RateUs
         visible={rateUsVisible}

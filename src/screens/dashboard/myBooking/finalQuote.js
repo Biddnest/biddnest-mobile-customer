@@ -92,12 +92,12 @@ const FinalQuote = (props) => {
           <LocationDistance
             from={
               source_meta?.city === destination_meta?.city
-                ? source_meta?.geocode
+                ? source_meta?.address
                 : source_meta?.city
             }
             to={
               source_meta?.city === destination_meta?.city
-                ? destination_meta?.geocode
+                ? destination_meta?.address
                 : destination_meta?.city
             }
             finalDistance={meta?.distance}

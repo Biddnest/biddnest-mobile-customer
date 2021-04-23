@@ -143,6 +143,7 @@ const Login = (props) => {
                       height: hp(7),
                       marginTop: hp(1),
                       marginBottom: hp(2),
+                      alignSelf: 'center',
                     }}>
                     <SmoothPinCodeInput
                       codeLength={6}

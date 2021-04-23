@@ -125,7 +125,7 @@ const MyBooking = (props) => {
                   maxWidth: wp(40),
                 }}>
                 {source_meta?.city === destination_meta?.city
-                  ? source_meta?.geocode
+                  ? source_meta?.address
                   : source_meta?.city}
               </Text>
               <Text
@@ -139,7 +139,7 @@ const MyBooking = (props) => {
                   },
                 ]}>
                 {destination_meta?.city === source_meta?.city
-                  ? destination_meta?.geocode
+                  ? destination_meta?.address
                   : destination_meta?.city}
               </Text>
             </View>
