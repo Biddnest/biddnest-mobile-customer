@@ -74,11 +74,13 @@ const Timer = (props) => {
       <View style={styles.inputForm}>
         <View style={{marginVertical: hp(0.8)}}>
           <CountdownCircleTimer
-            onComplete={() => resetNavigator(props, 'Dashboard')}
+            key={new Date()}
             isPlaying
-            duration={time}
+            duration={300}
+            initialRemainingTime={time}
             children={children}
             colors={[[Colors.darkBlue, 0.4]]}
+            onComplete={() => resetNavigator(props, 'Dashboard')}
           />
         </View>
         <Text style={styles.mainText}>Time Left</Text>

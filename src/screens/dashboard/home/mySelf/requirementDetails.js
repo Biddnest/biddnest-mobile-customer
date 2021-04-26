@@ -35,7 +35,13 @@ import {useSelector} from 'react-redux';
 import {Picker} from '@react-native-picker/picker';
 
 const RequirementDetails = (props) => {
-  const {data, handleStateChange, movementType} = props;
+  const {
+    data,
+    handleStateChange,
+    movementType,
+    selectedSubCategory,
+    handleSelectedSubCategory,
+  } = props;
   const configData =
     useSelector((state) => state.Login?.configData?.enums?.service) || {};
   const [defaultInventories, setDefaultInventories] = useState(
@@ -44,7 +50,6 @@ const RequirementDetails = (props) => {
   const [isLoading, setLoading] = useState(false);
   const [isWait, setWait] = useState(false);
   const [selectedInventory, setSelectedInventory] = useState({});
-  const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [addItem, setAddItem] = useState(false);
   const [addData, setAddData] = useState({});
   const [editItem, setEditItem] = useState(false);
@@ -56,7 +61,7 @@ const RequirementDetails = (props) => {
     inventory: undefined,
   });
   const [subServices, setSubServices] = useState([]);
-  const [inventoryItems, setInventoryItems] = useState([]);
+  const [inventoryItems, setInventoryItems] = useState(data?.inventory_items);
   const handleState = (key, value) => {
     let temp = {...data.meta};
     if (key === 'remarks') {
@@ -171,9 +176,14 @@ const RequirementDetails = (props) => {
         if (res?.data?.status === 'success') {
           if (res?.data?.data?.subservices.length > 0) {
             let temp = res?.data?.data?.subservices[0];
-            setSelectedSubCategory(temp);
-            getInventories(temp.id);
-            handleState('subcategory', temp.name);
+            if (!selectedSubCategory) {
+              handleSelectedSubCategory(temp);
+              getInventories(temp.id);
+              handleState('subcategory', temp.name);
+            } else {
+              handleSelectedSubCategory(selectedSubCategory);
+              handleState('subcategory', selectedSubCategory.name);
+            }
           }
           setSubServices(res?.data?.data?.subservices || []);
         } else {
@@ -365,7 +375,7 @@ const RequirementDetails = (props) => {
               onPress={() => {
                 handleState('subcategory', item.name);
                 getInventories(item.id);
-                setSelectedSubCategory(item);
+                handleSelectedSubCategory(item);
               }}
               style={{
                 height: wp(20),
@@ -405,7 +415,7 @@ const RequirementDetails = (props) => {
           },
         ]}>
         <Text style={STYLES.textHeader}>
-          {movementType?.id === 1
+          {selectedSubCategory?.name
             ? `${selectedSubCategory?.name} ITEM LIST`
             : `${movementType?.name} ITEM LIST`}
         </Text>
@@ -510,7 +520,7 @@ const RequirementDetails = (props) => {
               return (
                 <Pressable
                   key={index}
-                  onPress={() => setSelectedSubCategory(item)}
+                  onPress={() => handleSelectedSubCategory(item)}
                   style={{
                     height: wp(16),
                     width: wp(16),
@@ -908,13 +918,21 @@ const RequirementDetails = (props) => {
                 addData.material !== null &&
                 addData.size !== null
               ) {
-                addData.inventory_id = selectedInventory.id;
-                addData.image = selectedInventory.image;
-                temp.push(addData);
-                handleStateChange('inventory_items', temp);
-                setInventoryItems(temp);
-                setAddData({});
-                setAddItem(false);
+                if (
+                  temp.findIndex(
+                    (item) => item.inventory_id === selectedInventory.id,
+                  ) === -1
+                ) {
+                  addData.inventory_id = selectedInventory.id;
+                  addData.image = selectedInventory.image;
+                  temp.push(addData);
+                  handleStateChange('inventory_items', temp);
+                  setInventoryItems(temp);
+                  setAddData({});
+                  setAddItem(false);
+                } else {
+                  CustomAlert('The item has already been added."');
+                }
               } else {
                 CustomAlert('All Fields are mendatory');
               }

@@ -93,6 +93,7 @@ const BookingStepper = (props) => {
     movement_dates: [],
     inventory_items: [],
   });
+  const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [apiResponse, setApiResponse] = useState({});
   const [confirmationVisible, setConfirmationVisible] = useState(false);
 
@@ -363,6 +364,8 @@ const BookingStepper = (props) => {
         return (
           <RequirementDetails
             data={data}
+            selectedSubCategory={selectedSubCategory}
+            handleSelectedSubCategory={(text) => setSelectedSubCategory(text)}
             apiResponse={apiResponse}
             setApiResponse={setApiResponse}
             handleStateChange={handleStateChange}
@@ -380,6 +383,8 @@ const BookingStepper = (props) => {
           return (
             <RequirementDetails
               data={data}
+              selectedSubCategory={selectedSubCategory}
+              handleSelectedSubCategory={(text) => setSelectedSubCategory(text)}
               apiResponse={apiResponse}
               setApiResponse={setApiResponse}
               handleStateChange={handleStateChange}

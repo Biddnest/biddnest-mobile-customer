@@ -234,7 +234,8 @@ const MovingForm = (props) => {
           value={
             props.movingFrom ? destination?.meta?.city : source?.meta?.city
           }
-          placeHolder={'Choose on map'}
+          placeHolder={'City'}
+          onChange={(text) => handleState('city', text)}
         />
         <TextInput
           label={'Pincode'}
@@ -269,14 +270,20 @@ const MovingForm = (props) => {
           <Pressable
             style={styles.arrowView}
             onPress={() => {
-              handleState(
-                'floor',
-                parseInt(
-                  props.movingFrom
-                    ? destination?.meta?.floor
-                    : source?.meta?.floor,
-                ) + 1 || 0,
-              );
+              if (
+                props.movingFrom
+                  ? destination?.meta?.floor
+                  : source?.meta?.floor < 50
+              ) {
+                handleState(
+                  'floor',
+                  parseInt(
+                    props.movingFrom
+                      ? destination?.meta?.floor
+                      : source?.meta?.floor,
+                  ) + 1 || 0,
+                );
+              }
             }}>
             <MaterialIcons
               name="arrow-drop-up"
@@ -290,14 +297,20 @@ const MovingForm = (props) => {
               marginLeft: wp(2),
             }}
             onPress={() => {
-              handleState(
-                'floor',
-                parseInt(
-                  props.movingFrom
-                    ? destination?.meta?.floor
-                    : source?.meta?.floor,
-                ) - 1 || 0,
-              );
+              if (
+                props.movingFrom
+                  ? destination?.meta?.floor
+                  : source?.meta?.floor > -3
+              ) {
+                handleState(
+                  'floor',
+                  parseInt(
+                    props.movingFrom
+                      ? destination?.meta?.floor
+                      : source?.meta?.floor,
+                  ) - 1 || 0,
+                );
+              }
             }}>
             <MaterialIcons
               name="arrow-drop-down"
@@ -418,7 +431,11 @@ const MovingForm = (props) => {
                 pageData?.pincode?.length !== 6 ||
                 !/^[0-9]+$/.test(pageData?.pincode)
               );
-              tempError.floor = !(pageData?.floor?.toString()?.length === 0);
+              tempError.floor = !(
+                pageData?.floor?.toString()?.length === 0 ||
+                pageData?.floor < -3 ||
+                pageData?.floor > 50
+              );
               setError(tempError);
               if (
                 Object.values(tempError).findIndex((item) => item === false) ===
@@ -607,8 +624,8 @@ const MovingForm = (props) => {
               onPress={() => {
                 if (props.movingFrom) {
                   let temp = {...destination};
-                  temp.meta.address_line1 = mapData.address_line1;
-                  temp.meta.address_line2 = mapData.address_line2;
+                  // temp.meta.address_line1 = mapData.address_line1;
+                  // temp.meta.address_line2 = mapData.address_line2;
                   temp.meta.city = mapData.city;
                   temp.meta.pincode = mapData.pincode;
                   temp.meta.state = mapData.state;
@@ -634,8 +651,8 @@ const MovingForm = (props) => {
 
                   if (count > 0) {
                     let temp = {...source};
-                    temp.meta.address_line1 = mapData.address_line1;
-                    temp.meta.address_line2 = mapData.address_line2;
+                    // temp.meta.address_line1 = mapData.address_line1;
+                    // temp.meta.address_line2 = mapData.address_line2;
                     temp.meta.city = mapData.city;
                     temp.meta.pincode = mapData.pincode;
                     temp.meta.state = mapData.state;

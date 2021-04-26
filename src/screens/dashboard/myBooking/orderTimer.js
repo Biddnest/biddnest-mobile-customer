@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, ScrollView} from 'react-native';
+import {View, StyleSheet, Text, ScrollView, RefreshControl} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
 import {
   CustomAlert,
@@ -22,15 +22,31 @@ import ActiveRs from '../../../assets/svg/active_rs.svg';
 import InActiveRs from '../../../assets/svg/inactive_rs.svg';
 
 const OrderTimer = (props) => {
-  const orderData = props?.route?.params?.orderData || {};
-  const [orderDetails, setOrderDetails] = useState({});
+  const [orderDetails, setOrderDetails] = useState(
+    props?.route?.params?.orderData || {},
+  );
   const [timeOver, setTimeOver] = useState(false);
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
-    if (orderData?.public_booking_id) {
-      getOrderDetails(orderData?.public_booking_id)
+    getData();
+  }, []);
+  const getData = () => {
+    setLoading(true);
+    if (orderDetails?.public_booking_id) {
+      getOrderDetails(orderDetails?.public_booking_id)
         .then((res) => {
           if (res?.data?.status === 'success') {
+            let temp = res?.data?.data?.booking;
+            if (temp?.status === 4) {
+              props.navigation.replace('FinalQuote', {orderData: temp});
+            } else if (
+              temp?.status === 5 ||
+              temp?.status === 6 ||
+              temp?.status === 7 ||
+              temp?.status === 8
+            ) {
+              props.navigation.replace('OrderTracking', {orderData: temp});
+            }
             setOrderDetails(res?.data?.data?.booking);
           } else {
             CustomAlert(res?.data?.message);
@@ -44,7 +60,7 @@ const OrderTimer = (props) => {
     } else {
       setLoading(false);
     }
-  }, []);
+  };
   const children = ({remainingTime}) => {
     return (
       <Text
@@ -137,6 +153,9 @@ const OrderTimer = (props) => {
       />
       {isLoading && <LoadingScreen />}
       <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={getData} />
+        }
         showsVerticalScrollIndicator={false}
         bounces={false}
         contentContainerStyle={{flex: 1, justifyContent: 'center'}}>
@@ -177,16 +196,14 @@ const OrderTimer = (props) => {
           <View style={styles.inputForm}>
             <View style={{marginVertical: hp(0.8)}}>
               <CountdownCircleTimer
+                key={new Date()}
                 onComplete={() => {
+                  getData();
                   setTimeOver(true);
-                  // props.navigation.replace('FinalQuote', {
-                  //   orderData: orderDetails,
-                  // })
                 }}
                 isPlaying
-                duration={DiffMin(
-                  orderDetails?.bid_result_at || orderData?.bid_result_at,
-                )}
+                duration={300}
+                initialRemainingTime={DiffMin(orderDetails?.bid_result_at)}
                 children={children}
                 colors={[[Colors.darkBlue, 0.4]]}
               />
@@ -200,7 +217,9 @@ const OrderTimer = (props) => {
             <View style={styles.separatorView} />
             <View style={styles.flexView}>
               <Text style={styles.orderID}>ORDER ID</Text>
-              <Text style={styles.orderNo}>{orderData?.public_booking_id}</Text>
+              <Text style={styles.orderNo}>
+                {orderDetails?.public_booking_id}
+              </Text>
             </View>
           </View>
         </LinearGradient>

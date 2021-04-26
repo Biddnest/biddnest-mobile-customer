@@ -41,119 +41,122 @@ const InitialQuote = (props) => {
     ? JSON.parse((props?.apiResponse?.quote_estimate).toString())
     : {};
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      bounces={false}
-      style={{flex: 1}}>
-      <Text
-        style={{
-          fontFamily: 'Roboto-Italic',
-          fontSize: wp(3.5),
-          color: '#99A0A5',
-          textAlign: 'center',
-          marginHorizontal: wp(6),
-        }}>
-        Please note that this is the baseline price, you will be receiving the
-        Vendor bid list with the final quotations
-      </Text>
+    <View style={{flex: 1}}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        style={{flex: 1, marginBottom: hp(8)}}>
+        <Text
+          style={{
+            fontFamily: 'Roboto-Italic',
+            fontSize: wp(3.5),
+            color: '#99A0A5',
+            textAlign: 'center',
+            marginHorizontal: wp(6),
+          }}>
+          Please note that this is the baseline price, you will be receiving the
+          Vendor bid list with the final quotations
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginHorizontal: wp(5),
+            justifyContent: 'space-between',
+          }}>
+          {[
+            {
+              title: 'Economy',
+              price: estimation?.economic,
+              desc: 'Economy services includes moving only',
+            },
+            {
+              title: 'Premium',
+              price: estimation?.premium,
+              desc: 'Premium services includes Packing and Moving',
+            },
+          ].map((item, index) => {
+            return (
+              <Pressable
+                key={index}
+                style={styles.inputForm}
+                onPress={() => setOfferType(index)}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      fontFamily: 'Gilroy-Bold',
+                      fontSize: wp(4),
+                      color: Colors.inputTextColor,
+                      marginRight: 5,
+                    }}>
+                    {item.title}
+                  </Text>
+                  <Pressable
+                    onPress={() => {
+                      if (item.title === 'Economy') {
+                        setEconomicInfo(true);
+                      } else {
+                        setPremiumInfo(true);
+                      }
+                    }}>
+                    <Ionicons
+                      name={'information-circle'}
+                      size={25}
+                      color={'#DEE6ED'}
+                    />
+                  </Pressable>
+                </View>
+                <View
+                  style={{
+                    borderRadius: wp(15),
+                    borderColor:
+                      index === offerType ? Colors.btnBG : Colors.grey,
+                    height: wp(30),
+                    width: wp(30),
+                    borderWidth: 3,
+                    marginVertical: hp(2),
+                    ...STYLES.common,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'Gilroy-Bold',
+                      fontSize: wp(4.7),
+                      color:
+                        index === offerType
+                          ? Colors.btnBG
+                          : Colors.inputTextColor,
+                    }}>
+                    Rs. {item.price}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'Roboto-Light',
+                      fontSize: wp(4),
+                      color:
+                        index === offerType
+                          ? Colors.btnBG
+                          : Colors.inputTextColor,
+                      marginTop: 5,
+                    }}>
+                    Base price
+                  </Text>
+                </View>
+                <Text
+                  style={{
+                    fontFamily: 'Roboto-Italic',
+                    fontSize: wp(3.5),
+                    color: '#99A0A5',
+                    textAlign: 'center',
+                  }}>
+                  {item.desc}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </ScrollView>
       <View
         style={{
-          flexDirection: 'row',
-          marginHorizontal: wp(5),
-          justifyContent: 'space-between',
-        }}>
-        {[
-          {
-            title: 'Economy',
-            price: estimation?.economic,
-            desc: 'Economy services includes moving only',
-          },
-          {
-            title: 'Premium',
-            price: estimation?.premium,
-            desc: 'Premium services includes Packing and Moving',
-          },
-        ].map((item, index) => {
-          return (
-            <Pressable
-              key={index}
-              style={styles.inputForm}
-              onPress={() => setOfferType(index)}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text
-                  style={{
-                    fontFamily: 'Gilroy-Bold',
-                    fontSize: wp(4),
-                    color: Colors.inputTextColor,
-                    marginRight: 5,
-                  }}>
-                  {item.title}
-                </Text>
-                <Pressable
-                  onPress={() => {
-                    if (item.title === 'Economy') {
-                      setEconomicInfo(true);
-                    } else {
-                      setPremiumInfo(true);
-                    }
-                  }}>
-                  <Ionicons
-                    name={'information-circle'}
-                    size={25}
-                    color={'#DEE6ED'}
-                  />
-                </Pressable>
-              </View>
-              <View
-                style={{
-                  borderRadius: wp(15),
-                  borderColor: index === offerType ? Colors.btnBG : Colors.grey,
-                  height: wp(30),
-                  width: wp(30),
-                  borderWidth: 3,
-                  marginVertical: hp(2),
-                  ...STYLES.common,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'Gilroy-Bold',
-                    fontSize: wp(4.7),
-                    color:
-                      index === offerType
-                        ? Colors.btnBG
-                        : Colors.inputTextColor,
-                  }}>
-                  Rs. {item.price}
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: 'Roboto-Light',
-                    fontSize: wp(4),
-                    color:
-                      index === offerType
-                        ? Colors.btnBG
-                        : Colors.inputTextColor,
-                    marginTop: 5,
-                  }}>
-                  Base price
-                </Text>
-              </View>
-              <Text
-                style={{
-                  fontFamily: 'Roboto-Italic',
-                  fontSize: wp(3.5),
-                  color: '#99A0A5',
-                  textAlign: 'center',
-                }}>
-                {item.desc}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
-      <View
-        style={{
-          position: 'relative',
+          position: 'absolute',
           width: wp(100),
           bottom: 0,
         }}>
@@ -198,7 +201,7 @@ const InitialQuote = (props) => {
           }
         }}
       />
-    </ScrollView>
+    </View>
   );
 };
 
