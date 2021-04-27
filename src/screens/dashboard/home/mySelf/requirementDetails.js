@@ -87,6 +87,20 @@ const RequirementDetails = (props) => {
       delete temp.icon;
       inv[index] = temp;
     });
+    if (inv.findIndex((item) => item.id === null) === -1) {
+      inv.unshift({
+        label: '-Select-',
+        value: null,
+        category: '',
+        id: null,
+        image:
+          'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
+        material: '["wood","plastic","steel","fibre","glass"]',
+        name: '-Select-',
+        size: '["small","medium","large"]',
+      });
+    }
+    console.log(inv);
     if (JSON.stringify(inv) !== JSON.stringify(defaultInventories)) {
       setDefaultInventories(inv);
       if (inv.length > 0) {
@@ -690,46 +704,48 @@ const RequirementDetails = (props) => {
               }}
               selectedValue={editItem ? editData?.name : addData?.name}
               onValueChange={(itemValue, itemIndex) => {
-                let item = defaultInventories[itemIndex];
-                let temp = {...item};
-                temp.material = JSON.parse(item.material.toString());
-                temp.size = JSON.parse(item.size.toString());
+                if (itemValue) {
+                  let item = defaultInventories[itemIndex];
+                  let temp = {...item};
+                  temp.material = JSON.parse(item.material.toString());
+                  temp.size = JSON.parse(item.size.toString());
 
-                temp.label = item.name;
-                temp.value = item.name;
-                let materialAry = [];
-                let sizeAry = [];
-                temp.material.forEach((i) => {
-                  materialAry.push({
-                    label: i,
-                    value: i,
+                  temp.label = item.name;
+                  temp.value = item.name;
+                  let materialAry = [];
+                  let sizeAry = [];
+                  temp.material.forEach((i) => {
+                    materialAry.push({
+                      label: i,
+                      value: i,
+                    });
                   });
-                });
-                temp.size.forEach((i) => {
-                  sizeAry.push({
-                    label: i,
-                    value: i,
+                  temp.size.forEach((i) => {
+                    sizeAry.push({
+                      label: i,
+                      value: i,
+                    });
                   });
-                });
-                temp.material = materialAry;
-                temp.size = sizeAry;
-                setSelectedInventory(temp);
-                if (editItem) {
-                  setEditData({...editData, name: itemValue});
-                } else {
-                  setAddData({
-                    name: itemValue,
-                    material: null,
-                    size: null,
-                    quantity:
-                      configData?.inventory_quantity_type.range ===
-                      movementType?.inventory_quantity_type
-                        ? {
-                            min: 200,
-                            max: 750,
-                          }
-                        : 1,
-                  });
+                  temp.material = materialAry;
+                  temp.size = sizeAry;
+                  setSelectedInventory(temp);
+                  if (editItem) {
+                    setEditData({...editData, name: itemValue});
+                  } else {
+                    setAddData({
+                      name: itemValue,
+                      material: null,
+                      size: null,
+                      quantity:
+                        configData?.inventory_quantity_type.range ===
+                        movementType?.inventory_quantity_type
+                          ? {
+                              min: 200,
+                              max: 750,
+                            }
+                          : 1,
+                    });
+                  }
                 }
               }}>
               {defaultInventories.map((item, index) => {
