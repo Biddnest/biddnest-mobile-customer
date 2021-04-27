@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {View, StyleSheet, Text, Pressable, Platform} from 'react-native';
+import {View, StyleSheet, Text, Pressable, Platform, Image} from 'react-native';
 import {
   Colors,
   hp,
@@ -13,12 +13,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Switch from '../../../../components/switch';
 import Button from '../../../../components/button';
 import MapModalAndroid from '../../../../components/mapModal';
-import MapView, {
-  PROVIDER_GOOGLE,
-  PROVIDER_DEFAULT,
-  Marker,
-  Circle,
-} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, PROVIDER_DEFAULT} from 'react-native-maps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CloseIcon from '../../../../components/closeIcon';
 import FlatButton from '../../../../components/flatButton';
@@ -33,7 +28,6 @@ navigator.geolocation = require('@react-native-community/geolocation');
 const MovingForm = (props) => {
   const dispatch = useDispatch();
   const mapRef = useRef(null);
-  const markerRef = useRef(null);
   const googlePlaceRef = useRef(null);
   const [isMapReady, setMapReady] = useState(false);
   const {data, handleStateChange} = props;
@@ -151,13 +145,6 @@ const MovingForm = (props) => {
       temp.meta[key] = value;
       handleStateChange('source', temp);
     }
-  };
-
-  const onPanDrag = () => {
-    if (isPanding) {
-      return;
-    }
-    setPanding(true);
   };
 
   const handleMapReady = useCallback(() => {
@@ -483,7 +470,7 @@ const MovingForm = (props) => {
               rotateEnabled={false}
               onMapReady={handleMapReady}
               // showsUserLocation
-              // onRegionChangeComplete={fetchLocationString}
+              onRegionChangeComplete={fetchLocationString}
               zoomControlEnabled={false}
               provider={
                 Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
@@ -503,13 +490,12 @@ const MovingForm = (props) => {
                 latitudeDelta: MapConstantDelta,
                 longitudeDelta: MapConstantDelta,
               }}>
-              <Marker
-                ref={markerRef}
-                coordinate={{
-                  latitude: region.latitude,
-                  longitude: region.longitude,
-                }}
-              />
+              {/*<Marker*/}
+              {/*  coordinate={{*/}
+              {/*    latitude: region.latitude,*/}
+              {/*    longitude: region.longitude,*/}
+              {/*  }}*/}
+              {/*/>*/}
               {!props.movingFrom &&
                 zones.map((item, index) => {
                   return (
@@ -527,6 +513,13 @@ const MovingForm = (props) => {
                   );
                 })}
             </MapView>
+            <View style={styles.markerFixed}>
+              <MaterialIcons
+                name={'location-pin'}
+                size={35}
+                color={Colors.darkBlue}
+              />
+            </View>
             {/*<View*/}
             {/*  style={[styles.markerFixed, isPanding ? styles.isPanding : null]}*/}
             {/*  pointerEvents="none">*/}
@@ -727,8 +720,6 @@ const styles = StyleSheet.create({
   },
   markerFixed: {
     left: '50%',
-    marginLeft: -24,
-    marginTop: -48,
     position: 'absolute',
     top: '50%',
     zIndex: 2,
