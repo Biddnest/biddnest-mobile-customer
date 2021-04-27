@@ -86,7 +86,7 @@ const FriendsDetails = (props) => {
             tempError.name = !(
               !contact_details.name ||
               contact_details.name.length === 0 ||
-              /[^a-zA-Z]/.test(contact_details.name)
+              !/^[A-Za-z ]+$/.test(contact_details.name)
             );
             tempError.email = !(
               !contact_details.email ||

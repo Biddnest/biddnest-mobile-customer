@@ -7,8 +7,10 @@ import TwoButton from '../../../../components/twoButton';
 import {useSelector} from 'react-redux';
 import RejectBookingModal from '../../myBooking/rejectBookingModal';
 import InformationPopUp from '../../../../components/informationPopUp';
+import moment from 'moment';
 
 const InitialQuote = (props) => {
+  const {apiResponse} = props;
   const configData =
     useSelector((state) => state.Login?.configData?.keys) || {};
   const [offerType, setOfferType] = useState(0);
@@ -37,9 +39,18 @@ const InitialQuote = (props) => {
     setDefaultReason(temp);
   }, [configData]);
 
-  let estimation = props?.apiResponse?.quote_estimate
-    ? JSON.parse((props?.apiResponse?.quote_estimate).toString())
+  let estimation = apiResponse?.quote_estimate
+    ? JSON.parse((apiResponse?.quote_estimate).toString())
     : {};
+  let source_meta =
+    (apiResponse?.source_meta &&
+      JSON.parse(apiResponse?.source_meta?.toString())) ||
+    {};
+  let dateArray = [];
+  apiResponse?.movement_dates?.forEach((item) => {
+    dateArray.push(moment(item?.date).format('Do MMM'));
+  });
+
   return (
     <View style={{flex: 1}}>
       <ScrollView
@@ -153,6 +164,22 @@ const InitialQuote = (props) => {
             );
           })}
         </View>
+        <View
+          style={{
+            width: wp(85),
+            alignSelf: 'center',
+          }}>
+          <View style={styles.flexBox}>
+            <Text style={styles.leftText}>movement type</Text>
+            <Text style={styles.rightText}>
+              {source_meta?.shared_service ? 'Shared' : 'Dedicated'}
+            </Text>
+          </View>
+          <View style={styles.flexBox}>
+            <Text style={styles.leftText}>Moving date</Text>
+            <Text style={styles.rightText}>{dateArray.join('\n')}</Text>
+          </View>
+        </View>
       </ScrollView>
       <View
         style={{
@@ -181,7 +208,7 @@ const InitialQuote = (props) => {
         textOnChange={(text) => setRejectData({...rejectData, desc: text})}
         isLoading={isLoading}
         setLoading={(text) => setLoading(text)}
-        public_booking_id={props?.apiResponse?.public_booking_id}
+        public_booking_id={apiResponse?.public_booking_id}
         setApiResponse={props.setApiResponse}
         navigation={props}
       />
@@ -222,5 +249,21 @@ const styles = StyleSheet.create({
   common: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  flexBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: hp(2),
+  },
+  leftText: {
+    fontFamily: 'Gilroy-Bold',
+    fontSize: wp(4.5),
+    color: Colors.inputTextColor,
+    textTransform: 'capitalize',
+  },
+  rightText: {
+    fontFamily: 'Roboto-Bold',
+    fontSize: wp(4.5),
+    color: Colors.inputTextColor,
   },
 });

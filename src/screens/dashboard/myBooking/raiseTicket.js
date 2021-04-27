@@ -73,7 +73,7 @@ const RaiseTicket = (props) => {
           onChange={(text) => setData({...data, heading: text})}
         />
         {(error?.heading === false && (
-          <Text style={styles.errorText}>Minimun 15 character required</Text>
+          <Text style={styles.errorText}>Minimun 6 character required</Text>
         )) ||
           null}
         <TextInput
@@ -95,7 +95,7 @@ const RaiseTicket = (props) => {
             setLoading(true);
             let tempError = {};
             tempError.category = !!data?.category;
-            tempError.heading = !(!data?.heading || data?.heading.length < 15);
+            tempError.heading = !(!data?.heading || data?.heading.length < 6);
             tempError.desc = !(!data?.desc || data?.desc.length < 15);
             setError(tempError);
             if (

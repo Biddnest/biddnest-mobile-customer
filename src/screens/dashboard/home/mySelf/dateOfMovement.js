@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, Pressable} from 'react-native';
+import {View, StyleSheet, Text, Pressable, ScrollView} from 'react-native';
 import {Colors, hp, wp} from '../../../../constant/colors';
 import Button from '../../../../components/button';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -11,6 +11,7 @@ import FlatButton from '../../../../components/flatButton';
 import CloseIcon from '../../../../components/closeIcon';
 import {STYLES} from '../../../../constant/commonStyle';
 import moment from 'moment';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const DateOfMovement = (props) => {
   const {data, handleStateChange} = props;
@@ -46,7 +47,7 @@ const DateOfMovement = (props) => {
   };
 
   return (
-    <View>
+    <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
       <KeyboardAwareScrollView
         enableOnAndroid={false}
         keyboardShouldPersistTaps="handled"
@@ -73,7 +74,45 @@ const DateOfMovement = (props) => {
             else you can chose a range of dates.
           </Text>
         </View>
-        <Pressable style={{marginTop: hp(3)}} onPress={() => setCalender(true)}>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: hp(2),
+            flexWrap: 'wrap',
+            width: '90%',
+            alignSelf: 'center',
+          }}>
+          {(dateArrayDisplay || data?.movement_dates)?.map((item, index) => {
+            return (
+              <View style={styles.categoryView} key={index}>
+                <Pressable
+                  onPress={() => {
+                    let temp = [...data?.movement_dates];
+                    temp.splice(index, 1);
+                    handleStateChange('movement_dates', temp);
+                  }}
+                  style={{
+                    ...styles.closeView,
+                    ...STYLES.common,
+                  }}>
+                  <Ionicons name="close-sharp" size={12} color={Colors.white} />
+                </Pressable>
+                <Text
+                  style={{
+                    color: Colors.inputTextColor,
+                    fontSize: wp(3.8),
+                    fontFamily: 'Roboto-Bold',
+                    textTransform: 'capitalize',
+                  }}>
+                  {item}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+        <Pressable
+          style={{marginTop: hp(1.5)}}
+          onPress={() => setCalender(true)}>
           <Input
             placeholder={'Choose Date'}
             disabled={true}
@@ -187,7 +226,7 @@ const DateOfMovement = (props) => {
           }}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -202,5 +241,24 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: Colors.white,
     borderColor: '#DEE6ED',
+  },
+  categoryView: {
+    marginBottom: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderColor: Colors.darkBlue,
+    borderWidth: 2,
+    borderRadius: 8,
+    backgroundColor: Colors.white,
+    marginRight: 10,
+  },
+  closeView: {
+    position: 'absolute',
+    height: 16,
+    width: 16,
+    backgroundColor: Colors.darkBlue,
+    right: -8,
+    top: -8,
+    borderRadius: 8,
   },
 });
