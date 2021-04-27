@@ -1,5 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {View, StyleSheet, Text, Pressable, Platform, Image} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Pressable,
+  Platform,
+  Keyboard,
+} from 'react-native';
 import {
   Colors,
   hp,
@@ -63,6 +70,7 @@ const MovingForm = (props) => {
   const zones = useSelector((state) => state.Login?.zones) || [];
   const scrollViewRef = useRef(null);
   const [address, setAddress] = useState('');
+  const [isKeyboardOpen, setKeyboardOpen] = useState(false);
   let source = data?.source || {};
   let destination = data?.destination || {};
   let movingFromData = props.movingFrom ? destination?.meta : source?.meta;
@@ -81,6 +89,16 @@ const MovingForm = (props) => {
         });
     }
   }, [mapVisible]);
+
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidShow', () => setKeyboardOpen(true));
+    Keyboard.addListener('keyboardDidHide', () => setKeyboardOpen(false));
+
+    return () => {
+      Keyboard.removeListener('keyboardDidShow');
+      Keyboard.removeListener('keyboardDidHide');
+    };
+  }, []);
 
   const fetchLocationString = (regionData) => {
     let t1 = {...mapData};
@@ -470,7 +488,11 @@ const MovingForm = (props) => {
               rotateEnabled={false}
               onMapReady={handleMapReady}
               // showsUserLocation
-              onRegionChangeComplete={fetchLocationString}
+              onRegionChangeComplete={(region) => {
+                if (!isKeyboardOpen) {
+                  fetchLocationString(region);
+                }
+              }}
               zoomControlEnabled={false}
               provider={
                 Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
