@@ -64,12 +64,12 @@ const FAQDetails = (props) => {
         key={index}>
         <View style={styles.flexBox}>
           <Text style={styles.topText}>
-            {index + 1}. {item?.title} sdfsd fds sdf
+            {index + 1}. {item?.title}
           </Text>
           <View>
             <MaterialCommunityIcons
               name={openArray.includes(index) ? 'minus' : 'plus'}
-              size={26}
+              size={hp(3.5)}
               color={'#9A9FA4'}
             />
           </View>

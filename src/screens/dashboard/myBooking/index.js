@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Pressable, FlatList, Image} from 'react-native';
+import {View, Text, StyleSheet, Pressable, FlatList} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
 import {HomeHeader} from '../home';
 import {STYLES} from '../../../constant/commonStyle';
@@ -8,6 +8,7 @@ import {useIsFocused} from '@react-navigation/native';
 import {getLiveOrders, getPastOrders} from '../../../redux/actions/user';
 import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
 import moment from 'moment';
+import MapPin from '../../../assets/svg/map_pin.svg';
 
 const MyBooking = (props) => {
   const dispatch = useDispatch();
@@ -101,18 +102,16 @@ const MyBooking = (props) => {
           style={{
             backgroundColor: Colors.white,
             flexDirection: 'row',
+            alignItems: 'center',
           }}>
-          <Image
-            source={require('../../../assets/images/pin_distance.png')}
-            style={{height: wp(15), width: wp(10)}}
-            resizeMode={'contain'}
-          />
+          <MapPin height={hp(8)} width={wp(5)} />
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               flex: 1,
               alignItems: 'center',
+              marginLeft: 5,
             }}>
             <View>
               <Text

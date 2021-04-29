@@ -33,10 +33,18 @@ const DropDownAndroid = (props) => {
           items={props.items}
           defaultValue={props.value}
           customArrowUp={() => (
-            <MaterialIcons name="arrow-drop-up" size={25} color={'#3B4B58'} />
+            <MaterialIcons
+              name="arrow-drop-up"
+              size={hp(3.5)}
+              color={'#3B4B58'}
+            />
           )}
           customArrowDown={() => (
-            <MaterialIcons name="arrow-drop-down" size={25} color={'#3B4B58'} />
+            <MaterialIcons
+              name="arrow-drop-down"
+              size={hp(3.5)}
+              color={'#3B4B58'}
+            />
           )}
           containerStyle={{
             height: hp(6.5),

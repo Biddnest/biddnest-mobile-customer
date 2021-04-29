@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, LogBox} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import App from '../navigation';
 import appReducer from './reducers';
@@ -25,6 +25,7 @@ export const STORE = createStore(
 let PERSIST_STORE = persistStore(STORE);
 
 console.disableYellowBox = true;
+LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
 const MainNavigator = () => {
   return (

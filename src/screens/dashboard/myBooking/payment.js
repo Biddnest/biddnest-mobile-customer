@@ -201,7 +201,15 @@ const Payment = (props) => {
           bounces={false}
           showsVerticalScrollIndicator={false}
           style={{flex: 1, padding: hp(2)}}>
-          <Text>Payment Summary</Text>
+          <Text
+            style={[
+              styles.leftText,
+              {
+                fontSize: wp(3.8),
+              },
+            ]}>
+            Payment Summary
+          </Text>
           {Object.keys(paymentSummery).map((item, index) => {
             if (item === 'grand_total') {
               return null;
@@ -362,7 +370,7 @@ const Payment = (props) => {
                       }}>
                       <MaterialIcons
                         name={'content-copy'}
-                        size={25}
+                        size={hp(3.5)}
                         color={Colors.darkBlue}
                       />
                     </Pressable>

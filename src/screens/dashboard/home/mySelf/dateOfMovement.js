@@ -95,7 +95,11 @@ const DateOfMovement = (props) => {
                     ...styles.closeView,
                     ...STYLES.common,
                   }}>
-                  <Ionicons name="close-sharp" size={12} color={Colors.white} />
+                  <Ionicons
+                    name="close-sharp"
+                    size={hp(1.5)}
+                    color={Colors.white}
+                  />
                 </Pressable>
                 <Text
                   style={{
@@ -124,7 +128,7 @@ const DateOfMovement = (props) => {
               return (
                 <MaterialIcons
                   name="calendar-today"
-                  size={25}
+                  size={hp(3)}
                   color={Colors.grey}
                 />
               );

@@ -15,7 +15,7 @@ const VerticalStepper = (props) => {
   };
   return (
     <View style={{marginHorizontal: wp(8), marginVertical: hp(2)}}>
-      <View style={{flexDirection: 'row'}}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <View
           style={[
             styles.dotView,
@@ -55,7 +55,7 @@ const VerticalStepper = (props) => {
               ).format('MMMM Do YYYY, h:mm A')}
         </Text>
       </View>
-      <View style={{flexDirection: 'row'}}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <View
           style={[
             styles.dotView,
@@ -95,7 +95,7 @@ const VerticalStepper = (props) => {
               ).format('MMMM Do YYYY, h:mm A')}
         </Text>
       </View>
-      <View style={{flexDirection: 'row'}}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <View
           style={[
             styles.dotView,
@@ -147,23 +147,23 @@ export default VerticalStepper;
 
 const styles = StyleSheet.create({
   dotView: {
-    height: 20,
-    width: 20,
-    borderRadius: 10,
+    height: hp(2.6),
+    width: hp(2.6),
+    borderRadius: hp(1.3),
     backgroundColor: Colors.darkBlue,
   },
   stepHeaderText: {
     fontFamily: 'Gilroy-SemiBold',
     color: Colors.darkBlue,
     fontSize: wp(4),
-    marginLeft: 10,
+    marginLeft: wp(2.5),
     textTransform: 'uppercase',
   },
   stepBodyView: {
     borderLeftWidth: 1,
     borderColor: Colors.darkBlue,
-    marginLeft: 10,
-    paddingLeft: 20,
+    marginLeft: wp(2),
+    paddingLeft: wp(5),
     paddingBottom: hp(3),
   },
   inputForm: {

@@ -109,15 +109,7 @@ const OrderDetailModal = (props) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Text
-        style={{
-          marginTop: 35,
-          textAlign: 'center',
-          fontFamily: 'Gilroy-Bold',
-          color: Colors.inputTextColor,
-        }}>
-        {props.title}
-      </Text>
+      <Text style={STYLES.modalHeader}>{props.title}</Text>
       <CloseIcon onPress={props.onCloseIcon} />
       <FlatList
         keyExtractor={(item, index) => index.toString()}

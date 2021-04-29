@@ -197,6 +197,7 @@ const OrderTimer = (props) => {
             <View style={{marginVertical: hp(0.8)}}>
               <CountdownCircleTimer
                 key={new Date()}
+                size={hp(25)}
                 onComplete={() => {
                   getData();
                   setTimeOver(true);

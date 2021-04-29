@@ -79,7 +79,7 @@ export function DrawerContent(props) {
           <MaterialIcons
             name={'keyboard-arrow-right'}
             color={Colors.silver}
-            size={25}
+            size={hp(3.5)}
           />
         </View>
       </Pressable>

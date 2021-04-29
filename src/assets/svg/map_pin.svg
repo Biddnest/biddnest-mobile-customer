@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="17" height="52.207" viewBox="0 0 17 52.207">
+  <g id="Group_14058" data-name="Group 14058" transform="translate(-34 -101.5)">
+    <g id="Component_131_42" data-name="Component 131 – 42" transform="translate(34 102)">
+      <rect id="Rectangle_305" data-name="Rectangle 305" width="16" height="16" transform="translate(0 0)" fill="none"/>
+      <g id="Component_131_213" data-name="Component 131 – 213" transform="translate(1)">
+        <rect id="Rectangle_305-2" data-name="Rectangle 305" width="16" height="16" transform="translate(0 0)" fill="none"/>
+        <path id="Path_114" data-name="Path 114" d="M6.58,9.47A2.786,2.786,0,0,0,9.371,6.679,2.872,2.872,0,0,0,6.58,3.788,2.786,2.786,0,0,0,3.788,6.579,2.942,2.942,0,0,0,6.58,9.47ZM1.894,1.894a6.626,6.626,0,0,1,9.371,9.371L6.58,15.95,1.894,11.265A6.807,6.807,0,0,1,1.894,1.894Z" transform="translate(0.975 0.05)" fill="none" stroke="#0f0c75" stroke-width="1" fill-rule="evenodd"/>
+        <g id="Ellipse_387" data-name="Ellipse 387" transform="translate(4 3)" fill="#fff" stroke="#fdc403" stroke-width="1">
+          <circle cx="3.5" cy="3.5" r="3.5" stroke="none"/>
+          <circle cx="3.5" cy="3.5" r="3" fill="none"/>
+        </g>
+      </g>
+    </g>
+    <g id="Component_66" data-name="Component 66" transform="translate(34 137)">
+      <rect id="Rectangle_305-3" data-name="Rectangle 305" width="16" height="16" transform="translate(0 0)" fill="none"/>
+      <g id="Component_131_214" data-name="Component 131 – 214" transform="translate(1)">
+        <rect id="Rectangle_305-4" data-name="Rectangle 305" width="16" height="16" transform="translate(0 0)" fill="none"/>
+        <path id="Path_114-2" data-name="Path 114" d="M6.58,9.47A2.786,2.786,0,0,0,9.371,6.679,2.872,2.872,0,0,0,6.58,3.788,2.786,2.786,0,0,0,3.788,6.579,2.942,2.942,0,0,0,6.58,9.47ZM1.894,1.894a6.626,6.626,0,0,1,9.371,9.371L6.58,15.95,1.894,11.265A6.807,6.807,0,0,1,1.894,1.894Z" transform="translate(0.975 0.05)" fill="none" stroke="#0f0c75" stroke-width="1" fill-rule="evenodd"/>
+        <g id="Ellipse_387-2" data-name="Ellipse 387" transform="translate(4 3)" fill="#fff" stroke="#fdc403" stroke-width="1">
+          <circle cx="3.5" cy="3.5" r="3.5" stroke="none"/>
+          <circle cx="3.5" cy="3.5" r="3" fill="none"/>
+        </g>
+      </g>
+    </g>
+    <path id="Path_12204" data-name="Path 12204" d="M-7301,12.877V28.1" transform="translate(7344 107)" fill="none" stroke="#0f0c75" stroke-linecap="round" stroke-width="1" stroke-dasharray="2"/>
+  </g>
+</svg>

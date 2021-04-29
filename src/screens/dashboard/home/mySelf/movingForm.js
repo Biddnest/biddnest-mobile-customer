@@ -292,7 +292,7 @@ const MovingForm = (props) => {
             }}>
             <MaterialIcons
               name="arrow-drop-up"
-              size={35}
+              size={hp(5)}
               color={Colors.btnBG}
             />
           </Pressable>
@@ -319,7 +319,7 @@ const MovingForm = (props) => {
             }}>
             <MaterialIcons
               name="arrow-drop-down"
-              size={35}
+              size={hp(5)}
               color={Colors.btnBG}
             />
           </Pressable>
@@ -340,7 +340,7 @@ const MovingForm = (props) => {
             <Pressable onPress={() => setLiftInfo(true)}>
               <Ionicons
                 name={'information-circle'}
-                size={25}
+                size={hp(3.5)}
                 color={'#99A0A5'}
               />
             </Pressable>
@@ -382,7 +382,7 @@ const MovingForm = (props) => {
               <Pressable onPress={() => setSharedInfo(true)}>
                 <Ionicons
                   name={'information-circle'}
-                  size={25}
+                  size={hp(3.5)}
                   color={'#99A0A5'}
                 />
               </Pressable>
@@ -504,7 +504,9 @@ const MovingForm = (props) => {
                 });
               }}
               style={
-                isMapReady ? {flex: 1, marginBottom: 0} : {marginBottom: 1}
+                isMapReady
+                  ? {flex: 1, marginBottom: 0}
+                  : {flex: 1, marginBottom: 1}
               }
               initialRegion={{
                 latitude: region.latitude,
@@ -538,7 +540,7 @@ const MovingForm = (props) => {
             <View style={styles.markerFixed}>
               <MaterialIcons
                 name={'location-pin'}
-                size={35}
+                size={hp(5)}
                 color={Colors.darkBlue}
               />
             </View>

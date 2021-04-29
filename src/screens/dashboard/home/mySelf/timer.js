@@ -75,6 +75,7 @@ const Timer = (props) => {
         <View style={{marginVertical: hp(0.8)}}>
           <CountdownCircleTimer
             key={new Date()}
+            size={hp(25)}
             isPlaying
             duration={300}
             initialRemainingTime={time}

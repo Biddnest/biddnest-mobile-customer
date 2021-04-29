@@ -8,7 +8,14 @@ target 'cp_biddnest_mobile_customer' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  permissions_path = '../node_modules/react-native-permissions/ios'
+
   pod 'react-native-onesignal', :path => '../node_modules/react-native-onesignal'
+  pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
+  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+  pod 'GoogleMaps'
+  pod 'Google-Maps-iOS-Utils'
 
   target 'cp_biddnest_mobile_customerTests' do
     inherit! :complete

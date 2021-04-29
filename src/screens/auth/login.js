@@ -31,6 +31,7 @@ const Login = (props) => {
 
   const sendOTPFun = () => {
     setLoading(true);
+    setOTP();
     if (!phone?.length || phone?.length !== 10 || /\D/.test(phone)) {
       setPhoneValidate(false);
       setLoading(false);
@@ -149,8 +150,17 @@ const Login = (props) => {
                       codeLength={6}
                       restrictToNumbers={true}
                       value={otp}
+                      autoFocus
                       onTextChange={(code) => setOTP(code)}
-                      cellStyle={styles.textInput}
+                      cellStyle={{
+                        borderWidth: 2,
+                        borderRadius: 10,
+                        height: hp(6),
+                        width: hp(6),
+                        marginTop: hp(1),
+                        borderColor: Colors.silver,
+                        fontSize: wp(5),
+                      }}
                       cellStyleFocused={{
                         borderColor: Colors.darkBlue,
                       }}

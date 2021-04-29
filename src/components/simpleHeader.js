@@ -10,7 +10,7 @@ const SimpleHeader = (props) => {
       style={[
         boxShadow,
         {
-          height: 55,
+          height: hp(7.5),
           backgroundColor: Colors.white,
           flexDirection: 'row',
         },
@@ -25,8 +25,8 @@ const SimpleHeader = (props) => {
           props.onBack();
         }}>
         {(props.closeIcon && (
-          <Ionicons name="close-sharp" size={25} color={Colors.black} />
-        )) || <BackArrow width={100} height={100} />}
+          <Ionicons name="close-sharp" size={hp(3.5)} color={Colors.black} />
+        )) || <BackArrow width={wp(20)} height={hp(20)} />}
       </Pressable>
       <View style={{width: wp(87), height: '100%', ...styles.common}}>
         <Text

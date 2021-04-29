@@ -56,13 +56,15 @@ const FAQS = (props) => {
           contentContainerStyle={{justifyContent: 'space-evenly'}}
           renderItem={({item, index}) => {
             return (
-              <View style={styles.movementLinear} key={index}>
-                <Pressable
-                  onPress={() =>
-                    props.navigation.navigate('FAQDetails', {
-                      category: item?.value,
-                    })
-                  }
+              <Pressable
+                onPress={() =>
+                  props.navigation.navigate('FAQDetails', {
+                    category: item?.value,
+                  })
+                }
+                style={styles.movementLinear}
+                key={index}>
+                <View
                   style={{
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -73,12 +75,12 @@ const FAQS = (props) => {
                     resizeMode={'contain'}
                     style={{height: 50, width: 50}}
                   />
-                </Pressable>
+                </View>
                 <View style={styles.bottomView}>
                   <Text style={styles.bottomText}>{item.name}</Text>
                   <RightArrow width={20} height={20} />
                 </View>
-              </View>
+              </Pressable>
             );
           }}
         />

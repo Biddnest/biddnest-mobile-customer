@@ -7,6 +7,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {STORE} from '../redux';
 import {APICall} from '../redux/actions/user';
 import {CustomAlert, CustomConsole} from '../constant/commonFun';
+import MapPin from '../assets/svg/map_pin.svg';
 
 const LocationDistance = (props) => {
   const [cDistance, setCDistance] = useState('');
@@ -43,18 +44,16 @@ const LocationDistance = (props) => {
         marginTop: hp(2),
         padding: hp(2),
         flexDirection: 'row',
+        alignItems: 'center',
       }}>
-      <Image
-        source={require('../assets/images/pin_distance.png')}
-        style={{height: wp(15), width: wp(10)}}
-        resizeMode={'contain'}
-      />
+      <MapPin height={hp(8)} width={wp(5)} />
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
           flex: 1,
           alignItems: 'center',
+            marginLeft: 5
         }}>
         <View style={{width: '50%'}}>
           <Text
@@ -89,7 +88,7 @@ const LocationDistance = (props) => {
               }}>
               <Ionicons
                 name={'arrow-forward-sharp'}
-                size={30}
+                size={hp(3.7)}
                 color={Colors.white}
               />
             </View>
@@ -120,7 +119,7 @@ const LocationDistance = (props) => {
                 <Pressable style={{marginLeft: 10}} onPress={props.onEditClick}>
                   <SimpleLineIcons
                     name={'pencil'}
-                    size={16}
+                    size={hp(2.3)}
                     color={Colors.darkBlue}
                   />
                 </Pressable>

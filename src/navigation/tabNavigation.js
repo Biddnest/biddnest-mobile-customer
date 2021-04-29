@@ -53,7 +53,7 @@ const TabNavigation = (props: any) => {
           }
           return <ActiveHome width={hp(3)} height={hp(3)} />;
         },
-        tabBarLabel: ({focused, color, size}) => {
+        tabBarLabel: ({focused, color, size, position}) => {
           let tabLabel = 'Home';
           if (route.name === 'Home') {
           } else if (route.name === 'MyBooking') {
@@ -67,6 +67,8 @@ const TabNavigation = (props: any) => {
                 fontFamily: 'Gilroy-Bold',
                 fontSize: wp(3.5),
                 color: focused ? Colors.darkBlue : '#9D9CC5',
+                marginLeft: position === 'beside-icon' ? 20 : 0,
+                marginTop: position === 'beside-icon' ? 3 : 0,
               }}>
               {tabLabel}
             </Text>

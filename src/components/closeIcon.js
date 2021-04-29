@@ -1,6 +1,6 @@
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {Colors} from '../constant/colors';
+import {hp} from '../constant/colors';
 import {Pressable} from 'react-native';
 
 const CloseIcon = (props) => {
@@ -8,9 +8,11 @@ const CloseIcon = (props) => {
     <Pressable
       onPress={props.onPress}
       style={
-        props.style ? props.style : {position: 'absolute', right: 15, top: 15}
+        props.style
+          ? props.style
+          : {position: 'absolute', right: hp(2), top: hp(2)}
       }>
-      <Ionicons name="close-sharp" size={25} color={'#C9CDCF'} />
+      <Ionicons name="close-sharp" size={hp(3.3)} color={'#C9CDCF'} />
     </Pressable>
   );
 };
