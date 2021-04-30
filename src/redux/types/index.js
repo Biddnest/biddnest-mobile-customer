@@ -7,3 +7,4 @@ export const INVENTORY_DATA = 'INVENTORY_DATA';
 export const LIVE_ORDERS = 'LIVE_ORDERS';
 export const PAST_ORDERS = 'PAST_ORDERS';
 export const GET_ZONES = 'GET_ZONES';
+export const FORM_DATA = 'FORM_DATA';

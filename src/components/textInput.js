@@ -22,12 +22,14 @@ const TextInput = (props) => {
           return (
             <Ionicons
               name="checkmark-sharp"
-              size={25}
+              size={hp(3.5)}
               color={Colors.lightGreen}
             />
           );
         } else if (props.isRight === false) {
-          return <Ionicons name="close-outline" size={25} color={Colors.red} />;
+          return (
+            <Ionicons name="close-outline" size={hp(3.5)} color={Colors.red} />
+          );
         }
       }}
       onChangeText={props.onChange}

@@ -12,7 +12,7 @@ import {Colors, IMAGE_OPTIONS} from './colors';
 import {
   check,
   openSettings,
-  PERMISSIONS,
+  PERMISSIONS, request,
   RESULTS,
 } from 'react-native-permissions';
 import Geolocation from 'react-native-geolocation-service';
@@ -130,7 +130,7 @@ export const locationPermission = async () => {
         );
       }
     } else {
-      check(PERMISSIONS.IOS.LOCATION_ALWAYS)
+      request(PERMISSIONS.IOS.LOCATION_ALWAYS)
         .then((result) => {
           switch (result) {
             case RESULTS.UNAVAILABLE:

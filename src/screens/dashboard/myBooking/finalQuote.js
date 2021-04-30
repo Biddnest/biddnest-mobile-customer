@@ -123,7 +123,6 @@ const FinalQuote = (props) => {
                 ? 'Economic'
                 : 'Premium'}
             </Text>
-            {console.log(orderDetails)}
             {orderDetails?.vehicle && (
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View style={{flex: 1, alignItems: 'flex-end'}}>

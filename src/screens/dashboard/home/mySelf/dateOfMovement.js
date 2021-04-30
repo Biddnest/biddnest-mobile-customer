@@ -95,14 +95,17 @@ const DateOfMovement = (props) => {
                     ...styles.closeView,
                     ...STYLES.common,
                   }}>
-                  <Ionicons name="close-sharp" size={12} color={Colors.white} />
+                  <Ionicons
+                    name="close-sharp"
+                    size={hp(1.5)}
+                    color={Colors.white}
+                  />
                 </Pressable>
                 <Text
                   style={{
                     color: Colors.inputTextColor,
                     fontSize: wp(3.8),
                     fontFamily: 'Roboto-Bold',
-                    textTransform: 'capitalize',
                   }}>
                   {item}
                 </Text>
@@ -124,7 +127,7 @@ const DateOfMovement = (props) => {
               return (
                 <MaterialIcons
                   name="calendar-today"
-                  size={25}
+                  size={hp(3)}
                   color={Colors.grey}
                 />
               );
@@ -243,22 +246,22 @@ const styles = StyleSheet.create({
     borderColor: '#DEE6ED',
   },
   categoryView: {
-    marginBottom: 5,
+    marginBottom: hp(0.8),
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderColor: Colors.darkBlue,
     borderWidth: 2,
     borderRadius: 8,
     backgroundColor: Colors.white,
-    marginRight: 10,
+    marginRight: hp(1.3),
   },
   closeView: {
     position: 'absolute',
-    height: 16,
-    width: 16,
+    height: hp(2),
+    width: hp(2),
     backgroundColor: Colors.darkBlue,
-    right: -8,
-    top: -8,
-    borderRadius: 8,
+    right: -hp(1),
+    top: -hp(1),
+    borderRadius: hp(1),
   },
 });

@@ -1,18 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Pressable, FlatList} from 'react-native';
-import {Colors, hp, SIDE_DRAWER, wp} from '../../../../constant/colors';
+import {Colors, hp, wp} from '../../../../constant/colors';
 import SimpleHeader from '../../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {STORE} from '../../../../redux';
 import {APICall} from '../../../../redux/actions/user';
-import {
-  CustomAlert,
-  CustomConsole,
-  LoadingScreen,
-} from '../../../../constant/commonFun';
+import {CustomAlert, CustomConsole} from '../../../../constant/commonFun';
+import {Html5Entities} from 'html-entities';
 
 const FAQDetails = (props) => {
+  const entities = new Html5Entities();
   const category = props?.route?.params?.category || '';
   const [openArray, setOpenArray] = useState([0]);
   const [faqQue, setFaqQue] = useState([]);
@@ -64,12 +62,12 @@ const FAQDetails = (props) => {
         key={index}>
         <View style={styles.flexBox}>
           <Text style={styles.topText}>
-            {index + 1}. {item?.title} sdfsd fds sdf
+            {index + 1}. {entities.decode(item?.title)}
           </Text>
           <View>
             <MaterialCommunityIcons
               name={openArray.includes(index) ? 'minus' : 'plus'}
-              size={26}
+              size={hp(3.5)}
               color={'#9A9FA4'}
             />
           </View>
@@ -77,7 +75,7 @@ const FAQDetails = (props) => {
         {openArray.includes(index) && (
           <View>
             <View style={styles.separatorView} />
-            <Text style={styles.bottomText}>{item?.desc}</Text>
+            <Text style={styles.bottomText}>{entities.decode(item?.desc)}</Text>
           </View>
         )}
       </Pressable>

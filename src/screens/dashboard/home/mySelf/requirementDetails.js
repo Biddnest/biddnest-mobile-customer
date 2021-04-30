@@ -33,6 +33,7 @@ import {APICall} from '../../../../redux/actions/user';
 import {STORE} from '../../../../redux';
 import {useSelector} from 'react-redux';
 import {Picker} from '@react-native-picker/picker';
+import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 
 const RequirementDetails = (props) => {
   const {
@@ -87,7 +88,7 @@ const RequirementDetails = (props) => {
       delete temp.icon;
       inv[index] = temp;
     });
-    if (inv.findIndex((item) => item.id === null) === -1) {
+    if (inv.findIndex((item) => item.id === null) === -1 && isAndroid) {
       inv.unshift({
         label: '-Select-',
         value: null,
@@ -100,7 +101,6 @@ const RequirementDetails = (props) => {
         size: '["small","medium","large"]',
       });
     }
-    console.log(inv);
     if (JSON.stringify(inv) !== JSON.stringify(defaultInventories)) {
       setDefaultInventories(inv);
       if (inv.length > 0) {
@@ -300,13 +300,14 @@ const RequirementDetails = (props) => {
                 }}>
                 <MaterialCommunityIcons
                   name={'minus'}
-                  size={18}
+                  size={hp(2.5)}
                   color={Colors.inputTextColor}
                 />
               </Pressable>
               <Text
                 style={{
                   color: Colors.inputTextColor,
+                  fontSize: wp(3.5),
                 }}>
                 {item?.quantity || 0}
               </Text>
@@ -320,7 +321,7 @@ const RequirementDetails = (props) => {
                 }}>
                 <MaterialCommunityIcons
                   name={'plus'}
-                  size={18}
+                  size={hp(2.5)}
                   color={Colors.inputTextColor}
                 />
               </Pressable>
@@ -345,7 +346,7 @@ const RequirementDetails = (props) => {
               }}>
               <SimpleLineIcons
                 name={'pencil'}
-                size={18}
+                size={hp(2.5)}
                 color={Colors.darkBlue}
               />
             </Pressable>
@@ -362,7 +363,7 @@ const RequirementDetails = (props) => {
               }}>
               <Ionicons
                 name={'trash-outline'}
-                size={20}
+                size={hp(2.5)}
                 color={Colors.darkBlue}
               />
             </Pressable>
@@ -525,7 +526,7 @@ const RequirementDetails = (props) => {
                     }}>
                     <MaterialCommunityIcons
                       name={'plus'}
-                      size={35}
+                      size={hp(5)}
                       color={Colors.white}
                     />
                   </Pressable>
@@ -672,88 +673,144 @@ const RequirementDetails = (props) => {
             setEditData({});
           }}
         />
-        <View
-          style={{
-            width: wp(90),
-            paddingHorizontal: 10,
-          }}>
-          <Text
-            style={{
-              fontFamily: 'Roboto-Bold',
-              color: Colors.textLabelColor,
-              fontSize: wp(4),
-              marginBottom: hp(1),
-            }}>
-            {'Item Name'}
-          </Text>
+        {(isAndroid && (
           <View
             style={{
-              borderWidth: 2,
-              paddingHorizontal: 15,
-              borderRadius: 10,
-              height: hp(6.5),
-              borderColor: Colors.silver,
-              backgroundColor: Colors.white,
-              borderBottomWidth: 2,
-              ...STYLES.common,
+              width: wp(90),
+              paddingHorizontal: 10,
             }}>
-            <Picker
+            <Text
               style={{
-                height: '99%',
-                width: '100%',
-              }}
-              selectedValue={editItem ? editData?.name : addData?.name}
-              onValueChange={(itemValue, itemIndex) => {
-                if (itemValue) {
-                  let item = defaultInventories[itemIndex];
-                  let temp = {...item};
-                  temp.material = JSON.parse(item.material.toString());
-                  temp.size = JSON.parse(item.size.toString());
-
-                  temp.label = item.name;
-                  temp.value = item.name;
-                  let materialAry = [];
-                  let sizeAry = [];
-                  temp.material.forEach((i) => {
-                    materialAry.push({
-                      label: i,
-                      value: i,
-                    });
-                  });
-                  temp.size.forEach((i) => {
-                    sizeAry.push({
-                      label: i,
-                      value: i,
-                    });
-                  });
-                  temp.material = materialAry;
-                  temp.size = sizeAry;
-                  setSelectedInventory(temp);
-                  if (editItem) {
-                    setEditData({...editData, name: itemValue});
-                  } else {
-                    setAddData({
-                      name: itemValue,
-                      material: null,
-                      size: null,
-                      quantity:
-                        configData?.inventory_quantity_type.range ===
-                        movementType?.inventory_quantity_type
-                          ? {
-                              min: 200,
-                              max: 750,
-                            }
-                          : 1,
-                    });
-                  }
-                }
+                fontFamily: 'Roboto-Bold',
+                color: Colors.textLabelColor,
+                fontSize: wp(4),
+                marginBottom: hp(1),
               }}>
-              {defaultInventories.map((item, index) => {
-                return <Picker.Item label={item?.label} value={item?.value} />;
-              })}
-            </Picker>
+              {'Item Name'}
+            </Text>
+            <View
+              style={{
+                borderWidth: 2,
+                paddingHorizontal: 15,
+                borderRadius: 10,
+                height: hp(6.5),
+                borderColor: Colors.silver,
+                backgroundColor: Colors.white,
+                borderBottomWidth: 2,
+                ...STYLES.common,
+              }}>
+              <Picker
+                style={{
+                  height: '99%',
+                  width: '100%',
+                }}
+                selectedValue={editItem ? editData?.name : addData?.name}
+                onValueChange={(itemValue, itemIndex) => {
+                  if (itemValue) {
+                    let item = defaultInventories[itemIndex];
+                    let temp = {...item};
+                    temp.material = JSON.parse(item.material.toString());
+                    temp.size = JSON.parse(item.size.toString());
+
+                    temp.label = item.name;
+                    temp.value = item.name;
+                    let materialAry = [];
+                    let sizeAry = [];
+                    temp.material.forEach((i) => {
+                      materialAry.push({
+                        label: i,
+                        value: i,
+                      });
+                    });
+                    temp.size.forEach((i) => {
+                      sizeAry.push({
+                        label: i,
+                        value: i,
+                      });
+                    });
+                    temp.material = materialAry;
+                    temp.size = sizeAry;
+                    setSelectedInventory(temp);
+                    if (editItem) {
+                      setEditData({...editData, name: itemValue});
+                    } else {
+                      setAddData({
+                        name: itemValue,
+                        material: null,
+                        size: null,
+                        quantity:
+                          configData?.inventory_quantity_type.range ===
+                          movementType?.inventory_quantity_type
+                            ? {
+                                min: 200,
+                                max: 750,
+                              }
+                            : 1,
+                      });
+                    }
+                  }
+                }}>
+                {defaultInventories.map((item, index) => {
+                  return (
+                    <Picker.Item label={item?.label} value={item?.value} />
+                  );
+                })}
+              </Picker>
+            </View>
           </View>
-        </View>
+        )) || (
+          <View style={{zIndex: 5002}}>
+            <DropDownAndroid
+              value={editItem ? editData?.name : addData?.name}
+              label={'Item Name'}
+              width={wp(90)}
+              items={defaultInventories}
+              onChangeItem={(text, item) => {
+                let temp = {...item};
+
+                temp.material = JSON.parse(item.material.toString());
+                temp.size = JSON.parse(item.size.toString());
+
+                temp.label = item.name;
+                temp.value = item.name;
+                let materialAry = [];
+                let sizeAry = [];
+                temp.material.forEach((i) => {
+                  materialAry.push({
+                    label: i,
+                    value: i,
+                  });
+                });
+                temp.size.forEach((i) => {
+                  sizeAry.push({
+                    label: i,
+                    value: i,
+                  });
+                });
+                temp.material = materialAry;
+                temp.size = sizeAry;
+                setSelectedInventory(temp);
+                if (editItem) {
+                  setEditData({...editData, name: text});
+                } else {
+                  setAddData({
+                    name: text,
+                    material: null,
+                    size: null,
+                    quantity:
+                      configData?.inventory_quantity_type.range ===
+                      movementType?.inventory_quantity_type
+                        ? {
+                            min: 200,
+                            max: 750,
+                          }
+                        : 1,
+                  });
+                }
+              }}
+            />
+          </View>
+        )}
         <View
           style={[
             {flexDirection: 'row', marginTop: hp(2)},
@@ -819,9 +876,9 @@ const RequirementDetails = (props) => {
                 customMarker={() => (
                   <View
                     style={{
-                      height: 15,
-                      width: 15,
-                      borderRadius: 7.5,
+                      height: hp(2),
+                      width: hp(2),
+                      borderRadius: hp(1),
                       backgroundColor: Colors.white,
                       borderColor: '#B6DFFF',
                       borderWidth: 0.8,
@@ -887,7 +944,7 @@ const RequirementDetails = (props) => {
                 }}>
                 <MaterialCommunityIcons
                   name="minus"
-                  size={30}
+                  size={hp(5)}
                   color={Colors.btnBG}
                 />
               </Pressable>
@@ -908,7 +965,7 @@ const RequirementDetails = (props) => {
                 }}>
                 <MaterialCommunityIcons
                   name="plus"
-                  size={30}
+                  size={hp(5)}
                   color={Colors.btnBG}
                 />
               </Pressable>
@@ -989,9 +1046,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   backgroundCircle: {
-    height: 35,
-    width: 35,
-    borderRadius: 17.5,
+    height: hp(5),
+    width: hp(5),
+    borderRadius: hp(2.5),
     backgroundColor: '#EFEFF3',
   },
   sliderText: {

@@ -143,13 +143,11 @@ const EditProfile = (props) => {
                 iconComponent={
                   <Entypo
                     name={'calendar'}
-                    size={25}
+                    size={hp(3)}
                     color={Colors.inputTextColor}
                     style={{
-                      position: 'absolute',
-                      right: 8,
-                      top: 7,
-                      marginLeft: 0,
+                      position: 'relative',
+                      right: hp(1),
                     }}
                   />
                 }

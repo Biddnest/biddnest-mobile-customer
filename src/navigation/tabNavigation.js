@@ -14,9 +14,11 @@ import ActiveBooking from '../assets/svg/active_booking.svg';
 import InactiveBooking from '../assets/svg/inactive_booking.svg';
 import ActiveProfile from '../assets/svg/active_profile.svg';
 import InactiveProfile from '../assets/svg/inactive_profile.svg';
+import {useDispatch} from 'react-redux';
 
 const TabNavigation = (props: any) => {
   const Tab = createBottomTabNavigator();
+  const dispatch = useDispatch();
 
   return (
     <Tab.Navigator
@@ -53,7 +55,7 @@ const TabNavigation = (props: any) => {
           }
           return <ActiveHome width={hp(3)} height={hp(3)} />;
         },
-        tabBarLabel: ({focused, color, size}) => {
+        tabBarLabel: ({focused, color, size, position}) => {
           let tabLabel = 'Home';
           if (route.name === 'Home') {
           } else if (route.name === 'MyBooking') {
@@ -67,13 +69,23 @@ const TabNavigation = (props: any) => {
                 fontFamily: 'Gilroy-Bold',
                 fontSize: wp(3.5),
                 color: focused ? Colors.darkBlue : '#9D9CC5',
+                marginLeft: position === 'beside-icon' ? 20 : 0,
+                marginTop: position === 'beside-icon' ? 3 : 0,
               }}>
               {tabLabel}
             </Text>
           );
         },
       })}>
-      <Tab.Screen name="Home" component={MainStackNavigator} />
+      <Tab.Screen
+        name="Home"
+        component={MainStackNavigator}
+        listeners={({navigation, route}) => ({
+          tabPress: (e) => {
+
+          },
+        })}
+      />
       <Tab.Screen name="MyBooking" component={MyBookingStackNavigator} />
       <Tab.Screen name="MyProfile" component={MyProfileStackNavigator} />
     </Tab.Navigator>

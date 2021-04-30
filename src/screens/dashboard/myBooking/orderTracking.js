@@ -35,6 +35,7 @@ import Button from '../../../components/button';
 import RateUs from '../drawer/rateUs';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Shimmer from 'react-native-shimmer';
+import MapPin from '../../../assets/svg/map_pin.svg';
 
 const OrderTracking = (props) => {
   const orderData = props?.route?.params?.orderData || {};
@@ -132,17 +133,15 @@ const OrderTracking = (props) => {
               marginTop: 5,
               padding: hp(2),
               flexDirection: 'row',
+              alignItems: 'center',
             }}>
-            <Image
-              source={require('../../../assets/images/pin_distance.png')}
-              style={{height: wp(15), width: wp(10)}}
-              resizeMode={'contain'}
-            />
+            <MapPin height={hp(8)} width={wp(5)} />
             <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 flex: 1,
+                marginLeft: 5,
               }}>
               <View style={{width: '40%'}}>
                 <Text

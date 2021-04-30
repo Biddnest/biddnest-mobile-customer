@@ -62,24 +62,24 @@ const renderImage = (uri, size = 50) => {
     <Image
       source={uri}
       resizeMode={'contain'}
-      style={{height: size, width: size}}
+      style={{height: hp(6), width: hp(6)}}
     />
   );
 };
 
 export const PAYMENT_OPTION = [
   {
-    image: <CreditCard width={40} height={40} />,
+    image: <CreditCard width={hp(6)} height={hp(6)} />,
     name: 'Cards',
     value: 'card',
   },
   {
-    image: <DebitCard width={40} height={40} />,
+    image: <DebitCard width={hp(6)} height={hp(6)} />,
     name: 'Wallets',
     value: 'wallet',
   },
   {
-    image: <NetBanking width={40} height={40} />,
+    image: <NetBanking width={hp(6)} height={hp(6)} />,
     name: 'Net Banking',
     value: 'netbanking',
   },

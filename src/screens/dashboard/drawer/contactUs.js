@@ -26,6 +26,7 @@ import {
 } from '../../../constant/commonFun';
 import moment from 'moment';
 import {useSelector} from 'react-redux';
+import MapPin from '../../../assets/svg/map_pin.svg';
 
 const ContactUs = (props) => {
   const [recentTicket, setRecentTicket] = useState([]);
@@ -143,6 +144,7 @@ const ContactUs = (props) => {
               height: hp(3.5),
               borderRadius: hp(2),
               paddingHorizontal: wp(3),
+              paddingVertical: hp(1),
               ...STYLES.common,
             }}>
             <Text
@@ -216,16 +218,15 @@ const ContactUs = (props) => {
               style={{
                 backgroundColor: Colors.white,
                 flexDirection: 'row',
+                alignItems: 'center',
               }}>
-              <Image
-                source={require('../../../assets/images/pin_distance.png')}
-                style={{height: wp(15), width: wp(10)}}
-                resizeMode={'contain'}
-              />
+              <MapPin height={hp(8)} width={wp(5)} />
               <View
                 style={{
                   width: '87%',
                   flexDirection: 'row',
+                  alignItems: 'center',
+                  marginLeft: 5,
                 }}>
                 <View style={{width: '85%'}}>
                   <View style={[styles.flexBox, {width: wp(70)}]}>
@@ -236,7 +237,7 @@ const ContactUs = (props) => {
                         marginTop: 0,
                         textTransform: 'capitalize',
                         maxWidth: '80%',
-                        fontFamily: 'Roboto-SemiBold',
+                        fontFamily: 'Gilroy-SemiBold',
                       }}>
                       {source_meta?.city === destination_meta?.city
                         ? source_meta?.address
@@ -255,7 +256,7 @@ const ContactUs = (props) => {
                         {
                           textTransform: 'capitalize',
                           maxWidth: '80%',
-                          fontFamily: 'Roboto-SemiBold',
+                          fontFamily: 'Gilroy-SemiBold',
                         },
                       ]}>
                       {destination_meta?.city === source_meta?.city
@@ -357,7 +358,7 @@ const ContactUs = (props) => {
                 }`,
               )
             }>
-            <HomeCall width={55} height={55} />
+            <HomeCall width={hp(7)} height={hp(7)} />
           </Pressable>
         </View>
         <View style={{alignSelf: 'center'}}>

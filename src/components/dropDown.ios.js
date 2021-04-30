@@ -10,7 +10,6 @@ const DropDownAndroid = (props) => {
       style={{
         width: props.width ? props.width : wp(45),
         paddingHorizontal: 10,
-        zIndex: 5002,
       }}>
       <Text
         style={{
@@ -21,16 +20,29 @@ const DropDownAndroid = (props) => {
         }}>
         {props.label}
       </Text>
-      <View>
+      <View
+        style={{
+          zIndex: 50000,
+          // minHeight: hp(5)
+        }}>
         <DropDownPicker
-          searchable={true}
+          searchable={props.searchable !== false}
           items={props.items}
-          defaultValue={props.items[0]?.value}
+          placeholder={'-Select-'}
+          defaultValue={props.value}
           customArrowUp={() => (
-            <MaterialIcons name="arrow-drop-up" size={25} color={'#3B4B58'} />
+            <MaterialIcons
+              name="arrow-drop-up"
+              size={hp(3.5)}
+              color={'#3B4B58'}
+            />
           )}
           customArrowDown={() => (
-            <MaterialIcons name="arrow-drop-down" size={25} color={'#3B4B58'} />
+            <MaterialIcons
+              name="arrow-drop-down"
+              size={hp(3.5)}
+              color={'#3B4B58'}
+            />
           )}
           containerStyle={{
             height: hp(6.5),
@@ -46,6 +58,7 @@ const DropDownAndroid = (props) => {
               borderTopRightRadius: 10,
               borderBottomLeftRadius: 10,
               borderBottomRightRadius: 10,
+              ...props.customDropDown,
             },
           ]}
           selectedLabelLength={10}
@@ -53,12 +66,13 @@ const DropDownAndroid = (props) => {
             fontSize: wp(4),
             backgroundColor: Colors.textBG,
             color: Colors.inputTextColor,
+            textTransform: 'capitalize',
           }}
           itemStyle={{
             justifyContent: 'flex-start',
           }}
           dropDownStyle={styles.customDropDown}
-          onChangeItem={(item) => props.onChangeItem(item.value)}
+          onChangeItem={(item) => props.onChangeItem(item.value, item)}
         />
       </View>
     </View>

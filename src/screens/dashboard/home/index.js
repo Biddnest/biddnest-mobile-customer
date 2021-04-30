@@ -34,6 +34,7 @@ import {STORE} from '../../../redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {CustomTabs} from 'react-native-custom-tabs';
 import Shimmer from 'react-native-shimmer';
+import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 
 export const HomeHeader = (props) => {
   return (
@@ -41,7 +42,7 @@ export const HomeHeader = (props) => {
       style={[
         boxShadow,
         {
-          height: 55,
+          height: hp(7.5),
           backgroundColor: Colors.white,
           flexDirection: 'row',
         },
@@ -49,7 +50,7 @@ export const HomeHeader = (props) => {
       <Pressable
         style={{width: wp(13), height: '100%', ...styles.common}}
         onPress={() => props.navigation.toggleDrawer()}>
-        <MenuIcon width={20} height={20} />
+        <MenuIcon width={wp(5.5)} height={hp(2.7)} />
       </Pressable>
       <View
         style={{
@@ -84,7 +85,7 @@ export const HomeHeader = (props) => {
         <Pressable
           style={{...STYLES.common, width: wp(13)}}
           onPress={props.onEditPress}>
-          <MaterialIcons name={'edit'} color={Colors.darkBlue} size={25} />
+          <MaterialIcons name={'edit'} color={Colors.darkBlue} size={hp(3.5)} />
         </Pressable>
       ) : null}
     </View>
@@ -211,13 +212,17 @@ const Home = (props) => {
         key={index}
         onPress={() => {
           if (item?.url && item.url !== '') {
-            CustomTabs.openURL(item?.url, {
-              toolbarColor: Colors.darkBlue,
-            })
-              .then(() => {})
-              .catch((err) => {
-                console.log(err);
-              });
+            if (isAndroid) {
+              CustomTabs.openURL(item?.url, {
+                toolbarColor: Colors.darkBlue,
+              })
+                .then(() => {})
+                .catch((err) => {
+                  console.log(err);
+                });
+            } else {
+              Linking.openURL(item?.url);
+            }
           }
         }}
         style={[
@@ -317,11 +322,11 @@ const Home = (props) => {
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
-                      height: 100,
+                      height: hp(12),
                     }}>
                     <Image
                       source={{uri: item.image}}
-                      style={{height: 40, width: 40}}
+                      style={{height: hp(4.5), width: hp(4.5)}}
                       resizeMode={'contain'}
                     />
                     <Text
@@ -368,7 +373,7 @@ const Home = (props) => {
                 }`,
               );
             }}>
-            <HomeCall width={55} height={55} />
+            <HomeCall width={hp(7)} height={hp(7)} />
           </Pressable>
         </View>
         {sliderData.map((item, index) => {
@@ -397,13 +402,17 @@ const Home = (props) => {
                     <Pressable
                       onPress={() => {
                         if (item?.url && item.url !== '') {
-                          CustomTabs.openURL(item?.url, {
-                            toolbarColor: Colors.darkBlue,
-                          })
-                            .then(() => {})
-                            .catch((err) => {
-                              console.log(err);
-                            });
+                          if (isAndroid) {
+                            CustomTabs.openURL(item?.url, {
+                              toolbarColor: Colors.darkBlue,
+                            })
+                              .then(() => {})
+                              .catch((err) => {
+                                console.log(err);
+                              });
+                          } else {
+                            Linking.openURL(item?.url);
+                          }
                         }
                       }}
                       key={index}
@@ -479,7 +488,7 @@ const Home = (props) => {
                 },
               ]}
               onPress={() => setBookingFor('Myself')}>
-              <MySelf width={60} height={60} />
+              <MySelf width={hp(8)} height={hp(8)} />
             </Pressable>
             <Text style={styles.selectionText}>Myself</Text>
           </View>
@@ -493,7 +502,7 @@ const Home = (props) => {
                   ...STYLES.common,
                 },
               ]}>
-              <Friends width={60} height={60} />
+              <Friends width={hp(8)} height={hp(8)} />
             </Pressable>
             <Text style={styles.selectionText}>Somebody Else</Text>
           </View>
@@ -576,9 +585,9 @@ const styles = StyleSheet.create({
     color: Colors.inputTextColor,
   },
   selectionView: {
-    height: 100,
-    width: 100,
-    borderRadius: 50,
+    height: hp(12),
+    width: hp(12),
+    borderRadius: hp(6),
     backgroundColor: '#F2E6FF',
     borderColor: Colors.darkBlue,
   },

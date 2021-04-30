@@ -111,7 +111,7 @@ const InitialQuote = (props) => {
                     }}>
                     <Ionicons
                       name={'information-circle'}
-                      size={25}
+                      size={hp(3.5)}
                       color={'#DEE6ED'}
                     />
                   </Pressable>

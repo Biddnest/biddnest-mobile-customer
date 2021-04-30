@@ -256,22 +256,28 @@ const MovingForm = (props) => {
         />
         <View
           style={{
-            width: Platform.OS === 'android' ? wp(56) : wp(52),
             flexDirection: 'row',
             alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
           }}>
-          <TextInput
-            label={'Floor'}
-            isRight={error.floor}
-            value={
-              props.movingFrom
-                ? destination?.meta?.floor.toString()
-                : source?.meta?.floor.toString()
-            }
-            keyboard={'decimal-pad'}
-            placeHolder={'Floor'}
-            onChange={(text) => handleState('floor', text)}
-          />
+          <View
+            style={{
+              width: Platform.OS === 'android' ? wp(56) : '76%',
+            }}>
+            <TextInput
+              label={'Floor'}
+              isRight={error.floor}
+              value={
+                props.movingFrom
+                  ? destination?.meta?.floor.toString()
+                  : source?.meta?.floor.toString()
+              }
+              keyboard={'decimal-pad'}
+              placeHolder={'Floor'}
+              onChange={(text) => handleState('floor', text)}
+            />
+          </View>
           <Pressable
             style={styles.arrowView}
             onPress={() => {
@@ -292,7 +298,7 @@ const MovingForm = (props) => {
             }}>
             <MaterialIcons
               name="arrow-drop-up"
-              size={35}
+              size={hp(5)}
               color={Colors.btnBG}
             />
           </Pressable>
@@ -319,7 +325,7 @@ const MovingForm = (props) => {
             }}>
             <MaterialIcons
               name="arrow-drop-down"
-              size={35}
+              size={hp(5)}
               color={Colors.btnBG}
             />
           </Pressable>
@@ -340,7 +346,7 @@ const MovingForm = (props) => {
             <Pressable onPress={() => setLiftInfo(true)}>
               <Ionicons
                 name={'information-circle'}
-                size={25}
+                size={hp(3.5)}
                 color={'#99A0A5'}
               />
             </Pressable>
@@ -382,7 +388,7 @@ const MovingForm = (props) => {
               <Pressable onPress={() => setSharedInfo(true)}>
                 <Ionicons
                   name={'information-circle'}
-                  size={25}
+                  size={hp(3.5)}
                   color={'#99A0A5'}
                 />
               </Pressable>
@@ -504,7 +510,9 @@ const MovingForm = (props) => {
                 });
               }}
               style={
-                isMapReady ? {flex: 1, marginBottom: 0} : {marginBottom: 1}
+                isMapReady
+                  ? {flex: 1, marginBottom: 0}
+                  : {flex: 1, marginBottom: 1}
               }
               initialRegion={{
                 latitude: region.latitude,
@@ -538,7 +546,7 @@ const MovingForm = (props) => {
             <View style={styles.markerFixed}>
               <MaterialIcons
                 name={'location-pin'}
-                size={35}
+                size={hp(5)}
                 color={Colors.darkBlue}
               />
             </View>
@@ -558,11 +566,11 @@ const MovingForm = (props) => {
               boxShadow,
               {
                 position: 'absolute',
-                right: 15,
-                top: 15,
-                height: 40,
-                width: 40,
-                borderRadius: 20,
+                right: hp(2),
+                top: hp(2),
+                height: hp(5),
+                width: hp(5),
+                borderRadius: hp(2.5),
                 zIndex: 5000,
                 backgroundColor: Colors.white,
                 ...styles.common,
@@ -745,8 +753,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '50%',
     zIndex: 2,
-    height: 48,
-    width: 48,
+    height: hp(5),
+    width: hp(5),
   },
   isPanding: {
     marginTop: -60,

@@ -18,7 +18,7 @@ const CheckBox = (props) => {
       {props.value && (
         <Ionicons
           name={'checkmark-sharp'}
-          size={15}
+          size={hp(2)}
           color={Colors.white}
           style={{fontWeight: 'bold'}}
         />
@@ -35,10 +35,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   checkBoxView: {
-    height: 20,
-    width: 20,
+    height: hp(2.5),
+    width: hp(2.5),
     borderWidth: 2,
-    borderRadius: 3,
+    borderRadius: hp(0.5),
     marginRight: wp(2),
   },
 });

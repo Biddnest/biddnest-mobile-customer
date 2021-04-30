@@ -4,7 +4,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Colors, hp, wp, PAYMENT_OPTION} from '../../../constant/colors';
 import {
   FlatList,
-  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -26,11 +25,11 @@ import {
 import {STORE} from '../../../redux';
 import RazorpayCheckout from 'react-native-razorpay';
 import {useSelector} from 'react-redux';
-import Clipboard from '@react-native-community/clipboard';
-import RightArrow from '../../../assets/svg/right_arrow.svg';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {Html5Entities} from 'html-entities';
 
 const Payment = (props) => {
+  const entities = new Html5Entities();
   const inputCode = useRef(null);
   const configData =
     useSelector((state) => state.Login?.configData?.enums?.payment) || {};
@@ -201,7 +200,15 @@ const Payment = (props) => {
           bounces={false}
           showsVerticalScrollIndicator={false}
           style={{flex: 1, padding: hp(2)}}>
-          <Text>Payment Summary</Text>
+          <Text
+            style={[
+              styles.leftText,
+              {
+                fontSize: wp(3.8),
+              },
+            ]}>
+            Payment Summary
+          </Text>
           {Object.keys(paymentSummery).map((item, index) => {
             if (item === 'grand_total') {
               return null;
@@ -227,36 +234,40 @@ const Payment = (props) => {
           </View>
           <View
             style={{
-              width: applyButton ? wp(65) : wp(96),
               flexDirection: 'row',
               alignItems: 'center',
-              alignSelf: applyButton ? 'flex-start' : 'center',
+              justifyContent: 'center',
             }}>
-            <TextInput
-              ref={inputCode}
-              label={''}
-              disable={couponApplied}
-              autoCapitalize={true}
-              value={coupon_code}
-              placeHolder={'Enter Coupon Code if any'}
-              onChange={(text) => setCouponCode(text)}
-              onFocus={() => {
-                if (!applyButton) {
-                  setApplyButton(true);
-                }
-              }}
-              onBlur={() => {
-                if (applyButton && coupon_code.length === 0) {
-                  setApplyButton(false);
-                }
-              }}
-            />
+            <View
+              style={{
+                width: applyButton ? wp(65) : wp(96),
+              }}>
+              <TextInput
+                ref={inputCode}
+                label={''}
+                disable={couponApplied}
+                autoCapitalize={true}
+                value={coupon_code}
+                placeHolder={'Enter Coupon Code if any'}
+                onChange={(text) => setCouponCode(text)}
+                onFocus={() => {
+                  if (!applyButton) {
+                    setApplyButton(true);
+                  }
+                }}
+                onBlur={() => {
+                  if (applyButton && coupon_code.length === 0) {
+                    setApplyButton(false);
+                  }
+                }}
+              />
+            </View>
             {applyButton && (
               <Button
                 label={couponApplied ? 'Remove' : 'Apply'}
                 isLoading={isLoading}
                 width={wp(25)}
-                spaceTop={hp(0.1)}
+                spaceTop={hp(1)}
                 onPress={() => {
                   // Verify coupon API
                   setLoading(true);
@@ -362,7 +373,7 @@ const Payment = (props) => {
                       }}>
                       <MaterialIcons
                         name={'content-copy'}
-                        size={25}
+                        size={hp(3.5)}
                         color={Colors.darkBlue}
                       />
                     </Pressable>
@@ -376,7 +387,7 @@ const Payment = (props) => {
                       marginTop: hp(1),
                       textAlign: 'center',
                     }}>
-                    {coupons[index].desc}
+                    {entities.decode(coupons[index].desc)}
                   </Text>
                 </View>
               );
