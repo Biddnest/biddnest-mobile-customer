@@ -101,7 +101,6 @@ const RequirementDetails = (props) => {
         size: '["small","medium","large"]',
       });
     }
-    console.log(inv);
     if (JSON.stringify(inv) !== JSON.stringify(defaultInventories)) {
       setDefaultInventories(inv);
       if (inv.length > 0) {

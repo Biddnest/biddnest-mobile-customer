@@ -1,5 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, ScrollView, RefreshControl} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  ScrollView,
+  RefreshControl,
+  Pressable,
+  Platform,
+  Linking,
+} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
 import {
   CustomAlert,
@@ -20,6 +29,16 @@ import FinishCalender from '../../../assets/svg/finish_calender.svg';
 import FinishBed from '../../../assets/svg/finish_bed.svg';
 import ActiveRs from '../../../assets/svg/active_rs.svg';
 import InActiveRs from '../../../assets/svg/inactive_rs.svg';
+import Feather from 'react-native-vector-icons/Feather';
+import Requirements from './requirements';
+import MapView, {
+  Marker,
+  PROVIDER_DEFAULT,
+  PROVIDER_GOOGLE,
+} from 'react-native-maps';
+import MapModalAndroid from '../../../components/mapModal';
+import CloseIcon from '../../../components/closeIcon';
+import FlatButton from '../../../components/flatButton';
 
 const OrderTimer = (props) => {
   const [orderDetails, setOrderDetails] = useState(
@@ -27,6 +46,20 @@ const OrderTimer = (props) => {
   );
   const [timeOver, setTimeOver] = useState(false);
   const [isLoading, setLoading] = useState(true);
+  const [tab, setTab] = useState(['Order Details', 'Requirements', 'My Bid']);
+  const [selectedTab, setSelectedTab] = useState(2);
+  const [mapVisible, setMapVisible] = useState(null);
+  let coordinates =
+    mapVisible === 'pickup'
+      ? {
+          latitude: parseFloat(orderDetails?.source_lat),
+
+          longitude: parseFloat(orderDetails?.source_lng),
+        }
+      : {
+          latitude: parseFloat(orderDetails?.destination_lat),
+          longitude: parseFloat(orderDetails?.destination_lng),
+        };
   useEffect(() => {
     getData();
   }, []);
@@ -144,6 +177,23 @@ const OrderTimer = (props) => {
   };
   const renderStepIndicator = (params: any) =>
     getStepIndicatorIconConfig(params);
+  const renderText = (key, value) => {
+    return (
+      <View>
+        <Text style={STYLES.staticLabel}>{key}</Text>
+        <Text
+          style={[
+            STYLES.staticLabel,
+            {
+              fontFamily: 'Roboto-Regular',
+              marginTop: 5,
+            },
+          ]}>
+          {value}
+        </Text>
+      </View>
+    );
+  };
   return (
     <View style={{flex: 1, backgroundColor: Colors.pageBG}}>
       <SimpleHeader
@@ -183,46 +233,228 @@ const OrderTimer = (props) => {
               renderStepIndicator={renderStepIndicator}
             />
           </View>
-          <Text
-            style={{
-              fontFamily: 'Roboto-Italic',
-              fontSize: wp(3.5),
-              color: '#99A0A5',
-              textAlign: 'center',
-              marginHorizontal: wp(6),
-            }}>
-            You’ll get the estimated price once the time is up
-          </Text>
-          <View style={styles.inputForm}>
-            <View style={{marginVertical: hp(0.8)}}>
-              <CountdownCircleTimer
-                key={new Date()}
-                size={hp(25)}
-                onComplete={() => {
-                  getData();
-                  setTimeOver(true);
+          <View style={STYLES.tabView}>
+            {tab.map((item, index) => {
+              return (
+                <Pressable
+                  key={index}
+                  style={{
+                    ...STYLES.common,
+                    borderColor:
+                      selectedTab === index ? Colors.darkBlue : '#ACABCD',
+                    borderBottomWidth: selectedTab === index ? 2 : 0,
+                  }}
+                  onPress={() => setSelectedTab(index)}>
+                  <Text
+                    style={{
+                      ...STYLES.tabText,
+                      color:
+                        selectedTab === index ? Colors.darkBlue : '#ACABCD',
+                    }}>
+                    {item}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+          {selectedTab === 0 && (
+            <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+              <View
+                style={{
+                  marginHorizontal: wp(5),
+                  marginTop: hp(2),
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <View style={{maxWidth: '80%'}}>
+                  {renderText('Pickup Address', source_meta?.address)}
+                </View>
+                <Pressable
+                  style={STYLES.mapPinCircle}
+                  onPress={() => setMapVisible('pickup')}>
+                  <Feather
+                    name={'map-pin'}
+                    color={Colors.darkBlue}
+                    size={wp(7)}
+                  />
+                </Pressable>
+              </View>
+              <View
+                style={{
+                  marginHorizontal: wp(5),
+                  marginTop: hp(2),
+                }}>
+                {renderText('Pincode', source_meta?.pincode)}
+              </View>
+              <View
+                style={{
+                  marginHorizontal: wp(5),
+                  marginTop: hp(2),
+                  flexDirection: 'row',
+                }}>
+                <View style={{flex: 1}}>
+                  {renderText('Floor', source_meta?.floor)}
+                </View>
+                <View style={{flex: 1}}>
+                  {renderText('Lift', source_meta?.lift == 1 ? 'Yes' : 'No')}
+                </View>
+              </View>
+              <View
+                style={[
+                  STYLES.separatorView,
+                  {width: '90%', alignSelf: 'center'},
+                ]}
+              />
+              <View
+                style={{
+                  marginHorizontal: wp(5),
+                  marginTop: hp(2),
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <View style={{maxWidth: '80%'}}>
+                  {renderText('Drop Address', destination_meta?.address)}
+                </View>
+                <Pressable
+                  style={STYLES.mapPinCircle}
+                  onPress={() => setMapVisible('drop')}>
+                  <Feather
+                    name={'map-pin'}
+                    color={Colors.darkBlue}
+                    size={wp(7)}
+                  />
+                </Pressable>
+              </View>
+              <View
+                style={{
+                  marginHorizontal: wp(5),
+                  marginTop: hp(2),
+                }}>
+                {renderText('Pincode', destination_meta?.pincode)}
+              </View>
+              <View
+                style={{
+                  marginHorizontal: wp(5),
+                  marginTop: hp(2),
+                  flexDirection: 'row',
+                }}>
+                <View style={{flex: 1}}>
+                  {renderText('Floor', destination_meta?.floor)}
+                </View>
+                <View style={{flex: 1}}>
+                  {renderText(
+                    'Lift',
+                    destination_meta?.lift == 1 ? 'Yes' : 'No',
+                  )}
+                </View>
+              </View>
+            </ScrollView>
+          )}
+          {selectedTab === 1 && (
+            <Requirements
+              navigation={props.navigation}
+              orderDetails={orderDetails}
+            />
+          )}
+          {selectedTab === 2 && (
+            <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+              <Text
+                style={{
+                  fontFamily: 'Roboto-Italic',
+                  fontSize: wp(3.5),
+                  color: '#99A0A5',
+                  textAlign: 'center',
+                  marginHorizontal: wp(6),
+                  marginTop: hp(2),
+                }}>
+                You’ll get the estimated price once the time is up
+              </Text>
+              <View style={styles.inputForm}>
+                <View style={{marginVertical: hp(0.8)}}>
+                  <CountdownCircleTimer
+                    key={new Date()}
+                    size={hp(25)}
+                    onComplete={() => {
+                      getData();
+                      setTimeOver(true);
+                    }}
+                    isPlaying
+                    duration={300}
+                    initialRemainingTime={DiffMin(orderDetails?.bid_result_at)}
+                    children={children}
+                    colors={[[Colors.darkBlue, 0.4]]}
+                  />
+                </View>
+                <Text style={styles.mainText}>Time Left</Text>
+                {timeOver && (
+                  <Text style={styles.mainText}>
+                    Your result will be displayed soon
+                  </Text>
+                )}
+                <View style={styles.separatorView} />
+                <View style={styles.flexView}>
+                  <Text style={styles.orderID}>ORDER ID</Text>
+                  <Text style={styles.orderNo}>
+                    {orderDetails?.public_booking_id}
+                  </Text>
+                </View>
+              </View>
+            </ScrollView>
+          )}
+          <MapModalAndroid
+            visible={mapVisible !== null}
+            onPress={() => setMapVisible(null)}>
+            <View style={styles.mapView}>
+              <MapView
+                provider={
+                  Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
+                }
+                style={{flex: 1}}
+                initialRegion={{
+                  latitude: coordinates.latitude,
+                  longitude: coordinates.longitude,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                }}>
+                <Marker coordinate={coordinates} />
+              </MapView>
+            </View>
+            <CloseIcon
+              onPress={() => setMapVisible(null)}
+              style={[
+                {
+                  position: 'absolute',
+                  right: hp(2),
+                  top: hp(2),
+                  height: hp(5),
+                  width: hp(5),
+                  borderRadius: hp(2.5),
+                  zIndex: 5000,
+                  backgroundColor: Colors.white,
+                  ...STYLES.common,
+                },
+              ]}
+            />
+            <View style={{marginVertical: hp(3), width: wp(90)}}>
+              {renderText(
+                mapVisible === 'pickup' ? 'Pickup Address' : 'Drop Address',
+                mapVisible === 'pickup'
+                  ? source_meta?.address
+                  : destination_meta?.address,
+              )}
+            </View>
+            <View style={{marginTop: hp(1)}}>
+              <FlatButton
+                label={'open in maps app'}
+                onPress={() => {
+                  let scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:';
+                  Linking.openURL(
+                    scheme + `${coordinates.latitude},${coordinates.longitude}`,
+                  );
                 }}
-                isPlaying
-                duration={300}
-                initialRemainingTime={DiffMin(orderDetails?.bid_result_at)}
-                children={children}
-                colors={[[Colors.darkBlue, 0.4]]}
               />
             </View>
-            <Text style={styles.mainText}>Time Left</Text>
-            {timeOver && (
-              <Text style={styles.mainText}>
-                Your result will be displayed soon
-              </Text>
-            )}
-            <View style={styles.separatorView} />
-            <View style={styles.flexView}>
-              <Text style={styles.orderID}>ORDER ID</Text>
-              <Text style={styles.orderNo}>
-                {orderDetails?.public_booking_id}
-              </Text>
-            </View>
-          </View>
+          </MapModalAndroid>
         </LinearGradient>
       </ScrollView>
     </View>
@@ -268,5 +500,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Bold',
     fontSize: wp(3.5),
     color: Colors.inputTextColor,
+  },
+  mapView: {
+    height: hp(67),
+    width: wp(100),
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    overflow: 'hidden',
   },
 });

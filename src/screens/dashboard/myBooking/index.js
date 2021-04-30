@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: wp(4),
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Gilroy-Bold',
   },
   inputForm: {
     marginHorizontal: wp(5),
