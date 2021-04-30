@@ -21,6 +21,7 @@ const MapModalAndroid = (props) => {
         contentContainerStyle={styles.centeredView}>
         <ScrollView
           bounces={false}
+          keyboardShouldPersistTaps={'handled'}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{alignItems: 'center'}}
           style={styles.modalView}>

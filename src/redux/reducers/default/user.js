@@ -7,4 +7,52 @@ export const LoginData = {
   liveOrders: {},
   pastOrders: {},
   zones: [],
+  formData: {
+    booking_id: null,
+    service_id: null,
+    source: {
+      lat: 21.1702,
+      lng: 72.8311,
+      meta: {
+        geocode: '',
+        floor: 0,
+        city: '',
+        state: '',
+        pincode: '',
+        lift: 0,
+        shared_service: false,
+        address_line1: '',
+        address_line2: '',
+      },
+    },
+    destination: {
+      lat: 21.1702,
+      lng: 72.8311,
+      meta: {
+        geocode: '',
+        floor: 0,
+        city: '',
+        state: '',
+        pincode: '',
+        lift: 1,
+        address_line1: '',
+        address_line2: '',
+      },
+    },
+    contact_details: {
+      name: '',
+      phone: '',
+      email: '',
+    },
+    meta: {
+      self_booking: true,
+      subcategory: null,
+      customer: {
+        remarks: '',
+      },
+      images: [],
+    },
+    movement_dates: [],
+    inventory_items: [],
+  },
 };

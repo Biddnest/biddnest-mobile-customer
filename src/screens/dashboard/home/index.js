@@ -34,6 +34,7 @@ import {STORE} from '../../../redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {CustomTabs} from 'react-native-custom-tabs';
 import Shimmer from 'react-native-shimmer';
+import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 
 export const HomeHeader = (props) => {
   return (
@@ -211,13 +212,17 @@ const Home = (props) => {
         key={index}
         onPress={() => {
           if (item?.url && item.url !== '') {
-            CustomTabs.openURL(item?.url, {
-              toolbarColor: Colors.darkBlue,
-            })
-              .then(() => {})
-              .catch((err) => {
-                console.log(err);
-              });
+            if (isAndroid) {
+              CustomTabs.openURL(item?.url, {
+                toolbarColor: Colors.darkBlue,
+              })
+                .then(() => {})
+                .catch((err) => {
+                  console.log(err);
+                });
+            } else {
+              Linking.openURL(item?.url);
+            }
           }
         }}
         style={[
@@ -397,13 +402,17 @@ const Home = (props) => {
                     <Pressable
                       onPress={() => {
                         if (item?.url && item.url !== '') {
-                          CustomTabs.openURL(item?.url, {
-                            toolbarColor: Colors.darkBlue,
-                          })
-                            .then(() => {})
-                            .catch((err) => {
-                              console.log(err);
-                            });
+                          if (isAndroid) {
+                            CustomTabs.openURL(item?.url, {
+                              toolbarColor: Colors.darkBlue,
+                            })
+                              .then(() => {})
+                              .catch((err) => {
+                                console.log(err);
+                              });
+                          } else {
+                            Linking.openURL(item?.url);
+                          }
                         }
                       }}
                       key={index}
@@ -479,7 +488,7 @@ const Home = (props) => {
                 },
               ]}
               onPress={() => setBookingFor('Myself')}>
-              <MySelf width={60} height={60} />
+              <MySelf width={hp(8)} height={hp(8)} />
             </Pressable>
             <Text style={styles.selectionText}>Myself</Text>
           </View>
@@ -493,7 +502,7 @@ const Home = (props) => {
                   ...STYLES.common,
                 },
               ]}>
-              <Friends width={60} height={60} />
+              <Friends width={hp(8)} height={hp(8)} />
             </Pressable>
             <Text style={styles.selectionText}>Somebody Else</Text>
           </View>
@@ -576,9 +585,9 @@ const styles = StyleSheet.create({
     color: Colors.inputTextColor,
   },
   selectionView: {
-    height: 100,
-    width: 100,
-    borderRadius: 50,
+    height: hp(12),
+    width: hp(12),
+    borderRadius: hp(6),
     backgroundColor: '#F2E6FF',
     borderColor: Colors.darkBlue,
   },

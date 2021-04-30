@@ -78,7 +78,7 @@ const FAQS = (props) => {
                 </View>
                 <View style={styles.bottomView}>
                   <Text style={styles.bottomText}>{item.name}</Text>
-                  <RightArrow width={20} height={20} />
+                  <RightArrow width={hp(2.7)} height={hp(2.7)} />
                 </View>
               </Pressable>
             );
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FDFDFD',
   },
   bottomView: {
-    height: 40,
+    height: hp(5.5),
     backgroundColor: Colors.white,
     flexDirection: 'row',
     justifyContent: 'space-between',

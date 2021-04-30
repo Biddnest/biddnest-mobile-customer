@@ -14,9 +14,11 @@ import ActiveBooking from '../assets/svg/active_booking.svg';
 import InactiveBooking from '../assets/svg/inactive_booking.svg';
 import ActiveProfile from '../assets/svg/active_profile.svg';
 import InactiveProfile from '../assets/svg/inactive_profile.svg';
+import {useDispatch} from 'react-redux';
 
 const TabNavigation = (props: any) => {
   const Tab = createBottomTabNavigator();
+  const dispatch = useDispatch();
 
   return (
     <Tab.Navigator
@@ -75,7 +77,15 @@ const TabNavigation = (props: any) => {
           );
         },
       })}>
-      <Tab.Screen name="Home" component={MainStackNavigator} />
+      <Tab.Screen
+        name="Home"
+        component={MainStackNavigator}
+        listeners={({navigation, route}) => ({
+          tabPress: (e) => {
+
+          },
+        })}
+      />
       <Tab.Screen name="MyBooking" component={MyBookingStackNavigator} />
       <Tab.Screen name="MyProfile" component={MyProfileStackNavigator} />
     </Tab.Navigator>

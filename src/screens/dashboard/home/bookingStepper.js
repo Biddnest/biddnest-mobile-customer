@@ -185,7 +185,7 @@ const BookingStepper = (props) => {
     } else if (stepStatus === 'finished') {
       return <FinishMapPin width={hp(3.5)} height={hp(3.5)} />;
     } else {
-      return <Feather name={'map-pin'} size={25} color={'#9597B1'} />;
+      return <Feather name={'map-pin'} size={hp(3.5)} color={'#9597B1'} />;
     }
   };
   const renderCalender = (stepStatus) => {

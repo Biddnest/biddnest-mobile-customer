@@ -308,6 +308,7 @@ const RequirementDetails = (props) => {
               <Text
                 style={{
                   color: Colors.inputTextColor,
+                  fontSize: wp(3.5),
                 }}>
                 {item?.quantity || 0}
               </Text>
@@ -876,9 +877,9 @@ const RequirementDetails = (props) => {
                 customMarker={() => (
                   <View
                     style={{
-                      height: 15,
-                      width: 15,
-                      borderRadius: 7.5,
+                      height: hp(2),
+                      width: hp(2),
+                      borderRadius: hp(1),
                       backgroundColor: Colors.white,
                       borderColor: '#B6DFFF',
                       borderWidth: 0.8,
@@ -1046,9 +1047,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   backgroundCircle: {
-    height: 35,
-    width: 35,
-    borderRadius: 17.5,
+    height: hp(5),
+    width: hp(5),
+    borderRadius: hp(2.5),
     backgroundColor: '#EFEFF3',
   },
   sliderText: {

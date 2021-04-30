@@ -8,8 +8,7 @@ CustomLabel.defaultProps = {
   leftDiff: 0,
 };
 
-const width = 50;
-const pointerWidth = width * 0.47;
+const width = wp(12);
 
 function LabelBase(props) {
   const {position, value, leftDiff, pressed} = props;
