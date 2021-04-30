@@ -322,11 +322,11 @@ const Home = (props) => {
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
-                      height: 100,
+                      height: hp(12),
                     }}>
                     <Image
                       source={{uri: item.image}}
-                      style={{height: 40, width: 40}}
+                      style={{height: hp(4.5), width: hp(4.5)}}
                       resizeMode={'contain'}
                     />
                     <Text

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, BackHandler, Text} from 'react-native';
+import {View, BackHandler} from 'react-native';
 import SimpleHeader from '../../../components/simpleHeader';
 import {Colors, hp} from '../../../constant/colors';
 import LinearGradient from 'react-native-linear-gradient';
@@ -29,9 +29,7 @@ import {useDispatch} from 'react-redux';
 import {APICall, getAllInventories} from '../../../redux/actions/user';
 import {STORE} from '../../../redux';
 import {STYLES} from '../../../constant/commonStyle';
-import CloseIcon from '../../../components/closeIcon';
-import CustomModalAndroid from '../../../components/customModal';
-import TwoButton from '../../../components/twoButton';
+import BackConfirmation from '../../../components/backConfirmation';
 
 const BookingStepper = (props) => {
   const dispatch = useDispatch();
@@ -471,7 +469,11 @@ const BookingStepper = (props) => {
               if (currentPosition > 0) {
                 setCurrentPosition(currentPosition - 1);
               } else {
-                props.navigation.goBack();
+                setConfirmationText(
+                  'Are you sure want to cancel? All your progress will be lost & you will be taken back to home screen.',
+                );
+                setConfirmationVisible(true);
+                // props.navigation.goBack();
               }
             }
           }
@@ -515,26 +517,12 @@ const BookingStepper = (props) => {
         </View>
         {renderComponent()}
       </LinearGradient>
-      <CustomModalAndroid
+      <BackConfirmation
         visible={confirmationVisible}
-        onPress={() => setConfirmationVisible(false)}>
-        <Text style={STYLES.modalHeader}>CONFIRMATION</Text>
-        <CloseIcon
-          onPress={() => {
-            setConfirmationVisible(false);
-          }}
-        />
-        <Text style={STYLES.simpleText}>{confirmationText}</Text>
-        <TwoButton
-          leftLabel={'cancel'}
-          rightLabel={'ok'}
-          leftOnPress={() => setConfirmationVisible(false)}
-          rightOnPress={() => {
-            setConfirmationVisible(false);
-            props.navigation.goBack();
-          }}
-        />
-      </CustomModalAndroid>
+        closeIcon={() => setConfirmationVisible(false)}
+        text={confirmationText}
+        navigation={props.navigation}
+      />
     </View>
   );
 };
