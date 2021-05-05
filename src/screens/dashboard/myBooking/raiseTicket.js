@@ -94,7 +94,7 @@ const RaiseTicket = (props) => {
           onPress={() => {
             setLoading(true);
             let tempError = {};
-            tempError.category = !!data?.category;
+            tempError.category = !!(data?.category !== '');
             tempError.heading = !(!data?.heading || data?.heading.length < 6);
             tempError.desc = !(!data?.desc || data?.desc.length < 15);
             setError(tempError);

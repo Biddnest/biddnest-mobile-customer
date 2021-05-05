@@ -283,7 +283,7 @@ const MovingForm = (props) => {
             onPress={() => {
               if (
                 props.movingFrom
-                  ? destination?.meta?.floor
+                  ? destination?.meta?.floor < 50
                   : source?.meta?.floor < 50
               ) {
                 handleState(
@@ -310,7 +310,7 @@ const MovingForm = (props) => {
             onPress={() => {
               if (
                 props.movingFrom
-                  ? destination?.meta?.floor
+                  ? destination?.meta?.floor > -3
                   : source?.meta?.floor > -3
               ) {
                 handleState(
@@ -447,6 +447,7 @@ const MovingForm = (props) => {
                 pageData?.floor < -3 ||
                 pageData?.floor > 50
               );
+              scrollViewRef?.current?.scrollToPosition(0, 0, true);
               setError(tempError);
               if (
                 Object.values(tempError).findIndex((item) => item === false) ===
@@ -479,6 +480,7 @@ const MovingForm = (props) => {
                   props.changeTo();
                 }
               } else {
+                scrollViewRef?.current?.scrollToPosition(0, 0, true);
                 setLoading(false);
               }
             }}
