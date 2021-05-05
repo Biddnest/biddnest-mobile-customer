@@ -262,6 +262,7 @@ const Home = (props) => {
               backgroundColor: Colors.silver,
               alignSelf: 'center',
               marginVertical: hp(2),
+              borderRadius: hp(1),
             }}
           />
         )}

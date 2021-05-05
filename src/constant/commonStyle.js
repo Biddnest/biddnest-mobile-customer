@@ -99,4 +99,8 @@ export const STYLES = {
     borderColor: '#DEE6ED',
     marginTop: hp(2),
   },
+  tabText: {
+    fontSize: wp(4),
+    fontFamily: 'Gilroy-Bold',
+  },
 };

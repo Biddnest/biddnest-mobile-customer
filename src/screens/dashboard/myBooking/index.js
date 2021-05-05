@@ -213,7 +213,7 @@ const MyBooking = (props) => {
               onPress={() => setSelectedTab(index)}>
               <Text
                 style={{
-                  ...styles.tabText,
+                  ...STYLES.tabText,
                   color: selectedTab === index ? Colors.darkBlue : '#ACABCD',
                 }}>
                 {item}
@@ -268,10 +268,6 @@ const styles = StyleSheet.create({
   },
   tabViews: {
     flex: 1,
-  },
-  tabText: {
-    fontSize: wp(4),
-    fontFamily: 'Gilroy-Bold',
   },
   inputForm: {
     marginHorizontal: wp(5),

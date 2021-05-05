@@ -41,19 +41,23 @@ const ReferFriend = (props) => {
             width={wp(82)}
             spaceBottom={wp(1)}
             onPress={() => {
-              Share.open({
-                title: 'Share via',
-                message: `Hey there, \nI invite you to install this application using my refferal code - ${
-                  JSON.parse(userData)?.refferal_code
-                } to get ₹100 off on your first booking. \nclick here to install \n`,
-                url: 'https://play.google.com/store',
-              })
-                .then((res) => {
-                  console.log(res);
+              try {
+                Share.open({
+                  title: 'Share via',
+                  message: `Hey there, \nI invite you to install this application using my refferal code - ${
+                    JSON.parse(userData)?.refferal_code
+                  } to get ₹100 off on your first booking. \nclick here to install \n`,
+                  url: 'https://play.google.com/store',
                 })
-                .catch((err) => {
-                  err && console.log(err);
-                });
+                  .then((res) => {
+                    console.log(res);
+                  })
+                  .catch((err) => {
+                    err && console.log(err);
+                  });
+              } catch (e) {
+                console.log(e);
+              }
             }}
           />
         </View>
@@ -79,7 +83,6 @@ const styles = StyleSheet.create({
     color: Colors.inputTextColor,
     fontSize: wp(3.5),
     textAlign: 'center',
-    lineHeight: 22,
   },
   referralView: {
     borderWidth: 1.5,
