@@ -97,7 +97,7 @@ const DateOfMovement = (props) => {
                   }}>
                   <Ionicons
                     name="close-sharp"
-                    size={hp(1.5)}
+                    size={hp(2)}
                     color={Colors.white}
                   />
                 </Pressable>
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     borderColor: '#DEE6ED',
   },
   categoryView: {
-    marginBottom: hp(0.8),
+    marginBottom: hp(1.3),
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderColor: Colors.darkBlue,
@@ -257,11 +257,11 @@ const styles = StyleSheet.create({
   },
   closeView: {
     position: 'absolute',
-    height: hp(2),
-    width: hp(2),
+    height: hp(2.5),
+    width: hp(2.5),
     backgroundColor: Colors.darkBlue,
-    right: -hp(1),
-    top: -hp(1),
-    borderRadius: hp(1),
+    right: -hp(1.3),
+    top: -hp(1.3),
+    borderRadius: hp(12.5),
   },
 });

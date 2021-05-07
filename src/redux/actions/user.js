@@ -32,7 +32,9 @@ export const APICall = (obj) => {
             }),
           );
         } else if (err?.response?.status === 500) {
-          CustomAlert('Server Down');
+          alert(
+            'We are unable to connect. Please make sure you are connected to the internet.',
+          );
         } else if (err?.response) {
           reject(err.response);
         } else {

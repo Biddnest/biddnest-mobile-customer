@@ -24,12 +24,17 @@ import MapView, {PROVIDER_GOOGLE, PROVIDER_DEFAULT} from 'react-native-maps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CloseIcon from '../../../../components/closeIcon';
 import FlatButton from '../../../../components/flatButton';
-import {CustomAlert, getLocation} from '../../../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  getLocation,
+} from '../../../../constant/commonFun';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import InformationPopUp from '../../../../components/informationPopUp';
 import {useDispatch, useSelector} from 'react-redux';
-import {getZones} from '../../../../redux/actions/user';
+import {APICall, getZones} from '../../../../redux/actions/user';
 import {getDistance} from 'geolib';
+import {STORE} from '../../../../redux';
 navigator.geolocation = require('@react-native-community/geolocation');
 
 const MovingForm = (props) => {
@@ -273,6 +278,7 @@ const MovingForm = (props) => {
                   ? destination?.meta?.floor.toString()
                   : source?.meta?.floor.toString()
               }
+              maxLength={2}
               keyboard={'decimal-pad'}
               placeHolder={'Floor'}
               onChange={(text) => handleState('floor', text)}
@@ -646,19 +652,57 @@ const MovingForm = (props) => {
           <View style={{marginTop: hp(2)}}>
             <FlatButton
               label={'OKAY'}
+              isLoading={isLoading}
               onPress={() => {
                 if (props.movingFrom) {
-                  let temp = {...destination};
-                  // temp.meta.address_line1 = mapData.address_line1;
-                  // temp.meta.address_line2 = mapData.address_line2;
-                  temp.meta.city = mapData.city;
-                  temp.meta.pincode = mapData.pincode;
-                  temp.meta.state = mapData.state;
-                  temp.meta.geocode = mapData.geocode;
-                  temp.lat = mapData.latitude;
-                  temp.lng = mapData.longitude;
-                  handleStateChange('destination', temp);
-                  setMapVisible(false);
+                  setLoading(true);
+                  let obj = {
+                    url: 'bookings/distance',
+                    method: 'post',
+                    headers: {
+                      Authorization:
+                        'Bearer ' + STORE.getState().Login?.loginData?.token,
+                    },
+                    data: {
+                      source: {
+                        lat: data?.source?.lat,
+                        lng: data?.source?.lng,
+                      },
+                      destination: {
+                        lat: mapData.latitude,
+                        lng: mapData.longitude,
+                      },
+                    },
+                  };
+                  APICall(obj)
+                    .then((res) => {
+                      setLoading(false);
+                      if (res?.data?.status === 'success') {
+                        if (res?.data?.data?.distance !== 0) {
+                          let temp = {...destination};
+                          // temp.meta.address_line1 = mapData.address_line1;
+                          // temp.meta.address_line2 = mapData.address_line2;
+                          temp.meta.city = mapData.city;
+                          temp.meta.pincode = mapData.pincode;
+                          temp.meta.state = mapData.state;
+                          temp.meta.geocode = mapData.geocode;
+                          temp.lat = mapData.latitude;
+                          temp.lng = mapData.longitude;
+                          handleStateChange('destination', temp);
+                          setMapVisible(false);
+                        } else {
+                          alert(
+                            'Currently we are unable to deliver here. Please select a valid destination.',
+                          );
+                        }
+                      } else {
+                        CustomAlert(res?.data?.message);
+                      }
+                    })
+                    .catch((err) => {
+                      setLoading(false);
+                      CustomConsole(err);
+                    });
                 } else {
                   let count = 0;
                   zones.forEach((item, index) => {
@@ -687,7 +731,7 @@ const MovingForm = (props) => {
                     handleStateChange('source', temp);
                     setMapVisible(false);
                   } else {
-                    CustomAlert(
+                    alert(
                       'Your location is not currently serviceable by biddnest. We will be expanding soon.',
                     );
                   }

@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
     marginTop: hp(1.5),
     marginHorizontal: wp(5.5),
+    lineHeight: hp(3),
   },
   imageStyle: {
     height: wp(70),

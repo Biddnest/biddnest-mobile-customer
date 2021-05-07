@@ -38,6 +38,7 @@ const OrderDetailModal = (props) => {
               width: wp(13),
               backgroundColor: '#F2E6FF',
               borderRadius: wp(13) / 2,
+              overflow: 'hidden',
             }}>
             <Image
               source={{uri: item?.image}}
@@ -94,7 +95,8 @@ const OrderDetailModal = (props) => {
                   {paddingHorizontal: 10, textTransform: 'none'},
                 ]}
                 numberOfLines={1}>
-                x{typeof quantity === 'string' ? quantity : quantity?.toString()}
+                x
+                {typeof quantity === 'string' ? quantity : quantity?.toString()}
               </Text>
             </View>
           </View>

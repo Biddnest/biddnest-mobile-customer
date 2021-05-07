@@ -47,6 +47,7 @@ const TextInput = (props) => {
         backgroundColor: Colors.white,
         borderBottomWidth: 2,
       }}
+      maxLength={props?.maxLength || 10000000}
       labelStyle={{
         fontFamily: 'Roboto-Bold',
         color: Colors.textLabelColor,
