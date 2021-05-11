@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {SafeAreaView, LogBox} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import App from '../navigation';
@@ -10,6 +10,8 @@ import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import {logger} from 'redux-logger';
 import ChatBotButton from '../components/chatBotButton';
+import Orientation from 'react-native-orientation-locker';
+import {isTablet} from 'react-native-device-info';
 
 const PERSIST_CONFIG = {
   key: 'root',
@@ -28,6 +30,13 @@ console.disableYellowBox = true;
 LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
 const MainNavigator = () => {
+  // useEffect(() => {
+  //   if (isTablet()) {
+  //     Orientation.unlockAllOrientations();
+  //   } else {
+  //     Orientation.lockToPortrait();
+  //   }
+  // }, []);
   return (
     <Provider store={STORE}>
       <PersistGate loading={null} persistor={PERSIST_STORE}>
