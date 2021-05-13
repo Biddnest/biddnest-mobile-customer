@@ -27,6 +27,7 @@ import RazorpayCheckout from 'react-native-razorpay';
 import {useSelector} from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Html5Entities} from 'html-entities';
+import HTML from 'react-native-render-html';
 
 const Payment = (props) => {
   const entities = new Html5Entities();
@@ -314,14 +315,15 @@ const Payment = (props) => {
                 color: Colors.textLabelColor,
                 fontSize: wp(4),
                 fontFamily: 'Gilroy-SemiBold',
-                marginBottom: hp(2),
+                marginBottom: hp(0.5),
               }}>
-              Applied Coupons
+              Available Coupons
             </Text>
           )}
           <FlatList
             keyExtractor={(item, index) => index.toString()}
             refreshing={isLoading}
+            numColumns={2}
             showsVerticalScrollIndicator={false}
             data={coupons}
             extraData={coupons}
@@ -332,7 +334,8 @@ const Payment = (props) => {
                   style={[
                     styles.inputForm,
                     {
-                      marginTop: index === 0 ? 0 : hp(1),
+                      flex: 1,
+                      marginTop: wp(2),
                     },
                   ]}>
                   <View
@@ -350,7 +353,7 @@ const Payment = (props) => {
                         borderStyle: 'dashed',
                         borderColor: Colors.btnBG,
                         backgroundColor: Colors.white,
-                        width: '75%',
+                        width: '65%',
                         ...STYLES.common,
                       }}>
                       <Text
@@ -363,7 +366,7 @@ const Payment = (props) => {
                       </Text>
                     </View>
                     <Pressable
-                      style={{width: '15%', alignItems: 'flex-end'}}
+                      style={{width: '17%', alignItems: 'flex-end', marginLeft: '3%'}}
                       onPress={() => {
                         if (!applyButton) {
                           setApplyButton(true);
@@ -378,17 +381,20 @@ const Payment = (props) => {
                       />
                     </Pressable>
                   </View>
-                  <Text
-                    style={{
+                  <HTML
+                    defaultTextProps={{
                       width: wp(70),
+                      marginTop: hp(1),
+                    }}
+                    baseFontStyle={{
                       fontFamily: 'Roboto-Regular',
                       fontSize: wp(3.5),
-                      color: '#99A0A5',
-                      marginTop: hp(1),
                       textAlign: 'center',
-                    }}>
-                    {entities.decode(coupons[index].desc)}
-                  </Text>
+                      color: '#99A0A5',
+                    }}
+                    source={{html: coupons[index].desc}}
+                    contentWidth={'90%'}
+                  />
                 </View>
               );
             }}
@@ -524,7 +530,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFDF4',
     borderColor: Colors.btnBG,
     marginBottom: hp(1),
-    marginHorizontal: hp(2),
+    marginHorizontal: wp(2),
     alignItems: 'center',
   },
 });

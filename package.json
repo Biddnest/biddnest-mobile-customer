@@ -52,6 +52,7 @@
     "react-native-permissions": "^3.0.1",
     "react-native-razorpay": "^2.2.4",
     "react-native-reanimated": "^1.13.2",
+    "react-native-render-html": "^5.1.0",
     "react-native-responsive-screen": "^1.4.2",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.17.1",
