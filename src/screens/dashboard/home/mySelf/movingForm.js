@@ -278,7 +278,7 @@ const MovingForm = (props) => {
                   ? destination?.meta?.floor.toString()
                   : source?.meta?.floor.toString()
               }
-              maxLength={2}
+              maxLength={3}
               keyboard={'decimal-pad'}
               placeHolder={'Floor'}
               onChange={(text) => handleState('floor', text)}
@@ -289,8 +289,8 @@ const MovingForm = (props) => {
             onPress={() => {
               if (
                 props.movingFrom
-                  ? destination?.meta?.floor < 50
-                  : source?.meta?.floor < 50
+                  ? destination?.meta?.floor < 150
+                  : source?.meta?.floor < 150
               ) {
                 handleState(
                   'floor',
@@ -451,7 +451,7 @@ const MovingForm = (props) => {
               tempError.floor = !(
                 pageData?.floor?.toString()?.length === 0 ||
                 pageData?.floor < -3 ||
-                pageData?.floor > 50
+                pageData?.floor > 150
               );
               scrollViewRef?.current?.scrollToPosition(0, 0, true);
               setError(tempError);

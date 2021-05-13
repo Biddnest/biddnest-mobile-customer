@@ -82,6 +82,7 @@ const MyBooking = (props) => {
       (ele) => ele === item?.status,
     );
     let status = Object.keys(configData?.status)[ind]?.split('_').join(' ');
+    let statusInd = Object.keys(configData?.status)[ind];
     let source_meta =
       (item?.source_meta && JSON.parse(item?.source_meta?.toString())) || {};
     let destination_meta =
@@ -98,6 +99,41 @@ const MyBooking = (props) => {
         style={styles.inputForm}
         key={index}
         onPress={() => handleOrderClicked(item)}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={[
+              styles.statusView,
+              {
+                backgroundColor: configData?.color[statusInd],
+                maxWidth: '45%',
+              },
+            ]}>
+            {status}
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'Roboto-Bold',
+              fontSize: wp(4.5),
+              color: Colors.inputTextColor,
+              width: '55%',
+              textAlign: 'right',
+            }}>
+            {item?.public_booking_id}
+          </Text>
+        </View>
+        <View
+          style={[
+            styles.separatorView,
+            {
+              marginBottom: hp(2),
+            },
+          ]}
+        />
         <View
           style={{
             backgroundColor: Colors.white,
@@ -186,12 +222,12 @@ const MyBooking = (props) => {
           <Text style={styles.leftText}>category</Text>
           <Text style={styles.rightText}>{item?.service?.name}</Text>
         </View>
-        <View style={styles.flexBox}>
-          <Text style={styles.leftText}>status</Text>
-          <Text style={[styles.rightText, {textTransform: 'capitalize'}]}>
-            {status}
-          </Text>
-        </View>
+        {/*<View style={styles.flexBox}>*/}
+        {/*  <Text style={styles.leftText}>status</Text>*/}
+        {/*  <Text style={[styles.rightText, {textTransform: 'capitalize'}]}>*/}
+        {/*    {status}*/}
+        {/*  </Text>*/}
+        {/*</View>*/}
       </Pressable>
     );
   };
@@ -306,5 +342,15 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Bold',
     fontSize: wp(4.5),
     color: Colors.inputTextColor,
+  },
+  statusView: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: Colors.lightGreen,
+    color: Colors.white,
+    borderRadius: 5,
+    textTransform: 'capitalize',
+    fontFamily: 'Gilroy-Semibold',
+    fontSize: wp(4),
   },
 });

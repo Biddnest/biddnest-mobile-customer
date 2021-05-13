@@ -561,7 +561,8 @@ const styles = StyleSheet.create({
     marginTop: hp(2),
   },
   movementLinear: {
-    flex: 1,
+    // flex: 1,
+    width: '30%',
     flexDirection: 'column',
     margin: 5,
     overflow: 'hidden',
