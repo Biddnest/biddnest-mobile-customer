@@ -73,16 +73,16 @@ const EditProfile = (props) => {
               />
             </View>
           </View>
+          <View style={{width: wp(90)}}>
+            <TextInput
+              value={data?.email}
+              isRight={error.email}
+              label={'Email ID'}
+              placeHolder={'davidje@gmail.com'}
+              onChange={(text) => handleState('email', text)}
+            />
+          </View>
           <View style={{flexDirection: 'row'}}>
-            <View style={{width: wp(45)}}>
-              <TextInput
-                value={data?.email}
-                isRight={error.email}
-                label={'Email ID'}
-                placeHolder={'davidje@gmail.com'}
-                onChange={(text) => handleState('email', text)}
-              />
-            </View>
             <View style={{width: wp(45)}}>
               <TextInput
                 disable={true}
@@ -92,20 +92,22 @@ const EditProfile = (props) => {
                 onChange={(text) => handleState('phone', text)}
               />
             </View>
+            <View
+              style={[
+                {marginBottom: hp(3), width: wp(45)},
+                Platform.OS !== 'android' && {zIndex: 5001},
+              ]}>
+              <DropDownAndroid
+                searchable={false}
+                value={data.gender}
+                width={wp(45)}
+                label={'Gender'}
+                items={configData?.gender}
+                onChangeItem={(text) => handleState('gender', text)}
+              />
+            </View>
           </View>
-          <View
-            style={[
-              {marginBottom: hp(3)},
-              Platform.OS !== 'android' && {zIndex: 5001},
-            ]}>
-            <DropDownAndroid
-              value={data.gender}
-              width={wp(90)}
-              label={'Gender'}
-              items={configData?.gender}
-              onChangeItem={(text) => handleState('gender', text)}
-            />
-          </View>
+
           <View style={{width: '92%', marginHorizontal: wp(3)}}>
             <Text
               style={{

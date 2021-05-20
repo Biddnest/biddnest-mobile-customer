@@ -54,6 +54,7 @@ const RequirementDetails = (props) => {
   const [addItem, setAddItem] = useState(false);
   const [addData, setAddData] = useState({});
   const [editItem, setEditItem] = useState(false);
+  const [changeCategoryVisible, setChangeCategoryVisible] = useState(false);
   const [editData, setEditData] = useState({});
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(
     false,
@@ -98,6 +99,17 @@ const RequirementDetails = (props) => {
           'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
         material: '["wood","plastic","steel","fibre","glass"]',
         name: '-Select-',
+        size: '["small","medium","large"]',
+      });
+      inv.push({
+        label: '-Other-',
+        value: 'other',
+        category: '',
+        id: null,
+        image:
+          'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
+        material: '["wood","plastic","steel","fibre","glass"]',
+        name: '-Other-',
         size: '["small","medium","large"]',
       });
     }
@@ -388,9 +400,10 @@ const RequirementDetails = (props) => {
             <Pressable
               key={index}
               onPress={() => {
-                handleState('subcategory', item.name);
-                getInventories(item.id);
-                handleSelectedSubCategory(item);
+                setChangeCategoryVisible(true);
+                // handleState('subcategory', item.name);
+                // getInventories(item.id);
+                // handleSelectedSubCategory(item);
               }}
               style={{
                 height: wp(20),
@@ -732,10 +745,15 @@ const RequirementDetails = (props) => {
                     temp.size = sizeAry;
                     setSelectedInventory(temp);
                     if (editItem) {
-                      setEditData({...editData, name: itemValue});
+                      setEditData({
+                        ...editData,
+                        name: itemValue,
+                        id: itemValue,
+                      });
                     } else {
                       setAddData({
                         name: itemValue,
+                        id: itemValue,
                         material: null,
                         size: null,
                         quantity:
@@ -791,10 +809,11 @@ const RequirementDetails = (props) => {
                 temp.size = sizeAry;
                 setSelectedInventory(temp);
                 if (editItem) {
-                  setEditData({...editData, name: text});
+                  setEditData({...editData, name: text, id: text});
                 } else {
                   setAddData({
                     name: text,
+                    id: text,
                     material: null,
                     size: null,
                     quantity:
@@ -811,12 +830,41 @@ const RequirementDetails = (props) => {
             />
           </View>
         )}
+        {(addData?.id === '-Other-' || editData?.id === '-Other-') && (
+          <View style={{width: '90%', marginTop: hp(2)}}>
+            <TextInput
+              value={editItem ? editData?.name : addData?.name}
+              label={'Item Name'}
+              placeHolder={'Other'}
+              onChange={(text) => {
+                if (editItem) {
+                  setEditData({
+                    ...editData,
+                    name: text,
+                  });
+                } else {
+                  setAddData({
+                    ...addData,
+                    name: text,
+                  });
+                }
+              }}
+            />
+          </View>
+        )}
         <View
           style={[
-            {flexDirection: 'row', marginTop: hp(2)},
+            {
+              flexDirection: 'row',
+              marginTop:
+                addData?.id === '-Other-' || editData?.id === '-Other-'
+                  ? -hp(1)
+                  : hp(2),
+            },
             Platform.OS !== 'android' && {zIndex: 5001},
           ]}>
           <DropDownAndroid
+            searchable={false}
             value={editItem ? editData?.material : addData?.material}
             label={'Material'}
             items={selectedInventory?.material}
@@ -829,6 +877,7 @@ const RequirementDetails = (props) => {
             }}
           />
           <DropDownAndroid
+            searchable={false}
             label={'Size'}
             value={editItem ? editData?.size : addData?.size}
             items={selectedInventory?.size}
@@ -915,6 +964,7 @@ const RequirementDetails = (props) => {
                     ? editData?.quantity?.toString()
                     : addData?.quantity?.toString()
                 }
+                keyboard={'decimal-pad'}
                 onChange={(text) => {
                   if (editItem) {
                     setEditData({...editData, quantity: text});
@@ -977,34 +1027,87 @@ const RequirementDetails = (props) => {
             let temp = [...inventoryItems];
             let error = [];
             if (editItem) {
-              let index = temp.findIndex(
-                (ele) => ele.inventory_id === editData.inventory_id,
-              );
-              temp[index] = editData;
-              handleStateChange('inventory_items', temp);
-              setInventoryItems(temp);
-              setEditItem(false);
-              setEditData({});
+              if (
+                (configData?.inventory_quantity_type.range !==
+                  movementType?.inventory_quantity_type &&
+                  parseInt(editData?.quantity) !== 0) ||
+                configData?.inventory_quantity_type.range ===
+                  movementType?.inventory_quantity_type
+              ) {
+                let obj = temp.find((i) => {
+                  if (
+                    i.name === editData.name &&
+                    i.material === editData.material &&
+                    i.size === editData.size
+                  ) {
+                    return i;
+                  }
+                });
+                // if (!obj) {
+                let index = temp.findIndex(
+                  (ele) => ele.inventory_id === editData.inventory_id,
+                );
+                delete editData.id;
+                if (
+                  configData?.inventory_quantity_type.range !==
+                  movementType?.inventory_quantity_type
+                ) {
+                  editData.quantity = parseInt(editData?.quantity);
+                }
+                temp[index] = editData;
+                handleStateChange('inventory_items', temp);
+                setInventoryItems(temp);
+                setEditItem(false);
+                setEditData({});
+                // } else {
+                //   CustomAlert('The item has already been added.');
+                // }
+              } else {
+                CustomAlert('Quantity not valid');
+              }
             } else {
+              console.log(addData);
               if (
                 addData.name !== null &&
                 addData.material !== null &&
                 addData.size !== null
               ) {
                 if (
-                  temp.findIndex(
-                    (item) => item.inventory_id === selectedInventory.id,
-                  ) === -1
+                  (configData?.inventory_quantity_type.range !==
+                    movementType?.inventory_quantity_type &&
+                    parseInt(addData?.quantity) !== 0) ||
+                  configData?.inventory_quantity_type.range ===
+                    movementType?.inventory_quantity_type
                 ) {
-                  addData.inventory_id = selectedInventory.id;
-                  addData.image = selectedInventory.image;
-                  temp.push(addData);
-                  handleStateChange('inventory_items', temp);
-                  setInventoryItems(temp);
-                  setAddData({});
-                  setAddItem(false);
+                  let obj = temp.find((i) => {
+                    if (
+                      i.name === addData.name &&
+                      i.material === addData.material &&
+                      i.size === addData.size
+                    ) {
+                      return i;
+                    }
+                  });
+                  if (!obj) {
+                    addData.inventory_id = selectedInventory.id;
+                    addData.image = selectedInventory.image;
+                    if (
+                      configData?.inventory_quantity_type.range !==
+                      movementType?.inventory_quantity_type
+                    ) {
+                      addData.quantity = parseInt(addData?.quantity);
+                    }
+                    delete addData.id;
+                    temp.push(addData);
+                    handleStateChange('inventory_items', temp);
+                    setInventoryItems(temp);
+                    setAddData({});
+                    setAddItem(false);
+                  } else {
+                    CustomAlert('The item has already been added.');
+                  }
                 } else {
-                  CustomAlert('The item has already been added."');
+                  CustomAlert('Quantity not valid');
                 }
               } else {
                 CustomAlert('All Fields are mendatory');

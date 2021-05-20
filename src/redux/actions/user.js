@@ -1,4 +1,5 @@
 import instance from '../../constant/baseService';
+import {Alert} from 'react-native';
 import {
   CONFIG_DATA,
   FORM_DATA,
@@ -38,7 +39,11 @@ export const APICall = (obj) => {
         } else if (err?.response) {
           reject(err.response);
         } else {
-          CustomAlert('Server Down');
+          Alert.alert(
+            'oops!!',
+            'Something Went wrong!! Please try again later',
+            [{text: 'Retry', onPress: () => console.log('OK Pressed')}],
+          );
         }
       });
   });

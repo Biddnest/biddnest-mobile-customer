@@ -401,30 +401,35 @@ const OrderTracking = (props) => {
                           {orderDetails?.driver?.lname}
                         </Text>
                       </Text>
-                      <Text style={{...styles.driverContact, marginTop: 5}}>
-                        Phone{' '}
-                        <Text style={{fontFamily: 'Roboto-Regular'}}>
-                          {orderDetails?.driver?.phone}
-                        </Text>
-                      </Text>
+                      {orderDetails?.status !== 8 &&
+                        orderDetails?.status !== 9 && (
+                          <Text style={{...styles.driverContact, marginTop: 5}}>
+                            Phone{' '}
+                            <Text style={{fontFamily: 'Roboto-Regular'}}>
+                              {orderDetails?.driver?.phone}
+                            </Text>
+                          </Text>
+                        )}
                     </View>
-                    <Pressable
-                      onPress={() =>
-                        Linking.openURL(`tel:${orderDetails?.driver?.phone}`)
-                      }
-                      style={{
-                        height: wp(15),
-                        width: wp(15),
-                        borderRadius: wp(7.5),
-                        backgroundColor: '#F2E6FF',
-                        ...STYLES.common,
-                      }}>
-                      <Ionicons
-                        name={'call'}
-                        color={Colors.darkBlue}
-                        size={wp(6)}
-                      />
-                    </Pressable>
+                    {orderDetails?.status !== 8 && orderDetails?.status !== 9 && (
+                      <Pressable
+                        onPress={() =>
+                          Linking.openURL(`tel:${orderDetails?.driver?.phone}`)
+                        }
+                        style={{
+                          height: wp(15),
+                          width: wp(15),
+                          borderRadius: wp(7.5),
+                          backgroundColor: '#F2E6FF',
+                          ...STYLES.common,
+                        }}>
+                        <Ionicons
+                          name={'call'}
+                          color={Colors.darkBlue}
+                          size={wp(6)}
+                        />
+                      </Pressable>
+                    )}
                   </View>
                 )) || (
                   <Text

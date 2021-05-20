@@ -50,7 +50,7 @@ export const HomeHeader = (props) => {
       <Pressable
         style={{width: wp(13), height: '100%', ...styles.common}}
         onPress={() => props.navigation.toggleDrawer()}>
-        <MenuIcon width={wp(5.5)} height={hp(2.7)} />
+        <MenuIcon width={wp(5)} height={hp(2.2)} />
       </Pressable>
       <View
         style={{

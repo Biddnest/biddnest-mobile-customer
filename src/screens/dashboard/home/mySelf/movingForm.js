@@ -52,6 +52,7 @@ const MovingForm = (props) => {
     address_line1: undefined,
     address_line2: undefined,
     pincode: undefined,
+    state: undefined,
     floor: undefined,
     city: undefined,
     geocode: undefined,
@@ -126,6 +127,7 @@ const MovingForm = (props) => {
       .then((response) => response.json())
       .then((responseJson) => {
         let temp = JSON.parse(JSON.stringify(responseJson));
+        console.log(temp);
         if (temp?.results && temp?.results?.length > 0) {
           googlePlaceRef?.current?.setAddressText(
             temp?.results[0]?.formatted_address,
@@ -149,6 +151,27 @@ const MovingForm = (props) => {
             ) {
               t1.state = item?.long_name;
             }
+            // else if (
+            //   item?.types?.findIndex((ele) => {
+            //     if (ele === 'street_number' || ele === 'route') {
+            //       return ele;
+            //     }
+            //   }) !== -1
+            // ) {
+            //   t1.address_line1 = t1.address_line1 + item?.long_name;
+            // } else if (
+            //   item?.types?.findIndex((ele) => {
+            //     if (
+            //       ele === 'sublocality_level_3' ||
+            //       ele === 'sublocality_level_2' ||
+            //       ele === 'sublocality_level_1'
+            //     ) {
+            //       return ele;
+            //     }
+            //   }) !== -1
+            // ) {
+            //   t1.address_line2 = t1.address_line2 + item?.long_name;
+            // }
             t1.geocode = temp?.results[0]?.formatted_address;
           });
         }
@@ -194,7 +217,7 @@ const MovingForm = (props) => {
         <Pressable onPress={() => setMapVisible(true)}>
           <TextInput
             disable={true}
-            label={props.movingFrom ? 'To' : 'From'}
+            label={props.movingFrom ? 'Drop Location' : 'Pickup Location'}
             isRight={error?.geocode}
             value={
               props.movingFrom
@@ -248,6 +271,15 @@ const MovingForm = (props) => {
           onChange={(text) => handleState('city', text)}
         />
         <TextInput
+          label={'State'}
+          isRight={error.state}
+          value={
+            props.movingFrom ? destination?.meta?.state : source?.meta?.state
+          }
+          placeHolder={'State'}
+          onChange={(text) => handleState('state', text)}
+        />
+        <TextInput
           label={'Pincode'}
           isRight={error.pincode}
           keyboard={'decimal-pad'}
@@ -271,6 +303,7 @@ const MovingForm = (props) => {
               width: Platform.OS === 'android' ? wp(56) : '76%',
             }}>
             <TextInput
+              disable={true}
               label={'Floor'}
               isRight={error.floor}
               value={
@@ -443,6 +476,9 @@ const MovingForm = (props) => {
               tempError.address_line2 = !(
                 !pageData.address_line2 || pageData.address_line2.length === 0
               );
+              tempError.state = !(
+                !pageData.state || pageData.state.length === 0
+              );
               tempError.pincode = !(
                 !pageData.pincode ||
                 pageData?.pincode?.length !== 6 ||
@@ -462,6 +498,7 @@ const MovingForm = (props) => {
                 setError({
                   address_line1: undefined,
                   address_line2: undefined,
+                  state: undefined,
                   pincode: undefined,
                   floor: undefined,
                   city: undefined,
@@ -680,7 +717,7 @@ const MovingForm = (props) => {
                       if (res?.data?.status === 'success') {
                         if (res?.data?.data?.distance !== 0) {
                           let temp = {...destination};
-                          // temp.meta.address_line1 = mapData.address_line1;
+                          temp.meta.address_line1 = mapData.address_line1;
                           // temp.meta.address_line2 = mapData.address_line2;
                           temp.meta.city = mapData.city;
                           temp.meta.pincode = mapData.pincode;
@@ -720,7 +757,7 @@ const MovingForm = (props) => {
 
                   if (count > 0) {
                     let temp = {...source};
-                    // temp.meta.address_line1 = mapData.address_line1;
+                    temp.meta.address_line1 = mapData.address_line1;
                     // temp.meta.address_line2 = mapData.address_line2;
                     temp.meta.city = mapData.city;
                     temp.meta.pincode = mapData.pincode;

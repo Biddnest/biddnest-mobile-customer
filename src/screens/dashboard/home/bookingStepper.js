@@ -94,7 +94,6 @@ const BookingStepper = (props) => {
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [apiResponse, setApiResponse] = useState({});
   const [confirmationVisible, setConfirmationVisible] = useState(false);
-
   useEffect(() => {
     dispatch(getAllInventories());
   }, []);
@@ -483,7 +482,11 @@ const BookingStepper = (props) => {
         {((bookingFor === 'Others' && currentPosition > 1) ||
           (bookingFor === 'Myself' && currentPosition > 0)) && (
           <LocationDistance
-            onEditClick={() => setCurrentPosition(0)}
+            isEdit={!apiResponse?.public_booking_id}
+            onEditClick={() => {
+              setMovingFrom(false);
+              setCurrentPosition(0);
+            }}
             from={
               data?.source?.meta?.city === data?.destination?.meta?.city
                 ? data?.source?.meta?.geocode
