@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   textInput: {
     borderWidth: 2,
     borderRadius: 10,
-    height: hp(6.5),
+    height: hp(6),
     marginTop: hp(1),
     borderColor: Colors.silver,
     color: Colors.textLabelColor,

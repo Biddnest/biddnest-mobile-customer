@@ -361,7 +361,7 @@ const Home = (props) => {
                 fontFamily: 'Roboto-Medium',
                 color: '#434343',
                 fontSize: wp(3.6),
-                marginTop: hp(2),
+                marginTop: hp(1),
               }}>
               We are just a call away! {'\n'}(9123445566)
             </Text>
@@ -547,11 +547,11 @@ const styles = StyleSheet.create({
   topScroll: {
     borderRadius: 10,
     backgroundColor: Colors.silver,
-    marginRight: wp(4),
+    marginRight: wp(3),
     overflow: 'hidden',
   },
   movementView: {
-    padding: wp(3),
+    padding: wp(2),
     borderRadius: 10,
     borderColor: Colors.silver,
     borderWidth: 1.5,
@@ -571,7 +571,7 @@ const styles = StyleSheet.create({
   },
   assistantView: {
     flexDirection: 'row',
-    padding: wp(5),
+    padding: wp(3),
     marginVertical: hp(2),
     justifyContent: 'space-between',
     alignItems: 'center',

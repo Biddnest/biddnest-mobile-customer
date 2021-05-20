@@ -96,7 +96,17 @@ const MyBooking = (props) => {
     });
     return (
       <Pressable
-        style={styles.inputForm}
+        style={[
+          styles.inputForm,
+          {
+            backgroundColor:
+              selectedTab === 1
+                ? meta?.self_booking
+                  ? Colors.white
+                  : '#0f0c751a'
+                : Colors.white,
+          },
+        ]}
         key={index}
         onPress={() => handleOrderClicked(item)}>
         <View
@@ -136,7 +146,12 @@ const MyBooking = (props) => {
         />
         <View
           style={{
-            backgroundColor: Colors.white,
+            backgroundColor:
+              selectedTab === 1
+                ? meta?.self_booking
+                  ? Colors.white
+                  : 'transparent'
+                : Colors.white,
             flexDirection: 'row',
             alignItems: 'center',
           }}>
@@ -211,13 +226,31 @@ const MyBooking = (props) => {
             </Text>
           </View>
         )}
-        <View style={styles.flexBox}>
-          <Text style={styles.leftText}>moving date</Text>
-          <Text
-            style={[styles.rightText, {maxWidth: '60%', textAlign: 'right'}]}>
-            {dateArray.join('\n')}
-          </Text>
-        </View>
+        {(selectedTab === 0 && (
+          <View style={styles.flexBox}>
+            <Text style={styles.leftText}>moving date</Text>
+            <Text
+              style={[styles.rightText, {maxWidth: '60%', textAlign: 'right'}]}>
+              {dateArray.join('\n')}
+            </Text>
+          </View>
+        )) ||
+          (item?.bid && (
+            <View style={styles.flexBox}>
+              <Text style={styles.leftText}>moving date</Text>
+              <Text
+                style={[
+                  styles.rightText,
+                  {maxWidth: '60%', textAlign: 'right'},
+                ]}>
+                {item?.bid?.meta &&
+                  moment(JSON.parse(item?.bid?.meta)?.moving_date).format(
+                    'D MMM yyyy',
+                  )}
+              </Text>
+            </View>
+          ))}
+
         <View style={styles.flexBox}>
           <Text style={styles.leftText}>category</Text>
           <Text style={styles.rightText}>{item?.service?.name}</Text>

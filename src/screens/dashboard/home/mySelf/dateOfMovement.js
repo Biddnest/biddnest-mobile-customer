@@ -136,7 +136,7 @@ const DateOfMovement = (props) => {
               borderWidth: 2,
               paddingHorizontal: 15,
               borderRadius: 10,
-              height: hp(6.5),
+              height: hp(6),
               marginTop: hp(1),
               borderColor: error ? Colors.red : Colors.silver,
               borderBottomWidth: 2,

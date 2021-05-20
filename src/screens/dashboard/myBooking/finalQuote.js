@@ -75,6 +75,10 @@ const FinalQuote = (props) => {
     {};
   let meta =
     (orderDetails?.meta && JSON.parse(orderDetails?.meta?.toString())) || {};
+  let bid_meta =
+    (orderDetails?.bid?.meta &&
+      JSON.parse(orderDetails?.bid?.meta?.toString())) ||
+    {};
 
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
@@ -88,7 +92,7 @@ const FinalQuote = (props) => {
         <ScrollView
           bounces={false}
           showsVerticalScrollIndicator={false}
-          style={{flex: 1}}>
+          style={{flex: 1, marginBottom: hp(8)}}>
           <LocationDistance
             from={
               source_meta?.city === destination_meta?.city
@@ -123,7 +127,7 @@ const FinalQuote = (props) => {
                 ? 'Economic'
                 : 'Premium'}
             </Text>
-            {orderDetails?.vehicle && (
+            {bid_meta && (
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View style={{flex: 1, alignItems: 'flex-end'}}>
                   <Text
@@ -148,8 +152,8 @@ const FinalQuote = (props) => {
                 <View style={{flex: 1, marginLeft: 15}}>
                   <Text
                     style={[styles.leftText, {textTransform: 'capitalize'}]}>
-                    {orderDetails?.vehicle?.name},{' '}
-                    {orderDetails?.vehicle?.vehicle_type}
+                    {/*{orderDetails?.vehicle?.name},{' '}*/}
+                    {bid_meta?.vehicle_type}
                   </Text>
                   <Text style={styles.leftText}>
                     {orderDetails?.movement_specifications?.meta &&
@@ -175,45 +179,45 @@ const FinalQuote = (props) => {
               I agree to the Terms & conditions
             </Text>
           </View>
-          <View style={styles.btnWrapper}>
-            <Button
-              width={wp(43)}
-              backgroundColor={Colors.white}
-              label={'REJECT'}
-              onPress={() => setRejectVisible(true)}
-            />
-            <Button
-              label={'ACCEPT'}
-              onPress={() => {
-                if (isAgree) {
-                  props.navigation.navigate('Payment', {
-                    orderData: orderDetails,
-                  });
-                } else {
-                  CustomAlert('Please accept Terms & Conditions');
-                }
-              }}
-              spaceBottom={0}
-              width={wp(43)}
-            />
-          </View>
-          <RejectBookingModal
-            value={rejectData?.reason}
-            visible={rejectVisible}
-            closeModal={() => setRejectVisible(false)}
-            dropDownDefault={defaultReason}
-            dropDownChange={(text) =>
-              setRejectData({...rejectData, reason: text})
-            }
-            textValue={rejectData?.desc}
-            rejectData={rejectData}
-            textOnChange={(text) => setRejectData({...rejectData, desc: text})}
-            isLoading={isLoading}
-            setLoading={(text) => setLoading(text)}
-            public_booking_id={orderDetails?.public_booking_id}
-            navigation={props}
-          />
         </ScrollView>
+        <View style={styles.btnWrapper}>
+          <Button
+            width={wp(43)}
+            backgroundColor={Colors.white}
+            label={'REJECT'}
+            onPress={() => setRejectVisible(true)}
+          />
+          <Button
+            label={'ACCEPT'}
+            onPress={() => {
+              if (isAgree) {
+                props.navigation.navigate('Payment', {
+                  orderData: orderDetails,
+                });
+              } else {
+                CustomAlert('Please accept Terms & Conditions');
+              }
+            }}
+            spaceBottom={0}
+            width={wp(43)}
+          />
+        </View>
+        <RejectBookingModal
+          value={rejectData?.reason}
+          visible={rejectVisible}
+          closeModal={() => setRejectVisible(false)}
+          dropDownDefault={defaultReason}
+          dropDownChange={(text) =>
+            setRejectData({...rejectData, reason: text})
+          }
+          textValue={rejectData?.desc}
+          rejectData={rejectData}
+          textOnChange={(text) => setRejectData({...rejectData, desc: text})}
+          isLoading={isLoading}
+          setLoading={(text) => setLoading(text)}
+          public_booking_id={orderDetails?.public_booking_id}
+          navigation={props}
+        />
       </View>
     </LinearGradient>
   );
@@ -273,6 +277,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: wp(90),
+    position: 'absolute',
+    bottom: 0,
   },
   leftText: {
     fontFamily: 'Roboto-Regular',

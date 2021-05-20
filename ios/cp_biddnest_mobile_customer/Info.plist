@@ -22,12 +22,12 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
-  <key>NSLocationWhenInUseUsageDescription</key>
-  <string>Allow location for batter user experience</string>
-  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-  <string>Allow location for batter user experience</string>
-  <key>NSLocationAlwaysUsageDescription</key>
-  <string>Allow location for batter user experience</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Allow location for batter user experience</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Allow location for batter user experience</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -45,8 +45,6 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Allowing user to capture image</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allowing user to select image/video from photos</string>
 	<key>UIAppFonts</key>

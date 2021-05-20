@@ -50,6 +50,8 @@ const InitialQuote = (props) => {
   apiResponse?.movement_dates?.forEach((item) => {
     dateArray.push(moment(item?.date).format('Do MMM'));
   });
+  let meta = JSON.parse(apiResponse?.meta);
+  console.log(meta);
 
   return (
     <View style={{flex: 1}}>
@@ -173,6 +175,12 @@ const InitialQuote = (props) => {
             <Text style={styles.leftText}>movement type</Text>
             <Text style={styles.rightText}>
               {source_meta?.shared_service ? 'Shared' : 'Dedicated'}
+            </Text>
+          </View>
+          <View style={styles.flexBox}>
+            <Text style={styles.leftText}>order type</Text>
+            <Text style={styles.rightText}>
+              {meta?.self_booking ? 'My Self' : 'Others'}
             </Text>
           </View>
           <View style={styles.flexBox}>

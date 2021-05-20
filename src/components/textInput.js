@@ -41,11 +41,14 @@ const TextInput = (props) => {
           ? props.height
             ? props.height
             : hp(12)
-          : hp(6.5),
+          : hp(6),
         marginTop: hp(1),
         borderColor: props.isRight === false ? Colors.red : Colors.silver,
         backgroundColor: Colors.white,
         borderBottomWidth: 2,
+      }}
+      containerStyle={{
+        marginBottom: -hp(1),
       }}
       maxLength={props?.maxLength || 10000000}
       labelStyle={{

@@ -124,7 +124,7 @@ const EditProfile = (props) => {
                 borderWidth: 2,
                 // paddingHorizontal: 15,
                 borderRadius: 10,
-                height: hp(6.5),
+                height: hp(6),
                 borderColor: error?.dob === false ? Colors.red : Colors.silver,
                 backgroundColor: Colors.white,
               }}>
@@ -156,7 +156,7 @@ const EditProfile = (props) => {
                 customStyles={{
                   dateInput: {
                     borderWidth: 0,
-                    height: hp(6.5),
+                    height: hp(6),
                     marginTop: 1,
                     width: '100%',
                     alignItems: 'flex-start',
@@ -200,12 +200,12 @@ const EditProfile = (props) => {
                       : data?.avatar + '?' + new Date(),
                   }}
                   style={{height: '100%', width: '100%'}}
-                  resizeMode={'contain'}
+                  resizeMode={'stretch'}
                 />
               </View>
               <View
                 style={{
-                  justifyContent: 'space-between',
+                  justifyContent: 'center',
                   marginLeft: wp(5),
                   height: wp(18),
                 }}>
@@ -227,14 +227,14 @@ const EditProfile = (props) => {
                     UPLOAD IMAGE
                   </Text>
                 </Pressable>
-                <Text
-                  style={{
-                    color: Colors.inputTextColor,
-                    fontSize: wp(3.4),
-                    fontFamily: 'Roboto-Light',
-                  }}>
-                  Max File size: 1MB
-                </Text>
+                {/*<Text*/}
+                {/*  style={{*/}
+                {/*    color: Colors.inputTextColor,*/}
+                {/*    fontSize: wp(3.4),*/}
+                {/*    fontFamily: 'Roboto-Light',*/}
+                {/*  }}>*/}
+                {/*  Max File size: 1MB*/}
+                {/*</Text>*/}
               </View>
             </View>
             <Button

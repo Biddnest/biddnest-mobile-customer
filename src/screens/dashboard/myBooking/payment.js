@@ -406,7 +406,7 @@ const Payment = (props) => {
             style={{
               marginTop: coupons?.length > 0 ? hp(1) : 0,
               borderRadius: 10,
-              height: hp(6.5),
+              height: hp(6),
               backgroundColor: Colors.darkBlue,
               ...STYLES.common,
             }}>

@@ -487,15 +487,9 @@ const BookingStepper = (props) => {
               setMovingFrom(false);
               setCurrentPosition(0);
             }}
-            from={
-              data?.source?.meta?.city === data?.destination?.meta?.city
-                ? data?.source?.meta?.geocode
-                : data?.source?.meta?.city
-            }
+            from={data?.source?.meta?.geocode + data?.source?.meta?.city}
             to={
-              data?.source?.meta?.city === data?.destination?.meta?.city
-                ? data?.source?.meta?.geocode
-                : data?.destination?.meta?.city
+              data?.destination?.meta?.geocode + data?.destination?.meta?.city
             }
             distance={{
               source: {

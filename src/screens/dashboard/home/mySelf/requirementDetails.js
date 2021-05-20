@@ -34,6 +34,8 @@ import {STORE} from '../../../../redux';
 import {useSelector} from 'react-redux';
 import {Picker} from '@react-native-picker/picker';
 import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
+import TwoButton from '../../../../components/twoButton';
+import _ from 'lodash';
 
 const RequirementDetails = (props) => {
   const {
@@ -54,10 +56,13 @@ const RequirementDetails = (props) => {
   const [addItem, setAddItem] = useState(false);
   const [addData, setAddData] = useState({});
   const [editItem, setEditItem] = useState(false);
-  const [changeCategoryVisible, setChangeCategoryVisible] = useState(false);
+  const [changeCategoryVisible, setChangeCategoryVisible] = useState({});
   const [editData, setEditData] = useState({});
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(
     false,
+  );
+  const [defaultInventoryStore, setDefaultInventoryStore] = useState(
+    data?.inventory_items,
   );
   const [error, setError] = useState({
     inventory: undefined,
@@ -172,9 +177,11 @@ const RequirementDetails = (props) => {
                 image: item?.meta?.image,
               });
             });
+            setDefaultInventoryStore(temp);
             setInventoryItems(temp);
             handleStateChange('inventory_items', temp);
           } else {
+            setDefaultInventoryStore([]);
             setInventoryItems([]);
             handleStateChange('inventory_items', []);
           }
@@ -400,10 +407,7 @@ const RequirementDetails = (props) => {
             <Pressable
               key={index}
               onPress={() => {
-                setChangeCategoryVisible(true);
-                // handleState('subcategory', item.name);
-                // getInventories(item.id);
-                // handleSelectedSubCategory(item);
+                setChangeCategoryVisible(item);
               }}
               style={{
                 height: wp(20),
@@ -706,7 +710,7 @@ const RequirementDetails = (props) => {
                 borderWidth: 2,
                 paddingHorizontal: 15,
                 borderRadius: 10,
-                height: hp(6.5),
+                height: hp(6),
                 borderColor: Colors.silver,
                 backgroundColor: Colors.white,
                 borderBottomWidth: 2,
@@ -1066,7 +1070,6 @@ const RequirementDetails = (props) => {
                 CustomAlert('Quantity not valid');
               }
             } else {
-              console.log(addData);
               if (
                 addData.name !== null &&
                 addData.material !== null &&
@@ -1117,6 +1120,109 @@ const RequirementDetails = (props) => {
           label={editItem ? 'SAVE' : 'ADD ITEM'}
         />
       </CustomModalAndroid>
+      <CustomModalAndroid
+        visible={!!changeCategoryVisible?.id}
+        onPress={() => {
+          setChangeCategoryVisible({});
+        }}>
+        <Text style={STYLES.modalHeader}>{'Warning'}</Text>
+        <CloseIcon
+          onPress={() => {
+            setChangeCategoryVisible({});
+          }}
+        />
+        <View
+          style={{
+            marginTop: hp(4),
+            marginBottom: hp(2),
+            marginHorizontal: wp(6),
+          }}>
+          <Text
+            style={{
+              fontFamily: 'Roboto-Regular',
+              fontSize: wp(4),
+              color: Colors.inputTextColor,
+              marginBottom: hp(2),
+            }}>
+            1. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+            nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+            erat, sed diam voluptua.
+          </Text>
+        </View>
+        <TwoButton
+          leftLabel={'CANCEL'}
+          rightLabel={'KEEP'}
+          isLoading={isLoading}
+          leftOnPress={() => {
+            handleState('subcategory', changeCategoryVisible.name);
+            getInventories(changeCategoryVisible.id);
+            handleSelectedSubCategory(changeCategoryVisible);
+            setChangeCategoryVisible({});
+          }}
+          rightOnPress={() => {
+            setChangeCategoryVisible({});
+            handleState('subcategory', changeCategoryVisible?.name);
+            handleSelectedSubCategory(changeCategoryVisible);
+            setWait(true);
+            let obj = {
+              url: `inventories?subservice_id=${changeCategoryVisible?.id}`,
+              method: 'get',
+              headers: {
+                Authorization:
+                  'Bearer ' + STORE.getState().Login?.loginData?.token,
+              },
+            };
+            APICall(obj)
+              .then((res) => {
+                if (res?.data?.status === 'success') {
+                  let temp = [];
+                  let previousDummyInv = [...defaultInventoryStore];
+                  let t = [...inventoryItems];
+                  let finalT = t.filter(
+                    (a) =>
+                      !previousDummyInv
+                        .map((b) => b.inventory_id)
+                        .includes(a.inventory_id),
+                  );
+                  if (res?.data?.data?.inventories?.length > 0) {
+                    res?.data?.data?.inventories.forEach((item) => {
+                      temp.push({
+                        inventory_id: item?.inventory_id,
+                        material: item?.material,
+                        size: item?.size,
+                        quantity:
+                          configData?.inventory_quantity_type.range ===
+                          movementType?.inventory_quantity_type
+                            ? {
+                                min: parseInt(item?.quantity?.min),
+                                max: parseInt(item?.quantity?.max),
+                              }
+                            : parseInt(item?.quantity),
+                        name: item?.meta?.name,
+                        image: item?.meta?.image,
+                      });
+                    });
+                    let temp2 = [...finalT, ...temp];
+                    setDefaultInventoryStore(temp);
+                    setInventoryItems(_.uniq(temp2));
+                    handleStateChange('inventory_items', _.uniq(temp2));
+                  } else {
+                    setInventoryItems(finalT);
+                    setDefaultInventoryStore([]);
+                    handleStateChange('inventory_items', []);
+                  }
+                } else {
+                  CustomAlert(res?.data?.message);
+                }
+                setWait(false);
+              })
+              .catch((err) => {
+                setWait(false);
+                CustomConsole(err);
+              });
+          }}
+        />
+      </CustomModalAndroid>
     </ScrollView>
   );
 };
@@ -1135,8 +1241,8 @@ const styles = StyleSheet.create({
     marginTop: hp(2),
   },
   arrowView: {
-    height: hp(6.5),
-    width: hp(6.5),
+    height: hp(6),
+    width: hp(6),
     backgroundColor: Colors.white,
     borderRadius: 10,
     borderWidth: 2,

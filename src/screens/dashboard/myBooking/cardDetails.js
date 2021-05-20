@@ -37,7 +37,7 @@ const CardDetails = (props) => {
             end={{x: 1, y: 0}}
             style={{
               borderRadius: 10,
-              height: hp(6.5),
+              height: hp(6),
               backgroundColor: Colors.darkBlue,
               ...STYLES.common,
             }}>
@@ -135,7 +135,7 @@ const CardDetails = (props) => {
                                 borderWidth: 2,
                                 // paddingHorizontal: 15,
                                 borderRadius: 10,
-                                height: hp(6.5),
+                                height: hp(6),
                                 borderColor: Colors.silver,
                                 backgroundColor: Colors.white,
                               }}>
@@ -169,7 +169,7 @@ const CardDetails = (props) => {
                                 customStyles={{
                                   dateInput: {
                                     borderWidth: 0,
-                                    height: hp(6.5),
+                                    height: hp(6),
                                     marginTop: 1,
                                     width: '100%',
                                     alignItems: 'flex-start',

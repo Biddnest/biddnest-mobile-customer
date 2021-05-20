@@ -6,19 +6,19 @@ import {
   View,
 } from 'react-native';
 import {CommonActions} from '@react-navigation/native';
-import ImagePicker from 'react-native-image-picker';
 import Toast from 'react-native-simple-toast';
-import {Colors, IMAGE_OPTIONS} from './colors';
+import {Colors} from './colors';
 import {
-  check,
   openSettings,
-  PERMISSIONS, request,
+  PERMISSIONS,
+  request,
   RESULTS,
 } from 'react-native-permissions';
 import Geolocation from 'react-native-geolocation-service';
 import {STYLES} from './commonStyle';
 import React from 'react';
 import moment from 'moment';
+import ImagePicker from 'react-native-image-crop-picker';
 
 export const resetNavigator = (props, screenName) => {
   props.navigation.dispatch(
@@ -79,20 +79,19 @@ export const pad_with_zeroes = (number, length) => {
 
 export const ImageSelection = () => {
   return new Promise((resolve, reject) => {
-    ImagePicker.showImagePicker(IMAGE_OPTIONS, (response) => {
-      console.log('Response = ', response);
-
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
+    ImagePicker.openPicker({
+      width: 400,
+      height: 400,
+      cropping: true,
+      includeBase64: true,
+    })
+      .then((response) => {
         resolve('data:image/jpeg;base64,' + response.data);
-      }
-      reject(false);
-    });
+        reject(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   });
 };
 
