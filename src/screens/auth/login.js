@@ -86,7 +86,12 @@ const Login = (props) => {
               placeHolder={'Phone Number'}
               keyboard={'decimal-pad'}
               onChange={(text) => {
-                setOtpSend(false);
+                if (isLoading) {
+                  setLoading(false);
+                }
+                if (otpSend) {
+                  setOtpSend(false);
+                }
                 setPhone(text);
               }}
             />

@@ -9,12 +9,23 @@ import TextInput from '../../../components/textInput';
 import {Text} from 'react-native-elements';
 import {STYLES} from '../../../constant/commonStyle';
 import Button from '../../../components/button';
-import {CustomAlert, ImageSelection} from '../../../constant/commonFun';
+import {
+  CustomAlert,
+  ImageSelection,
+} from '../../../constant/commonFun';
 import DatePicker from 'react-native-datepicker';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {useDispatch, useSelector} from 'react-redux';
-import {updateProfile} from '../../../redux/actions/user';
+import {
+  editMobileNumber,
+  profileVerifyOTP,
+  updateProfile,
+} from '../../../redux/actions/user';
 import moment from 'moment';
+import CloseIcon from '../../../components/closeIcon';
+import CustomModalAndroid from '../../../components/customModal';
+import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
+import FlatButton from '../../../components/flatButton';
 
 const EditProfile = (props) => {
   const dispatch = useDispatch();
@@ -24,6 +35,12 @@ const EditProfile = (props) => {
   const [data, setData] = useState(
     useSelector((state) => state.Login?.loginData?.user) || {},
   );
+  const [otpModal, setOTPModal] = useState(false);
+  const [phone, setPhone] = React.useState();
+  const [otp, setOTP] = React.useState();
+  const [phoneValidate, setPhoneValidate] = React.useState(undefined);
+  const [otpSend, setOtpSend] = React.useState(false);
+  const [otpResponse, setOtpResponse] = useState({});
   const [error, setError] = useState({
     fname: undefined,
     lname: undefined,
@@ -35,6 +52,33 @@ const EditProfile = (props) => {
       ...data,
       [key]: value,
     });
+  };
+  const sendOTPFun = () => {
+    setLoading(true);
+    setOTP();
+    if (!phone?.length || phone?.length !== 10 || /\D/.test(phone)) {
+      setPhoneValidate(false);
+      setLoading(false);
+    } else {
+      setPhoneValidate(true);
+
+      // Send OTP
+      editMobileNumber({phone})
+        .then((res) => {
+          setLoading(false);
+          if (res.status === 'success') {
+            CustomAlert(res.message + res.data.otp);
+            setOtpResponse(res.data);
+            setOtpSend(true);
+          } else {
+            CustomAlert(res.message);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          CustomAlert(err?.data?.message);
+        });
+    }
   };
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
@@ -83,7 +127,9 @@ const EditProfile = (props) => {
             />
           </View>
           <View style={{flexDirection: 'row'}}>
-            <View style={{width: wp(45)}}>
+            <Pressable
+              style={{width: wp(45)}}
+              onPress={() => setOTPModal(true)}>
               <TextInput
                 disable={true}
                 value={data?.phone}
@@ -91,7 +137,7 @@ const EditProfile = (props) => {
                 placeHolder={'9739912345'}
                 onChange={(text) => handleState('phone', text)}
               />
-            </View>
+            </Pressable>
             <View
               style={[
                 {marginBottom: hp(3), width: wp(45)},
@@ -306,6 +352,153 @@ const EditProfile = (props) => {
           </View>
         </KeyboardAwareScrollView>
       </View>
+      <CustomModalAndroid
+        visible={otpModal}
+        onPress={() => {
+          setPhoneValidate(undefined);
+          setOtpSend(false);
+          setPhone();
+          setOTP();
+          setOTPModal(false);
+        }}>
+        <Text style={STYLES.modalHeader}>Change Phone Number</Text>
+        <CloseIcon
+          onPress={() => {
+            setPhoneValidate(undefined);
+            setOtpSend(false);
+            setPhone();
+            setOTP();
+            setOTPModal(false);
+          }}
+        />
+        <View style={styles.bottomView}>
+          <TextInput
+            isRight={phoneValidate}
+            label={'Phone Number'}
+            placeHolder={'Phone Number'}
+            keyboard={'decimal-pad'}
+            onChange={(text) => {
+              if (isLoading) {
+                setLoading(false);
+              }
+              if (otpSend) {
+                setOtpSend(false);
+              }
+              setPhone(text);
+            }}
+          />
+          {(!otpSend && (
+            <View style={{alignItems: 'center'}}>
+              <FlatButton
+                isLoading={isLoading}
+                spaceTop={hp(4)}
+                label={'SEND OTP'}
+                onPress={() => {
+                  sendOTPFun();
+                }}
+              />
+            </View>
+          )) || (
+            <View style={{alignItems: 'center'}}>
+              <View
+                style={{
+                  width: wp(85),
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Roboto-Bold',
+                    color: Colors.textLabelColor,
+                    fontSize: wp(4),
+                  }}>
+                  Verify OTP
+                </Text>
+                <View
+                  style={{
+                    height: hp(7),
+                    marginTop: hp(1),
+                    marginBottom: hp(2),
+                    alignSelf: 'center',
+                  }}>
+                  <SmoothPinCodeInput
+                    codeLength={6}
+                    restrictToNumbers={true}
+                    value={otp}
+                    autoFocus
+                    onTextChange={(code) => setOTP(code)}
+                    cellStyle={{
+                      borderWidth: 2,
+                      borderRadius: 10,
+                      height: hp(6),
+                      width: hp(6),
+                      marginTop: hp(1),
+                      borderColor: Colors.silver,
+                      fontSize: wp(5),
+                    }}
+                    cellStyleFocused={{
+                      borderColor: Colors.darkBlue,
+                    }}
+                    keyboardType={'number-pad'}
+                    cellSpacing={wp(2)}
+                    textStyle={{
+                      fontFamily: 'Gilroy-SemiBold',
+                      fontSize: wp(5),
+                      backgroundColor: Colors.textBG,
+                      color: Colors.inputTextColor,
+                    }}
+                  />
+                </View>
+              </View>
+              <Text
+                style={{
+                  color: Colors.grey,
+                  fontSize: wp(3.8),
+                }}>
+                Did not receive OTP?{' '}
+                <Text
+                  onPress={() => sendOTPFun()}
+                  style={{
+                    fontFamily: 'Roboto-Bold',
+                    color: Colors.textLabelColor,
+                  }}>
+                  Resend
+                </Text>
+              </Text>
+              <FlatButton
+                label={'SUBMIT'}
+                isLoading={isLoading}
+                onPress={() => {
+                  // Verify OTP
+                  setLoading(true);
+                  profileVerifyOTP({
+                    phone,
+                    otp,
+                  })
+                    .then((res) => {
+                      setLoading(false);
+                      if (res.status === 'success') {
+                        setData({
+                          ...data,
+                          phone: phone,
+                        });
+                        setPhoneValidate(undefined);
+                        setOtpSend(false);
+                        setPhone();
+                        setOTP();
+                        setOTPModal(false);
+                      } else {
+                        CustomAlert(res.message);
+                      }
+                    })
+                    .catch((err) => {
+                      setLoading(false);
+                      CustomAlert(err?.data?.message);
+                    });
+                }}
+              />
+            </View>
+          )}
+        </View>
+      </CustomModalAndroid>
     </LinearGradient>
   );
 };
@@ -330,5 +523,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: wp(40),
     ...STYLES.common,
+  },
+  bottomView: {
+    backgroundColor: Colors.white,
+    borderTopLeftRadius: wp(7),
+    borderTopRightRadius: wp(7),
+    borderColor: 'red',
+    overflow: 'hidden',
+    width: wp(100),
+    paddingHorizontal: wp(5),
+    paddingTop: hp(2),
+    alignItems: 'center',
   },
 });

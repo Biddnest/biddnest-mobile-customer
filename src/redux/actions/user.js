@@ -88,6 +88,26 @@ export const sendOTP = (data) => {
   });
 };
 
+export const editMobileNumber = (data) => {
+  return new Promise((resolve, reject) => {
+    let obj = {
+      url: 'profile/update-mobile',
+      method: 'put',
+      data: data,
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+    };
+    APICall(obj)
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
 export const verifyOTP = (data) => {
   return new Promise((resolve, reject) => {
     let obj = {
@@ -102,6 +122,26 @@ export const verifyOTP = (data) => {
       .catch((err) => {
         reject(err);
       });
+  });
+};
+
+export const profileVerifyOTP = (data) => {
+  return new Promise((resolve, reject) => {
+    let obj = {
+      url: 'profile/verify-otp',
+      method: 'put',
+      data: data,
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+    };
+    APICall(obj)
+        .then((res) => {
+          resolve(res.data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
   });
 };
 

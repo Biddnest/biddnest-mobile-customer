@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {SafeAreaView, LogBox} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import App from '../navigation';
@@ -42,9 +42,7 @@ const MainNavigator = () => {
       <PersistGate loading={null} persistor={PERSIST_STORE}>
         <SafeAreaView style={{flex: 1}}>
           <App />
-          {/*{STORE.getState().Login?.loginData?.token && (*/}
-          {/*  <ChatBotButton onPress={() => {}} />*/}
-          {/*)}*/}
+          <ChatBotButton onPress={() => {}} />
         </SafeAreaView>
       </PersistGate>
     </Provider>

@@ -51,7 +51,6 @@ const InitialQuote = (props) => {
     dateArray.push(moment(item?.date).format('Do MMM'));
   });
   let meta = JSON.parse(apiResponse?.meta);
-  console.log(meta);
 
   return (
     <View style={{flex: 1}}>
