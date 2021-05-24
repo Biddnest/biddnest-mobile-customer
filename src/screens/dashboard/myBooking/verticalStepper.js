@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   stepBodyView: {
     borderLeftWidth: 1,
     borderColor: Colors.darkBlue,
-    marginLeft: wp(2),
+    marginLeft: hp(1.3),
     paddingLeft: wp(5),
     paddingBottom: hp(3),
   },

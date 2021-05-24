@@ -35,6 +35,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {CustomTabs} from 'react-native-custom-tabs';
 import Shimmer from 'react-native-shimmer';
 import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
+import Carousel from 'react-native-snap-carousel';
+import {CHAT_BOT_VISIBLE} from '../../../redux/types';
 
 export const HomeHeader = (props) => {
   return (
@@ -111,6 +113,12 @@ const Home = (props) => {
   const [bookingFor, setBookingFor] = useState('Myself');
   const [isLoading, setLoading] = useState(true);
   const [contactUs, setContactUs] = useState({});
+  useEffect(() => {
+    dispatch({
+      type: CHAT_BOT_VISIBLE,
+      payload: true,
+    });
+  }, []);
 
   useEffect(() => {
     if (isFocused && userData?.fname) {
@@ -250,7 +258,7 @@ const Home = (props) => {
       <HomeHeader navigation={props.navigation} />
       {isLoading && <LoadingScreen />}
       <ScrollView
-        style={{flex: 1}}
+        style={{flex: 1, marginTop: hp(2)}}
         showsVerticalScrollIndicator={false}
         bounces={false}>
         {/*<LocationDistance inTransit={true} />*/}
@@ -268,20 +276,81 @@ const Home = (props) => {
         )}
         {sliderData.map((item, index) => {
           if (configData?.enums?.slider?.position?.main === item.position) {
+            let bottomSize = [];
+            Object.values(sliderSize.size).forEach((i, ind) => {
+              if (i === item?.size) {
+                bottomSize =
+                  sliderSize?.banner_dimensions[
+                    Object.keys(sliderSize.size)[ind]
+                  ];
+              }
+            });
             return (
-              <FlatList
+              <Carousel
                 key={item.id}
-                bounces={false}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                data={item?.banners}
-                renderItem={renderItem}
-                keyExtractor={(item, index) => index.toString()}
                 contentContainerStyle={{
                   padding: wp(4),
                   paddingRight: 0,
                   paddingBottom: 0,
                 }}
+                loop={true}
+                // ref={(c) => { this._carousel = c; }}
+                data={item?.banners}
+                renderItem={({item, index}) => {
+                  let bottomSize = [];
+                  Object.values(sliderSize.size).forEach((i, ind) => {
+                    if (i === item?.banner_size) {
+                      bottomSize =
+                        sliderSize?.banner_dimensions[
+                          Object.keys(sliderSize.size)[ind]
+                        ];
+                    }
+                  });
+                  return (
+                    <Pressable
+                      onPress={() => {
+                        if (item?.url && item.url !== '') {
+                          if (isAndroid) {
+                            CustomTabs.openURL(item?.url, {
+                              toolbarColor: Colors.darkBlue,
+                            })
+                              .then(() => {})
+                              .catch((err) => {
+                                console.log(err);
+                              });
+                          } else {
+                            Linking.openURL(item?.url);
+                          }
+                        }
+                      }}
+                      key={index}
+                      style={[
+                        styles.topScroll,
+                        {
+                          ...styles.common,
+                          height: bottomSize.length > 0 && bottomSize[1],
+                          width: bottomSize.length > 0 && bottomSize[0],
+                        },
+                      ]}>
+                      <Image
+                        style={{
+                          height: '100%',
+                          width: '100%',
+                        }}
+                        source={{uri: item?.image}}
+                        resizeMode={'contain'}
+                        key={index}
+                      />
+                    </Pressable>
+                  );
+                }}
+                sliderWidth={wp(100)}
+                itemWidth={bottomSize.length > 0 && bottomSize[0]}
+                autoplay={true}
+                slideStyle={{marginHorizontal: wp(2)}}
+                layout="default"
+                inactiveSlideScale={1}
+                autoplayDelay={1000}
               />
             );
           }
@@ -381,14 +450,20 @@ const Home = (props) => {
           if (
             configData?.enums?.slider?.position?.secondary === item.position
           ) {
+            let bottomSize = [];
+            Object.values(sliderSize.size).forEach((i, ind) => {
+              if (i === item?.size) {
+                bottomSize =
+                  sliderSize?.banner_dimensions[
+                    Object.keys(sliderSize.size)[ind]
+                  ];
+              }
+            });
             return (
-              <FlatList
-                key={item.id}
-                bounces={false}
-                horizontal
-                showsHorizontalScrollIndicator={false}
+              <Carousel
+                loop={true}
+                // ref={(c) => { this._carousel = c; }}
                 data={item?.banners}
-                keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => {
                   let bottomSize = [];
                   Object.values(sliderSize.size).forEach((i, ind) => {
@@ -437,12 +512,75 @@ const Home = (props) => {
                     </Pressable>
                   );
                 }}
-                contentContainerStyle={{
-                  padding: wp(4),
-                  paddingTop: 0,
-                  paddingRight: 0,
-                }}
+                sliderWidth={wp(100)}
+                itemWidth={bottomSize.length > 0 && bottomSize[0]}
+                autoplay={true}
+                slideStyle={{marginHorizontal: wp(2)}}
+                layout="default"
+                inactiveSlideScale={1}
+                autoplayDelay={1000}
               />
+              // <FlatList
+              //   key={item.id}
+              //   bounces={false}
+              //   horizontal
+              //   showsHorizontalScrollIndicator={false}
+              //   data={item?.banners}
+              //   keyExtractor={(item, index) => index.toString()}
+              //   renderItem={({item, index}) => {
+              //     let bottomSize = [];
+              //     Object.values(sliderSize.size).forEach((i, ind) => {
+              //       if (i === item?.banner_size) {
+              //         bottomSize =
+              //           sliderSize?.banner_dimensions[
+              //             Object.keys(sliderSize.size)[ind]
+              //           ];
+              //       }
+              //     });
+              //     return (
+              //       <Pressable
+              //         onPress={() => {
+              //           if (item?.url && item.url !== '') {
+              //             if (isAndroid) {
+              //               CustomTabs.openURL(item?.url, {
+              //                 toolbarColor: Colors.darkBlue,
+              //               })
+              //                 .then(() => {})
+              //                 .catch((err) => {
+              //                   console.log(err);
+              //                 });
+              //             } else {
+              //               Linking.openURL(item?.url);
+              //             }
+              //           }
+              //         }}
+              //         key={index}
+              //         style={[
+              //           styles.topScroll,
+              //           {
+              //             ...styles.common,
+              //             height: bottomSize.length > 0 && bottomSize[1],
+              //             width: bottomSize.length > 0 && bottomSize[0],
+              //           },
+              //         ]}>
+              //         <Image
+              //           style={{
+              //             height: '100%',
+              //             width: '100%',
+              //           }}
+              //           source={{uri: item?.image}}
+              //           resizeMode={'contain'}
+              //           key={index}
+              //         />
+              //       </Pressable>
+              //     );
+              //   }}
+              //   contentContainerStyle={{
+              //     padding: wp(4),
+              //     paddingTop: 0,
+              //     paddingRight: 0,
+              //   }}
+              // />
             );
           } else {
             return null;
@@ -485,6 +623,8 @@ const Home = (props) => {
                 styles.selectionView,
                 {
                   borderWidth: bookingFor === 'Myself' ? 2 : 0,
+                  backgroundColor:
+                    bookingFor === 'Myself' ? '#F2E6FF' : Colors.silver,
                   ...STYLES.common,
                 },
               ]}
@@ -500,6 +640,8 @@ const Home = (props) => {
                 styles.selectionView,
                 {
                   borderWidth: bookingFor === 'Others' ? 2 : 0,
+                  backgroundColor:
+                    bookingFor === 'Others' ? '#F2E6FF' : Colors.silver,
                   ...STYLES.common,
                 },
               ]}>

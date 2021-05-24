@@ -1,5 +1,7 @@
 import {
+  CHAT_BOT_VISIBLE,
   CONFIG_DATA,
+  ENQUIRY_ORDERS,
   FORM_DATA,
   GET_ZONES,
   INVENTORY_DATA,
@@ -32,6 +34,9 @@ export default (state = INITIAL_STATE, action) => {
     case LIVE_ORDERS: {
       return {...state, liveOrders: action.payload};
     }
+    case ENQUIRY_ORDERS: {
+      return {...state, enquiryOrders: action.payload};
+    }
     case PAST_ORDERS: {
       return {...state, pastOrders: action.payload};
     }
@@ -40,6 +45,9 @@ export default (state = INITIAL_STATE, action) => {
     }
     case FORM_DATA: {
       return {...state, formData: action.payload};
+    }
+    case CHAT_BOT_VISIBLE: {
+      return {...state, chatBotVisible: action.payload};
     }
     default:
       return state;

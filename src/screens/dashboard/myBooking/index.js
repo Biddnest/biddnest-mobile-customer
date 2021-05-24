@@ -5,7 +5,11 @@ import {HomeHeader} from '../home';
 import {STYLES} from '../../../constant/commonStyle';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
-import {getLiveOrders, getPastOrders} from '../../../redux/actions/user';
+import {
+  getEnquiryOrders,
+  getLiveOrders,
+  getPastOrders,
+} from '../../../redux/actions/user';
 import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
 import moment from 'moment';
 import MapPin from '../../../assets/svg/map_pin.svg';
@@ -18,6 +22,9 @@ const MyBooking = (props) => {
   const userData = useSelector((state) => state.Login?.loginData?.user) || {};
   const [liveOrders, setLiveOrders] = useState(
     useSelector((state) => state.Login?.liveOrders?.booking) || [],
+  );
+  const [enquiryOrders, setEnquiryOrders] = useState(
+    useSelector((state) => state.Login?.enquiryOrders?.booking) || [],
   );
   const [pastOrders, setPastOrders] = useState(
     useSelector((state) => state.Login?.pastOrders?.booking) || [],
@@ -33,6 +40,20 @@ const MyBooking = (props) => {
   const fetchOrderList = () => {
     setLoading(true);
     if (selectedTab === 0) {
+      dispatch(getEnquiryOrders())
+        .then((res) => {
+          setLoading(false);
+          if (res?.status === 'success') {
+            setEnquiryOrders(res?.data?.booking);
+          } else {
+            CustomAlert(res?.message);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          CustomConsole(err);
+        });
+    } else if (selectedTab === 1) {
       dispatch(getLiveOrders())
         .then((res) => {
           setLoading(false);
@@ -218,7 +239,7 @@ const MyBooking = (props) => {
           </View>
         </View>
         <View style={styles.separatorView} />
-        {selectedTab === 0 && (
+        {selectedTab === 1 && (
           <View style={styles.flexBox}>
             <Text style={styles.leftText}>expected price</Text>
             <Text style={styles.rightText}>
@@ -226,7 +247,7 @@ const MyBooking = (props) => {
             </Text>
           </View>
         )}
-        {(selectedTab === 0 && (
+        {((selectedTab === 0 || selectedTab === 1) && (
           <View style={styles.flexBox}>
             <Text style={styles.leftText}>moving date</Text>
             <Text
@@ -268,28 +289,30 @@ const MyBooking = (props) => {
     <View style={styles.container}>
       <HomeHeader navigation={props.navigation} title={'MY BOOKINGS'} />
       <View style={{height: hp(7), flexDirection: 'row'}}>
-        {['Ongoing Orders', 'Past Orders'].map((item, index) => {
-          return (
-            <Pressable
-              key={index}
-              style={{
-                ...styles.tabViews,
-                ...STYLES.common,
-                borderColor:
-                  selectedTab === index ? Colors.darkBlue : '#ACABCD',
-                borderBottomWidth: selectedTab === index ? 2 : 0.8,
-              }}
-              onPress={() => setSelectedTab(index)}>
-              <Text
+        {['Enquiry Orders', 'Ongoing Orders', 'Past Orders'].map(
+          (item, index) => {
+            return (
+              <Pressable
+                key={index}
                 style={{
-                  ...STYLES.tabText,
-                  color: selectedTab === index ? Colors.darkBlue : '#ACABCD',
-                }}>
-                {item}
-              </Text>
-            </Pressable>
-          );
-        })}
+                  ...styles.tabViews,
+                  ...STYLES.common,
+                  borderColor:
+                    selectedTab === index ? Colors.darkBlue : '#ACABCD',
+                  borderBottomWidth: selectedTab === index ? 2 : 0.8,
+                }}
+                onPress={() => setSelectedTab(index)}>
+                <Text
+                  style={{
+                    ...STYLES.tabText,
+                    color: selectedTab === index ? Colors.darkBlue : '#ACABCD',
+                  }}>
+                  {item}
+                </Text>
+              </Pressable>
+            );
+          },
+        )}
       </View>
       <View style={{flex: 1}}>
         <FlatList
@@ -298,6 +321,10 @@ const MyBooking = (props) => {
           showsVerticalScrollIndicator={false}
           data={
             selectedTab === 0
+              ? enquiryOrders.length > 0
+                ? enquiryOrders
+                : []
+              : selectedTab === 1
               ? liveOrders.length > 0
                 ? liveOrders
                 : []
@@ -305,7 +332,13 @@ const MyBooking = (props) => {
               ? pastOrders
               : []
           }
-          extraData={selectedTab === 0 ? liveOrders : pastOrders}
+          extraData={
+            selectedTab === 0
+              ? enquiryOrders
+              : selectedTab === 1
+              ? liveOrders
+              : pastOrders
+          }
           renderItem={renderItem}
           onRefresh={fetchOrderList}
           refreshing={isLoading}

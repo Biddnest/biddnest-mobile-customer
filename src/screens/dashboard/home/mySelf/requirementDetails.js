@@ -1179,9 +1179,7 @@ const RequirementDetails = (props) => {
               color: Colors.inputTextColor,
               marginBottom: hp(2),
             }}>
-            1. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-            nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-            erat, sed diam voluptua.
+            Are you sure? you want to change category? Data will be lost.
           </Text>
         </View>
         <TwoButton

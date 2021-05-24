@@ -342,7 +342,7 @@ const Payment = (props) => {
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
-                      justifyContent: 'center',
+                      justifyContent: 'space-between',
                       marginVertical: wp(1),
                     }}>
                     <View
@@ -353,7 +353,7 @@ const Payment = (props) => {
                         borderStyle: 'dashed',
                         borderColor: Colors.btnBG,
                         backgroundColor: Colors.white,
-                        width: '65%',
+                        width: '80%',
                         ...STYLES.common,
                       }}>
                       <Text
@@ -366,7 +366,7 @@ const Payment = (props) => {
                       </Text>
                     </View>
                     <Pressable
-                      style={{width: '17%', alignItems: 'flex-end', marginLeft: '3%'}}
+                      style={{width: '15%', marginLeft: '3%'}}
                       onPress={() => {
                         if (!applyButton) {
                           setApplyButton(true);

@@ -2,6 +2,7 @@ import instance from '../../constant/baseService';
 import {Alert} from 'react-native';
 import {
   CONFIG_DATA,
+  ENQUIRY_ORDERS,
   FORM_DATA,
   GET_ZONES,
   INVENTORY_DATA,
@@ -304,6 +305,32 @@ export const getLiveOrders = () => {
         .then((res) => {
           dispatch({
             type: LIVE_ORDERS,
+            payload: res?.data?.data || {},
+          });
+          resolve(res.data);
+        })
+        .catch((err) => {
+          CustomAlert(err?.data?.message);
+          reject(err);
+        });
+    });
+  };
+};
+
+export const getEnquiryOrders = () => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      let obj = {
+        url: 'bookings/history/enquiry',
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+      };
+      APICall(obj)
+        .then((res) => {
+          dispatch({
+            type: ENQUIRY_ORDERS,
             payload: res?.data?.data || {},
           });
           resolve(res.data);

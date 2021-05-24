@@ -5,6 +5,7 @@ export const LoginData = {
   configData: {},
   inventoriesData: {},
   liveOrders: {},
+  enquiryOrders: {},
   pastOrders: {},
   zones: [],
   formData: {
@@ -55,4 +56,5 @@ export const LoginData = {
     movement_dates: [],
     inventory_items: [],
   },
+  chatBotVisible: false,
 };

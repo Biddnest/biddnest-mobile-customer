@@ -544,7 +544,9 @@ const MovingForm = (props) => {
                   fetchLocationString(region);
                 }
               }}
-              zoomControlEnabled={false}
+              zoomEnabled={true}
+              // minZoomLevel={0}
+              // maxZoomLevel={20}
               provider={
                 Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
               }
