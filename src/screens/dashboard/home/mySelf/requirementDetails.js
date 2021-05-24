@@ -94,12 +94,12 @@ const RequirementDetails = (props) => {
       delete temp.icon;
       inv[index] = temp;
     });
-    if (inv.findIndex((item) => item.id === null) === -1 && isAndroid) {
+    if (inv.findIndex((item) => item.id === 'select') === -1 && isAndroid) {
       inv.unshift({
         label: '-Select-',
         value: null,
         category: '',
-        id: null,
+        id: 'select',
         image:
           'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
         material: '["wood","plastic","steel","fibre","glass"]',
@@ -752,12 +752,10 @@ const RequirementDetails = (props) => {
                       setEditData({
                         ...editData,
                         name: itemValue,
-                        id: itemValue,
                       });
                     } else {
                       setAddData({
                         name: itemValue,
-                        id: itemValue,
                         material: null,
                         size: null,
                         quantity:
@@ -813,11 +811,10 @@ const RequirementDetails = (props) => {
                 temp.size = sizeAry;
                 setSelectedInventory(temp);
                 if (editItem) {
-                  setEditData({...editData, name: text, id: text});
+                  setEditData({...editData, name: text});
                 } else {
                   setAddData({
                     name: text,
-                    id: text,
                     material: null,
                     size: null,
                     quantity:
@@ -834,7 +831,7 @@ const RequirementDetails = (props) => {
             />
           </View>
         )}
-        {(addData?.id === '-Other-' || editData?.id === '-Other-') && (
+        {(addData?.name === '-Other-' || editData?.name === '-Other-') && (
           <View style={{width: '90%', marginTop: hp(2)}}>
             <TextInput
               value={editItem ? editData?.name : addData?.name}
@@ -861,45 +858,82 @@ const RequirementDetails = (props) => {
             {
               flexDirection: 'row',
               marginTop:
-                addData?.id === '-Other-' || editData?.id === '-Other-'
+                addData?.name === '-Other-' || editData?.name === '-Other-'
                   ? -hp(1)
                   : hp(2),
             },
             Platform.OS !== 'android' && {zIndex: 5001},
           ]}>
-          <DropDownAndroid
-            searchable={false}
-            value={editItem ? editData?.material : addData?.material}
-            label={'Material'}
-            items={selectedInventory?.material}
-            onChangeItem={(text) => {
-              if (editItem) {
-                setEditData({...editData, material: text});
-              } else {
-                setAddData({...addData, material: text});
-              }
-            }}
-          />
-          <DropDownAndroid
-            searchable={false}
-            label={'Size'}
-            value={editItem ? editData?.size : addData?.size}
-            items={selectedInventory?.size}
-            onChangeItem={(text) => {
-              if (editItem) {
-                setEditData({...editData, size: text});
-              } else {
-                setAddData({...addData, size: text});
-              }
-            }}
-          />
+          {((addData?.name === '-Other-' || editData?.name === '-Other-') && (
+            <View style={{width: '45%', marginTop: hp(1)}}>
+              <TextInput
+                value={editItem ? editData?.material : addData?.material}
+                label={'Material'}
+                placeHolder={'Material'}
+                onChange={(text) => {
+                  if (editItem) {
+                    setEditData({...editData, material: text});
+                  } else {
+                    setAddData({...addData, material: text});
+                  }
+                }}
+              />
+            </View>
+          )) || (
+            <DropDownAndroid
+              searchable={false}
+              value={editItem ? editData?.material : addData?.material}
+              label={'Material'}
+              items={selectedInventory?.material}
+              onChangeItem={(text) => {
+                if (editItem) {
+                  setEditData({...editData, material: text});
+                } else {
+                  setAddData({...addData, material: text});
+                }
+              }}
+            />
+          )}
+          {((addData?.name === '-Other-' || editData?.name === '-Other-') && (
+            <View style={{width: '45%', marginTop: hp(1)}}>
+              <TextInput
+                label={'Size'}
+                value={editItem ? editData?.size : addData?.size}
+                placeHolder={'Size'}
+                onChange={(text) => {
+                  if (editItem) {
+                    setEditData({...editData, size: text});
+                  } else {
+                    setAddData({...addData, size: text});
+                  }
+                }}
+              />
+            </View>
+          )) || (
+            <DropDownAndroid
+              searchable={false}
+              label={'Size'}
+              value={editItem ? editData?.size : addData?.size}
+              items={selectedInventory?.size}
+              onChangeItem={(text) => {
+                if (editItem) {
+                  setEditData({...editData, size: text});
+                } else {
+                  setAddData({...addData, size: text});
+                }
+              }}
+            />
+          )}
         </View>
         <View style={{width: '90%'}}>
           {(configData?.inventory_quantity_type.range ===
             movementType?.inventory_quantity_type && (
             <View
               style={{
-                marginTop: hp(2),
+                marginTop:
+                  addData?.name === '-Other-' || editData?.name === '-Other-'
+                    ? hp(0.01)
+                    : hp(2),
                 marginHorizontal: wp(3),
               }}>
               <Text
@@ -957,7 +991,10 @@ const RequirementDetails = (props) => {
                 width: Platform.OS === 'android' ? wp(60) : wp(57),
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginTop: hp(2),
+                marginTop:
+                  addData?.name === '-Other-' || editData?.name === '-Other-'
+                    ? hp(0.01)
+                    : hp(2),
               }}>
               <TextInput
                 label={'Quantity'}
@@ -1051,7 +1088,6 @@ const RequirementDetails = (props) => {
                 let index = temp.findIndex(
                   (ele) => ele.inventory_id === editData.inventory_id,
                 );
-                delete editData.id;
                 if (
                   configData?.inventory_quantity_type.range !==
                   movementType?.inventory_quantity_type
@@ -1100,7 +1136,6 @@ const RequirementDetails = (props) => {
                     ) {
                       addData.quantity = parseInt(addData?.quantity);
                     }
-                    delete addData.id;
                     temp.push(addData);
                     handleStateChange('inventory_items', temp);
                     setInventoryItems(temp);

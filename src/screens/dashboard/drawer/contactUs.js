@@ -117,33 +117,36 @@ const ContactUs = (props) => {
             ticket: {id: item?.id},
           })
         }>
-        {/*<View style={styles.flexBox}>*/}
-        {/*  <Text*/}
-        {/*    style={{*/}
-        {/*      ...styles.locationText,*/}
-        {/*      marginTop: 0,*/}
-        {/*      fontSize: wp(3.8),*/}
-        {/*      fontFamily: 'Roboto-Medium',*/}
-        {/*      width: '30%',*/}
-        {/*    }}>*/}
-        {/*    Order ID*/}
-        {/*  </Text>*/}
-        {/*  <View*/}
-        {/*    style={{*/}
-        {/*      height: hp(3.5),*/}
-        {/*      ...STYLES.common,*/}
-        {/*    }}>*/}
-        {/*    <Text*/}
-        {/*      style={{*/}
-        {/*        color: Colors.inputTextColor,*/}
-        {/*        fontSize: wp(3.8),*/}
-        {/*        fontFamily: 'Gilroy-SemiBold',*/}
-        {/*        textTransform: 'capitalize',*/}
-        {/*      }}>*/}
-        {/*      {recentOrder?.booking_id}*/}
-        {/*    </Text>*/}
-        {/*  </View>*/}
-        {/*</View>*/}
+        {item?.meta && JSON.parse(item?.meta?.toString())?.public_booking_id && (
+          <View style={styles.flexBox}>
+            <Text
+              style={{
+                ...styles.locationText,
+                marginTop: 0,
+                fontSize: wp(3.8),
+                fontFamily: 'Roboto-Medium',
+                width: '30%',
+              }}>
+              Order ID
+            </Text>
+            <View
+              style={{
+                height: hp(3.5),
+                ...STYLES.common,
+              }}>
+              <Text
+                style={{
+                  color: Colors.inputTextColor,
+                  fontSize: wp(3.8),
+                  fontFamily: 'Gilroy-SemiBold',
+                  textTransform: 'capitalize',
+                }}>
+                {item?.meta &&
+                  JSON.parse(item?.meta?.toString())?.public_booking_id}
+              </Text>
+            </View>
+          </View>
+        )}
         <View style={styles.flexBox}>
           <Text
             style={{

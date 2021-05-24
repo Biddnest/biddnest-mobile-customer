@@ -41,6 +41,8 @@ const MainStackNavigator = () => {
       <Stack.Screen name="FAQDetails" component={FAQDetails} />
       <Stack.Screen name="FinalQuote" component={FinalQuote} />
       <Stack.Screen name="RaiseTicket" component={RaiseTicket} />
+      <Stack.Screen name="OrderTimer" component={OrderTimer} />
+      <Stack.Screen name="OrderTracking" component={OrderTracking} />
     </Stack.Navigator>
   );
 };
