@@ -43,6 +43,7 @@ import Shimmer from 'react-native-shimmer';
 import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 import Carousel from 'react-native-snap-carousel';
 import {Rating} from 'react-native-ratings';
+import HTML from 'react-native-render-html';
 
 export const HomeHeader = (props) => {
   return (
@@ -620,6 +621,7 @@ const Home = (props) => {
                 flex: 1,
                 alignSelf: 'flex-start',
                 marginTop: hp(0.2),
+                marginBottom: hp(1),
               }}>
               <Rating
                 readonly={true}
@@ -631,15 +633,19 @@ const Home = (props) => {
                 showRating={false}
               />
             </View>
-            <Text
-              style={{
+            <HTML
+              defaultTextProps={{
+                width: wp(70),
+                marginTop: hp(1),
+              }}
+              baseFontStyle={{
                 fontFamily: 'Roboto-Light',
                 color: Colors.grey,
                 fontSize: wp(3.2),
-                marginTop: hp(1),
-              }}>
-              {selectedTestimonial?.desc}
-            </Text>
+              }}
+              source={{html: selectedTestimonial?.desc}}
+              contentWidth={'90%'}
+            />
           </View>
         </View>
         <View style={{alignItems: 'center'}}>
