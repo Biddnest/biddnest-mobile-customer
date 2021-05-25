@@ -50,6 +50,7 @@
     "react-native-orientation-locker": "^1.2.0",
     "react-native-paper": "^4.7.1",
     "react-native-permissions": "^3.0.1",
+    "react-native-ratings": "^7.4.0",
     "react-native-razorpay": "^2.2.4",
     "react-native-reanimated": "^1.13.2",
     "react-native-render-html": "^5.1.0",

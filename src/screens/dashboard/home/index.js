@@ -21,13 +21,19 @@ import MenuIcon from '../../../assets/svg/menu_icon.svg';
 import HomeCall from '../../../assets/svg/home_call.svg';
 import MySelf from '../../../assets/svg/myself.svg';
 import Coupon from '../../../assets/svg/coupon.svg';
+import Quote from '../../../assets/svg/quote.svg';
 import {
   CustomAlert,
   CustomConsole,
   getLocation,
   LoadingScreen,
 } from '../../../constant/commonFun';
-import {APICall, getServices, getSlider} from '../../../redux/actions/user';
+import {
+  APICall,
+  getServices,
+  getSlider,
+  getTestimonials,
+} from '../../../redux/actions/user';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import {STORE} from '../../../redux';
@@ -37,6 +43,7 @@ import Shimmer from 'react-native-shimmer';
 import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 import Carousel from 'react-native-snap-carousel';
 import {CHAT_BOT_VISIBLE} from '../../../redux/types';
+import {Rating} from 'react-native-ratings';
 
 export const HomeHeader = (props) => {
   return (
@@ -107,12 +114,16 @@ const Home = (props) => {
   const [sliderData, setSliderData] = useState(
     useSelector((state) => state.Login?.sliderData?.sliders) || [],
   );
+  const [testimonialData, setTestimonialData] = useState(
+    useSelector((state) => state.Login?.testimonials?.testimonials) || [],
+  );
   const [couponVisible, setCouponVisible] = useState(false);
   const [bookingSelectionVisible, setBookingSelectionVisible] = useState(false);
   const [movementType, setMovementType] = useState();
   const [bookingFor, setBookingFor] = useState('Myself');
   const [isLoading, setLoading] = useState(true);
   const [contactUs, setContactUs] = useState({});
+  const [selectedTestimonial, setSelectedTestimonial] = useState({});
   useEffect(() => {
     dispatch({
       type: CHAT_BOT_VISIBLE,
@@ -173,6 +184,23 @@ const Home = (props) => {
               setLoading(false);
               if (res.status === 'success' && res?.data?.services) {
                 setServiceData(res?.data?.services);
+              } else {
+                CustomAlert(res.message);
+              }
+            })
+            .catch((err) => {
+              setLoading(false);
+              CustomAlert(err?.data?.message);
+            });
+          dispatch(getTestimonials())
+            .then((res) => {
+              setLoading(false);
+              if (res.status === 'success' && res?.data?.testimonials) {
+                setTestimonialData(res?.data?.testimonials);
+                setSelectedTestimonial(
+                  res?.data?.testimonials?.length > 0 &&
+                    res?.data?.testimonials[0],
+                );
               } else {
                 CustomAlert(res.message);
               }
@@ -296,54 +324,7 @@ const Home = (props) => {
                 loop={true}
                 // ref={(c) => { this._carousel = c; }}
                 data={item?.banners}
-                renderItem={({item, index}) => {
-                  let bottomSize = [];
-                  Object.values(sliderSize.size).forEach((i, ind) => {
-                    if (i === item?.banner_size) {
-                      bottomSize =
-                        sliderSize?.banner_dimensions[
-                          Object.keys(sliderSize.size)[ind]
-                        ];
-                    }
-                  });
-                  return (
-                    <Pressable
-                      onPress={() => {
-                        if (item?.url && item.url !== '') {
-                          if (isAndroid) {
-                            CustomTabs.openURL(item?.url, {
-                              toolbarColor: Colors.darkBlue,
-                            })
-                              .then(() => {})
-                              .catch((err) => {
-                                console.log(err);
-                              });
-                          } else {
-                            Linking.openURL(item?.url);
-                          }
-                        }
-                      }}
-                      key={index}
-                      style={[
-                        styles.topScroll,
-                        {
-                          ...styles.common,
-                          height: bottomSize.length > 0 && bottomSize[1],
-                          width: bottomSize.length > 0 && bottomSize[0],
-                        },
-                      ]}>
-                      <Image
-                        style={{
-                          height: '100%',
-                          width: '100%',
-                        }}
-                        source={{uri: item?.image}}
-                        resizeMode={'contain'}
-                        key={index}
-                      />
-                    </Pressable>
-                  );
-                }}
+                renderItem={renderItem}
                 sliderWidth={wp(100)}
                 itemWidth={bottomSize.length > 0 && bottomSize[0]}
                 autoplay={true}
@@ -415,36 +396,61 @@ const Home = (props) => {
             }}
           />
         </View>
-        <View style={styles.assistantView}>
+        <View
+          style={[
+            styles.assistantView,
+            {
+              flexDirection: 'column',
+            },
+          ]}>
           <View>
-            <Text
-              style={{
-                fontFamily: 'Gilroy-Bold',
-                fontSize: wp(6),
-                color: Colors.darkBlue,
-              }}>
-              Need Assistance?
-            </Text>
-            <Text
-              style={{
-                fontFamily: 'Roboto-Medium',
-                color: '#434343',
-                fontSize: wp(3.6),
-                marginTop: hp(1),
-              }}>
-              We are just a call away! {'\n'}(9123445566)
-            </Text>
+            <Image
+              source={require('../../../assets/images/support_icon.png')}
+              style={{height: hp(20), width: hp(20)}}
+              resizeMode={'contain'}
+            />
           </View>
-          <Pressable
-            onPress={() => {
-              Linking.openURL(
-                `tel:${
-                  contactUs?.contact_no?.length > 0 && contactUs.contact_no[0]
-                }`,
-              );
-            }}>
-            <HomeCall width={hp(7)} height={hp(7)} />
-          </Pressable>
+          <View
+            style={[
+              {
+                flexDirection: 'row',
+                padding: wp(3),
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: wp(90),
+                alignSelf: 'center',
+              },
+            ]}>
+            <View>
+              <Text
+                style={{
+                  fontFamily: 'Gilroy-Bold',
+                  fontSize: wp(6),
+                  color: Colors.darkBlue,
+                }}>
+                Need Assistance?
+              </Text>
+              <Text
+                style={{
+                  fontFamily: 'Roboto-Medium',
+                  color: '#434343',
+                  fontSize: wp(3.6),
+                  marginTop: hp(1),
+                }}>
+                We are just a call away! {'\n'}(9123445566)
+              </Text>
+            </View>
+            <Pressable
+              onPress={() => {
+                Linking.openURL(
+                  `tel:${
+                    contactUs?.contact_no?.length > 0 && contactUs.contact_no[0]
+                  }`,
+                );
+              }}>
+              <HomeCall width={hp(7)} height={hp(7)} />
+            </Pressable>
+          </View>
         </View>
         {sliderData.map((item, index) => {
           if (
@@ -586,6 +592,113 @@ const Home = (props) => {
             return null;
           }
         })}
+        <View
+          style={[
+            styles.assistantView,
+            {
+              justifyContent: 'flex-start',
+              paddingVertical: hp(2),
+            },
+          ]}>
+          <View
+            style={{
+              marginHorizontal: wp(3),
+              marginVertical: hp(3),
+            }}>
+            <Quote height={hp(5)} width={hp(5)} />
+          </View>
+          <View
+            style={{
+              borderLeftWidth: 1,
+              borderColor: Colors.silver,
+              paddingLeft: wp(4),
+              flex: 1,
+            }}>
+            <Text
+              style={{
+                fontFamily: 'Gilroy-Bold',
+                color: Colors.darkBlue,
+                fontSize: wp(4),
+              }}>
+              {selectedTestimonial?.name}
+            </Text>
+            <View
+              style={{
+                flex: 1,
+                alignSelf: 'flex-start',
+                marginTop: hp(0.2),
+              }}>
+              <Rating
+                readonly={true}
+                fractions={1}
+                defaultRating={selectedTestimonial?.rating || 3}
+                ratingContainerStyle={{paddingHorizontal: wp(5)}}
+                ratingCount={5}
+                imageSize={wp(4)}
+                showRating={false}
+              />
+            </View>
+            <Text
+              style={{
+                fontFamily: 'Roboto-Light',
+                color: Colors.grey,
+                fontSize: wp(3.2),
+                marginTop: hp(1),
+              }}>
+              {selectedTestimonial?.desc}
+            </Text>
+          </View>
+        </View>
+        <View style={{alignItems: 'center'}}>
+          <FlatList
+            data={testimonialData}
+            bounces={false}
+            horizontal
+            contentContainerStyle={{marginBottom: hp(2)}}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}) => {
+              return (
+                <Pressable
+                  onPress={() => {
+                    setSelectedTestimonial(item);
+                  }}
+                  key={index}
+                  style={{
+                    marginLeft: wp(5),
+                    opacity: item?.id === selectedTestimonial?.id ? 1 : 0.3,
+                  }}>
+                  <View
+                    style={{
+                      height: hp(8),
+                      width: hp(8),
+                      borderRadius: hp(4),
+                      overflow: 'hidden',
+                    }}>
+                    <Image
+                      source={{uri: item?.image}}
+                      resizeMode={'contain'}
+                      style={{height: '100%', width: '100%'}}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      height: hp(0.8),
+                      width: hp(0.8),
+                      borderRadius: hp(0.4),
+                      backgroundColor:
+                        item?.id === selectedTestimonial?.id
+                          ? Colors.darkBlue
+                          : 'transparent',
+                      alignSelf: 'center',
+                      marginTop: hp(1),
+                    }}
+                  />
+                </Pressable>
+              );
+            }}
+          />
+        </View>
       </ScrollView>
       <CustomModalAndroid
         visible={couponVisible}

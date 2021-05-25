@@ -1170,7 +1170,7 @@ const RequirementDetails = (props) => {
           style={{
             marginTop: hp(4),
             marginBottom: hp(2),
-            marginHorizontal: wp(6),
+            marginHorizontal: wp(15),
           }}>
           <Text
             style={{
@@ -1178,6 +1178,7 @@ const RequirementDetails = (props) => {
               fontSize: wp(4),
               color: Colors.inputTextColor,
               marginBottom: hp(2),
+              textAlign: 'center',
             }}>
             Are you sure? you want to change category? Data will be lost.
           </Text>

@@ -57,4 +57,5 @@ export const LoginData = {
     inventory_items: [],
   },
   chatBotVisible: false,
+  testimonials: {},
 };

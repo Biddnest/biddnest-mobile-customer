@@ -12,6 +12,7 @@ import {
   RESET_STORE,
   SERVICE_DATA,
   SLIDER_DATA,
+  TESTIMONIALS,
 } from '../types';
 import {CustomAlert} from '../../constant/commonFun';
 import {STORE} from '../index';
@@ -137,12 +138,12 @@ export const profileVerifyOTP = (data) => {
       },
     };
     APICall(obj)
-        .then((res) => {
-          resolve(res.data);
-        })
-        .catch((err) => {
-          reject(err);
-        });
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
   });
 };
 
@@ -384,6 +385,32 @@ export const getZones = () => {
           dispatch({
             type: GET_ZONES,
             payload: res?.data?.data?.zones || [],
+          });
+          resolve(res.data);
+        })
+        .catch((err) => {
+          CustomAlert(err?.data?.message);
+          reject(err);
+        });
+    });
+  };
+};
+
+export const getTestimonials = () => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      let obj = {
+        url: 'testimonials',
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+      };
+      APICall(obj)
+        .then((res) => {
+          dispatch({
+            type: TESTIMONIALS,
+            payload: res?.data?.data?.testimonials || [],
           });
           resolve(res.data);
         })

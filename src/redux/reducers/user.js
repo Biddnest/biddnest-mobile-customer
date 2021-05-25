@@ -10,6 +10,7 @@ import {
   PAST_ORDERS,
   SERVICE_DATA,
   SLIDER_DATA,
+  TESTIMONIALS,
 } from '../types';
 import {appDefaultReducer} from './default';
 const INITIAL_STATE = appDefaultReducer.Login;
@@ -48,6 +49,9 @@ export default (state = INITIAL_STATE, action) => {
     }
     case CHAT_BOT_VISIBLE: {
       return {...state, chatBotVisible: action.payload};
+    }
+    case TESTIMONIALS: {
+      return {...state, testimonials: action.payload};
     }
     default:
       return state;

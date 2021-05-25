@@ -4,7 +4,7 @@ import axios from 'axios';
 // const data = STORE.getState().Login?.configData?.config?.api || '';
 const instance = axios.create({
   // baseURL: data.base_url + '/api/' + data.version + '/',
-  baseURL: 'https://dashboard-biddnest.dev.diginnovators.com/api/v1/',
+  baseURL: 'https://uat-dashboard-biddnest.dev.diginnovators.com/api/v1/',
 });
 
 instance.defaults.headers.post['Content-Type'] = 'application/json';

@@ -8,5 +8,6 @@ export const ENQUIRY_ORDERS = 'ENQUIRY_ORDERS';
 export const LIVE_ORDERS = 'LIVE_ORDERS';
 export const PAST_ORDERS = 'PAST_ORDERS';
 export const GET_ZONES = 'GET_ZONES';
+export const TESTIMONIALS = 'TESTIMONIALS';
 export const FORM_DATA = 'FORM_DATA';
 export const CHAT_BOT_VISIBLE = 'CHAT_BOT_VISIBLE';
