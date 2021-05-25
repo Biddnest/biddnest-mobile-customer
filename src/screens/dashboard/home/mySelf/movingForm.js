@@ -111,14 +111,14 @@ const MovingForm = (props) => {
     mapRef?.current?.animateToRegion({
       latitude: regionData?.latitude,
       longitude: regionData?.longitude,
-      latitudeDelta: MapConstantDelta,
-      longitudeDelta: MapConstantDelta,
+      latitudeDelta: regionData?.latitudeDelta || MapConstantDelta,
+      longitudeDelta: regionData?.longitudeDelta || MapConstantDelta,
     });
     setRegion({
       latitude: regionData?.latitude,
       longitude: regionData?.longitude,
-      latitudeDelta: MapConstantDelta,
-      longitudeDelta: MapConstantDelta,
+      latitudeDelta: regionData?.latitudeDelta || MapConstantDelta,
+      longitudeDelta: regionData?.longitudeDelta || MapConstantDelta,
     });
     setPanding(false);
     fetch(
@@ -127,7 +127,6 @@ const MovingForm = (props) => {
       .then((response) => response.json())
       .then((responseJson) => {
         let temp = JSON.parse(JSON.stringify(responseJson));
-        console.log(temp);
         if (temp?.results && temp?.results?.length > 0) {
           googlePlaceRef?.current?.setAddressText(
             temp?.results[0]?.formatted_address,

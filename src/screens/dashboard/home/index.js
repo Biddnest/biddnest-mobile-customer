@@ -42,7 +42,6 @@ import {CustomTabs} from 'react-native-custom-tabs';
 import Shimmer from 'react-native-shimmer';
 import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 import Carousel from 'react-native-snap-carousel';
-import {CHAT_BOT_VISIBLE} from '../../../redux/types';
 import {Rating} from 'react-native-ratings';
 
 export const HomeHeader = (props) => {
@@ -124,12 +123,6 @@ const Home = (props) => {
   const [isLoading, setLoading] = useState(true);
   const [contactUs, setContactUs] = useState({});
   const [selectedTestimonial, setSelectedTestimonial] = useState({});
-  useEffect(() => {
-    dispatch({
-      type: CHAT_BOT_VISIBLE,
-      payload: true,
-    });
-  }, []);
 
   useEffect(() => {
     if (isFocused && userData?.fname) {

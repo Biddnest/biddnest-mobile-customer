@@ -42,7 +42,6 @@ const MainNavigator = () => {
       <PersistGate loading={null} persistor={PERSIST_STORE}>
         <SafeAreaView style={{flex: 1}}>
           <App />
-          <ChatBotButton onPress={() => {}} />
         </SafeAreaView>
       </PersistGate>
     </Provider>

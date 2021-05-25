@@ -1,5 +1,4 @@
 import {
-  CHAT_BOT_VISIBLE,
   CONFIG_DATA,
   ENQUIRY_ORDERS,
   FORM_DATA,
@@ -46,9 +45,6 @@ export default (state = INITIAL_STATE, action) => {
     }
     case FORM_DATA: {
       return {...state, formData: action.payload};
-    }
-    case CHAT_BOT_VISIBLE: {
-      return {...state, chatBotVisible: action.payload};
     }
     case TESTIMONIALS: {
       return {...state, testimonials: action.payload};

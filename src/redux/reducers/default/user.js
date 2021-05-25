@@ -56,6 +56,5 @@ export const LoginData = {
     movement_dates: [],
     inventory_items: [],
   },
-  chatBotVisible: false,
   testimonials: {},
 };
