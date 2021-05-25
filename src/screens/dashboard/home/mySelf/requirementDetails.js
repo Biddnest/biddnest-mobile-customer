@@ -641,6 +641,15 @@ const RequirementDetails = (props) => {
           rightOnPress={() => {
             // Booking API call
             setLoading(true);
+            let temp = {...props.data};
+            let t2 = [...temp?.inventory_items];
+            t2.forEach((item, index) => {
+              if (item?.inventory_id === null) {
+                item.name = item.itemName;
+                // delete t2[index].itemName;
+              }
+            });
+            temp.inventory_items = t2;
             let obj = {
               url: 'bookings/enquiry',
               method: 'post',
@@ -648,7 +657,7 @@ const RequirementDetails = (props) => {
                 Authorization:
                   'Bearer ' + STORE.getState().Login?.loginData?.token,
               },
-              data: props.data,
+              data: temp,
             };
             APICall(obj)
               .then((res) => {
@@ -752,10 +761,22 @@ const RequirementDetails = (props) => {
                       setEditData({
                         ...editData,
                         name: itemValue,
+                        itemName: itemValue,
+                        material: null,
+                        size: null,
+                        quantity:
+                          configData?.inventory_quantity_type.range ===
+                          movementType?.inventory_quantity_type
+                            ? {
+                                min: 200,
+                                max: 750,
+                              }
+                            : 1,
                       });
                     } else {
                       setAddData({
                         name: itemValue,
+                        itemName: itemValue,
                         material: null,
                         size: null,
                         quantity:
@@ -811,10 +832,11 @@ const RequirementDetails = (props) => {
                 temp.size = sizeAry;
                 setSelectedInventory(temp);
                 if (editItem) {
-                  setEditData({...editData, name: text});
+                  setEditData({...editData, name: text, itemName: text});
                 } else {
                   setAddData({
                     name: text,
+                    itemName: text,
                     material: null,
                     size: null,
                     quantity:
@@ -834,19 +856,19 @@ const RequirementDetails = (props) => {
         {(addData?.name === '-Other-' || editData?.name === '-Other-') && (
           <View style={{width: '90%', marginTop: hp(2)}}>
             <TextInput
-              value={editItem ? editData?.name : addData?.name}
+              value={editItem ? editData?.itemName : addData?.itemName}
               label={'Item Name'}
               placeHolder={'Other'}
               onChange={(text) => {
                 if (editItem) {
                   setEditData({
                     ...editData,
-                    name: text,
+                    itemName: text,
                   });
                 } else {
                   setAddData({
                     ...addData,
-                    name: text,
+                    itemName: text,
                   });
                 }
               }}

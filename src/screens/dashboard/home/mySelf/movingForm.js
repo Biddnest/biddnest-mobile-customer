@@ -653,7 +653,7 @@ const MovingForm = (props) => {
               keyboardShouldPersistTaps={'handled'}
               fetchDetails={true}
               currentLocation={true}
-              currentLocationLabel={'Current location'}
+              currentLocationLabel={'Current Location'}
               query={{
                 key: 'AIzaSyCvVaeoUidYMQ8cdIJ_cEvrZNJeBeMpC-4',
                 language: 'en',
