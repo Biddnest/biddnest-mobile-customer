@@ -85,7 +85,9 @@ const MyBooking = (props) => {
   };
 
   const handleOrderClicked = (item) => {
-    if (item?.status === 2 || item?.status === 3) {
+    if (item?.status === 0) {
+      props.navigation.navigate('BookingInitialQuote', {orderData: item});
+    } else if (item?.status === 2 || item?.status === 3) {
       props.navigation.navigate('OrderTimer', {orderData: item});
     } else if (item?.status === 4) {
       props.navigation.navigate('FinalQuote', {orderData: item});
@@ -97,6 +99,57 @@ const MyBooking = (props) => {
     ) {
       props.navigation.navigate('OrderTracking', {orderData: item});
     }
+  };
+  const renderRightDate = (item, dates) => {
+    if (!item?.bid) {
+      return (
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            width: '50%',
+            justifyContent: 'flex-end',
+          }}>
+          {dates?.map((item, index) => {
+            return (
+              <View style={styles.categoryView} key={index}>
+                <Text
+                  style={{
+                    color: Colors.inputTextColor,
+                    fontSize: wp(3.8),
+                    fontFamily: 'Roboto-Bold',
+                  }}>
+                  {item}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+      );
+    }
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          width: '50%',
+          justifyContent: 'flex-end',
+        }}>
+        <View style={styles.categoryView}>
+          <Text
+            style={{
+              color: Colors.inputTextColor,
+              fontSize: wp(3.8),
+              fontFamily: 'Roboto-Bold',
+            }}>
+            {item?.bid &&
+              moment(JSON.parse(item?.bid?.meta)?.moving_date).format(
+                'D MMM yyyy',
+              )}
+          </Text>
+        </View>
+      </View>
+    );
   };
   const renderItem = ({item, index}) => {
     let ind = Object.values(configData?.status).findIndex(
@@ -149,12 +202,14 @@ const MyBooking = (props) => {
           <Text
             style={{
               fontFamily: 'Roboto-Bold',
-              fontSize: wp(4.5),
+              fontSize: wp(4),
               color: Colors.inputTextColor,
               width: '55%',
               textAlign: 'right',
             }}>
-            {item?.public_booking_id}
+            {item.status > 4
+              ? item?.public_booking_id
+              : item?.public_enquiry_id}
           </Text>
         </View>
         <View
@@ -228,7 +283,7 @@ const MyBooking = (props) => {
                   numberOfLines={1}
                   style={{
                     fontFamily: 'Gilroy-Bold',
-                    fontSize: wp(4.5),
+                    fontSize: wp(4),
                     color: Colors.inputTextColor,
                     maxWidth: wp(28),
                   }}>
@@ -250,25 +305,17 @@ const MyBooking = (props) => {
         {((selectedTab === 0 || selectedTab === 1) && (
           <View style={styles.flexBox}>
             <Text style={styles.leftText}>moving date</Text>
-            <Text
-              style={[styles.rightText, {maxWidth: '60%', textAlign: 'right'}]}>
-              {dateArray.join('\n')}
-            </Text>
+            {renderRightDate(item, dateArray)}
+            {/*<Text*/}
+            {/*  style={[styles.rightText, {maxWidth: '60%', textAlign: 'right'}]}>*/}
+            {/*  {dateArray.join('\n')}*/}
+            {/*</Text>*/}
           </View>
         )) ||
           (item?.bid && (
             <View style={styles.flexBox}>
               <Text style={styles.leftText}>moving date</Text>
-              <Text
-                style={[
-                  styles.rightText,
-                  {maxWidth: '60%', textAlign: 'right'},
-                ]}>
-                {item?.bid?.meta &&
-                  moment(JSON.parse(item?.bid?.meta)?.moving_date).format(
-                    'D MMM yyyy',
-                  )}
-              </Text>
+              {renderRightDate(item, dateArray)}
             </View>
           ))}
 
@@ -319,6 +366,7 @@ const MyBooking = (props) => {
           bounces={false}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom: hp(2)}}
           data={
             selectedTab === 0
               ? enquiryOrders.length > 0
@@ -384,7 +432,7 @@ const styles = StyleSheet.create({
   locationText: {
     fontFamily: 'Roboto-Regular',
     color: Colors.inputTextColor,
-    fontSize: wp(4.5),
+    fontSize: wp(4),
     marginTop: hp(1),
   },
   separatorView: {
@@ -400,13 +448,13 @@ const styles = StyleSheet.create({
   },
   leftText: {
     fontFamily: 'Gilroy-Bold',
-    fontSize: wp(4.5),
+    fontSize: wp(4),
     color: Colors.inputTextColor,
     textTransform: 'capitalize',
   },
   rightText: {
     fontFamily: 'Roboto-Bold',
-    fontSize: wp(4.5),
+    fontSize: wp(4),
     color: Colors.inputTextColor,
   },
   statusView: {
@@ -418,5 +466,15 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
     fontFamily: 'Gilroy-Semibold',
     fontSize: wp(4),
+  },
+  categoryView: {
+    marginBottom: hp(0.8),
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderColor: Colors.darkBlue,
+    borderWidth: 2,
+    borderRadius: 8,
+    backgroundColor: Colors.white,
+    marginLeft: hp(1.3),
   },
 });

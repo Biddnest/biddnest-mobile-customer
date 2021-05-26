@@ -43,7 +43,7 @@ const App = () => {
           <Stack.Screen name="Dashboard" component={DrawerNavigation} />
           <Stack.Screen name="SingleTicket" component={SingleTicket} />
         </Stack.Navigator>
-        {routeName && <ChatBotButton onPress={() => {}} />}
+        {/*{routeName && <ChatBotButton onPress={() => {}} />}*/}
       </NavigationContainer>
     </>
   );

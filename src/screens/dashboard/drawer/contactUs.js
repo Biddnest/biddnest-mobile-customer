@@ -127,7 +127,7 @@ const ContactUs = (props) => {
                 fontFamily: 'Roboto-Medium',
                 width: '30%',
               }}>
-              Order ID
+              ORDER ID
             </Text>
             <View
               style={{
@@ -147,7 +147,13 @@ const ContactUs = (props) => {
             </View>
           </View>
         )}
-        <View style={styles.flexBox}>
+        <View
+          style={[
+            styles.flexBox,
+            {
+              marginTop: hp(0.5),
+            },
+          ]}>
           <Text
             style={{
               ...styles.locationText,
@@ -167,8 +173,9 @@ const ContactUs = (props) => {
           <View
             style={{
               backgroundColor:
-                ticketStatus?.open === item?.status ||
-                ticketStatus?.resolved === item?.status
+                ticketStatus?.open === item?.status
+                  ? Colors.btnBG
+                  : ticketStatus?.resolved === item?.status
                   ? Colors.lightGreen
                   : Colors.error,
               height: hp(3.5),
@@ -314,24 +321,6 @@ const ContactUs = (props) => {
             </View>
           </View>
         )}
-        {recentTicket.length > 0 && (
-          <View style={styles.inputForm}>
-            <Text style={styles.headerText}>RECENT TICKETS</Text>
-            <View style={styles.separatorView} />
-            <View>
-              <FlatList
-                keyExtractor={(item, index) => index.toString()}
-                bounces={false}
-                showsVerticalScrollIndicator={false}
-                data={recentTicket || []}
-                renderItem={renderItem}
-                ItemSeparatorComponent={() => (
-                  <View style={styles.separatorView} />
-                )}
-              />
-            </View>
-          </View>
-        )}
         <View style={styles.assistantView}>
           <View>
             <Text
@@ -351,14 +340,14 @@ const ContactUs = (props) => {
                   marginTop: hp(1),
                 },
               ]}>
-              Call us at{' '}
+              Call us at{'\n'}
               <Text
                 style={{
                   fontFamily: 'Gilroy-Bold',
                 }}>
-                {contactUs?.contact_no?.length > 0 && contactUs.contact_no[0]}{' '}
+                {contactUs?.contact_no?.length > 0 && contactUs.contact_no[0]}
                 {contactUs?.contact_no?.length > 1 &&
-                  'Or \n' + contactUs.contact_no[1]}
+                  ', \n' + contactUs.contact_no[1]}
               </Text>
             </Text>
             <Text
@@ -369,14 +358,14 @@ const ContactUs = (props) => {
                   marginTop: hp(0.5),
                 },
               ]}>
-              Email us at{' '}
+              Email us at{'\n'}
               <Text
                 style={{
                   fontFamily: 'Gilroy-Bold',
                 }}>
-                {contactUs?.email_id?.length > 0 && contactUs.email_id[0]}{' '}
+                {contactUs?.email_id?.length > 0 && contactUs.email_id[0]}
                 {contactUs?.email_id?.length > 1 &&
-                  'Or \n' + contactUs.email_id[1]}{' '}
+                  ', \n' + contactUs.email_id[1]}{' '}
               </Text>
             </Text>
           </View>
@@ -391,6 +380,24 @@ const ContactUs = (props) => {
             <HomeCall width={hp(7)} height={hp(7)} />
           </Pressable>
         </View>
+        {recentTicket.length > 0 && (
+          <View style={styles.inputForm}>
+            <Text style={styles.headerText}>RECENT TICKETS</Text>
+            <View style={styles.separatorView} />
+            <View>
+              <FlatList
+                keyExtractor={(item, index) => index.toString()}
+                bounces={false}
+                showsVerticalScrollIndicator={false}
+                data={recentTicket || []}
+                renderItem={renderItem}
+                ItemSeparatorComponent={() => (
+                  <View style={styles.separatorView} />
+                )}
+              />
+            </View>
+          </View>
+        )}
         <View style={{alignSelf: 'center'}}>
           <Button
             width={wp(90)}

@@ -44,6 +44,8 @@ import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 import Carousel from 'react-native-snap-carousel';
 import {Rating} from 'react-native-ratings';
 import HTML from 'react-native-render-html';
+import ChatBotButton from '../../../components/chatBotButton';
+import ChatBot from '../../../assets/svg/chat_bot.svg';
 
 export const HomeHeader = (props) => {
   return (
@@ -63,7 +65,7 @@ export const HomeHeader = (props) => {
       </Pressable>
       <View
         style={{
-          width: props.edit ? wp(74) : wp(87),
+          width: props.edit ? wp(64) : wp(74),
           height: '100%',
           ...styles.common,
         }}>
@@ -73,7 +75,7 @@ export const HomeHeader = (props) => {
               fontFamily: 'Gilroy-Bold',
               color: Colors.inputTextColor,
               fontSize: wp(5),
-              marginRight: props.edit ? wp(0) : wp(13),
+              marginRight: props.edit ? -wp(3) : wp(0),
               textTransform: 'capitalize',
             }}>
             {props.title}
@@ -85,14 +87,16 @@ export const HomeHeader = (props) => {
             style={{
               height: '65%',
               width: '70%',
-              marginRight: wp(13),
             }}
           />
         )}
       </View>
+      <Pressable style={{...STYLES.common, width: wp(13)}}>
+        <ChatBot width={hp(5)} height={hp(5)} />
+      </Pressable>
       {props.edit ? (
         <Pressable
-          style={{...STYLES.common, width: wp(13)}}
+          style={{...STYLES.common, width: wp(10)}}
           onPress={props.onEditPress}>
           <MaterialIcons name={'edit'} color={Colors.darkBlue} size={hp(3.5)} />
         </Pressable>

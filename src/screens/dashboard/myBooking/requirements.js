@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Pressable,
   ScrollView,
@@ -12,14 +12,36 @@ import {Colors, hp, wp} from '../../../constant/colors';
 import {STYLES} from '../../../constant/commonStyle';
 import {useSelector} from 'react-redux';
 import {Html5Entities} from 'html-entities';
+import {getOrderDetails} from '../../../redux/actions/user';
+import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
 
 const Requirements = (props) => {
   const entities = new Html5Entities();
-  const {orderDetails} = props;
+  const [orderDetails, setOrderDetails] = useState(props?.orderDetails || {});
   const configData =
     useSelector((state) => state.Login?.configData?.enums?.service) || {};
   let meta =
     (orderDetails?.meta && JSON.parse(orderDetails?.meta?.toString())) || {};
+
+  useEffect(() => {
+    fetchOrderDetails();
+  }, []);
+
+  const fetchOrderDetails = () => {
+    if (orderDetails?.public_booking_id) {
+      getOrderDetails(orderDetails?.public_booking_id)
+        .then((res) => {
+          if (res?.data?.status === 'success') {
+            setOrderDetails(res?.data?.data?.booking);
+          } else {
+            CustomAlert(res?.data?.message);
+          }
+        })
+        .catch((err) => {
+          CustomConsole(err);
+        });
+    }
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: Colors.white}}>

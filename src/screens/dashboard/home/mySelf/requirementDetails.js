@@ -263,7 +263,7 @@ const RequirementDetails = (props) => {
             color: Colors.inputTextColor,
             fontSize: wp(4.5),
           }}>
-          {item.name}
+          {item?.itemName || item.name}
         </Text>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View style={{width: '38%', marginRight: '2%'}}>

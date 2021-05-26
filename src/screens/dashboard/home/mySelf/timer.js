@@ -90,9 +90,9 @@ const Timer = (props) => {
           <Text style={styles.mainText}>Time Left</Text>
           <View style={styles.separatorView} />
           <View style={styles.flexView}>
-            <Text style={styles.orderID}>ORDER ID</Text>
+            <Text style={styles.orderID}>ENQUIRY ID</Text>
             <Text style={styles.orderNo}>
-              {orderDetails?.public_booking_id}
+              {orderDetails?.public_enquiry_id}
             </Text>
           </View>
           <Button
@@ -131,8 +131,8 @@ const Timer = (props) => {
               marginBottom: hp(2),
             },
           ]}>
-          <Text style={styles.orderID}>ORDER ID</Text>
-          <Text style={styles.orderNo}>{orderDetails?.public_booking_id}</Text>
+          <Text style={styles.orderID}>ENQUIRY ID</Text>
+          <Text style={styles.orderNo}>{orderDetails?.public_enquiry_id}</Text>
         </View>
       </CustomModalAndroid>
     </View>

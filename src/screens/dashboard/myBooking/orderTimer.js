@@ -393,9 +393,9 @@ const OrderTimer = (props) => {
                 )}
                 <View style={styles.separatorView} />
                 <View style={styles.flexView}>
-                  <Text style={styles.orderID}>ORDER ID</Text>
+                  <Text style={styles.orderID}>ENQUIRY ID</Text>
                   <Text style={styles.orderNo}>
-                    {orderDetails?.public_booking_id}
+                    {orderDetails?.public_enquiry_id}
                   </Text>
                 </View>
               </View>

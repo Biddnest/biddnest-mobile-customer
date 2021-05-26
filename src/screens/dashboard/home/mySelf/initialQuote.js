@@ -56,8 +56,6 @@ const InitialQuote = (props) => {
           longitude: parseFloat(apiResponse?.destination_lng),
         };
 
-  console.log(apiResponse);
-
   useEffect(() => {
     let temp = [];
     configData.cancellation_reason_options.forEach((item) => {
@@ -104,6 +102,33 @@ const InitialQuote = (props) => {
           ]}>
           {value}
         </Text>
+      </View>
+    );
+  };
+
+  const renderRightDate = (dates) => {
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          width: '50%',
+          justifyContent: 'flex-end',
+        }}>
+        {dates?.map((item, index) => {
+          return (
+            <View style={styles.categoryView} key={index}>
+              <Text
+                style={{
+                  color: Colors.inputTextColor,
+                  fontSize: wp(3.8),
+                  fontFamily: 'Roboto-Bold',
+                }}>
+                {item}
+              </Text>
+            </View>
+          );
+        })}
       </View>
     );
   };
@@ -231,7 +256,7 @@ const InitialQuote = (props) => {
                 color: '#99A0A5',
                 textAlign: 'center',
                 marginHorizontal: wp(6),
-                marginTop: hp(2)
+                marginTop: hp(2),
               }}>
               Please note that this is the baseline price, you will be receiving
               the Vendor bid list with the final quotations
@@ -344,14 +369,14 @@ const InitialQuote = (props) => {
                 </Text>
               </View>
               <View style={styles.flexBox}>
-                <Text style={styles.leftText}>order type</Text>
+                <Text style={styles.leftText}>Booking For</Text>
                 <Text style={styles.rightText}>
                   {meta?.self_booking ? 'My Self' : 'Others'}
                 </Text>
               </View>
               <View style={styles.flexBox}>
                 <Text style={styles.leftText}>Moving date</Text>
-                <Text style={styles.rightText}>{dateArray.join('\n')}</Text>
+                {renderRightDate(dateArray)}
               </View>
             </View>
           </ScrollView>
@@ -502,5 +527,15 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     overflow: 'hidden',
+  },
+  categoryView: {
+    marginBottom: hp(0.8),
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderColor: Colors.darkBlue,
+    borderWidth: 2,
+    borderRadius: 8,
+    backgroundColor: Colors.white,
+    marginLeft: hp(1.3),
   },
 });

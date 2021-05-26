@@ -62,7 +62,7 @@ const OrderDetailModal = (props) => {
               fontSize: wp(4),
               color: Colors.inputTextColor,
             }}>
-            {item?.name}
+            {item?.itemName || item?.name}
           </Text>
           <View
             style={{
