@@ -118,7 +118,7 @@ const FinalQuote = (props) => {
             </View>
             <Text
               style={{
-                fontFamily: 'Roboto-Regular',
+                fontFamily: 'Roboto-Bold',
                 fontSize: wp(4),
                 color: Colors.inputTextColor,
               }}>

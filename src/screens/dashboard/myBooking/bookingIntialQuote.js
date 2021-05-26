@@ -572,7 +572,7 @@ const BookingInitialQuote = (props) => {
                   <View style={styles.flexBox}>
                     <Text style={styles.leftText}>Booking For</Text>
                     <Text style={styles.rightText}>
-                      {meta?.self_booking ? 'My Self' : 'Others'}
+                      {meta?.self_booking ? 'MySelf' : 'Others'}
                     </Text>
                   </View>
                   <View style={styles.flexBox}>

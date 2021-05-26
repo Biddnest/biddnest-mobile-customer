@@ -41,11 +41,9 @@ export const APICall = (obj) => {
         } else if (err?.response) {
           reject(err.response);
         } else {
-          Alert.alert(
-            'oops!!',
-            'Something Went wrong!! Please try again later',
-            [{text: 'Retry', onPress: () => console.log('OK Pressed')}],
-          );
+          Alert.alert('Something Went wrong', 'Please try again later', [
+            {text: 'Okay', onPress: () => console.log('OK Pressed')},
+          ]);
         }
       });
   });

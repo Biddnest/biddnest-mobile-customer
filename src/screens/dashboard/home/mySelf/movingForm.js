@@ -321,8 +321,8 @@ const MovingForm = (props) => {
             onPress={() => {
               if (
                 props.movingFrom
-                  ? destination?.meta?.floor < 150
-                  : source?.meta?.floor < 150
+                  ? destination?.meta?.floor < 99
+                  : source?.meta?.floor < 99
               ) {
                 handleState(
                   'floor',
@@ -486,7 +486,7 @@ const MovingForm = (props) => {
               tempError.floor = !(
                 pageData?.floor?.toString()?.length === 0 ||
                 pageData?.floor < -3 ||
-                pageData?.floor > 150
+                pageData?.floor > 99
               );
               scrollViewRef?.current?.scrollToPosition(0, 0, true);
               setError(tempError);
