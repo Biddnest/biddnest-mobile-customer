@@ -26,6 +26,7 @@ import MapView, {
 } from 'react-native-maps';
 import CloseIcon from '../../../../components/closeIcon';
 import FlatButton from '../../../../components/flatButton';
+import Ripple from 'react-native-material-ripple';
 
 const InitialQuote = (props) => {
   const {apiResponse} = props;
@@ -138,7 +139,8 @@ const InitialQuote = (props) => {
       <View style={STYLES.tabView}>
         {tab.map((item, index) => {
           return (
-            <Pressable
+            <Ripple
+              rippleColor={Colors.darkBlue}
               key={index}
               style={{
                 ...STYLES.common,
@@ -154,7 +156,7 @@ const InitialQuote = (props) => {
                 }}>
                 {item}
               </Text>
-            </Pressable>
+            </Ripple>
           );
         })}
       </View>

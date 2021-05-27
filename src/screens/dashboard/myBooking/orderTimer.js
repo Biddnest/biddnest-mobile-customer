@@ -39,6 +39,7 @@ import MapView, {
 import MapModalAndroid from '../../../components/mapModal';
 import CloseIcon from '../../../components/closeIcon';
 import FlatButton from '../../../components/flatButton';
+import Ripple from 'react-native-material-ripple';
 
 const OrderTimer = (props) => {
   const [orderDetails, setOrderDetails] = useState(
@@ -236,7 +237,8 @@ const OrderTimer = (props) => {
           <View style={STYLES.tabView}>
             {tab.map((item, index) => {
               return (
-                <Pressable
+                <Ripple
+                  rippleColor={Colors.darkBlue}
                   key={index}
                   style={{
                     ...STYLES.common,
@@ -253,7 +255,7 @@ const OrderTimer = (props) => {
                     }}>
                     {item}
                   </Text>
-                </Pressable>
+                </Ripple>
               );
             })}
           </View>

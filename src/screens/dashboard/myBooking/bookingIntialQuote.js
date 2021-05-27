@@ -45,6 +45,7 @@ import LocationDistance from '../../../components/locationDistance';
 import StepIndicator from 'react-native-step-indicator';
 import {APICall, getOrderDetails} from '../../../redux/actions/user';
 import {STORE} from '../../../redux';
+import Ripple from 'react-native-material-ripple';
 
 const BookingInitialQuote = (props) => {
   const [orderData, setOrderData] = useState(
@@ -320,7 +321,8 @@ const BookingInitialQuote = (props) => {
           <View style={STYLES.tabView}>
             {tab.map((item, index) => {
               return (
-                <Pressable
+                <Ripple
+                  rippleColor={Colors.darkBlue}
                   key={index}
                   style={{
                     ...STYLES.common,
@@ -337,7 +339,7 @@ const BookingInitialQuote = (props) => {
                     }}>
                     {item}
                   </Text>
-                </Pressable>
+                </Ripple>
               );
             })}
           </View>

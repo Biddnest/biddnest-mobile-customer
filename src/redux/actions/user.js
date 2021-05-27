@@ -34,7 +34,10 @@ export const APICall = (obj) => {
               routes: [{name: 'Login'}],
             }),
           );
-        } else if (err?.response?.status === 500) {
+        } else if (
+          err?.response?.status === 500 ||
+          err?.response?.status === 504
+        ) {
           alert(
             'We are unable to connect. Please make sure you are connected to the internet.',
           );

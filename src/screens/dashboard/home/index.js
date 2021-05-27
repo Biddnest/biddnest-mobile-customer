@@ -46,6 +46,7 @@ import {Rating} from 'react-native-ratings';
 import HTML from 'react-native-render-html';
 import ChatBotButton from '../../../components/chatBotButton';
 import ChatBot from '../../../assets/svg/chat_bot.svg';
+import Ripple from 'react-native-material-ripple';
 
 export const HomeHeader = (props) => {
   return (
@@ -363,7 +364,8 @@ const Home = (props) => {
                   start={{x: 0, y: 0}}
                   end={{x: 1, y: 0}}
                   style={styles.movementLinear}>
-                  <Pressable
+                  <Ripple
+                    rippleColor={Colors.white}
                     onPress={() => {
                       setMovementType(item);
                       setBookingSelectionVisible(true);
@@ -388,7 +390,7 @@ const Home = (props) => {
                       }}>
                       {item.name}
                     </Text>
-                  </Pressable>
+                  </Ripple>
                 </LinearGradient>
               );
             }}
@@ -438,7 +440,8 @@ const Home = (props) => {
                 We are just a call away! {'\n'}(9123445566)
               </Text>
             </View>
-            <Pressable
+            <Ripple
+              rippleColor={Colors.white}
               onPress={() => {
                 Linking.openURL(
                   `tel:${
@@ -447,7 +450,7 @@ const Home = (props) => {
                 );
               }}>
               <HomeCall width={hp(7)} height={hp(7)} />
-            </Pressable>
+            </Ripple>
           </View>
         </View>
         {sliderData.map((item, index) => {
@@ -734,7 +737,8 @@ const Home = (props) => {
             width: wp(100),
           }}>
           <View style={styles.common}>
-            <Pressable
+            <Ripple
+              rippleColor={Colors.white}
               style={[
                 styles.selectionView,
                 {
@@ -746,11 +750,12 @@ const Home = (props) => {
               ]}
               onPress={() => setBookingFor('Myself')}>
               <MySelf width={hp(8)} height={hp(8)} />
-            </Pressable>
+            </Ripple>
             <Text style={styles.selectionText}>Myself</Text>
           </View>
           <View style={styles.common}>
-            <Pressable
+            <Ripple
+              rippleColor={Colors.white}
               onPress={() => setBookingFor('Others')}
               style={[
                 styles.selectionView,
@@ -762,7 +767,7 @@ const Home = (props) => {
                 },
               ]}>
               <Friends width={hp(8)} height={hp(8)} />
-            </Pressable>
+            </Ripple>
             <Text style={styles.selectionText}>Somebody Else</Text>
           </View>
         </View>

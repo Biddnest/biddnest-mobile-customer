@@ -9,10 +9,7 @@ import TextInput from '../../../components/textInput';
 import {Text} from 'react-native-elements';
 import {STYLES} from '../../../constant/commonStyle';
 import Button from '../../../components/button';
-import {
-  CustomAlert,
-  ImageSelection,
-} from '../../../constant/commonFun';
+import {CustomAlert, ImageSelection} from '../../../constant/commonFun';
 import DatePicker from 'react-native-datepicker';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {useDispatch, useSelector} from 'react-redux';
@@ -26,6 +23,7 @@ import CloseIcon from '../../../components/closeIcon';
 import CustomModalAndroid from '../../../components/customModal';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import FlatButton from '../../../components/flatButton';
+import Ripple from 'react-native-material-ripple';
 
 const EditProfile = (props) => {
   const dispatch = useDispatch();
@@ -255,7 +253,8 @@ const EditProfile = (props) => {
                   marginLeft: wp(5),
                   height: wp(18),
                 }}>
-                <Pressable
+                <Ripple
+                  rippleColor={Colors.white}
                   onPress={async () => {
                     ImageSelection()
                       .then((res) => {
@@ -272,7 +271,7 @@ const EditProfile = (props) => {
                     }}>
                     UPLOAD IMAGE
                   </Text>
-                </Pressable>
+                </Ripple>
                 {/*<Text*/}
                 {/*  style={{*/}
                 {/*    color: Colors.inputTextColor,*/}

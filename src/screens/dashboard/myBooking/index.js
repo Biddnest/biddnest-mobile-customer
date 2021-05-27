@@ -13,6 +13,7 @@ import {
 import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
 import moment from 'moment';
 import MapPin from '../../../assets/svg/map_pin.svg';
+import Ripple from 'react-native-material-ripple';
 
 const MyBooking = (props) => {
   const dispatch = useDispatch();
@@ -339,7 +340,8 @@ const MyBooking = (props) => {
         {['Enquiry Orders', 'Ongoing Orders', 'Past Orders'].map(
           (item, index) => {
             return (
-              <Pressable
+              <Ripple
+                rippleColor={Colors.darkBlue}
                 key={index}
                 style={{
                   ...styles.tabViews,
@@ -356,7 +358,7 @@ const MyBooking = (props) => {
                   }}>
                   {item}
                 </Text>
-              </Pressable>
+              </Ripple>
             );
           },
         )}

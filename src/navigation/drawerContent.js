@@ -21,6 +21,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {resetNavigator} from '../constant/commonFun';
 import {RESET_STORE} from '../redux/types';
 import {useDispatch, useSelector} from 'react-redux';
+import Ripple from 'react-native-material-ripple';
 
 export function DrawerContent(props) {
   const dispatch = useDispatch();
@@ -57,7 +58,8 @@ export function DrawerContent(props) {
   };
   const renderItem = ({item, index}) => {
     return (
-      <Pressable
+      <Ripple
+        rippleColor={Colors.darkBlue}
         style={[
           styles.menuView,
           // {borderBottomWidth: SIDE_DRAWER.length - 1 === index ? 0 : 0},
@@ -82,7 +84,7 @@ export function DrawerContent(props) {
             size={hp(3.5)}
           />
         </View>
-      </Pressable>
+      </Ripple>
     );
   };
   return (
