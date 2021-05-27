@@ -39,49 +39,51 @@ const MyBooking = (props) => {
   }, [isFocused, selectedTab]);
 
   const fetchOrderList = () => {
-    setLoading(true);
-    if (selectedTab === 0) {
-      dispatch(getEnquiryOrders())
-        .then((res) => {
-          setLoading(false);
-          if (res?.status === 'success') {
-            setEnquiryOrders(res?.data?.booking);
-          } else {
-            CustomAlert(res?.message);
-          }
-        })
-        .catch((err) => {
-          setLoading(false);
-          CustomConsole(err);
-        });
-    } else if (selectedTab === 1) {
-      dispatch(getLiveOrders())
-        .then((res) => {
-          setLoading(false);
-          if (res?.status === 'success') {
-            setLiveOrders(res?.data?.booking);
-          } else {
-            CustomAlert(res?.message);
-          }
-        })
-        .catch((err) => {
-          setLoading(false);
-          CustomConsole(err);
-        });
-    } else {
-      dispatch(getPastOrders())
-        .then((res) => {
-          setLoading(false);
-          if (res?.status === 'success') {
-            setPastOrders(res?.data?.booking);
-          } else {
-            CustomAlert(res?.message);
-          }
-        })
-        .catch((err) => {
-          setLoading(false);
-          CustomConsole(err);
-        });
+    if (!isLoading) {
+      setLoading(true);
+      if (selectedTab === 0) {
+        dispatch(getEnquiryOrders())
+          .then((res) => {
+            setLoading(false);
+            if (res?.status === 'success') {
+              setEnquiryOrders(res?.data?.booking);
+            } else {
+              CustomAlert(res?.message);
+            }
+          })
+          .catch((err) => {
+            setLoading(false);
+            CustomConsole(err);
+          });
+      } else if (selectedTab === 1) {
+        dispatch(getLiveOrders())
+          .then((res) => {
+            setLoading(false);
+            if (res?.status === 'success') {
+              setLiveOrders(res?.data?.booking);
+            } else {
+              CustomAlert(res?.message);
+            }
+          })
+          .catch((err) => {
+            setLoading(false);
+            CustomConsole(err);
+          });
+      } else {
+        dispatch(getPastOrders())
+          .then((res) => {
+            setLoading(false);
+            if (res?.status === 'success') {
+              setPastOrders(res?.data?.booking);
+            } else {
+              CustomAlert(res?.message);
+            }
+          })
+          .catch((err) => {
+            setLoading(false);
+            CustomConsole(err);
+          });
+      }
     }
   };
 

@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import Toast from 'react-native-simple-toast';
+import Snackbar from 'react-native-snackbar';
 import {Colors} from './colors';
 import {
   openSettings,
@@ -66,7 +67,11 @@ export const DiffMin = (dt1) => {
 };
 
 export const CustomAlert = (msg = '') => {
-  return Toast.show(msg, Toast.LONG);
+  return Snackbar.show({
+    text: msg,
+    duration: Snackbar.LENGTH_LONG,
+  });
+  // return Toast.show(msg, Toast.LONG);
 };
 
 export const pad_with_zeroes = (number, length) => {

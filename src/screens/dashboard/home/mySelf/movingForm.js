@@ -172,6 +172,7 @@ const MovingForm = (props) => {
             //   t1.address_line2 = t1.address_line2 + item?.long_name;
             // }
             t1.geocode = temp?.results[0]?.formatted_address;
+            t1.address_line2 = temp?.results[0]?.formatted_address;
           });
         }
       });
@@ -719,7 +720,7 @@ const MovingForm = (props) => {
                         if (res?.data?.data?.distance !== 0) {
                           let temp = {...destination};
                           temp.meta.address_line1 = mapData.address_line1;
-                          // temp.meta.address_line2 = mapData.address_line2;
+                          temp.meta.address_line2 = mapData.address_line2;
                           temp.meta.city = mapData.city;
                           temp.meta.pincode = mapData.pincode;
                           temp.meta.state = mapData.state;
@@ -759,7 +760,7 @@ const MovingForm = (props) => {
                   if (count > 0) {
                     let temp = {...source};
                     temp.meta.address_line1 = mapData.address_line1;
-                    // temp.meta.address_line2 = mapData.address_line2;
+                    temp.meta.address_line2 = mapData.address_line2;
                     temp.meta.city = mapData.city;
                     temp.meta.pincode = mapData.pincode;
                     temp.meta.state = mapData.state;
