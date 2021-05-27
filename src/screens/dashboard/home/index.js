@@ -35,7 +35,7 @@ import {
   getTestimonials,
 } from '../../../redux/actions/user';
 import {useDispatch, useSelector} from 'react-redux';
-import {useIsFocused} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {STORE} from '../../../redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {CustomTabs} from 'react-native-custom-tabs';
@@ -49,6 +49,7 @@ import ChatBot from '../../../assets/svg/chat_bot.svg';
 import Ripple from 'react-native-material-ripple';
 
 export const HomeHeader = (props) => {
+  const navigation = useNavigation();
   return (
     <View
       style={[
@@ -92,8 +93,12 @@ export const HomeHeader = (props) => {
           />
         )}
       </View>
-      <Pressable style={{...STYLES.common, width: wp(13)}}>
-        <ChatBot width={hp(5)} height={hp(5)} />
+      <Pressable
+        style={{...STYLES.common, width: wp(13)}}
+        onPress={() => {
+          navigation.navigate('ContactUs');
+        }}>
+        <ChatBot width={hp(6.5)} height={hp(6.5)} />
       </Pressable>
       {props.edit ? (
         <Pressable
@@ -593,6 +598,16 @@ const Home = (props) => {
             return null;
           }
         })}
+        <Text
+          style={{
+            marginTop: hp(2),
+            textAlign: 'center',
+            color: Colors.darkBlue,
+            fontSize: wp(5),
+            fontFamily: 'Gilroy-Bold',
+          }}>
+          Whatever customer say
+        </Text>
         <View
           style={[
             styles.assistantView,

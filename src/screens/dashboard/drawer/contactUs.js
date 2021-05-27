@@ -338,6 +338,7 @@ const ContactUs = (props) => {
                 {
                   fontSize: wp(3.8),
                   marginTop: hp(1),
+                  lineHeight: hp(2.7),
                 },
               ]}>
               Call us at{'\n'}
@@ -355,7 +356,8 @@ const ContactUs = (props) => {
                 styles.locationText,
                 {
                   fontSize: wp(3.8),
-                  marginTop: hp(0.5),
+                  marginTop: hp(0.8),
+                  lineHeight: hp(2.7),
                 },
               ]}>
               Email us at{'\n'}

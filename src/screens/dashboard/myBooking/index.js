@@ -322,7 +322,7 @@ const MyBooking = (props) => {
             </View>
           ))}
 
-        <View style={styles.flexBox}>
+        <View style={[styles.flexBox, {marginTop: hp(1.2)}]}>
           <Text style={styles.leftText}>category</Text>
           <Text style={styles.rightText}>{item?.service?.name}</Text>
         </View>
