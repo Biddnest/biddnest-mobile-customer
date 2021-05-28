@@ -38,7 +38,7 @@ const Login = (props) => {
     } else if (!isAgree) {
       setPhoneValidate(true);
       setLoading(false);
-      CustomAlert('Agree to the Terms & Conditions');
+      CustomAlert('Please Agree to the Terms & Conditions');
     } else {
       setPhoneValidate(true);
 
