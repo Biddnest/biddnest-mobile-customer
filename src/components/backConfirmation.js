@@ -1,16 +1,16 @@
 import React from 'react';
 import {Text} from 'react-native';
 import {STYLES} from '../constant/commonStyle';
-import CloseIcon from './closeIcon';
 import TwoButton from './twoButton';
 import CustomModalAndroid from './customModal';
 
 const BackConfirmation = (props) => {
   const {visible, closeIcon, text, navigation} = props;
   return (
-    <CustomModalAndroid visible={visible} onPress={closeIcon}>
-      <Text style={STYLES.modalHeader}>CONFIRMATION</Text>
-      <CloseIcon onPress={closeIcon} />
+    <CustomModalAndroid
+      visible={visible}
+      onPress={closeIcon}
+      title={'CONFIRMATION'}>
       <Text style={STYLES.simpleText}>{text}</Text>
       <TwoButton
         leftLabel={'cancel'}

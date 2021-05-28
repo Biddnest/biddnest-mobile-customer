@@ -51,7 +51,6 @@ const BookingInitialQuote = (props) => {
   const [orderData, setOrderData] = useState(
     props?.route?.params?.orderData || {},
   );
-  console.log(orderData);
   const configData =
     useSelector((state) => state.Login?.configData?.keys) || {};
   const [offerType, setOfferType] = useState(0);

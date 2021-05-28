@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -14,7 +14,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import CustomModalAndroid from '../../../components/customModal';
 import FlatButton from '../../../components/flatButton';
 import {STYLES} from '../../../constant/commonStyle';
-import CloseIcon from '../../../components/closeIcon';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Friends from '../../../assets/svg/friends.svg';
 import MenuIcon from '../../../assets/svg/menu_icon.svg';
@@ -22,6 +21,7 @@ import HomeCall from '../../../assets/svg/home_call.svg';
 import MySelf from '../../../assets/svg/myself.svg';
 import Coupon from '../../../assets/svg/coupon.svg';
 import Quote from '../../../assets/svg/quote.svg';
+import BiddnestLogo from '../../../assets/svg/biddnest_logo.svg';
 import {
   CustomAlert,
   CustomConsole,
@@ -41,12 +41,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {CustomTabs} from 'react-native-custom-tabs';
 import Shimmer from 'react-native-shimmer';
 import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
-import Carousel from 'react-native-snap-carousel';
-import {Rating} from 'react-native-ratings';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
 import HTML from 'react-native-render-html';
-import ChatBotButton from '../../../components/chatBotButton';
 import ChatBot from '../../../assets/svg/chat_bot.svg';
 import Ripple from 'react-native-material-ripple';
+import {AirbnbRating} from 'react-native-elements';
 
 export const HomeHeader = (props) => {
   const navigation = useNavigation();
@@ -82,16 +81,7 @@ export const HomeHeader = (props) => {
             }}>
             {props.title}
           </Text>
-        )) || (
-          <Image
-            source={require('../../../assets/images/biddnest_logo.png')}
-            resizeMode={'contain'}
-            style={{
-              height: '65%',
-              width: '70%',
-            }}
-          />
-        )}
+        )) || <BiddnestLogo height={'55%'} width={'70%'} />}
       </View>
       <Pressable
         style={{...STYLES.common, width: wp(13)}}
@@ -134,6 +124,10 @@ const Home = (props) => {
   const [isLoading, setLoading] = useState(true);
   const [contactUs, setContactUs] = useState({});
   const [selectedTestimonial, setSelectedTestimonial] = useState({});
+  const [activeSlide1, setActiveSlide1] = useState(0);
+  const [activeSlide2, setActiveSlide2] = useState(0);
+  const carousel1 = useRef(null);
+  const carousel2 = useRef(null);
 
   useEffect(() => {
     if (isFocused && userData?.fname) {
@@ -318,25 +312,53 @@ const Home = (props) => {
               }
             });
             return (
-              <Carousel
-                key={item.id}
-                contentContainerStyle={{
-                  padding: wp(4),
-                  paddingRight: 0,
-                  paddingBottom: 0,
-                }}
-                loop={true}
-                // ref={(c) => { this._carousel = c; }}
-                data={item?.banners}
-                renderItem={renderItem}
-                sliderWidth={wp(100)}
-                itemWidth={bottomSize.length > 0 && bottomSize[0]}
-                autoplay={true}
-                slideStyle={{marginHorizontal: wp(2)}}
-                layout="default"
-                inactiveSlideScale={1}
-                autoplayDelay={1000}
-              />
+              <View key={item.id}>
+                <Carousel
+                  key={item.id}
+                  contentContainerStyle={{
+                    padding: wp(4),
+                    paddingRight: 0,
+                    paddingBottom: 0,
+                  }}
+                  loop={true}
+                  ref={carousel1}
+                  data={item?.banners}
+                  loopClonesPerSide={item?.banners?.length - 1}
+                  renderItem={renderItem}
+                  lockScrollWhileSnapping={true}
+                  sliderWidth={wp(100)}
+                  itemWidth={bottomSize.length > 0 && bottomSize[0]}
+                  autoplay={true}
+                  // slideStyle={{marginHorizontal: wp(2)}}
+                  layout="default"
+                  useNativeDriver
+                  inactiveSlideScale={0.8}
+                  autoplayDelay={5000}
+                  onSnapToItem={(index) => setActiveSlide1(index)}
+                />
+                <Pagination
+                  dotsLength={item?.banners?.length}
+                  activeDotIndex={activeSlide1}
+                  containerStyle={{
+                    backgroundColor: 'transparent',
+                    marginTop: -hp(2),
+                    marginBottom: -hp(3),
+                  }}
+                  dotStyle={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    backgroundColor: Colors.darkBlue,
+                  }}
+                  inactiveDotStyle={
+                    {
+                      // Define styles for inactive dots here
+                    }
+                  }
+                  inactiveDotOpacity={0.4}
+                  inactiveDotScale={0.6}
+                />
+              </View>
             );
           }
           return null;
@@ -350,7 +372,7 @@ const Home = (props) => {
               textAlign: 'center',
               marginTop: hp(1),
             }}>
-            MOVEMENT TYPE
+            WHAT WOULD YOU LIKE TO MOVE
           </Text>
           <FlatList
             bounces={false}
@@ -472,66 +494,92 @@ const Home = (props) => {
               }
             });
             return (
-              <Carousel
-                loop={true}
-                // ref={(c) => { this._carousel = c; }}
-                data={item?.banners}
-                renderItem={({item, index}) => {
-                  let bottomSize = [];
-                  Object.values(sliderSize.size).forEach((i, ind) => {
-                    if (i === item?.banner_size) {
-                      bottomSize =
-                        sliderSize?.banner_dimensions[
-                          Object.keys(sliderSize.size)[ind]
-                        ];
-                    }
-                  });
-                  return (
-                    <Pressable
-                      onPress={() => {
-                        if (item?.url && item.url !== '') {
-                          if (isAndroid) {
-                            CustomTabs.openURL(item?.url, {
-                              toolbarColor: Colors.darkBlue,
-                            })
-                              .then(() => {})
-                              .catch((err) => {
-                                console.log(err);
-                              });
-                          } else {
-                            Linking.openURL(item?.url);
+              <View key={item?.id}>
+                <Carousel
+                  loop={true}
+                  key={item?.id}
+                  ref={carousel2}
+                  data={item?.banners}
+                  renderItem={({item, index}) => {
+                    let bottomSize = [];
+                    Object.values(sliderSize.size).forEach((i, ind) => {
+                      if (i === item?.banner_size) {
+                        bottomSize =
+                          sliderSize?.banner_dimensions[
+                            Object.keys(sliderSize.size)[ind]
+                          ];
+                      }
+                    });
+                    return (
+                      <Pressable
+                        onPress={() => {
+                          if (item?.url && item.url !== '') {
+                            if (isAndroid) {
+                              CustomTabs.openURL(item?.url, {
+                                toolbarColor: Colors.darkBlue,
+                              })
+                                .then(() => {})
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            } else {
+                              Linking.openURL(item?.url);
+                            }
                           }
-                        }
-                      }}
-                      key={index}
-                      style={[
-                        styles.topScroll,
-                        {
-                          ...styles.common,
-                          height: bottomSize.length > 0 && bottomSize[1],
-                          width: bottomSize.length > 0 && bottomSize[0],
-                        },
-                      ]}>
-                      <Image
-                        style={{
-                          height: '100%',
-                          width: '100%',
                         }}
-                        source={{uri: item?.image}}
-                        resizeMode={'contain'}
                         key={index}
-                      />
-                    </Pressable>
-                  );
-                }}
-                sliderWidth={wp(100)}
-                itemWidth={bottomSize.length > 0 && bottomSize[0]}
-                autoplay={true}
-                slideStyle={{marginHorizontal: wp(2)}}
-                layout="default"
-                inactiveSlideScale={1}
-                autoplayDelay={1000}
-              />
+                        style={[
+                          styles.topScroll,
+                          {
+                            ...styles.common,
+                            height: bottomSize.length > 0 && bottomSize[1],
+                            width: bottomSize.length > 0 && bottomSize[0],
+                          },
+                        ]}>
+                        <Image
+                          style={{
+                            height: '100%',
+                            width: '100%',
+                          }}
+                          source={{uri: item?.image}}
+                          resizeMode={'contain'}
+                          key={index}
+                        />
+                      </Pressable>
+                    );
+                  }}
+                  sliderWidth={wp(100)}
+                  itemWidth={bottomSize.length > 0 && bottomSize[0]}
+                  autoplay={true}
+                  slideStyle={{marginHorizontal: wp(2)}}
+                  layout="default"
+                  inactiveSlideScale={1}
+                  autoplayDelay={5000}
+                  onSnapToItem={(index) => setActiveSlide2(index)}
+                />
+                <Pagination
+                  dotsLength={item?.banners?.length}
+                  activeDotIndex={activeSlide2}
+                  containerStyle={{
+                    backgroundColor: 'transparent',
+                    marginTop: -hp(2),
+                    marginBottom: -hp(3),
+                  }}
+                  dotStyle={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    backgroundColor: Colors.darkBlue,
+                  }}
+                  inactiveDotStyle={
+                    {
+                      // Define styles for inactive dots here
+                    }
+                  }
+                  inactiveDotOpacity={0.4}
+                  inactiveDotScale={0.6}
+                />
+              </View>
               // <FlatList
               //   key={item.id}
               //   bounces={false}
@@ -600,13 +648,13 @@ const Home = (props) => {
         })}
         <Text
           style={{
-            marginTop: hp(2),
+            marginTop: hp(3),
             textAlign: 'center',
             color: Colors.darkBlue,
             fontSize: wp(5),
             fontFamily: 'Gilroy-Bold',
           }}>
-          Whatever customer say
+          What Our Customers Say
         </Text>
         <View
           style={[
@@ -645,13 +693,18 @@ const Home = (props) => {
                 marginTop: hp(0.2),
                 marginBottom: hp(1),
               }}>
-              <Rating
+              <AirbnbRating
+                key={selectedTestimonial?.id}
                 readonly={true}
                 fractions={1}
-                defaultRating={selectedTestimonial?.rating || 3}
+                defaultRating={
+                  (selectedTestimonial?.ratings &&
+                    parseInt(selectedTestimonial?.ratings)) ||
+                  3
+                }
                 ratingContainerStyle={{paddingHorizontal: wp(5)}}
                 ratingCount={5}
-                imageSize={wp(4)}
+                size={wp(4)}
                 showRating={false}
               />
             </View>
@@ -724,7 +777,6 @@ const Home = (props) => {
       <CustomModalAndroid
         visible={couponVisible}
         onPress={() => setCouponVisible(false)}>
-        <CloseIcon onPress={() => setCouponVisible(false)} />
         <Coupon width={hp(25)} height={hp(25)} />
         <Text style={STYLES.modalHeader}>DISCOUNT COUPON</Text>
         <Text
@@ -741,9 +793,8 @@ const Home = (props) => {
       </CustomModalAndroid>
       <CustomModalAndroid
         visible={bookingSelectionVisible}
+        title={'WHOM ARE YOU BOOKING FOR?'}
         onPress={() => setBookingSelectionVisible(false)}>
-        <Text style={STYLES.modalHeader}>WHOM ARE YOU BOOKING FOR?</Text>
-        <CloseIcon onPress={() => setBookingSelectionVisible(false)} />
         <View
           style={{
             flexDirection: 'row',
@@ -825,7 +876,7 @@ const styles = StyleSheet.create({
   topScroll: {
     borderRadius: 10,
     backgroundColor: Colors.silver,
-    marginRight: wp(3),
+    // marginRight: wp(3),
     overflow: 'hidden',
   },
   movementView: {

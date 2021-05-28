@@ -22,8 +22,6 @@ import FlatButton from '../../../components/flatButton';
 import {useSelector} from 'react-redux';
 import {STORE} from '../../../redux';
 import {APICall} from '../../../redux/actions/user';
-import CloseIcon from '../../../components/closeIcon';
-import TwoButton from '../../../components/twoButton';
 import CustomModalAndroid from '../../../components/customModal';
 import TextInput from '../../../components/textInput';
 import Button from '../../../components/button';
@@ -253,13 +251,8 @@ const SingleTicket = (props) => {
       )}
       <CustomModalAndroid
         visible={repliesModal}
+        title={'REPLY'}
         onPress={() => setRepliesModal(false)}>
-        <Text style={STYLES.modalHeader}>REPLY</Text>
-        <CloseIcon
-          onPress={() => {
-            setRepliesModal(false);
-          }}
-        />
         <View
           style={{
             width: '90%',

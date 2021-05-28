@@ -1,7 +1,6 @@
 import React from 'react';
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
-import CloseIcon from '../../../components/closeIcon';
 import {STYLES} from '../../../constant/commonStyle';
 import TwoButton from '../../../components/twoButton';
 import {useSelector} from 'react-redux';
@@ -41,7 +40,7 @@ const OrderDetailModal = (props) => {
               overflow: 'hidden',
             }}>
             <Image
-              source={{uri: item?.image}}
+              source={{uri: item?.image || item?.inventory?.image}}
               resizeMode={'contain'}
               style={{
                 height: '100%',
@@ -111,8 +110,6 @@ const OrderDetailModal = (props) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Text style={STYLES.modalHeader}>{props.title}</Text>
-      <CloseIcon onPress={props.onCloseIcon} />
       <FlatList
         keyExtractor={(item, index) => index.toString()}
         bounces={false}

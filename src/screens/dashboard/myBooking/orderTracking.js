@@ -16,7 +16,6 @@ import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomModalAndroid from '../../../components/customModal';
-import CloseIcon from '../../../components/closeIcon';
 import TwoButton from '../../../components/twoButton';
 import VerticalStepper from './verticalStepper';
 import OrderDetailModal from './orderDetailModal';
@@ -527,7 +526,10 @@ const OrderTracking = (props) => {
           </View>
         </ScrollView>
       </LinearGradient>
-      <CustomModalAndroid visible={orderDetailsVisible}>
+      <CustomModalAndroid
+        visible={orderDetailsVisible}
+        title={'CHECKLIST'}
+        onPress={() => setOrderDetailsVisible(false)}>
         <OrderDetailModal
           title={'CHECKLIST'}
           onCloseIcon={() => setOrderDetailsVisible(false)}
@@ -536,29 +538,21 @@ const OrderTracking = (props) => {
       </CustomModalAndroid>
       <CustomModalAndroid
         visible={manageOrderVisible || cancelOrder || privacyPolicy}
+        title={
+          cancelOrder
+            ? 'CANCEL ORDER'
+            : privacyPolicy
+            ? 'Terms & Conditions'
+            : resecheduleOrder
+            ? 'RESCHEDULE'
+            : 'MANAGE ORDER'
+        }
         onPress={() => {
           setRescheduleOrder(false);
           setCancelOrder(false);
           setManageOrderVisible(false);
           setPrivacyPolicy(false);
         }}>
-        <Text style={STYLES.modalHeader}>
-          {cancelOrder
-            ? 'CANCEL ORDER'
-            : privacyPolicy
-            ? 'Terms & Conditions'
-            : resecheduleOrder
-            ? 'RESCHEDULE'
-            : 'MANAGE ORDER'}
-        </Text>
-        <CloseIcon
-          onPress={() => {
-            setRescheduleOrder(false);
-            setCancelOrder(false);
-            setManageOrderVisible(false);
-            setPrivacyPolicy(false);
-          }}
-        />
         <View
           style={{
             marginTop: hp(4),
@@ -688,12 +682,9 @@ const OrderTracking = (props) => {
       </CustomModalAndroid>
       <CustomModalAndroid
         visible={showPin}
+        title={orderDetails?.status === 6 ? 'Start trip pin' : 'End trip pin'}
         paddingTop={hp(0.1)}
         onPress={() => setShowPin(false)}>
-        <CloseIcon onPress={() => setShowPin(false)} />
-        <Text style={STYLES.modalHeader}>
-          {orderDetails?.status === 6 ? 'Start' : 'End'} trip pin
-        </Text>
         <View
           style={{
             height: hp(7),

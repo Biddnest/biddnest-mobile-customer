@@ -23,7 +23,6 @@ import {
   CustomConsole,
   ImageSelection,
 } from '../../../../constant/commonFun';
-import CloseIcon from '../../../../components/closeIcon';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import OrderDetailModal from '../../myBooking/orderDetailModal';
@@ -630,7 +629,10 @@ const RequirementDetails = (props) => {
           }}
         />
       </View>
-      <CustomModalAndroid visible={confirmationModalVisible}>
+      <CustomModalAndroid
+        visible={confirmationModalVisible}
+        title={'CONFIRM ITEM LIST'}
+        onPress={() => setConfirmationModalVisible(false)}>
         <OrderDetailModal
           from={'RequirementDetails'}
           isLoading={isLoading}
@@ -682,23 +684,13 @@ const RequirementDetails = (props) => {
       </CustomModalAndroid>
       <CustomModalAndroid
         visible={addItem || editItem}
+        title={editItem ? 'EDIT ITEM' : 'ADD ITEM'}
         onPress={() => {
           setAddItem(false);
           setAddData({});
           setEditItem(false);
           setEditData({});
         }}>
-        <Text style={STYLES.modalHeader}>
-          {editItem ? 'EDIT ITEM' : 'ADD ITEM'}
-        </Text>
-        <CloseIcon
-          onPress={() => {
-            setAddItem(false);
-            setAddData({});
-            setEditItem(false);
-            setEditData({});
-          }}
-        />
         {(isAndroid && (
           <View
             style={{
@@ -1179,15 +1171,10 @@ const RequirementDetails = (props) => {
       </CustomModalAndroid>
       <CustomModalAndroid
         visible={!!changeCategoryVisible?.id}
+        title={'Warning'}
         onPress={() => {
           setChangeCategoryVisible({});
         }}>
-        <Text style={STYLES.modalHeader}>{'Warning'}</Text>
-        <CloseIcon
-          onPress={() => {
-            setChangeCategoryVisible({});
-          }}
-        />
         <View
           style={{
             marginTop: hp(4),

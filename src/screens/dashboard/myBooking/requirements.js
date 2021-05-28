@@ -76,6 +76,7 @@ const Requirements = (props) => {
             <FlatList
               keyExtractor={(item, index) => index.toString()}
               bounces={false}
+              scrollEnabled={false}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{marginTop: hp(2)}}
               data={orderDetails?.inventories || []}
@@ -173,6 +174,7 @@ const Requirements = (props) => {
                         borderRadius: wp(3),
                         backgroundColor: Colors.silver,
                         marginRight: wp(3),
+                        overflow: 'hidden',
                       }}>
                       <Image
                         source={{uri: item}}

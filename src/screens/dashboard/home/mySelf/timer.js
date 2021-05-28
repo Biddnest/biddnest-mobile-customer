@@ -9,7 +9,6 @@ import {
   DiffMin,
 } from '../../../../constant/commonFun';
 import CustomModalAndroid from '../../../../components/customModal';
-import CloseIcon from '../../../../components/closeIcon';
 import {STYLES} from '../../../../constant/commonStyle';
 import Feather from 'react-native-vector-icons/Feather';
 import {STORE} from '../../../../redux';
@@ -24,29 +23,31 @@ const Timer = (props) => {
   );
 
   useEffect(() => {
-    let obj = {
-      url: `bookings?id=${props?.apiResponse?.public_booking_id}`,
-      method: 'get',
-      headers: {
-        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
-      },
-    };
-    APICall(obj)
-      .then((res) => {
-        if (res?.data?.status === 'success') {
-          setOrderDetails(res?.data?.data?.booking);
-          setOrderPlacedVisible(true);
-          if (res?.data?.data?.booking?.bid_result_at) {
-            let temp = DiffMin(res?.data?.data?.booking?.bid_result_at);
-            setTime(temp);
+    if (props?.apiResponse?.public_booking_id) {
+      let obj = {
+        url: `bookings?id=${props?.apiResponse?.public_booking_id}`,
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+      };
+      APICall(obj)
+        .then((res) => {
+          if (res?.data?.status === 'success') {
+            setOrderDetails(res?.data?.data?.booking);
+            setOrderPlacedVisible(true);
+            if (res?.data?.data?.booking?.bid_result_at) {
+              let temp = DiffMin(res?.data?.data?.booking?.bid_result_at);
+              setTime(temp);
+            }
+          } else {
+            CustomAlert(res?.data?.message);
           }
-        } else {
-          CustomAlert(res?.data?.message);
-        }
-      })
-      .catch((err) => {
-        CustomConsole(err);
-      });
+        })
+        .catch((err) => {
+          CustomConsole(err);
+        });
+    }
   }, []);
   const children = ({remainingTime}) => {
     return (
@@ -105,7 +106,6 @@ const Timer = (props) => {
       <CustomModalAndroid
         visible={orderPlacedVisible}
         onPress={() => setOrderPlacedVisible(false)}>
-        <CloseIcon onPress={() => setOrderPlacedVisible(false)} />
         <View
           style={{
             ...styles.circleView,

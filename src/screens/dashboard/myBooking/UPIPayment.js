@@ -1,6 +1,6 @@
 import React from 'react';
 import CustomModalAndroid from '../../../components/customModal';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {Colors, wp, hp} from '../../../constant/colors';
 import CloseIcon from '../../../components/closeIcon';
 import TextInput from '../../../components/textInput';

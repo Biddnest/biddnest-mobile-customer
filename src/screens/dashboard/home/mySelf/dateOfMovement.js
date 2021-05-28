@@ -8,7 +8,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CustomModalAndroid from '../../../../components/customModal';
 import {Calendar} from 'react-native-calendars';
 import FlatButton from '../../../../components/flatButton';
-import CloseIcon from '../../../../components/closeIcon';
 import {STYLES} from '../../../../constant/commonStyle';
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -156,16 +155,11 @@ const DateOfMovement = (props) => {
         </Pressable>
         <CustomModalAndroid
           visible={openCalender}
+          title={'Choose Date'}
           onPress={() => {
+            setDefaultSelectedDates();
             setCalender(false);
           }}>
-          <Text style={STYLES.modalHeader}>Choose Date</Text>
-          <CloseIcon
-            onPress={() => {
-              setDefaultSelectedDates();
-              setCalender(false);
-            }}
-          />
           <Calendar
             markedDates={dateArray}
             style={{width: wp(90), height: hp(50)}}

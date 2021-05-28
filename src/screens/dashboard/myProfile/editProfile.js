@@ -19,7 +19,6 @@ import {
   updateProfile,
 } from '../../../redux/actions/user';
 import moment from 'moment';
-import CloseIcon from '../../../components/closeIcon';
 import CustomModalAndroid from '../../../components/customModal';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import FlatButton from '../../../components/flatButton';
@@ -353,6 +352,7 @@ const EditProfile = (props) => {
       </View>
       <CustomModalAndroid
         visible={otpModal}
+        title={'Change Phone Number'}
         onPress={() => {
           setPhoneValidate(undefined);
           setOtpSend(false);
@@ -360,16 +360,6 @@ const EditProfile = (props) => {
           setOTP();
           setOTPModal(false);
         }}>
-        <Text style={STYLES.modalHeader}>Change Phone Number</Text>
-        <CloseIcon
-          onPress={() => {
-            setPhoneValidate(undefined);
-            setOtpSend(false);
-            setPhone();
-            setOTP();
-            setOTPModal(false);
-          }}
-        />
         <View style={styles.bottomView}>
           <TextInput
             isRight={phoneValidate}

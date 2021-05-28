@@ -177,6 +177,39 @@ const Login = (props) => {
                         backgroundColor: Colors.textBG,
                         color: Colors.inputTextColor,
                       }}
+                      onFulfill={(code) => {
+                        setLoading(true);
+                        verifyOTP({
+                          phone,
+                          otp: code,
+                        })
+                          .then((res) => {
+                            setLoading(false);
+                            if (res.status === 'success') {
+                              dispatch({
+                                type: LOGIN_USER_DATA,
+                                payload: res.data,
+                              });
+                              if (otpResponse?.new === true) {
+                                props.navigation.navigate('Signup', {
+                                  phone,
+                                });
+                              } else {
+                                OneSignal.setExternalUserId(
+                                  res?.data?.user?.id?.toString(),
+                                  (results) => {},
+                                );
+                                resetNavigator(props, 'Dashboard');
+                              }
+                            } else {
+                              CustomAlert(res.message);
+                            }
+                          })
+                          .catch((err) => {
+                            setLoading(false);
+                            CustomAlert(err?.data?.message);
+                          });
+                      }}
                     />
                   </View>
                 </View>
