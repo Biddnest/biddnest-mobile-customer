@@ -234,7 +234,7 @@ const MyBooking = (props) => {
             flexDirection: 'row',
             alignItems: 'center',
           }}>
-          <MapPin height={hp(8)} width={wp(5)} />
+          <MapPin height={hp(7)} width={wp(5)} />
           <View
             style={{
               flexDirection: 'row',
