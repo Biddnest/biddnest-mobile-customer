@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, ScrollView} from 'react-native';
+import {View, StyleSheet, Text, ScrollView, Pressable} from 'react-native';
 import {Colors, hp, wp} from '../../../../constant/colors';
 import Button from '../../../../components/button';
 import {
@@ -14,6 +14,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import {STORE} from '../../../../redux';
 import {APICall} from '../../../../redux/actions/user';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Timer = (props) => {
   const [orderPlacedVisible, setOrderPlacedVisible] = useState(false);
@@ -105,7 +106,16 @@ const Timer = (props) => {
       </ScrollView>
       <CustomModalAndroid
         visible={orderPlacedVisible}
-        onPress={() => setOrderPlacedVisible(false)}>
+        onPress={() => {
+          setOrderPlacedVisible(false);
+        }}>
+        <Pressable
+          onPress={() => {
+            setOrderPlacedVisible(false);
+          }}
+          style={{position: 'absolute', right: hp(2), top: hp(2)}}>
+          <Ionicons name="close-sharp" size={hp(3.3)} color={'#C9CDCF'} />
+        </Pressable>
         <View
           style={{
             ...styles.circleView,

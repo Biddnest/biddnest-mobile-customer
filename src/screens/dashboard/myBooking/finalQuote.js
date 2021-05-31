@@ -112,7 +112,7 @@ const FinalQuote = (props) => {
             </View>
             <View style={styles.circleView}>
               <Text style={styles.priceText}>
-                Rs. {orderDetails?.final_quote}
+                ₹ {orderDetails?.final_quote}
               </Text>
               <Text style={styles.priceLabel}>Base price</Text>
             </View>

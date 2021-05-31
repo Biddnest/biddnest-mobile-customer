@@ -301,7 +301,7 @@ const MyBooking = (props) => {
           <View style={styles.flexBox}>
             <Text style={styles.leftText}>expected price</Text>
             <Text style={styles.rightText}>
-              Rs. {item?.final_estimated_quote}
+              ₹ {item?.final_estimated_quote}
             </Text>
           </View>
         )}

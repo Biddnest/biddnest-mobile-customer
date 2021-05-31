@@ -14,6 +14,7 @@ import {useSelector} from 'react-redux';
 import {Html5Entities} from 'html-entities';
 import {getOrderDetails} from '../../../redux/actions/user';
 import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
+import Lightbox from 'react-native-lightbox';
 
 const Requirements = (props) => {
   const entities = new Html5Entities();
@@ -48,6 +49,7 @@ const Requirements = (props) => {
       <ScrollView
         style={{flex: 1}}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: hp(2)}}
         bounces={false}>
         <View>
           <View
@@ -127,7 +129,7 @@ const Requirements = (props) => {
                     textAlign: 'center',
                     textTransform: 'uppercase',
                   }}>
-                  Comments from customer
+                  Comments
                 </Text>
                 <Text
                   style={{
@@ -176,11 +178,13 @@ const Requirements = (props) => {
                         marginRight: wp(3),
                         overflow: 'hidden',
                       }}>
-                      <Image
-                        source={{uri: item}}
-                        style={{height: '100%', width: '100%'}}
-                        resizeMode={'contain'}
-                      />
+                      <Lightbox>
+                        <Image
+                          source={{uri: item}}
+                          style={{height: '100%', width: '100%'}}
+                          resizeMode={'contain'}
+                        />
+                      </Lightbox>
                     </Pressable>
                   );
                 })}

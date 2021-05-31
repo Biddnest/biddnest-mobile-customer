@@ -14,6 +14,8 @@ import TextInput from '../../../components/textInput';
 import Button from '../../../components/button';
 import {useSelector} from 'react-redux';
 import DropDownAndroid from '../../../components/dropDown';
+import {STYLES} from '../../../constant/commonStyle';
+import {Picker} from '@react-native-picker/picker';
 
 const RaiseTicket = (props) => {
   const public_booking_id = props?.route?.params?.public_booking_id || null;
@@ -37,6 +39,12 @@ const RaiseTicket = (props) => {
       value: Object.values(configData)[index],
     });
   });
+  if (dropdownDefault.findIndex((item) => item.value === null) === -1) {
+    dropdownDefault.unshift({
+      label: '-Select-',
+      value: null,
+    });
+  }
   return (
     <View style={styles.container}>
       <SimpleHeader
@@ -48,21 +56,43 @@ const RaiseTicket = (props) => {
       <LinearGradient
         colors={[Colors.pageBG, Colors.white]}
         style={{flex: 1, padding: wp(5), alignItems: 'center'}}>
-        <View style={{marginBottom: hp(3)}}>
-          <DropDownAndroid
-            customDropDown={
-              error?.category === false
-                ? {
-                    borderColor: 'red',
-                    borderWidth: 2,
-                  }
-                : {}
-            }
-            width={wp(90)}
-            label={'Category'}
-            items={dropdownDefault}
-            onChangeItem={(text) => setData({...data, category: text})}
-          />
+        <View
+          style={{
+            width: wp(90),
+            paddingHorizontal: 10,
+            marginBottom: hp(2),
+          }}>
+          <Text
+            style={{
+              fontFamily: 'Roboto-Bold',
+              color: Colors.textLabelColor,
+              fontSize: wp(4),
+              marginBottom: hp(1),
+            }}>
+            {'Category'}
+          </Text>
+          <View
+            style={{
+              borderWidth: 2,
+              borderRadius: 10,
+              height: hp(6),
+              borderColor: error?.category === false ? 'red' : Colors.silver,
+              backgroundColor: Colors.white,
+              borderBottomWidth: 2,
+              ...STYLES.common,
+            }}>
+            <Picker
+              style={{
+                height: '99%',
+                width: '100%',
+              }}
+              // selectedValue={editItem ? editData?.name : addData?.name}
+              onValueChange={(text) => setData({...data, category: text})}>
+              {dropdownDefault.map((item, index) => {
+                return <Picker.Item label={item?.label} value={item?.value} />;
+              })}
+            </Picker>
+          </View>
         </View>
         <TextInput
           isRight={error?.heading}

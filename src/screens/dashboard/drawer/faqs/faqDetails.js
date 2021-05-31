@@ -88,7 +88,7 @@ const FAQDetails = (props) => {
         navigation={props.navigation}
         onBack={() => props.navigation.goBack()}
       />
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, marginBottom: wp(5)}}>
         <FlatList
           keyExtractor={(item, index) => index.toString()}
           onRefresh={fetchData}

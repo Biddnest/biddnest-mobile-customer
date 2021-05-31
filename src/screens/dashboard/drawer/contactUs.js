@@ -244,7 +244,7 @@ const ContactUs = (props) => {
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={fetchTicket} />
         }
-        style={{flex: 1}}
+        style={{flex: 1, marginBottom: wp(5)}}
         showsVerticalScrollIndicator={false}
         bounces={false}>
         {destination_meta?.city && (

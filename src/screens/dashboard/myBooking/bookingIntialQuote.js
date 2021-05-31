@@ -63,7 +63,11 @@ const BookingInitialQuote = (props) => {
   const [rejectVisible, setRejectVisible] = useState(false);
   const [economicInfo, setEconomicInfo] = useState(false);
   const [premiumInfo, setPremiumInfo] = useState(false);
-  const [tab, setTab] = useState(['Order Details', 'Requirements', 'My Bid']);
+  const [tab, setTab] = useState([
+    'Order Details',
+    'Requirements',
+    'Est Price',
+  ]);
   const [selectedTab, setSelectedTab] = useState(2);
   const [mapVisible, setMapVisible] = useState(null);
   let coordinates =
@@ -343,7 +347,12 @@ const BookingInitialQuote = (props) => {
             })}
           </View>
           {selectedTab === 0 && (
-            <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+            <ScrollView
+              bounces={false}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingBottom: hp(2),
+              }}>
               <View
                 style={{
                   marginHorizontal: wp(5),
@@ -368,15 +377,11 @@ const BookingInitialQuote = (props) => {
                 style={{
                   marginHorizontal: wp(5),
                   marginTop: hp(2),
-                }}>
-                {renderText('Pincode', source_meta?.pincode)}
-              </View>
-              <View
-                style={{
-                  marginHorizontal: wp(5),
-                  marginTop: hp(2),
                   flexDirection: 'row',
                 }}>
+                <View style={{flex: 1}}>
+                  {renderText('Pincode', source_meta?.pincode)}
+                </View>
                 <View style={{flex: 1}}>
                   {renderText('Floor', source_meta?.floor)}
                 </View>
@@ -414,15 +419,11 @@ const BookingInitialQuote = (props) => {
                 style={{
                   marginHorizontal: wp(5),
                   marginTop: hp(2),
-                }}>
-                {renderText('Pincode', destination_meta?.pincode)}
-              </View>
-              <View
-                style={{
-                  marginHorizontal: wp(5),
-                  marginTop: hp(2),
                   flexDirection: 'row',
                 }}>
+                <View style={{flex: 1}}>
+                  {renderText('Pincode', destination_meta?.pincode)}
+                </View>
                 <View style={{flex: 1}}>
                   {renderText('Floor', destination_meta?.floor)}
                 </View>

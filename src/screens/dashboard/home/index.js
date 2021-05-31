@@ -139,9 +139,7 @@ const Home = (props) => {
         },
       };
       APICall(obj)
-        .then((res) => {
-          setLoading(false);
-        })
+        .then((res) => {})
         .catch((err) => {
           setLoading(false);
           CustomAlert(err?.data?.message);
@@ -220,7 +218,6 @@ const Home = (props) => {
       };
       APICall(obj1)
         .then((res) => {
-          setLoading(false);
           if (res?.data?.status === 'success') {
             setContactUs(res?.data?.data?.details);
           } else {
@@ -810,7 +807,7 @@ const Home = (props) => {
                 {
                   borderWidth: bookingFor === 'Myself' ? 2 : 0,
                   backgroundColor:
-                    bookingFor === 'Myself' ? '#F2E6FF' : Colors.silver,
+                    bookingFor === 'Myself' ? '#F2E6FF' : 'transparent',
                   ...STYLES.common,
                 },
               ]}
@@ -828,7 +825,7 @@ const Home = (props) => {
                 {
                   borderWidth: bookingFor === 'Others' ? 2 : 0,
                   backgroundColor:
-                    bookingFor === 'Others' ? '#F2E6FF' : Colors.silver,
+                    bookingFor === 'Others' ? '#F2E6FF' : 'transparent',
                   ...STYLES.common,
                 },
               ]}>

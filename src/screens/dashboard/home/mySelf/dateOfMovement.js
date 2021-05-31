@@ -11,6 +11,7 @@ import FlatButton from '../../../../components/flatButton';
 import {STYLES} from '../../../../constant/commonStyle';
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import _ from 'lodash';
 
 const DateOfMovement = (props) => {
   const {data, handleStateChange} = props;
@@ -191,9 +192,16 @@ const DateOfMovement = (props) => {
           <FlatButton
             label={'OKAY'}
             onPress={() => {
-              handleStateChange('movement_dates', Object.keys(dateArray));
+              let t = _.orderBy(
+                Object.keys(dateArray),
+                (o: any) => {
+                  return moment(o);
+                },
+                ['asc'],
+              );
+              handleStateChange('movement_dates', t);
               let temp = [];
-              Object.keys(dateArray).forEach((item) => {
+              t.forEach((item) => {
                 temp.push(moment(item).format('Do MMM'));
               });
               setDateArrayDisplay(temp);

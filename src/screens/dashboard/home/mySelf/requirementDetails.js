@@ -709,7 +709,6 @@ const RequirementDetails = (props) => {
             <View
               style={{
                 borderWidth: 2,
-                paddingHorizontal: 15,
                 borderRadius: 10,
                 height: hp(6),
                 borderColor: Colors.silver,
@@ -753,7 +752,7 @@ const RequirementDetails = (props) => {
                       setEditData({
                         ...editData,
                         name: itemValue,
-                        itemName: itemValue,
+                        itemName: editData?.itemName,
                         material: null,
                         size: null,
                         quantity:
@@ -768,7 +767,7 @@ const RequirementDetails = (props) => {
                     } else {
                       setAddData({
                         name: itemValue,
-                        itemName: itemValue,
+                        itemName: null,
                         material: null,
                         size: null,
                         quantity:
@@ -850,7 +849,7 @@ const RequirementDetails = (props) => {
             <TextInput
               value={editItem ? editData?.itemName : addData?.itemName}
               label={'Item Name'}
-              placeHolder={'Other'}
+              placeHolder={'Add Custom item'}
               onChange={(text) => {
                 if (editItem) {
                   setEditData({
@@ -882,8 +881,8 @@ const RequirementDetails = (props) => {
             <View style={{width: '45%', marginTop: hp(1)}}>
               <TextInput
                 value={editItem ? editData?.material : addData?.material}
-                label={'Material'}
-                placeHolder={'Material'}
+                label={'Material/Variant'}
+                placeHolder={'Material/Variant'}
                 onChange={(text) => {
                   if (editItem) {
                     setEditData({...editData, material: text});
@@ -897,7 +896,7 @@ const RequirementDetails = (props) => {
             <DropDownAndroid
               searchable={false}
               value={editItem ? editData?.material : addData?.material}
-              label={'Material'}
+              label={'Material/Variant'}
               items={selectedInventory?.material}
               onChangeItem={(text) => {
                 if (editItem) {
@@ -1121,9 +1120,15 @@ const RequirementDetails = (props) => {
               }
             } else {
               if (
-                addData.name !== null &&
-                addData.material !== null &&
-                addData.size !== null
+                addData?.inventory_id
+                  ? addData.name !== null &&
+                    addData.material !== null &&
+                    addData.size !== null
+                  : addData.name !== null &&
+                    addData.material !== null &&
+                    addData.size !== null &&
+                    addData?.itemName !== null &&
+                    addData?.itemName !== ''
               ) {
                 if (
                   (configData?.inventory_quantity_type.range !==

@@ -342,8 +342,8 @@ const Payment = (props) => {
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
-                      justifyContent: 'space-between',
                       marginVertical: wp(1),
+                      width: '100%',
                     }}>
                     <View
                       style={{

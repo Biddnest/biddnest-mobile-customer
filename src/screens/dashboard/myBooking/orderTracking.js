@@ -226,6 +226,9 @@ const OrderTracking = (props) => {
               },
             ].map((item, index) => {
               if (item?.title === 'Manage' && orderDetails?.status === 8) {
+                if (orderDetails?.status === 7) {
+                  return null;
+                }
                 return (
                   <Pressable
                     onPress={() => {
@@ -505,7 +508,7 @@ const OrderTracking = (props) => {
             <View style={{...styles.flexBox}}>
               <Text style={styles.leftText}>price</Text>
               <Text style={{...styles.rightText, fontFamily: 'Roboto-Bold'}}>
-                Rs. {orderDetails?.final_quote}
+                ₹ {orderDetails?.final_quote}
               </Text>
             </View>
             <View style={styles.flexBox}>
