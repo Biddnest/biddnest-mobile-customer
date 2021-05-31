@@ -7,6 +7,7 @@ import RightArrow from '../../../../assets/svg/right_arrow.svg';
 import {STORE} from '../../../../redux';
 import {APICall} from '../../../../redux/actions/user';
 import {CustomAlert, CustomConsole} from '../../../../constant/commonFun';
+import {SvgCssUri} from 'react-native-svg';
 
 const FAQS = (props) => {
   const [faqs, setFaqs] = useState([]);
@@ -70,11 +71,7 @@ const FAQS = (props) => {
                     alignItems: 'center',
                     height: wp(30),
                   }}>
-                  <Image
-                    source={{uri: item?.image}}
-                    resizeMode={'contain'}
-                    style={{height: 50, width: 50}}
-                  />
+                  <SvgCssUri width="60%" height="60%" uri={item?.image} />
                 </View>
                 <View style={styles.bottomView}>
                   <Text style={styles.bottomText}>{item.name}</Text>
@@ -95,7 +92,7 @@ const styles = StyleSheet.create({
   movementLinear: {
     flex: 1,
     flexDirection: 'column',
-    margin: 5,
+    margin: 7,
     overflow: 'hidden',
     borderWidth: 2,
     borderRadius: 10,

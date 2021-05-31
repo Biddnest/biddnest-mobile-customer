@@ -462,14 +462,14 @@ const styles = StyleSheet.create({
     color: Colors.inputTextColor,
   },
   statusView: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 7,
     paddingVertical: 5,
     backgroundColor: Colors.lightGreen,
     color: Colors.white,
     borderRadius: 5,
     textTransform: 'capitalize',
     fontFamily: 'Gilroy-Semibold',
-    fontSize: wp(4),
+    fontSize: wp(3.5),
   },
   categoryView: {
     marginBottom: hp(0.8),

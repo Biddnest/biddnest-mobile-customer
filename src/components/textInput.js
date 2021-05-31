@@ -2,6 +2,7 @@ import React from 'react';
 import {Input} from 'react-native-elements';
 import {hp, Colors, wp} from '../constant/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Pressable} from 'react-native';
 
 const TextInput = (props) => {
   return (
@@ -29,6 +30,12 @@ const TextInput = (props) => {
         } else if (props.isRight === false) {
           return (
             <Ionicons name="close-outline" size={hp(3.5)} color={Colors.red} />
+          );
+        } else if (props?.isRight === 'search') {
+          return (
+            <Pressable onPress={props.searchPress}>
+              <Ionicons name={props.icon} size={hp(3)} color={'#C9CDCF'} />
+            </Pressable>
           );
         }
       }}

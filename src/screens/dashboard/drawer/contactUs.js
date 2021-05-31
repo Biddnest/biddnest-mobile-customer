@@ -139,7 +139,7 @@ const ContactUs = (props) => {
                   color: Colors.inputTextColor,
                   fontSize: wp(3.8),
                   fontFamily: 'Gilroy-SemiBold',
-                  textTransform: 'capitalize',
+                  textTransform: 'uppercase',
                 }}>
                 {item?.meta &&
                   JSON.parse(item?.meta?.toString())?.public_booking_id}

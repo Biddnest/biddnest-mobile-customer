@@ -16,7 +16,6 @@ import {STYLES} from '../../../../constant/commonStyle';
 import TextInput from '../../../../components/textInput';
 import CustomModalAndroid from '../../../../components/customModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import DropDownAndroid from '../../../../components/dropDown';
 import FlatButton from '../../../../components/flatButton';
 import {
   CustomAlert,
@@ -32,9 +31,9 @@ import {APICall} from '../../../../redux/actions/user';
 import {STORE} from '../../../../redux';
 import {useSelector} from 'react-redux';
 import {Picker} from '@react-native-picker/picker';
-import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 import TwoButton from '../../../../components/twoButton';
-import _ from 'lodash';
+import SearchableItem from '../../../../components/searchableItem';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const RequirementDetails = (props) => {
   const {
@@ -55,6 +54,7 @@ const RequirementDetails = (props) => {
   const [addItem, setAddItem] = useState(false);
   const [addData, setAddData] = useState({});
   const [editItem, setEditItem] = useState(false);
+  const [openPicker, setOpenPicker] = useState(false);
   const [editableWarning, setEditableWarning] = useState(false);
   const [changeCategoryVisible, setChangeCategoryVisible] = useState({});
   const [editData, setEditData] = useState({});
@@ -94,30 +94,30 @@ const RequirementDetails = (props) => {
       delete temp.icon;
       inv[index] = temp;
     });
-    if (inv.findIndex((item) => item.id === 'select') === -1 && isAndroid) {
-      inv.unshift({
-        label: '-Select-',
-        value: null,
-        category: '',
-        id: 'select',
-        image:
-          'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
-        material: '["wood","plastic","steel","fibre","glass"]',
-        name: '-Select-',
-        size: '["small","medium","large"]',
-      });
-      inv.push({
-        label: '-Other-',
-        value: 'other',
-        category: '',
-        id: null,
-        image:
-          'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
-        material: '["wood","plastic","steel","fibre","glass"]',
-        name: '-Other-',
-        size: '["small","medium","large"]',
-      });
-    }
+    // if (inv.findIndex((item) => item.id === 'select') === -1 && isAndroid) {
+    //   inv.unshift({
+    //     label: '-Select-',
+    //     value: null,
+    //     category: '',
+    //     id: 'select',
+    //     image:
+    //       'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
+    //     material: '["wood","plastic","steel","fibre","glass"]',
+    //     name: '-Select-',
+    //     size: '["small","medium","large"]',
+    //   });
+    //   inv.push({
+    //     label: '-Other-',
+    //     value: 'other',
+    //     category: '',
+    //     id: null,
+    //     image:
+    //       'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
+    //     material: '["wood","plastic","steel","fibre","glass"]',
+    //     name: '-Other-',
+    //     size: '["small","medium","large"]',
+    //   });
+    // }
     if (JSON.stringify(inv) !== JSON.stringify(defaultInventories)) {
       setDefaultInventories(inv);
       if (inv.length > 0) {
@@ -132,12 +132,24 @@ const RequirementDetails = (props) => {
             value: item,
           });
         });
+        if (materialAry.findIndex((item) => item.value === null) === -1) {
+          materialAry.unshift({
+            label: '-Select-',
+            value: null,
+          });
+        }
         temp.size.forEach((item) => {
           sizeAry.push({
             label: item,
             value: item,
           });
         });
+        if (sizeAry.findIndex((item) => item.value === null) === -1) {
+          sizeAry.unshift({
+            label: '-Select-',
+            value: null,
+          });
+        }
         temp.material = materialAry;
         temp.size = sizeAry;
         setSelectedInventory(temp);
@@ -656,159 +668,30 @@ const RequirementDetails = (props) => {
           setEditItem(false);
           setEditData({});
         }}>
-        {(isAndroid && (
-          <View
-            style={{
-              width: wp(90),
-              paddingHorizontal: 10,
-            }}>
-            <Text
-              style={{
-                fontFamily: 'Roboto-Bold',
-                color: Colors.textLabelColor,
-                fontSize: wp(4),
-                marginBottom: hp(1),
-              }}>
-              {'Item Name'}
+        <Pressable
+          onPress={() => {
+            if (addItem) {
+              setOpenPicker(true);
+            }
+          }}
+          style={{
+            width: wp(90),
+            paddingHorizontal: 10,
+          }}>
+          <Text style={styles.textLabel}>{'Item Name'}</Text>
+          <View style={styles.outerView}>
+            <Text numberOfLines={1} style={styles.innerText}>
+              {addItem
+                ? addData?.name || '-Select-'
+                : editData?.name || '-Select-'}
             </Text>
-            <View
-              style={{
-                borderWidth: 2,
-                borderRadius: 10,
-                height: hp(6),
-                borderColor: Colors.silver,
-                backgroundColor: Colors.white,
-                borderBottomWidth: 2,
-                ...STYLES.common,
-              }}>
-              <Picker
-                style={{
-                  height: '99%',
-                  width: '100%',
-                }}
-                selectedValue={editItem ? editData?.name : addData?.name}
-                onValueChange={(itemValue, itemIndex) => {
-                  if (itemValue) {
-                    let item = defaultInventories[itemIndex];
-                    let temp = {...item};
-                    temp.material = JSON.parse(item.material.toString());
-                    temp.size = JSON.parse(item.size.toString());
-
-                    temp.label = item.name;
-                    temp.value = item.name;
-                    let materialAry = [];
-                    let sizeAry = [];
-                    temp.material.forEach((i) => {
-                      materialAry.push({
-                        label: i,
-                        value: i,
-                      });
-                    });
-                    temp.size.forEach((i) => {
-                      sizeAry.push({
-                        label: i,
-                        value: i,
-                      });
-                    });
-                    temp.material = materialAry;
-                    temp.size = sizeAry;
-                    setSelectedInventory(temp);
-                    if (editItem) {
-                      setEditData({
-                        ...editData,
-                        name: itemValue,
-                        itemName: editData?.itemName,
-                        material: null,
-                        size: null,
-                        quantity:
-                          configData?.inventory_quantity_type.range ===
-                          movementType?.inventory_quantity_type
-                            ? {
-                                min: 200,
-                                max: 750,
-                              }
-                            : 1,
-                      });
-                    } else {
-                      setAddData({
-                        name: itemValue,
-                        itemName: null,
-                        material: null,
-                        size: null,
-                        quantity:
-                          configData?.inventory_quantity_type.range ===
-                          movementType?.inventory_quantity_type
-                            ? {
-                                min: 200,
-                                max: 750,
-                              }
-                            : 1,
-                      });
-                    }
-                  }
-                }}>
-                {defaultInventories.map((item, index) => {
-                  return (
-                    <Picker.Item label={item?.label} value={item?.value} />
-                  );
-                })}
-              </Picker>
-            </View>
-          </View>
-        )) || (
-          <View style={{zIndex: 5002}}>
-            <DropDownAndroid
-              value={editItem ? editData?.name : addData?.name}
-              label={'Item Name'}
-              width={wp(90)}
-              items={defaultInventories}
-              onChangeItem={(text, item) => {
-                let temp = {...item};
-
-                temp.material = JSON.parse(item.material.toString());
-                temp.size = JSON.parse(item.size.toString());
-
-                temp.label = item.name;
-                temp.value = item.name;
-                let materialAry = [];
-                let sizeAry = [];
-                temp.material.forEach((i) => {
-                  materialAry.push({
-                    label: i,
-                    value: i,
-                  });
-                });
-                temp.size.forEach((i) => {
-                  sizeAry.push({
-                    label: i,
-                    value: i,
-                  });
-                });
-                temp.material = materialAry;
-                temp.size = sizeAry;
-                setSelectedInventory(temp);
-                if (editItem) {
-                  setEditData({...editData, name: text, itemName: text});
-                } else {
-                  setAddData({
-                    name: text,
-                    itemName: text,
-                    material: null,
-                    size: null,
-                    quantity:
-                      configData?.inventory_quantity_type.range ===
-                      movementType?.inventory_quantity_type
-                        ? {
-                            min: 200,
-                            max: 750,
-                          }
-                        : 1,
-                  });
-                }
-              }}
+            <MaterialIcons
+              name={!openPicker ? 'arrow-drop-down' : 'arrow-drop-up'}
+              size={hp(3.5)}
+              color={'#3B4B58'}
             />
           </View>
-        )}
+        </Pressable>
         {(addData?.name === '-Other-' || editData?.name === '-Other-') && (
           <View style={{width: '90%', marginTop: hp(2)}}>
             <TextInput
@@ -858,19 +741,41 @@ const RequirementDetails = (props) => {
               />
             </View>
           )) || (
-            <DropDownAndroid
-              searchable={false}
-              value={editItem ? editData?.material : addData?.material}
-              label={'Material/Variant'}
-              items={selectedInventory?.material}
-              onChangeItem={(text) => {
-                if (editItem) {
-                  setEditData({...editData, material: text});
-                } else {
-                  setAddData({...addData, material: text});
-                }
-              }}
-            />
+            <View
+              style={{
+                width: wp(45),
+                paddingHorizontal: 10,
+                marginBottom: hp(2),
+              }}>
+              <Text style={styles.textLabel}>{'Material/Variant'}</Text>
+              <View
+                style={[
+                  styles.outerView,
+                  {width: '100%', paddingHorizontal: 0},
+                ]}>
+                <Picker
+                  style={{
+                    height: '99%',
+                    width: '100%',
+                  }}
+                  selectedValue={
+                    editItem ? editData?.material : addData?.material
+                  }
+                  onValueChange={(text) => {
+                    if (editItem) {
+                      setEditData({...editData, material: text});
+                    } else {
+                      setAddData({...addData, material: text});
+                    }
+                  }}>
+                  {selectedInventory?.material?.map((item, index) => {
+                    return (
+                      <Picker.Item label={item?.label} value={item?.value} />
+                    );
+                  })}
+                </Picker>
+              </View>
+            </View>
           )}
           {((addData?.name === '-Other-' || editData?.name === '-Other-') && (
             <View style={{width: '45%', marginTop: hp(1)}}>
@@ -888,19 +793,40 @@ const RequirementDetails = (props) => {
               />
             </View>
           )) || (
-            <DropDownAndroid
-              searchable={false}
-              label={'Size'}
-              value={editItem ? editData?.size : addData?.size}
-              items={selectedInventory?.size}
-              onChangeItem={(text) => {
-                if (editItem) {
-                  setEditData({...editData, size: text});
-                } else {
-                  setAddData({...addData, size: text});
-                }
-              }}
-            />
+            <View
+              style={{
+                width: wp(45),
+                paddingHorizontal: 10,
+                marginBottom: hp(2),
+              }}>
+              <Text style={styles.textLabel}>{'Size'}</Text>
+              <View
+                style={[
+                  styles.outerView,
+                  {width: '100%', paddingHorizontal: 0},
+                ]}>
+                <Picker
+                  style={{
+                    height: '99%',
+                    width: '100%',
+                  }}
+                  // selectedValue={editItem ? editData?.size : addData?.size}
+                  selectedValue={editItem ? editData?.size : addData?.size}
+                  onValueChange={(text) => {
+                    if (editItem) {
+                      setEditData({...editData, size: text});
+                    } else {
+                      setAddData({...addData, size: text});
+                    }
+                  }}>
+                  {selectedInventory?.size?.map((item, index) => {
+                    return (
+                      <Picker.Item label={item?.label} value={item?.value} />
+                    );
+                  })}
+                </Picker>
+              </View>
+            </View>
           )}
         </View>
         <View style={{width: '90%'}}>
@@ -908,10 +834,6 @@ const RequirementDetails = (props) => {
             movementType?.inventory_quantity_type && (
             <View
               style={{
-                marginTop:
-                  addData?.name === '-Other-' || editData?.name === '-Other-'
-                    ? hp(0.01)
-                    : hp(2),
                 marginHorizontal: wp(3),
               }}>
               <Text
@@ -1053,33 +975,49 @@ const RequirementDetails = (props) => {
                 configData?.inventory_quantity_type.range ===
                   movementType?.inventory_quantity_type
               ) {
-                let obj = temp.find((i) => {
-                  if (
-                    i.name === editData.name &&
-                    i.material === editData.material &&
-                    i.size === editData.size
-                  ) {
-                    return i;
-                  }
-                });
-                // if (!obj) {
-                let index = temp.findIndex(
-                  (ele) => ele.inventory_id === editData.inventory_id,
-                );
                 if (
-                  configData?.inventory_quantity_type.range !==
-                  movementType?.inventory_quantity_type
+                  editData?.inventory_id !== null
+                    ? editData.name !== null &&
+                      editData.material !== null &&
+                      editData.size !== null
+                    : editData.name !== null &&
+                      editData.material !== null &&
+                      editData.size !== null &&
+                      editData?.itemName !== null &&
+                      editData?.itemName !== ''
                 ) {
-                  editData.quantity = parseInt(editData?.quantity);
+                  let obj = temp.find((i) => {
+                    if (
+                      i.name === editData.name &&
+                      i.material === editData.material &&
+                      i.size === editData.size &&
+                      i.itemName === editData.itemName
+                    ) {
+                      return i;
+                    }
+                  });
+                  if (!obj) {
+                    let index = temp.findIndex(
+                      (ele) => ele.inventory_id === editData.inventory_id,
+                    );
+                    console.log(index);
+                    if (
+                      configData?.inventory_quantity_type.range !==
+                      movementType?.inventory_quantity_type
+                    ) {
+                      editData.quantity = parseInt(editData?.quantity);
+                    }
+                    temp[index] = editData;
+                    handleStateChange('inventory_items', temp);
+                    setInventoryItems(temp);
+                    setEditItem(false);
+                    setEditData({});
+                  } else {
+                    CustomAlert('The item has already been added.');
+                  }
+                } else {
+                  CustomAlert('All Fields are mendatory');
                 }
-                temp[index] = editData;
-                handleStateChange('inventory_items', temp);
-                setInventoryItems(temp);
-                setEditItem(false);
-                setEditData({});
-                // } else {
-                //   CustomAlert('The item has already been added.');
-                // }
               } else {
                 CustomAlert('Quantity not valid');
               }
@@ -1316,6 +1254,88 @@ const RequirementDetails = (props) => {
           }}
         />
       </CustomModalAndroid>
+      <SearchableItem
+        visible={!!openPicker}
+        title={'Warning'}
+        onPress={() => {
+          setOpenPicker(false);
+        }}
+        onConfirmPress={(itemData) => {
+          setOpenPicker(false);
+          if (itemData) {
+            let temp = {...itemData};
+            temp.material = JSON.parse(itemData.material.toString());
+            temp.size = JSON.parse(itemData.size.toString());
+
+            temp.label = itemData.name;
+            temp.value = itemData.name;
+            let materialAry = [];
+            let sizeAry = [];
+            temp.material.forEach((i) => {
+              materialAry.push({
+                label: i,
+                value: i,
+              });
+            });
+            if (materialAry.findIndex((item) => item.value === null) === -1) {
+              materialAry.unshift({
+                label: '-Select-',
+                value: null,
+              });
+            }
+            temp.size.forEach((i) => {
+              sizeAry.push({
+                label: i,
+                value: i,
+              });
+            });
+            if (sizeAry.findIndex((item) => item.value === null) === -1) {
+              sizeAry.unshift({
+                label: '-Select-',
+                value: null,
+              });
+            }
+            temp.material = materialAry;
+            temp.size = sizeAry;
+            setSelectedInventory(temp);
+            if (editItem) {
+              setEditData({
+                ...editData,
+                inventory_id: itemData?.id,
+                name: itemData?.name,
+                itemName: itemData?.itemName,
+                material: null,
+                size: null,
+                quantity:
+                  configData?.inventory_quantity_type.range ===
+                  movementType?.inventory_quantity_type
+                    ? {
+                        min: 200,
+                        max: 750,
+                      }
+                    : 1,
+              });
+            } else {
+              setAddData({
+                name: itemData?.name,
+                inventory_id: itemData?.id,
+                itemName: itemData?.itemName,
+                material: null,
+                size: null,
+                quantity:
+                  configData?.inventory_quantity_type.range ===
+                  movementType?.inventory_quantity_type
+                    ? {
+                        min: 200,
+                        max: 750,
+                      }
+                    : 1,
+              });
+            }
+          }
+        }}
+        defaultInventories={defaultInventories}
+      />
     </ScrollView>
   );
 };
@@ -1356,6 +1376,30 @@ const styles = StyleSheet.create({
   sliderText: {
     fontFamily: 'Roboto-Light',
     fontSize: wp(3.5),
+    color: Colors.inputTextColor,
+  },
+  textLabel: {
+    fontFamily: 'Roboto-Bold',
+    color: Colors.textLabelColor,
+    fontSize: wp(4),
+    marginBottom: hp(1),
+  },
+  outerView: {
+    borderWidth: 2,
+    borderRadius: 10,
+    height: hp(6),
+    borderColor: Colors.silver,
+    backgroundColor: Colors.white,
+    borderBottomWidth: 2,
+    alignItems: 'center',
+    paddingHorizontal: wp(5),
+    flexDirection: 'row',
+  },
+  innerText: {
+    width: '90%',
+    fontFamily: 'Gilroy-SemiBold',
+    fontSize: wp(4),
+    backgroundColor: Colors.textBG,
     color: Colors.inputTextColor,
   },
 });

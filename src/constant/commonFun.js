@@ -67,9 +67,19 @@ export const DiffMin = (dt1) => {
 };
 
 export const CustomAlert = (msg = '') => {
+  setTimeout(() => {
+    Snackbar.dismiss();
+  }, 10000);
   return Snackbar.show({
     text: msg,
-    duration: Snackbar.LENGTH_LONG,
+    duration: Snackbar.LENGTH_INDEFINITE,
+    action: {
+      text: 'CLOSE',
+      textColor: Colors.btnBG,
+      onPress: () => {
+        Snackbar.dismiss();
+      },
+    },
   });
   // return Toast.show(msg, Toast.LONG);
 };

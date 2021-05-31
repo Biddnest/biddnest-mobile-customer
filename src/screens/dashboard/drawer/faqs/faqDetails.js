@@ -61,9 +61,7 @@ const FAQDetails = (props) => {
         style={styles.inputForm}
         key={index}>
         <View style={styles.flexBox}>
-          <Text style={styles.topText}>
-            {index + 1}. {entities.decode(item?.title)}
-          </Text>
+          <Text style={styles.topText}>{entities.decode(item?.title)}</Text>
           <View>
             <MaterialCommunityIcons
               name={openArray.includes(index) ? 'minus' : 'plus'}
@@ -84,7 +82,7 @@ const FAQDetails = (props) => {
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <SimpleHeader
-        headerText={'FAQS'}
+        headerText={`FAQS - ${category}`}
         navigation={props.navigation}
         onBack={() => props.navigation.goBack()}
       />
