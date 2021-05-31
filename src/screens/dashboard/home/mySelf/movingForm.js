@@ -82,19 +82,24 @@ const MovingForm = (props) => {
   let movingFromData = props.movingFrom ? destination?.meta : source?.meta;
   useEffect(() => {
     dispatch(getZones());
+    getCurrentLocation();
   }, []);
 
   useEffect(() => {
     if (mapVisible) {
-      getLocation()
-        .then((res) => {
-          fetchLocationString(res);
-        })
-        .catch((err) => {
-          CustomAlert(err);
-        });
+      getCurrentLocation();
     }
   }, [mapVisible]);
+
+  const getCurrentLocation = () => {
+    getLocation()
+      .then((res) => {
+        fetchLocationString(res);
+      })
+      .catch((err) => {
+        CustomAlert(err);
+      });
+  };
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => setKeyboardOpen(true));
@@ -539,9 +544,13 @@ const MovingForm = (props) => {
               rotateEnabled={false}
               onMapReady={handleMapReady}
               // showsUserLocation
-              onRegionChangeComplete={(region) => {
-                if (!isKeyboardOpen) {
-                  fetchLocationString(region);
+              onRegionChangeComplete={(region1) => {
+                if (
+                  !isKeyboardOpen &&
+                  region1.latitude.toFixed(6) !== region.latitude.toFixed(6) &&
+                  region1.longitude.toFixed(6) !== region.longitude.toFixed(6)
+                ) {
+                  fetchLocationString(region1);
                 }
               }}
               zoomEnabled={true}
@@ -717,7 +726,7 @@ const MovingForm = (props) => {
                     .then((res) => {
                       setLoading(false);
                       if (res?.data?.status === 'success') {
-                        if (res?.data?.data?.distance !== 0) {
+                        if (res?.data?.data?.distance > 0) {
                           let temp = {...destination};
                           temp.meta.address_line1 = mapData.address_line1;
                           temp.meta.address_line2 = mapData.address_line2;

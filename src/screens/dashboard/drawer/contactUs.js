@@ -489,7 +489,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: wp(92),
+    width: wp(90),
     alignSelf: 'center',
   },
 });

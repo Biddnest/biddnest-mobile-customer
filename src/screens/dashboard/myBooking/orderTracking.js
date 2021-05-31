@@ -225,10 +225,12 @@ const OrderTracking = (props) => {
                 iconFamily: 'AntDesign',
               },
             ].map((item, index) => {
-              if (item?.title === 'Manage' && orderDetails?.status === 8) {
-                if (orderDetails?.status === 7) {
-                  return null;
-                }
+              if (item?.title === 'Manage' && orderDetails?.status === 7) {
+                return null;
+              } else if (
+                item?.title === 'Manage' &&
+                orderDetails?.status === 8
+              ) {
                 return (
                   <Pressable
                     onPress={() => {

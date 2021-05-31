@@ -55,6 +55,7 @@ const RequirementDetails = (props) => {
   const [addItem, setAddItem] = useState(false);
   const [addData, setAddData] = useState({});
   const [editItem, setEditItem] = useState(false);
+  const [editableWarning, setEditableWarning] = useState(false);
   const [changeCategoryVisible, setChangeCategoryVisible] = useState({});
   const [editData, setEditData] = useState({});
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(
@@ -641,44 +642,8 @@ const RequirementDetails = (props) => {
           onCloseIcon={() => setConfirmationModalVisible(false)}
           leftOnPress={() => setConfirmationModalVisible(false)}
           rightOnPress={() => {
-            // Booking API call
-            setLoading(true);
-            let temp = {...props.data};
-            let t2 = [...temp?.inventory_items];
-            t2.forEach((item, index) => {
-              if (item?.inventory_id === null) {
-                item.name = item.itemName;
-                // delete t2[index].itemName;
-              }
-            });
-            temp.inventory_items = t2;
-            let obj = {
-              url: 'bookings/enquiry',
-              method: 'post',
-              headers: {
-                Authorization:
-                  'Bearer ' + STORE.getState().Login?.loginData?.token,
-              },
-              data: temp,
-            };
-            APICall(obj)
-              .then((res) => {
-                setLoading(false);
-                if (res?.data?.status === 'success') {
-                  props.setApiResponse(res?.data?.data?.booking);
-                  if (props.bookingFor === 'Others') {
-                    props.onPageChange(4);
-                  } else {
-                    props.onPageChange(3);
-                  }
-                } else {
-                  CustomAlert(res?.data?.message);
-                }
-              })
-              .catch((err) => {
-                setLoading(false);
-                CustomConsole(err);
-              });
+            setEditableWarning(true);
+            setConfirmationModalVisible(false);
           }}
         />
       </CustomModalAndroid>
@@ -1120,7 +1085,7 @@ const RequirementDetails = (props) => {
               }
             } else {
               if (
-                addData?.inventory_id
+                addData?.inventory_id !== null
                   ? addData.name !== null &&
                     addData.material !== null &&
                     addData.size !== null
@@ -1194,17 +1159,17 @@ const RequirementDetails = (props) => {
               marginBottom: hp(2),
               textAlign: 'center',
             }}>
-            Are you sure? you want to change category? Data will be lost.
+            Are you sure? you want to change category?
           </Text>
         </View>
         <TwoButton
-          leftLabel={'CANCEL'}
-          rightLabel={'KEEP'}
+          leftLabel={'no'}
+          rightLabel={'Yes'}
           isLoading={isLoading}
           leftOnPress={() => {
-            handleState('subcategory', changeCategoryVisible.name);
-            getInventories(changeCategoryVisible.id);
-            handleSelectedSubCategory(changeCategoryVisible);
+            // handleState('subcategory', changeCategoryVisible.name);
+            // getInventories(changeCategoryVisible.id);
+            // handleSelectedSubCategory(changeCategoryVisible);
             setChangeCategoryVisible({});
           }}
           rightOnPress={() => {
@@ -1226,12 +1191,6 @@ const RequirementDetails = (props) => {
                   let temp = [];
                   let previousDummyInv = [...defaultInventoryStore];
                   let t = [...inventoryItems];
-                  let finalT = t.filter(
-                    (a) =>
-                      !previousDummyInv
-                        .map((b) => b.inventory_id)
-                        .includes(a.inventory_id),
-                  );
                   if (res?.data?.data?.inventories?.length > 0) {
                     res?.data?.data?.inventories.forEach((item) => {
                       temp.push({
@@ -1250,12 +1209,26 @@ const RequirementDetails = (props) => {
                         image: item?.meta?.image,
                       });
                     });
-                    let temp2 = [...finalT, ...temp];
+                    let temp2 = [...t, ...temp];
+                    var result = temp2.reduce((unique, o) => {
+                      if (
+                        !unique.some(
+                          (obj) =>
+                            obj.name === o.name &&
+                            obj.material === o.material &&
+                            obj.size === o.size &&
+                            obj.itemName === o.itemName,
+                        )
+                      ) {
+                        unique.push(o);
+                      }
+                      return unique;
+                    }, []);
                     setDefaultInventoryStore(temp);
-                    setInventoryItems(_.uniq(temp2));
-                    handleStateChange('inventory_items', _.uniq(temp2));
+                    setInventoryItems(result);
+                    handleStateChange('inventory_items', result);
                   } else {
-                    setInventoryItems(finalT);
+                    setInventoryItems(t);
                     setDefaultInventoryStore([]);
                     handleStateChange('inventory_items', []);
                   }
@@ -1266,6 +1239,78 @@ const RequirementDetails = (props) => {
               })
               .catch((err) => {
                 setWait(false);
+                CustomConsole(err);
+              });
+          }}
+        />
+      </CustomModalAndroid>
+      <CustomModalAndroid
+        visible={editableWarning}
+        title={'Warning'}
+        onPress={() => {
+          setEditableWarning(false);
+        }}>
+        <View
+          style={{
+            marginTop: hp(4),
+            marginBottom: hp(2),
+            marginHorizontal: wp(15),
+          }}>
+          <Text
+            style={{
+              fontFamily: 'Roboto-Regular',
+              fontSize: wp(4),
+              color: Colors.inputTextColor,
+              marginBottom: hp(2),
+              textAlign: 'center',
+            }}>
+            Order details will not be editable after confirmation.
+          </Text>
+        </View>
+        <TwoButton
+          leftLabel={'cancel'}
+          rightLabel={'okay'}
+          isLoading={isLoading}
+          leftOnPress={() => {
+            setEditableWarning(false);
+          }}
+          rightOnPress={() => {
+            // Booking API call
+            setLoading(true);
+            let temp = {...props.data};
+            let t2 = [...temp?.inventory_items];
+            t2.forEach((item, index) => {
+              if (item?.inventory_id === null) {
+                item.name = item.itemName;
+                // delete t2[index].itemName;
+              }
+            });
+            temp.inventory_items = t2;
+            let obj = {
+              url: 'bookings/enquiry',
+              method: 'post',
+              headers: {
+                Authorization:
+                  'Bearer ' + STORE.getState().Login?.loginData?.token,
+              },
+              data: temp,
+            };
+            APICall(obj)
+              .then((res) => {
+                setLoading(false);
+                if (res?.data?.status === 'success') {
+                  props.setApiResponse(res?.data?.data?.booking);
+                  if (props.bookingFor === 'Others') {
+                    props.onPageChange(4);
+                  } else {
+                    props.onPageChange(3);
+                  }
+                } else {
+                  CustomAlert(res?.data?.message);
+                }
+              })
+              .catch((err) => {
+                setLoading(false);
                 CustomConsole(err);
               });
           }}

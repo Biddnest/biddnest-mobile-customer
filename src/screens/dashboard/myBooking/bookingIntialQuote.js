@@ -615,7 +615,7 @@ const BookingInitialQuote = (props) => {
             isLoading={isLoading}
             setLoading={(text) => setLoading(text)}
             public_booking_id={orderData?.public_booking_id}
-            setApiResponse={props.setApiResponse}
+            setApiResponse={() => {}}
             navigation={props}
           />
           <InformationPopUp

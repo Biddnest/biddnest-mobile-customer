@@ -79,6 +79,7 @@ const RejectBookingModal = (props) => {
               data: {
                 ...props.rejectData,
                 public_booking_id: props?.public_booking_id,
+                request_callback: isAgree,
               },
             };
             APICall(obj)
