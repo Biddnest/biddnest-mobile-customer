@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Keyboard} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Colors, hp, wp} from '../../constant/colors';
 import TextInput from '../../components/textInput';
 import Button from '../../components/button';
-import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Header from './header';
 import CheckBox from '../../components/checkBox';
 import LinearGradient from 'react-native-linear-gradient';
@@ -24,6 +23,7 @@ const Login = (props) => {
   const [isAgree, setAgree] = React.useState(true);
   const [isLoading, setLoading] = useState(false);
   const [otpResponse, setOtpResponse] = useState({});
+  const [resendOTP, setResendOTP] = useState(false);
 
   useEffect(() => {
     dispatch(signOut());
@@ -31,6 +31,7 @@ const Login = (props) => {
 
   const sendOTPFun = () => {
     setLoading(true);
+    setResendOTP(false);
     setOTP();
     if (!phone?.length || phone?.length !== 10 || /\D/.test(phone)) {
       setPhoneValidate(false);
@@ -48,6 +49,9 @@ const Login = (props) => {
           setLoading(false);
           if (res.status === 'success') {
             CustomAlert(res.message + res.data.otp);
+            setTimeout(() => {
+              setResendOTP(true);
+            }, 30000);
             setOtpResponse(res.data);
             setOtpSend(true);
           } else {
@@ -178,6 +182,7 @@ const Login = (props) => {
                         color: Colors.inputTextColor,
                       }}
                       onFulfill={(code) => {
+                        Keyboard.dismiss();
                         setLoading(true);
                         verifyOTP({
                           phone,
@@ -259,21 +264,23 @@ const Login = (props) => {
                       });
                   }}
                 />
-                <Text
-                  style={{
-                    color: Colors.grey,
-                    fontSize: wp(3.8),
-                  }}>
-                  Did not receive OTP?{' '}
+                {resendOTP && (
                   <Text
-                    onPress={() => sendOTPFun()}
                     style={{
-                      fontFamily: 'Roboto-Bold',
-                      color: Colors.textLabelColor,
+                      color: Colors.grey,
+                      fontSize: wp(3.8),
                     }}>
-                    Resend
+                    Did not receive OTP?{' '}
+                    <Text
+                      onPress={() => sendOTPFun()}
+                      style={{
+                        fontFamily: 'Roboto-Bold',
+                        color: Colors.textLabelColor,
+                      }}>
+                      Resend
+                    </Text>
                   </Text>
-                </Text>
+                )}
               </View>
             )}
           </View>
