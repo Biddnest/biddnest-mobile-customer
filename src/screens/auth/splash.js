@@ -102,7 +102,7 @@ const Splash = (props) => {
       .then((res) => {
         setLoading(false);
         if (res.status === 'success') {
-          if (res?.data?.config?.app?.version_code === 1) {
+          if (res?.data?.config?.app?.version_code == 1) {
             if (userData?.fname) {
               resetNavigator(props, 'Dashboard');
             } else {

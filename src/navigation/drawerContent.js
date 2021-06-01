@@ -111,7 +111,7 @@ export function DrawerContent(props) {
           } else {
             props.navigation.navigate(item.navigate);
           }
-          // props.navigation.closeDrawer();
+          props.navigation.closeDrawer();
         }}>
         <View style={{width: wp(10)}}>{renderIcon(item)}</View>
         <View
