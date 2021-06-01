@@ -245,7 +245,7 @@ const ContactUs = (props) => {
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={fetchTicket} />
         }
-        style={{flex: 1, marginBottom: wp(5)}}
+        style={{flex: 1}}
         showsVerticalScrollIndicator={false}
         bounces={false}>
         {destination_meta?.city && (
@@ -417,43 +417,43 @@ const ContactUs = (props) => {
             </View>
           </View>
         )}
-        <View style={{alignSelf: 'center'}}>
-          <Button
-            width={wp(90)}
-            backgroundColor={Colors.white}
-            label={'RAISE SERVICE REQUEST'}
-            spaceBottom={0.1}
-            onPress={() => props.navigation.navigate('RaiseTicket')}
-          />
-          <Button
-            isLoading={requestCallBackLoading}
-            label={'REQUEST A CALL BACK'}
-            onPress={() => {
-              // call Request a call back api
-              setRequestCallBackLoading(true);
-              let obj = {
-                url: 'tickets/callback',
-                method: 'post',
-                headers: {
-                  Authorization:
-                    'Bearer ' + STORE.getState().Login?.loginData?.token,
-                },
-              };
-              APICall(obj)
-                .then((res) => {
-                  setRequestCallBackLoading(false);
-                  CustomAlert('Request a Call Back Successfully');
-                })
-                .catch((err) => {
-                  setRequestCallBackLoading(false);
-                  CustomConsole(err);
-                });
-            }}
-            spaceBottom={0}
-            width={wp(90)}
-          />
-        </View>
       </ScrollView>
+      <View style={{alignSelf: 'center'}}>
+        <Button
+          width={wp(90)}
+          backgroundColor={Colors.white}
+          label={'RAISE SERVICE REQUEST'}
+          spaceBottom={0.1}
+          onPress={() => props.navigation.navigate('RaiseTicket')}
+        />
+        <Button
+          isLoading={requestCallBackLoading}
+          label={'REQUEST A CALL BACK'}
+          onPress={() => {
+            // call Request a call back api
+            setRequestCallBackLoading(true);
+            let obj = {
+              url: 'tickets/callback',
+              method: 'post',
+              headers: {
+                Authorization:
+                  'Bearer ' + STORE.getState().Login?.loginData?.token,
+              },
+            };
+            APICall(obj)
+              .then((res) => {
+                setRequestCallBackLoading(false);
+                CustomAlert('Request a Call Back Successfully');
+              })
+              .catch((err) => {
+                setRequestCallBackLoading(false);
+                CustomConsole(err);
+              });
+          }}
+          spaceBottom={0}
+          width={wp(90)}
+        />
+      </View>
     </LinearGradient>
   );
 };
