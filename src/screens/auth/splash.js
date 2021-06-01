@@ -102,10 +102,14 @@ const Splash = (props) => {
       .then((res) => {
         setLoading(false);
         if (res.status === 'success') {
-          if (userData?.fname) {
-            resetNavigator(props, 'Dashboard');
+          if (res?.data?.config?.app?.version_code === 1) {
+            if (userData?.fname) {
+              resetNavigator(props, 'Dashboard');
+            } else {
+              resetNavigator(props, 'WalkThroughPage');
+            }
           } else {
-            resetNavigator(props, 'WalkThroughPage');
+            Linking.openURL('https://play.google.com/store/apps');
           }
         }
       })

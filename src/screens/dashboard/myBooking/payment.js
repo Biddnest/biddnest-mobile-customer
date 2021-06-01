@@ -13,9 +13,6 @@ import {
 import TextInput from '../../../components/textInput';
 import {STYLES} from '../../../constant/commonStyle';
 import Button from '../../../components/button';
-import AddNewCard from './addNewCard';
-import UPIPayment from './UPIPayment';
-import NetBanking from './netBanking';
 import {APICall, getOrderDetails} from '../../../redux/actions/user';
 import {
   CustomAlert,
@@ -28,15 +25,16 @@ import {useSelector} from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Html5Entities} from 'html-entities';
 import HTML from 'react-native-render-html';
+import moment from 'moment';
+import {Base64} from 'js-base64';
 
 const Payment = (props) => {
   const entities = new Html5Entities();
   const inputCode = useRef(null);
   const configData =
     useSelector((state) => state.Login?.configData?.enums?.payment) || {};
-  const [addCardVisible, setCardVisible] = useState(false);
-  const [UPIVisible, setUPIVisible] = useState(false);
-  const [netBankingVisible, setNetBankingVisible] = useState(false);
+  const APIData =
+    useSelector((state) => state.Login?.configData?.config?.api) || '';
   const orderData = props?.route?.params?.orderData || {};
   const [orderDetails, setOrderDetails] = useState({});
   const [paymentSummery, setPaymentSummery] = useState({});
@@ -138,13 +136,18 @@ const Payment = (props) => {
     setLoading(true);
     let options = {
       currency: payment?.currency || 'INR',
-      key: configData?.razorpay?.rzp_id,
+      key: Base64.decode(configData?.razorpay?.rzp_id),
       amount: parseFloat(paymentSummery?.grand_total).toFixed(2) * 100,
       order_id: payment?.rzp_order_id,
       theme: {color: Colors.darkBlue, hide_topbar: true},
-      name: 'test',
-      description: 'Credits towards consultation',
-      image: 'https://i.imgur.com/3g7nmJC.png',
+      name: APIData?.name,
+      description: `Movement on ${
+        orderData?.bid?.meta &&
+        moment(JSON.parse(orderData?.bid?.meta?.toString()).moving_date).format(
+          'Do MMM YYYY',
+        )
+      }`,
+      image: APIData?.logo,
       prefill: {
         email: userData?.email,
         contact: userData?.phone,
@@ -241,6 +244,7 @@ const Payment = (props) => {
             }}>
             <View
               style={{
+                marginTop: hp(1),
                 width: applyButton ? wp(65) : wp(96),
               }}>
               <TextInput
@@ -347,13 +351,13 @@ const Payment = (props) => {
                     }}>
                     <View
                       style={{
-                        borderWidth: 1.5,
+                        borderWidth: 1,
                         height: hp(5),
                         borderRadius: 6,
                         borderStyle: 'dashed',
                         borderColor: Colors.btnBG,
                         backgroundColor: Colors.white,
-                        width: '80%',
+                        flex: 1,
                         ...STYLES.common,
                       }}>
                       <Text
@@ -366,7 +370,15 @@ const Payment = (props) => {
                       </Text>
                     </View>
                     <Pressable
-                      style={{width: '15%', marginLeft: '3%'}}
+                      style={{
+                        width:
+                          coupons?.length === index + 1
+                            ? coupons?.length % 2 === 0
+                              ? '15%'
+                              : '8%'
+                            : '15%',
+                        marginLeft: '3%',
+                      }}
                       onPress={() => {
                         if (!applyButton) {
                           setApplyButton(true);
@@ -388,7 +400,7 @@ const Payment = (props) => {
                     }}
                     baseFontStyle={{
                       fontFamily: 'Roboto-Regular',
-                      fontSize: wp(3.5),
+                      fontSize: wp(3),
                       textAlign: 'center',
                       color: '#99A0A5',
                     }}
@@ -416,7 +428,7 @@ const Payment = (props) => {
                 fontSize: wp(4),
                 fontFamily: 'Roboto-Regular',
               }}>
-              Total Price{'  '}
+              To be paid{'  '}
               <Text
                 style={{
                   fontSize: wp(5.5),
@@ -459,27 +471,8 @@ const Payment = (props) => {
               );
             }}
           />
-          {/*<Button*/}
-          {/*  spaceTop={hp(1)}*/}
-          {/*  width={wp(90)}*/}
-          {/*  backgroundColor={Colors.white}*/}
-          {/*  label={'USE ANOTHER CARD'}*/}
-          {/*  onPress={() => setCardVisible(true)}*/}
-          {/*/>*/}
         </ScrollView>
       </View>
-      <AddNewCard
-        visible={addCardVisible}
-        onCloseIcon={() => setCardVisible(false)}
-      />
-      <UPIPayment
-        visible={UPIVisible}
-        onCloseIcon={() => setUPIVisible(false)}
-      />
-      <NetBanking
-        visible={netBankingVisible}
-        onCloseIcon={() => setNetBankingVisible(false)}
-      />
     </LinearGradient>
   );
 };
@@ -525,7 +518,7 @@ const styles = StyleSheet.create({
   inputForm: {
     paddingVertical: hp(2),
     paddingHorizontal: wp(2),
-    borderWidth: 1,
+    borderWidth: 0.8,
     borderRadius: 6,
     backgroundColor: '#FFFDF4',
     borderColor: Colors.btnBG,

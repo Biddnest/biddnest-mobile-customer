@@ -80,6 +80,9 @@ const OrderTracking = (props) => {
           setLoading(false);
           if (res?.data?.status === 'success') {
             setOrderDetails(res?.data?.data?.booking);
+            if (res?.data?.data?.booking?.status === 8) {
+              setRateUsVisible(true);
+            }
           } else {
             CustomAlert(res?.data?.message);
           }

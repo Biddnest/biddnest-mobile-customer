@@ -473,12 +473,13 @@ const styles = StyleSheet.create({
   },
   categoryView: {
     marginBottom: hp(0.8),
-    paddingHorizontal: 10,
+    width: wp(17),
     paddingVertical: 5,
     borderColor: Colors.darkBlue,
     borderWidth: 2,
     borderRadius: 8,
     backgroundColor: Colors.white,
     marginLeft: hp(1.3),
+    alignItems: 'center',
   },
 });
