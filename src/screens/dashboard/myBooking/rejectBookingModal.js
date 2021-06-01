@@ -1,6 +1,5 @@
 import {Text, View} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
-import DropDownAndroid from '../../../components/dropDown';
 import TextInput from '../../../components/textInput';
 import CheckBox from '../../../components/checkBox';
 import FlatButton from '../../../components/flatButton';
@@ -13,6 +12,7 @@ import {
 } from '../../../constant/commonFun';
 import CustomModalAndroid from '../../../components/customModal';
 import React, {useState} from 'react';
+import SelectionModal from '../../../components/selectionModal';
 
 const RejectBookingModal = (props) => {
   const [error, setError] = useState(undefined);
@@ -22,10 +22,10 @@ const RejectBookingModal = (props) => {
       title={'REASON FOR REJECTION'}
       visible={props.visible}
       onPress={props.closeModal}>
-      <DropDownAndroid
-        label={''}
+      <SelectionModal
         value={props.value}
         width={wp(90)}
+        label={''}
         items={props.dropDownDefault}
         onChangeItem={(text) => props.dropDownChange(text)}
       />

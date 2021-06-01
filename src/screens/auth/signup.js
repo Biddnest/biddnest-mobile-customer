@@ -8,16 +8,15 @@ import Button from '../../components/button';
 import CheckBox from '../../components/checkBox';
 import {
   CustomAlert,
-  CustomConsole,
   resetNavigator,
 } from '../../constant/commonFun';
-import DropDownAndroid from '../../components/dropDown';
 import LinearGradient from 'react-native-linear-gradient';
 import {signUP} from '../../redux/actions/user';
 import {useDispatch, useSelector} from 'react-redux';
 import {LOGIN_USER_DATA} from '../../redux/types';
 import {STORE} from '../../redux';
 import OneSignal from 'react-native-onesignal';
+import SelectionModal from '../../components/selectionModal';
 
 const Signup = (props) => {
   const dispatch = useDispatch();
@@ -33,6 +32,7 @@ const Signup = (props) => {
     referral_code: '',
     phone: props?.route?.params?.phone || 0,
   });
+  const genderDefault = [...configData?.gender];
   const [error, setError] = useState({
     fname: undefined,
     lname: undefined,
@@ -45,6 +45,12 @@ const Signup = (props) => {
       [key]: value,
     });
   };
+  if (genderDefault?.findIndex((item, index) => item.value === null) === -1) {
+    genderDefault.unshift({
+      label: '-Select-',
+      value: null,
+    });
+  }
   return (
     <View style={[styles.container, {...styles.common}]}>
       <Header />
@@ -106,9 +112,9 @@ const Signup = (props) => {
                 {flexDirection: 'row'},
                 Platform.OS !== 'android' && {zIndex: 5001},
               ]}>
-              <DropDownAndroid
-                searchable={false}
-                customDropDown={
+              <SelectionModal
+                width={wp(45)}
+                style={
                   error?.gender === false
                     ? {
                         borderColor: 'red',
@@ -118,7 +124,7 @@ const Signup = (props) => {
                 }
                 value={data?.gender}
                 label={'Gender'}
-                items={configData?.gender}
+                items={genderDefault}
                 onChangeItem={(text) => handleState('gender', text)}
               />
               <View style={{width: wp(45)}}>

@@ -110,7 +110,7 @@ const MyBooking = (props) => {
           style={{
             flexDirection: 'row',
             flexWrap: 'wrap',
-            width: '50%',
+            maxWidth: '69%',
             justifyContent: 'flex-end',
           }}>
           {dates?.map((item, index) => {
@@ -169,7 +169,7 @@ const MyBooking = (props) => {
     let meta = (item?.meta && JSON.parse(item?.meta?.toString())) || {};
     let dateArray = [];
     item?.movement_dates?.forEach((i) => {
-      dateArray.push(moment(i.date).format('D MMM yyyy'));
+      dateArray.push(moment(i.date).format('D MMM'));
     });
     return (
       <Pressable
@@ -469,7 +469,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     textTransform: 'capitalize',
     fontFamily: 'Gilroy-Semibold',
-    fontSize: wp(3.5),
+    fontSize: wp(3.2),
   },
   categoryView: {
     marginBottom: hp(0.8),

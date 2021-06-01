@@ -17,6 +17,7 @@ import {STYLES} from '../../../constant/commonStyle';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from '../../../components/button';
 import HomeCall from '../../../assets/svg/home_call.svg';
+import EmailCall from '../../../assets/svg/email_call.svg';
 import {STORE} from '../../../redux';
 import {APICall} from '../../../redux/actions/user';
 import {
@@ -257,10 +258,10 @@ const ContactUs = (props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
-              <MapPin height={hp(8)} width={wp(5)} />
+              <MapPin height={hp(6.5)} width={wp(5)} />
               <View
                 style={{
-                  width: '87%',
+                  width: '90%',
                   flexDirection: 'row',
                   alignItems: 'center',
                   marginLeft: 5,
@@ -304,9 +305,9 @@ const ContactUs = (props) => {
                 </View>
                 <View
                   style={{
-                    height: wp(10),
-                    width: wp(10),
-                    borderRadius: wp(5),
+                    height: hp(7),
+                    width: hp(7),
+                    borderRadius: hp(3.5),
                     backgroundColor: '#F2E6FF',
                     alignSelf: 'center',
                     ...STYLES.common,
@@ -322,65 +323,81 @@ const ContactUs = (props) => {
           </View>
         )}
         <View style={styles.assistantView}>
-          <View>
-            <Text
-              style={{
-                ...styles.locationText,
-                marginTop: 0,
-                fontSize: wp(3.8),
-                fontFamily: 'Roboto-Medium',
-              }}>
-              NEED ASSISTANCE?
-            </Text>
+          <Text style={styles.headerText}>NEED ASSISTANCE?</Text>
+          <View style={styles.separatorView} />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '100%',
+              alignItems: 'center',
+            }}>
             <Text
               style={[
                 styles.locationText,
                 {
                   fontSize: wp(3.8),
-                  marginTop: hp(1),
                   lineHeight: hp(2.7),
                 },
               ]}>
               Call us at{'\n'}
               <Text
                 style={{
-                  fontFamily: 'Gilroy-Bold',
+                  fontFamily: 'Gilroy-SemiBold',
                 }}>
                 {contactUs?.contact_no?.length > 0 && contactUs.contact_no[0]}
                 {contactUs?.contact_no?.length > 1 &&
-                  ', \n' + contactUs.contact_no[1]}
+                  ', ' + contactUs.contact_no[1]}
               </Text>
             </Text>
+            <Pressable
+              onPress={() =>
+                Linking.openURL(
+                  `tel:${
+                    contactUs?.contact_no?.length > 0 && contactUs.contact_no[0]
+                  }`,
+                )
+              }>
+              <HomeCall width={hp(7)} height={hp(7)} />
+            </Pressable>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '100%',
+              alignItems: 'center',
+              marginTop: hp(1.5),
+            }}>
             <Text
               style={[
                 styles.locationText,
                 {
                   fontSize: wp(3.8),
-                  marginTop: hp(0.8),
                   lineHeight: hp(2.7),
                 },
               ]}>
               Email us at{'\n'}
               <Text
                 style={{
-                  fontFamily: 'Gilroy-Bold',
+                  fontFamily: 'Gilroy-SemiBold',
                 }}>
                 {contactUs?.email_id?.length > 0 && contactUs.email_id[0]}
                 {contactUs?.email_id?.length > 1 &&
                   ', \n' + contactUs.email_id[1]}{' '}
               </Text>
             </Text>
+            <Pressable
+              onPress={() =>
+                Linking.openURL(
+                  `mailto:${
+                    contactUs?.email_id?.length > 0 && contactUs.email_id[0]
+                  }`,
+                )
+              }>
+              <EmailCall width={hp(7)} height={hp(7)} />
+            </Pressable>
           </View>
-          <Pressable
-            onPress={() =>
-              Linking.openURL(
-                `tel:${
-                  contactUs?.contact_no?.length > 0 && contactUs.contact_no[0]
-                }`,
-              )
-            }>
-            <HomeCall width={hp(7)} height={hp(7)} />
-          </Pressable>
         </View>
         {recentTicket.length > 0 && (
           <View style={styles.inputForm}>
@@ -463,7 +480,7 @@ const styles = StyleSheet.create({
   locationText: {
     fontFamily: 'Gilroy-Regular',
     color: Colors.inputTextColor,
-    fontSize: wp(4.5),
+    fontSize: wp(4),
   },
   flexBox: {
     flexDirection: 'row',
@@ -486,8 +503,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderColor: '#DEE6ED',
     marginTop: wp(5),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     width: wp(90),
     alignSelf: 'center',

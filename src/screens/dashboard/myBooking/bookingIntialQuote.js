@@ -235,7 +235,7 @@ const BookingInitialQuote = (props) => {
         style={{
           flexDirection: 'row',
           flexWrap: 'wrap',
-          width: '50%',
+          maxWidth: '65%',
           justifyContent: 'flex-end',
         }}>
         {dates?.map((item, index) => {

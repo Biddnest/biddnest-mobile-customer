@@ -4,7 +4,6 @@ import {Image, Platform, Pressable, StyleSheet, View} from 'react-native';
 import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import DropDownAndroid from '../../../components/dropDown';
 import TextInput from '../../../components/textInput';
 import {Text} from 'react-native-elements';
 import {STYLES} from '../../../constant/commonStyle';
@@ -23,6 +22,7 @@ import CustomModalAndroid from '../../../components/customModal';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import FlatButton from '../../../components/flatButton';
 import Ripple from 'react-native-material-ripple';
+import SelectionModal from '../../../components/selectionModal';
 
 const EditProfile = (props) => {
   const dispatch = useDispatch();
@@ -140,8 +140,7 @@ const EditProfile = (props) => {
                 {marginBottom: hp(3), width: wp(45)},
                 Platform.OS !== 'android' && {zIndex: 5001},
               ]}>
-              <DropDownAndroid
-                searchable={false}
+              <SelectionModal
                 value={data.gender}
                 width={wp(45)}
                 label={'Gender'}
