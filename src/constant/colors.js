@@ -140,4 +140,11 @@ export const SIDE_DRAWER = [
     bottomText: 'Find answers for what you need',
     navigate: 'FAQs',
   },
+  // {
+  //   iconFamily: 'MaterialCommunityIcons',
+  //   icon: 'comment-question-outline',
+  //   topText: 'App Review',
+  //   bottomText: 'Find answers for what you need',
+  //   navigate: '',
+  // },
 ];

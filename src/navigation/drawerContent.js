@@ -22,6 +22,7 @@ import {resetNavigator} from '../constant/commonFun';
 import {RESET_STORE} from '../redux/types';
 import {useDispatch, useSelector} from 'react-redux';
 import Ripple from 'react-native-material-ripple';
+import InAppReview from 'react-native-in-app-review';
 
 export function DrawerContent(props) {
   const dispatch = useDispatch();
@@ -66,8 +67,51 @@ export function DrawerContent(props) {
         ]}
         key={index}
         onPress={() => {
-          props.navigation.navigate(item.navigate);
-          props.navigation.closeDrawer();
+          if (item?.navigate === '') {
+            InAppReview.RequestInAppReview()
+              .then((hasFlowFinishedSuccessfully) => {
+                // when return true in android it means user finished or close review flow
+                console.log(
+                  'InAppReview in android',
+                  hasFlowFinishedSuccessfully,
+                );
+
+                // when return true in ios it means review flow lanuched to user.
+                console.log(
+                  'InAppReview in ios has lanuched successfully',
+                  hasFlowFinishedSuccessfully,
+                );
+
+                // 1- you have option to do something ex: (navigate Home page) (in android).
+                // 2- you have option to do something,
+                // ex: (save date today to lanuch InAppReview after 15 days) (in android and ios).
+
+                // 3- another option:
+                if (hasFlowFinishedSuccessfully) {
+                  // do something for ios
+                  // do something for android
+                }
+
+                // for android:
+                // The flow has finished. The API does not indicate whether the user
+                // reviewed or not, or even whether the review dialog was shown. Thus, no
+                // matter the result, we continue our app flow.
+
+                // for ios
+                // the flow lanuched successfully, The API does not indicate whether the user
+                // reviewed or not, or he/she closed flow yet as android, Thus, no
+                // matter the result, we continue our app flow.
+              })
+              .catch((error) => {
+                //we continue our app flow.
+                // we have some error could happen while lanuching InAppReview,
+                // Check table for errors and code number that can return in catch.
+                console.log(error);
+              });
+          } else {
+            props.navigation.navigate(item.navigate);
+          }
+          // props.navigation.closeDrawer();
         }}>
         <View style={{width: wp(10)}}>{renderIcon(item)}</View>
         <View
