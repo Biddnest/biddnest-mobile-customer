@@ -241,10 +241,10 @@ const Payment = (props) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
+              marginTop: hp(1),
             }}>
             <View
               style={{
-                marginTop: hp(1),
                 width: applyButton ? wp(65) : wp(96),
               }}>
               <TextInput
@@ -374,9 +374,9 @@ const Payment = (props) => {
                         width:
                           coupons?.length === index + 1
                             ? coupons?.length % 2 === 0
-                              ? '15%'
+                              ? '18%'
                               : '8%'
-                            : '15%',
+                            : '18%',
                         marginLeft: '3%',
                       }}
                       onPress={() => {

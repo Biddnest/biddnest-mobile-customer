@@ -24,7 +24,11 @@ import InActiveRs from '../../../assets/svg/inactive_rs.svg';
 import ActiveRs from '../../../assets/svg/active_rs.svg';
 import ActiveFriends from '../../../assets/svg/active_friends.svg';
 import FinishFriends from '../../../assets/svg/finish_friends.svg';
-import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  resetNavigator,
+} from '../../../constant/commonFun';
 import {useDispatch} from 'react-redux';
 import {APICall, getAllInventories} from '../../../redux/actions/user';
 import {STORE} from '../../../redux';
@@ -457,10 +461,7 @@ const BookingStepper = (props) => {
         navigation={props.navigation}
         onBack={() => {
           if (apiResponse?.public_booking_id) {
-            setConfirmationText(
-              'Are you sure want to cancel? All your progress will be lost & you will be taken back to home screen.',
-            );
-            setConfirmationVisible(true);
+            resetNavigator(props, 'Dashboard');
           } else {
             if (headerText === 'MOVING TO') {
               setMovingFrom(false);

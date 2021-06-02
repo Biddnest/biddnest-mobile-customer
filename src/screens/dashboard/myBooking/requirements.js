@@ -156,7 +156,7 @@ const Requirements = (props) => {
                   textAlign: 'center',
                   textTransform: 'uppercase',
                 }}>
-                Pictures uploaded by the customer
+                Pictures uploaded by you
               </Text>
               <ScrollView
                 horizontal

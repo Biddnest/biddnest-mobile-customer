@@ -324,7 +324,10 @@ const RequirementDetails = (props) => {
                   let temp = [...inventoryItems];
                   let t1 = temp[index];
                   if (t1?.quantity > 1) {
-                    t1.quantity = t1?.quantity - 1 || 0;
+                    t1.quantity =
+                      typeof t1?.quantity === 'string'
+                        ? parseInt(t1?.quantity) - 1 || 0
+                        : t1?.quantity - 1 || 0;
                     setInventoryItems(temp);
                     handleStateChange('inventory_items', temp);
                   }
@@ -346,7 +349,10 @@ const RequirementDetails = (props) => {
                 onPress={() => {
                   let temp = [...inventoryItems];
                   let t1 = temp[index];
-                  t1.quantity = t1?.quantity + 1 || 0;
+                  t1.quantity =
+                    typeof t1?.quantity === 'string'
+                      ? parseInt(t1?.quantity) + 1 || 0
+                      : t1?.quantity + 1 || 0;
                   setInventoryItems(temp);
                   handleStateChange('inventory_items', temp);
                 }}>
@@ -645,6 +651,8 @@ const RequirementDetails = (props) => {
       <CustomModalAndroid
         visible={confirmationModalVisible}
         title={'CONFIRM ITEM LIST'}
+        maxHeight={hp(90)}
+        showsVerticalScrollIndicator={true}
         onPress={() => setConfirmationModalVisible(false)}>
         <OrderDetailModal
           from={'RequirementDetails'}

@@ -531,7 +531,7 @@ const styles = StyleSheet.create({
   },
   categoryView: {
     marginBottom: hp(0.8),
-    width: wp(17),
+    width: wp(19),
     paddingVertical: 5,
     borderColor: Colors.darkBlue,
     borderWidth: 2,

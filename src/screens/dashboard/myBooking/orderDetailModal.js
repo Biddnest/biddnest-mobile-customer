@@ -1,5 +1,12 @@
 import React from 'react';
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
 import {STYLES} from '../../../constant/commonStyle';
 import TwoButton from '../../../components/twoButton';
@@ -110,33 +117,48 @@ const OrderDetailModal = (props) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <FlatList
-        keyExtractor={(item, index) => index.toString()}
-        bounces={false}
-        data={props.data}
-        extraData={props.data}
-        renderItem={renderItem}
-        contentContainerStyle={{
-          marginHorizontal: wp(4),
-          marginBottom: hp(5),
-        }}
-        ItemSeparatorComponent={() => (
-          <View
-            style={{
-              borderWidth: 0.7,
-              borderColor: Colors.silver,
-            }}
-          />
-        )}
-      />
-      {props.title === 'CONFIRM ITEM LIST' ? (
-        <TwoButton
-          isLoading={props.isLoading}
-          leftLabel={'cancel'}
-          rightLabel={'confirm'}
-          leftOnPress={props.leftOnPress}
-          rightOnPress={props.rightOnPress}
+      <ScrollView
+        style={{
+          flex: 1,
+          maxHeight: hp(75),
+          marginBottom: props.title === 'CONFIRM ITEM LIST' ? hp(6) : 0,
+        }}>
+        <FlatList
+          keyExtractor={(item, index) => index.toString()}
+          bounces={false}
+          scrollEnabled={false}
+          data={props.data}
+          extraData={props.data}
+          renderItem={renderItem}
+          contentContainerStyle={{
+            marginHorizontal: wp(4),
+            flex: 1,
+          }}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                borderWidth: 0.7,
+                borderColor: Colors.silver,
+              }}
+            />
+          )}
         />
+      </ScrollView>
+      {props.title === 'CONFIRM ITEM LIST' ? (
+        <View
+          style={{
+            position: 'absolute',
+            width: '100%',
+            bottom: 0,
+          }}>
+          <TwoButton
+            isLoading={props.isLoading}
+            leftLabel={'cancel'}
+            rightLabel={'confirm'}
+            leftOnPress={props.leftOnPress}
+            rightOnPress={props.rightOnPress}
+          />
+        </View>
       ) : null}
     </View>
   );

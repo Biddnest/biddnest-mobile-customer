@@ -80,7 +80,10 @@ const OrderTracking = (props) => {
           setLoading(false);
           if (res?.data?.status === 'success') {
             setOrderDetails(res?.data?.data?.booking);
-            if (res?.data?.data?.booking?.status === 8) {
+            if (
+              res?.data?.data?.booking?.status === 8 &&
+              !res?.data?.data?.booking?.review?.id
+            ) {
               setRateUsVisible(true);
             }
           } else {
@@ -537,6 +540,8 @@ const OrderTracking = (props) => {
       <CustomModalAndroid
         visible={orderDetailsVisible}
         title={'CHECKLIST'}
+        maxHeight={hp(90)}
+        showsVerticalScrollIndicator={true}
         onPress={() => setOrderDetailsVisible(false)}>
         <OrderDetailModal
           title={'CHECKLIST'}
