@@ -548,9 +548,9 @@ const Home = (props) => {
                   sliderWidth={wp(100)}
                   itemWidth={bottomSize.length > 0 && bottomSize[0]}
                   autoplay={true}
-                  slideStyle={{marginHorizontal: wp(2)}}
+                  // slideStyle={{marginHorizontal: wp(3)}}
                   layout="default"
-                  inactiveSlideScale={1}
+                  inactiveSlideScale={0}
                   autoplayDelay={5000}
                   onSnapToItem={(index) => setActiveSlide2(index)}
                 />

@@ -29,11 +29,11 @@ import {
   CustomAlert,
   CustomConsole,
   LoadingScreen,
+  resetNavigator,
 } from '../../../constant/commonFun';
 import Button from '../../../components/button';
 import RateUs from '../drawer/rateUs';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-import Shimmer from 'react-native-shimmer';
 import MapPin from '../../../assets/svg/map_pin.svg';
 
 const OrderTracking = (props) => {
@@ -78,7 +78,9 @@ const OrderTracking = (props) => {
       getOrderDetails(orderData?.public_booking_id)
         .then((res) => {
           setLoading(false);
-          if (res?.data?.status === 'success') {
+          if (res?.status == 400) {
+            resetNavigator(props, 'Dashboard');
+          } else if (res?.data?.status === 'success') {
             setOrderDetails(res?.data?.data?.booking);
             if (
               res?.data?.data?.booking?.status === 8 &&

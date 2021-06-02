@@ -37,8 +37,8 @@ import SimpleHeader from '../../../components/simpleHeader';
 import {
   CustomAlert,
   CustomConsole,
-  DiffMin,
   LoadingScreen,
+  resetNavigator,
 } from '../../../constant/commonFun';
 import LinearGradient from 'react-native-linear-gradient';
 import LocationDistance from '../../../components/locationDistance';
@@ -105,7 +105,9 @@ const BookingInitialQuote = (props) => {
     if (orderData?.public_booking_id) {
       getOrderDetails(orderData?.public_booking_id)
         .then((res) => {
-          if (res?.data?.status === 'success') {
+          if (res?.status == 400) {
+            resetNavigator(props, 'Dashboard');
+          } else if (res?.data?.status === 'success') {
             let temp = res?.data?.data?.booking;
             if (temp?.status === 4) {
               props.navigation.replace('FinalQuote', {orderData: temp});
@@ -532,7 +534,7 @@ const BookingInitialQuote = (props) => {
                                   ? Colors.btnBG
                                   : Colors.inputTextColor,
                             }}>
-                            Rs. {item.price}
+                            Rs. {item.price?.toFixed(2)}
                           </Text>
                           <Text
                             style={{

@@ -18,6 +18,7 @@ import {
   CustomAlert,
   CustomConsole,
   LoadingScreen,
+  resetNavigator,
 } from '../../../constant/commonFun';
 import {STORE} from '../../../redux';
 import RazorpayCheckout from 'react-native-razorpay';
@@ -51,7 +52,9 @@ const Payment = (props) => {
       getOrderDetails(orderData?.public_booking_id)
         .then((res) => {
           setLoading(false);
-          if (res?.data?.status === 'success') {
+          if (res?.status == 400) {
+            resetNavigator(props, 'Dashboard');
+          } else if (res?.data?.status === 'success') {
             setOrderDetails(res?.data?.data?.booking);
           } else {
             CustomAlert(res?.data?.message);

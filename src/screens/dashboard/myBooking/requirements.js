@@ -13,7 +13,11 @@ import {STYLES} from '../../../constant/commonStyle';
 import {useSelector} from 'react-redux';
 import {Html5Entities} from 'html-entities';
 import {getOrderDetails} from '../../../redux/actions/user';
-import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  resetNavigator,
+} from '../../../constant/commonFun';
 import Lightbox from 'react-native-lightbox';
 
 const Requirements = (props) => {
@@ -32,7 +36,9 @@ const Requirements = (props) => {
     if (orderDetails?.public_booking_id) {
       getOrderDetails(orderDetails?.public_booking_id)
         .then((res) => {
-          if (res?.data?.status === 'success') {
+          if (res?.status == 400) {
+            resetNavigator(props, 'Dashboard');
+          } else if (res?.data?.status === 'success') {
             setOrderDetails(res?.data?.data?.booking);
           } else {
             CustomAlert(res?.data?.message);

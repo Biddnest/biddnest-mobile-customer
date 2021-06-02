@@ -138,7 +138,14 @@ const MyBooking = (props) => {
           width: '50%',
           justifyContent: 'flex-end',
         }}>
-        <View style={styles.categoryView}>
+        <View
+          style={[
+            styles.categoryView,
+            {
+              width: 'auto',
+              paddingHorizontal: wp(2),
+            },
+          ]}>
           <Text
             style={{
               color: Colors.inputTextColor,

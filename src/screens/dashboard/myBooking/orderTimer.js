@@ -15,6 +15,7 @@ import {
   CustomConsole,
   DiffMin,
   LoadingScreen,
+  resetNavigator,
 } from '../../../constant/commonFun';
 import {getOrderDetails} from '../../../redux/actions/user';
 import SimpleHeader from '../../../components/simpleHeader';
@@ -73,7 +74,9 @@ const OrderTimer = (props) => {
     if (orderDetails?.public_booking_id) {
       getOrderDetails(orderDetails?.public_booking_id)
         .then((res) => {
-          if (res?.data?.status === 'success') {
+          if (res?.status == 400) {
+            resetNavigator(props, 'Dashboard');
+          } else if (res?.data?.status === 'success') {
             let temp = res?.data?.data?.booking;
             if (temp?.status === 4) {
               props.navigation.replace('FinalQuote', {orderData: temp});
