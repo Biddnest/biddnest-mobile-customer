@@ -125,9 +125,11 @@ const Home = (props) => {
   const [contactUs, setContactUs] = useState({});
   const [selectedTestimonial, setSelectedTestimonial] = useState({});
   const [activeSlide1, setActiveSlide1] = useState(0);
-  const [activeSlide2, setActiveSlide2] = useState(0);
+  // const [activeSlide2, setActiveSlide2] = useState(0);
+  let activeSlide2 = 0;
   const carousel1 = useRef(null);
   const carousel2 = useRef(null);
+  const scrollViewRef = useRef(null);
 
   useEffect(() => {
     if (isFocused && userData?.fname) {
@@ -229,6 +231,17 @@ const Home = (props) => {
           CustomConsole(err);
         });
     }
+    setInterval(() => {
+      if (activeSlide2 === 2) {
+        activeSlide2 = 0;
+      } else {
+        activeSlide2 = activeSlide2 + 1;
+      }
+      scrollViewRef?.current?.scrollToIndex({
+        animated: true,
+        index: activeSlide2 === 2 ? 0 : activeSlide2 + 1,
+      });
+    }, 5000);
   }, [isFocused]);
   const renderItem = ({item, index}) => {
     let mainSize = [];
@@ -312,13 +325,14 @@ const Home = (props) => {
               <View key={item.id}>
                 <Carousel
                   enableSnap={true}
+                  enableMomentum={false}
                   key={item.id}
                   contentContainerStyle={{
                     padding: wp(4),
                     paddingRight: 0,
                     paddingBottom: 0,
                   }}
-                  loop={true}
+                  // loop={true}
                   ref={carousel1}
                   data={item?.banners}
                   loopClonesPerSide={item?.banners?.length - 1}
@@ -493,12 +507,14 @@ const Home = (props) => {
             });
             return (
               <View key={item?.id}>
-                <Carousel
-                  enableSnap={true}
-                  loop={true}
-                  key={item?.id}
-                  ref={carousel2}
+                <FlatList
+                  ref={scrollViewRef}
+                  key={item.id}
+                  bounces={false}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
                   data={item?.banners}
+                  keyExtractor={(item, index) => index.toString()}
                   renderItem={({item, index}) => {
                     let bottomSize = [];
                     Object.values(sliderSize.size).forEach((i, ind) => {
@@ -533,6 +549,7 @@ const Home = (props) => {
                             ...styles.common,
                             height: bottomSize.length > 0 && bottomSize[1],
                             width: bottomSize.length > 0 && bottomSize[0],
+                            marginLeft: wp(5),
                           },
                         ]}>
                         <Image
@@ -547,99 +564,33 @@ const Home = (props) => {
                       </Pressable>
                     );
                   }}
-                  sliderWidth={wp(100)}
-                  itemWidth={bottomSize.length > 0 && bottomSize[0]}
-                  autoplay={true}
-                  // slideStyle={{marginHorizontal: wp(3)}}
-                  layout="default"
-                  inactiveSlideScale={0}
-                  autoplayDelay={5000}
-                  onSnapToItem={(index) => setActiveSlide2(index)}
-                />
-                <Pagination
-                  dotsLength={item?.banners?.length}
-                  activeDotIndex={activeSlide2}
-                  containerStyle={{
-                    backgroundColor: 'transparent',
-                    marginTop: -hp(2),
-                    marginBottom: -hp(3),
+                  contentContainerStyle={{
+                    paddingRight: wp(5),
                   }}
-                  dotStyle={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: 5,
-                    backgroundColor: Colors.darkBlue,
-                  }}
-                  inactiveDotStyle={
-                    {
-                      // Define styles for inactive dots here
-                    }
-                  }
-                  inactiveDotOpacity={0.4}
-                  inactiveDotScale={0.6}
                 />
+                {/*<Pagination*/}
+                {/*  dotsLength={item?.banners?.length}*/}
+                {/*  activeDotIndex={activeSlide2}*/}
+                {/*  containerStyle={{*/}
+                {/*    backgroundColor: 'transparent',*/}
+                {/*    marginTop: -hp(2),*/}
+                {/*    marginBottom: -hp(3),*/}
+                {/*  }}*/}
+                {/*  dotStyle={{*/}
+                {/*    width: 10,*/}
+                {/*    height: 10,*/}
+                {/*    borderRadius: 5,*/}
+                {/*    backgroundColor: Colors.darkBlue,*/}
+                {/*  }}*/}
+                {/*  inactiveDotStyle={*/}
+                {/*    {*/}
+                {/*      // Define styles for inactive dots here*/}
+                {/*    }*/}
+                {/*  }*/}
+                {/*  inactiveDotOpacity={0.4}*/}
+                {/*  inactiveDotScale={0.6}*/}
+                {/*/>*/}
               </View>
-              // <FlatList
-              //   key={item.id}
-              //   bounces={false}
-              //   horizontal
-              //   showsHorizontalScrollIndicator={false}
-              //   data={item?.banners}
-              //   keyExtractor={(item, index) => index.toString()}
-              //   renderItem={({item, index}) => {
-              //     let bottomSize = [];
-              //     Object.values(sliderSize.size).forEach((i, ind) => {
-              //       if (i === item?.banner_size) {
-              //         bottomSize =
-              //           sliderSize?.banner_dimensions[
-              //             Object.keys(sliderSize.size)[ind]
-              //           ];
-              //       }
-              //     });
-              //     return (
-              //       <Pressable
-              //         onPress={() => {
-              //           if (item?.url && item.url !== '') {
-              //             if (isAndroid) {
-              //               CustomTabs.openURL(item?.url, {
-              //                 toolbarColor: Colors.darkBlue,
-              //               })
-              //                 .then(() => {})
-              //                 .catch((err) => {
-              //                   console.log(err);
-              //                 });
-              //             } else {
-              //               Linking.openURL(item?.url);
-              //             }
-              //           }
-              //         }}
-              //         key={index}
-              //         style={[
-              //           styles.topScroll,
-              //           {
-              //             ...styles.common,
-              //             height: bottomSize.length > 0 && bottomSize[1],
-              //             width: bottomSize.length > 0 && bottomSize[0],
-              //           },
-              //         ]}>
-              //         <Image
-              //           style={{
-              //             height: '100%',
-              //             width: '100%',
-              //           }}
-              //           source={{uri: item?.image}}
-              //           resizeMode={'contain'}
-              //           key={index}
-              //         />
-              //       </Pressable>
-              //     );
-              //   }}
-              //   contentContainerStyle={{
-              //     padding: wp(4),
-              //     paddingTop: 0,
-              //     paddingRight: 0,
-              //   }}
-              // />
             );
           } else {
             return null;
