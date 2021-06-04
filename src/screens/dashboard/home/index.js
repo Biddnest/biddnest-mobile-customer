@@ -311,6 +311,7 @@ const Home = (props) => {
             return (
               <View key={item.id}>
                 <Carousel
+                  enableSnap={true}
                   key={item.id}
                   contentContainerStyle={{
                     padding: wp(4),
@@ -493,6 +494,7 @@ const Home = (props) => {
             return (
               <View key={item?.id}>
                 <Carousel
+                  enableSnap={true}
                   loop={true}
                   key={item?.id}
                   ref={carousel2}

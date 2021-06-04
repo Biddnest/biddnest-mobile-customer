@@ -12,6 +12,7 @@ import {STYLES} from '../../../../constant/commonStyle';
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash';
+import {CustomAlert} from '../../../../constant/commonFun';
 
 const DateOfMovement = (props) => {
   const {data, handleStateChange} = props;
@@ -166,16 +167,61 @@ const DateOfMovement = (props) => {
             style={{width: wp(90), height: hp(50)}}
             current={new Date()}
             minDate={date.setDate(date.getDate() + 1)}
-            maxDate={date.setDate(date.getDate() + 13)}
+            maxDate={date.setDate(date.getDate() + 20)}
             onDayPress={(day) => {
               let temp = {...dateArray};
               if (day.dateString in temp) {
                 delete temp[day.dateString];
               } else {
-                temp[day.dateString] = {
-                  selected: true,
-                  selectedColor: Colors.btnBG,
-                };
+                if (Object.keys(temp)?.length < 5) {
+                  if (Object.keys(temp)?.length === 1) {
+                    let a = moment(Object.keys(temp)[0]);
+                    let b = moment(day.dateString);
+                    let dateDifference = b.diff(a, 'days');
+                    if (Math.abs(dateDifference) < 5) {
+                      let ary = new Array(Math.abs(dateDifference)).fill('');
+                      ary.forEach((item, index) => {
+                        if (Math.sign(dateDifference) === -1) {
+                          temp[
+                            moment(
+                              moment(Object.keys(temp)[0]).subtract(
+                                index + 1,
+                                'days',
+                              ),
+                            ).format('yyyy-MM-DD')
+                          ] = {
+                            selected: true,
+                            selectedColor: Colors.btnBG,
+                          };
+                        } else {
+                          temp[
+                            moment(
+                              moment(Object.keys(temp)[0]).add(
+                                index + 1,
+                                'days',
+                              ),
+                            ).format('yyyy-MM-DD')
+                          ] = {
+                            selected: true,
+                            selectedColor: Colors.btnBG,
+                          };
+                        }
+                      });
+                    } else {
+                      temp[day.dateString] = {
+                        selected: true,
+                        selectedColor: Colors.btnBG,
+                      };
+                    }
+                  } else {
+                    temp[day.dateString] = {
+                      selected: true,
+                      selectedColor: Colors.btnBG,
+                    };
+                  }
+                } else {
+                  CustomAlert('You can select maximum 5 dates');
+                }
               }
               setDateArray(temp);
             }}

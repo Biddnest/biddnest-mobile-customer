@@ -487,7 +487,7 @@ const OrderTracking = (props) => {
               </View>
             )}
           </View>
-          <VerticalStepper orderDetails={orderDetails} />
+          <VerticalStepper key={new Date()} orderDetails={orderDetails} />
           <View
             style={{...styles.inputForm, marginTop: 0, marginBottom: hp(2)}}>
             <View style={{...styles.flexBox, marginTop: 0}}>

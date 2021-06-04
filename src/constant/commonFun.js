@@ -92,21 +92,37 @@ export const pad_with_zeroes = (number, length) => {
   return my_string;
 };
 
-export const ImageSelection = () => {
+export const ImageSelection = (type) => {
   return new Promise((resolve, reject) => {
-    ImagePicker.openPicker({
-      width: 400,
-      height: 400,
-      cropping: true,
-      includeBase64: true,
-    })
-      .then((response) => {
-        resolve('data:image/jpeg;base64,' + response.data);
-        reject(false);
+    if (type === 'camera') {
+      ImagePicker.openCamera({
+        width: 400,
+        height: 400,
+        cropping: true,
+        includeBase64: true,
       })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((response) => {
+          resolve('data:image/jpeg;base64,' + response.data);
+          reject(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      ImagePicker.openPicker({
+        width: 400,
+        height: 400,
+        cropping: true,
+        includeBase64: true,
+      })
+        .then((response) => {
+          resolve('data:image/jpeg;base64,' + response.data);
+          reject(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   });
 };
 

@@ -86,6 +86,7 @@ const Login = (props) => {
           <View style={styles.bottomView}>
             <TextInput
               isRight={phoneValidate}
+              isLeft={true}
               label={'Phone Number'}
               placeHolder={'Phone Number'}
               keyboard={'decimal-pad'}

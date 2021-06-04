@@ -1,6 +1,13 @@
 import React, {useState} from 'react';
 import {Colors, hp, wp} from '../../../constant/colors';
-import {Image, Platform, Pressable, StyleSheet, View} from 'react-native';
+import {
+  Image,
+  Linking,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -23,6 +30,8 @@ import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import FlatButton from '../../../components/flatButton';
 import Ripple from 'react-native-material-ripple';
 import SelectionModal from '../../../components/selectionModal';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const EditProfile = (props) => {
   const dispatch = useDispatch();
@@ -33,6 +42,7 @@ const EditProfile = (props) => {
     useSelector((state) => state.Login?.loginData?.user) || {},
   );
   const [otpModal, setOTPModal] = useState(false);
+  const [imageSelect, setImageSelect] = useState(false);
   const [phone, setPhone] = React.useState();
   const [otp, setOTP] = React.useState();
   const [phoneValidate, setPhoneValidate] = React.useState(undefined);
@@ -76,6 +86,13 @@ const EditProfile = (props) => {
           CustomAlert(err?.data?.message);
         });
     }
+  };
+  const setImage = (type) => {
+    ImageSelection(type)
+      .then((res) => {
+        handleState('avatar', res);
+      })
+      .catch((err) => {});
   };
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
@@ -254,11 +271,7 @@ const EditProfile = (props) => {
                 <Ripple
                   rippleColor={Colors.white}
                   onPress={async () => {
-                    ImageSelection()
-                      .then((res) => {
-                        handleState('avatar', res);
-                      })
-                      .catch((err) => {});
+                    setImageSelect(true);
                   }}
                   style={styles.imageUploadBtn}>
                   <Text
@@ -485,6 +498,59 @@ const EditProfile = (props) => {
               />
             </View>
           )}
+        </View>
+      </CustomModalAndroid>
+      <CustomModalAndroid
+        visible={imageSelect}
+        title={'Upload From'}
+        onPress={() => {
+          setImageSelect(false);
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            marginVertical: hp(3),
+            width: wp(100),
+          }}>
+          <View style={styles.common}>
+            <Ripple
+              rippleColor={Colors.white}
+              style={[STYLES.selectionView, STYLES.common]}
+              onPress={() => setImage('camera')}>
+              <Ionicons name={'camera'} color={Colors.darkBlue} size={hp(6)} />
+            </Ripple>
+            <Text
+              style={[
+                STYLES.selectionText,
+                {
+                  textAlign: 'center',
+                },
+              ]}>
+              Camera
+            </Text>
+          </View>
+          <View style={styles.common}>
+            <Ripple
+              rippleColor={Colors.white}
+              onPress={() => setImage('gallery')}
+              style={[STYLES.selectionView, STYLES.common]}>
+              <AntDesign
+                name={'picture'}
+                color={Colors.darkBlue}
+                size={hp(6)}
+              />
+            </Ripple>
+            <Text
+              style={[
+                STYLES.selectionText,
+                {
+                  textAlign: 'center',
+                },
+              ]}>
+              Gallery
+            </Text>
+          </View>
         </View>
       </CustomModalAndroid>
     </LinearGradient>

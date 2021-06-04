@@ -222,6 +222,7 @@ const MovingForm = (props) => {
         <Pressable onPress={() => setMapVisible(true)}>
           <TextInput
             disable={true}
+            selection={{start: 0}}
             label={props.movingFrom ? 'Drop Location' : 'Pickup Location'}
             isRight={error?.geocode}
             value={
@@ -259,6 +260,7 @@ const MovingForm = (props) => {
           label={'Address Line 2'}
           isRight={error.address_line2}
           placeHolder={'Landmark, Area'}
+          selection={isKeyboardOpen ? {end: 0} : {start: 0}}
           value={
             props.movingFrom
               ? destination?.meta?.address_line2
@@ -308,7 +310,6 @@ const MovingForm = (props) => {
               width: Platform.OS === 'android' ? wp(56) : '76%',
             }}>
             <TextInput
-              disable={true}
               label={'Floor'}
               isRight={error.floor}
               value={
@@ -316,7 +317,7 @@ const MovingForm = (props) => {
                   ? destination?.meta?.floor.toString()
                   : source?.meta?.floor.toString()
               }
-              maxLength={3}
+              maxLength={2}
               keyboard={'decimal-pad'}
               placeHolder={'Floor'}
               onChange={(text) => handleState('floor', text)}
@@ -404,7 +405,7 @@ const MovingForm = (props) => {
                 fontSize: wp(4),
                 marginLeft: 5,
               }}>
-              Is lift available?
+              Is service lift available?
             </Text>
           </View>
           <Switch
@@ -795,7 +796,7 @@ const MovingForm = (props) => {
               ? 'Mentioning this helps us being better prepaid for your moment'
               : 'If checked, our vendors will move your items along with other items in a shared vehicle \n\n Checking this option will effectively reduce the movement cost, else A dedicated vehicle will be used.'
           }
-          title={liftInfo ? 'lift' : 'Shared Service'}
+          title={liftInfo ? 'service lift' : 'Shared Service'}
           onCloseIcon={() => {
             if (liftInfo) {
               setLiftInfo(false);

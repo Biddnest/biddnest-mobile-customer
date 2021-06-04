@@ -53,6 +53,14 @@ export function DrawerContent(props) {
         return (
           <Ionicons name={item.icon} color={Colors.darkBlue} size={wp(7)} />
         );
+      case 'MaterialIcons':
+        return (
+          <MaterialIcons
+            name={item.icon}
+            color={Colors.darkBlue}
+            size={wp(7)}
+          />
+        );
       default:
         break;
     }
@@ -108,6 +116,11 @@ export function DrawerContent(props) {
                 // Check table for errors and code number that can return in catch.
                 console.log(error);
               });
+          } else if (item?.navigate === 'test') {
+            dispatch({
+              type: RESET_STORE,
+            });
+            resetNavigator(props, 'Login');
           } else {
             props.navigation.navigate(item.navigate);
           }
@@ -160,7 +173,7 @@ export function DrawerContent(props) {
               resizeMode={'contain'}
             />
           </View>
-          <View style={{width: wp(35), paddingLeft: wp(2)}}>
+          <View style={{width: wp(45), paddingLeft: wp(2)}}>
             <Text numberOfLines={1} style={styles.userText}>
               {userData?.fname} {userData?.lname}
             </Text>
@@ -175,22 +188,22 @@ export function DrawerContent(props) {
               {userData?.phone}
             </Text>
           </View>
-          <View style={{width: wp(15)}}>
-            <Pressable
-              style={styles.logoutWrapper}
-              onPress={() => {
-                dispatch({
-                  type: RESET_STORE,
-                });
-                resetNavigator(props, 'Login');
-              }}>
-              <MaterialIcons
-                name={'logout'}
-                color={Colors.white}
-                size={wp(6)}
-              />
-            </Pressable>
-          </View>
+          {/*<View style={{width: wp(15)}}>*/}
+          {/*  <Pressable*/}
+          {/*    style={styles.logoutWrapper}*/}
+          {/*    onPress={() => {*/}
+          {/*      dispatch({*/}
+          {/*        type: RESET_STORE,*/}
+          {/*      });*/}
+          {/*      resetNavigator(props, 'Login');*/}
+          {/*    }}>*/}
+          {/*    <MaterialIcons*/}
+          {/*      name={'logout'}*/}
+          {/*      color={Colors.white}*/}
+          {/*      size={wp(6)}*/}
+          {/*    />*/}
+          {/*  </Pressable>*/}
+          {/*</View>*/}
         </View>
       </ImageBackground>
       <View style={styles.bottomView}>

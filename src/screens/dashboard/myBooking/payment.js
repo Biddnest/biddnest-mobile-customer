@@ -4,6 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Colors, hp, wp, PAYMENT_OPTION} from '../../../constant/colors';
 import {
   FlatList,
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -28,6 +29,8 @@ import {Html5Entities} from 'html-entities';
 import HTML from 'react-native-render-html';
 import moment from 'moment';
 import {Base64} from 'js-base64';
+import CustomModalAndroid from '../../../components/customModal';
+import BookedConfirm from '../../../assets/svg/booked_confirm.svg';
 
 const Payment = (props) => {
   const entities = new Html5Entities();
@@ -45,6 +48,7 @@ const Payment = (props) => {
   const userData = useSelector((state) => state.Login?.loginData?.user) || {};
   const [couponApplied, setCouponApplied] = useState(false);
   const [coupons, setCoupons] = useState([]);
+  const [placedSuccessVisible, setPlacedSuccessVisible] = useState(false);
 
   useEffect(() => {
     if (orderData?.public_booking_id) {
@@ -175,10 +179,7 @@ const Payment = (props) => {
           .then((res) => {
             setLoading(false);
             if (res?.data?.status === 'success') {
-              props.navigation.pop(1);
-              props.navigation.replace('OrderTracking', {
-                orderData: orderDetails,
-              });
+              setPlacedSuccessVisible(true);
             } else {
               CustomAlert(res?.data?.message);
             }
@@ -475,6 +476,25 @@ const Payment = (props) => {
             }}
           />
         </ScrollView>
+        <CustomModalAndroid
+          visible={placedSuccessVisible}
+          title={'Payment Received'}
+          onPress={() => {
+            props.navigation.pop(1);
+            props.navigation.replace('OrderTracking', {
+              orderData: orderDetails,
+            });
+            setPlacedSuccessVisible(false);
+          }}>
+          <BookedConfirm
+            height={wp(30)}
+            width={wp(30)}
+            style={{marginTop: hp(5)}}
+          />
+          <Text style={styles.bidText}>
+            Thankyou, Your booking has been Confirmed
+          </Text>
+        </CustomModalAndroid>
       </View>
     </LinearGradient>
   );
@@ -528,5 +548,15 @@ const styles = StyleSheet.create({
     marginBottom: hp(1),
     marginHorizontal: wp(2),
     alignItems: 'center',
+  },
+  bidText: {
+    marginTop: hp(3),
+    marginBottom: hp(5),
+    color: Colors.darkBlue,
+    fontFamily: 'Gilroy-SemiBold',
+    fontSize: wp(5),
+    marginHorizontal: wp(10),
+    textAlign: 'center',
+    lineHeight: hp(3.5),
   },
 });

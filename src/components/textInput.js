@@ -2,7 +2,7 @@ import React from 'react';
 import {Input} from 'react-native-elements';
 import {hp, Colors, wp} from '../constant/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {Pressable} from 'react-native';
+import {Pressable, Text} from 'react-native';
 
 const TextInput = (props) => {
   return (
@@ -16,8 +16,23 @@ const TextInput = (props) => {
       numberOfLines={props.numberOfLines || 1}
       value={props.value}
       onFocus={props.onFocus}
+      selection={props?.selection}
       onBlur={props.onBlur}
       label={props.label}
+      leftIcon={() => {
+        if (props?.isLeft) {
+          return (
+            <Text
+              style={{
+                fontFamily: 'Gilroy-SemiBold',
+                fontSize: wp(4),
+                color: Colors.inputTextColor,
+              }}>
+              +91
+            </Text>
+          );
+        }
+      }}
       rightIcon={() => {
         if (props.isRight === true) {
           return (

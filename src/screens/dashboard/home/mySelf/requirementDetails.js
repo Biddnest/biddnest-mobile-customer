@@ -34,6 +34,8 @@ import {Picker} from '@react-native-picker/picker';
 import TwoButton from '../../../../components/twoButton';
 import SearchableItem from '../../../../components/searchableItem';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ripple from 'react-native-material-ripple';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const RequirementDetails = (props) => {
   const {
@@ -54,6 +56,7 @@ const RequirementDetails = (props) => {
   const [addItem, setAddItem] = useState(false);
   const [addData, setAddData] = useState({});
   const [editItem, setEditItem] = useState(false);
+  const [imageSelect, setImageSelect] = useState(false);
   const [openPicker, setOpenPicker] = useState(false);
   const [editableWarning, setEditableWarning] = useState(false);
   const [changeCategoryVisible, setChangeCategoryVisible] = useState({});
@@ -409,10 +412,27 @@ const RequirementDetails = (props) => {
       </View>
     );
   };
+  const setImage = (type) => {
+    ImageSelection(type)
+      .then((res) => {
+        handleState('images', res);
+      })
+      .catch((err) => {});
+  };
   let imageData = [...data?.meta?.images];
   imageData.push('Plus');
   return (
     <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+      <Text
+        style={{
+          textAlign: 'center',
+          marginBottom: hp(2),
+          fontFamily: 'Gilroy-SemiBold',
+          fontSize: wp(4),
+          textTransform: 'uppercase',
+        }}>
+        Pick an item list
+      </Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -502,7 +522,7 @@ const RequirementDetails = (props) => {
             )}
           />
           <Button
-            label={'ADD ITEM'}
+            label={'I NEED MORE SPACE'}
             backgroundColor={Colors.white}
             spaceBottom={0}
             onPress={() => {
@@ -543,13 +563,7 @@ const RequirementDetails = (props) => {
               if (item === 'Plus') {
                 return (
                   <Pressable
-                    onPress={() =>
-                      ImageSelection()
-                        .then((res) => {
-                          handleState('images', res);
-                        })
-                        .catch((err) => {})
-                    }
+                    onPress={() => setImageSelect(true)}
                     style={{
                       height: wp(16),
                       width: wp(16),
@@ -1261,6 +1275,59 @@ const RequirementDetails = (props) => {
               });
           }}
         />
+      </CustomModalAndroid>
+      <CustomModalAndroid
+        visible={imageSelect}
+        title={'Upload From'}
+        onPress={() => {
+          setImageSelect(false);
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            marginVertical: hp(3),
+            width: wp(100),
+          }}>
+          <View style={styles.common}>
+            <Ripple
+              rippleColor={Colors.white}
+              style={[STYLES.selectionView, STYLES.common]}
+              onPress={() => setImage('camera')}>
+              <Ionicons name={'camera'} color={Colors.darkBlue} size={hp(6)} />
+            </Ripple>
+            <Text
+              style={[
+                STYLES.selectionText,
+                {
+                  textAlign: 'center',
+                },
+              ]}>
+              Camera
+            </Text>
+          </View>
+          <View style={styles.common}>
+            <Ripple
+              rippleColor={Colors.white}
+              onPress={() => setImage('gallery')}
+              style={[STYLES.selectionView, STYLES.common]}>
+              <AntDesign
+                name={'picture'}
+                color={Colors.darkBlue}
+                size={hp(6)}
+              />
+            </Ripple>
+            <Text
+              style={[
+                STYLES.selectionText,
+                {
+                  textAlign: 'center',
+                },
+              ]}>
+              Gallery
+            </Text>
+          </View>
+        </View>
       </CustomModalAndroid>
       <SearchableItem
         visible={!!openPicker}

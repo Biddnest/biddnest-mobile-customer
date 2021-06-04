@@ -15,6 +15,7 @@ import {STORE} from '../../../../redux';
 import {APICall} from '../../../../redux/actions/user';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import BookedConfirm from '../../../../assets/svg/booked_confirm.svg';
 
 const Timer = (props) => {
   const [orderPlacedVisible, setOrderPlacedVisible] = useState(false);
@@ -121,7 +122,7 @@ const Timer = (props) => {
             ...styles.circleView,
             ...STYLES.common,
           }}>
-          <Feather name={'check'} size={wp(15)} color={Colors.btnBG} />
+          <BookedConfirm height={wp(25)} width={wp(25)} />
         </View>
         <Text
           style={[
@@ -193,10 +194,10 @@ const styles = StyleSheet.create({
     height: wp(25),
     width: wp(25),
     marginTop: 35,
-    borderRadius: wp(12.5),
-    backgroundColor: Colors.white,
-    borderWidth: 4,
+    // borderRadius: wp(12.5),
+    // backgroundColor: Colors.white,
+    // borderWidth: 4,
     marginBottom: hp(3),
-    borderColor: Colors.btnBG,
+    // borderColor: Colors.btnBG,
   },
 });
