@@ -116,7 +116,7 @@ const EditProfile = (props) => {
               <TextInput
                 value={data?.fname}
                 isRight={error.fname}
-                label={'First Name'}
+                label={'First Name *'}
                 placeHolder={'David'}
                 onChange={(text) => handleState('fname', text)}
               />
@@ -125,7 +125,7 @@ const EditProfile = (props) => {
               <TextInput
                 value={data?.lname}
                 isRight={error.lname}
-                label={'Last Name'}
+                label={'Last Name *'}
                 placeHolder={'Jerome'}
                 onChange={(text) => handleState('lname', text)}
               />
@@ -135,7 +135,7 @@ const EditProfile = (props) => {
             <TextInput
               value={data?.email}
               isRight={error.email}
-              label={'Email ID'}
+              label={'Email ID *'}
               placeHolder={'davidje@gmail.com'}
               onChange={(text) => handleState('email', text)}
             />
@@ -147,7 +147,7 @@ const EditProfile = (props) => {
               <TextInput
                 disable={true}
                 value={data?.phone}
-                label={'Phone Number'}
+                label={'Phone Number *'}
                 placeHolder={'9739912345'}
                 onChange={(text) => handleState('phone', text)}
               />
@@ -160,7 +160,7 @@ const EditProfile = (props) => {
               <SelectionModal
                 value={data.gender}
                 width={wp(45)}
-                label={'Gender'}
+                label={'Gender *'}
                 items={configData?.gender}
                 onChangeItem={(text) => handleState('gender', text)}
               />
@@ -174,7 +174,7 @@ const EditProfile = (props) => {
                 color: Colors.textLabelColor,
                 fontSize: wp(4),
               }}>
-              Date Of Birth
+              Date Of Birth *
             </Text>
             <View
               style={{
@@ -375,7 +375,7 @@ const EditProfile = (props) => {
         <View style={styles.bottomView}>
           <TextInput
             isRight={phoneValidate}
-            label={'Phone Number'}
+            label={'Phone Number *'}
             placeHolder={'Phone Number'}
             keyboard={'decimal-pad'}
             onChange={(text) => {
@@ -411,7 +411,7 @@ const EditProfile = (props) => {
                     color: Colors.textLabelColor,
                     fontSize: wp(4),
                   }}>
-                  Verify OTP
+                  Verify OTP *
                 </Text>
                 <View
                   style={{

@@ -82,7 +82,7 @@ const Signup = (props) => {
             <View style={{flexDirection: 'row'}}>
               <View style={{width: wp(45)}}>
                 <TextInput
-                  label={'First Name'}
+                  label={'First Name *'}
                   isRight={error.fname}
                   value={data?.fname}
                   placeHolder={'John'}
@@ -91,7 +91,7 @@ const Signup = (props) => {
               </View>
               <View style={{width: wp(45)}}>
                 <TextInput
-                  label={'Last Name'}
+                  label={'Last Name *'}
                   isRight={error.lname}
                   value={data?.lname}
                   placeHolder={'Doe'}
@@ -100,7 +100,7 @@ const Signup = (props) => {
               </View>
             </View>
             <TextInput
-              label={'Email ID'}
+              label={'Email ID *'}
               placeHolder={'example@domain.com'}
               isRight={error.email}
               value={data?.email}
@@ -123,7 +123,7 @@ const Signup = (props) => {
                     : {}
                 }
                 value={data?.gender}
-                label={'Gender'}
+                label={'Gender *'}
                 items={genderDefault}
                 onChangeItem={(text) => handleState('gender', text)}
               />

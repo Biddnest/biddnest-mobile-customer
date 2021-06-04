@@ -87,7 +87,7 @@ const Login = (props) => {
             <TextInput
               isRight={phoneValidate}
               isLeft={true}
-              label={'Phone Number'}
+              label={'Phone Number *'}
               placeHolder={'Phone Number'}
               keyboard={'decimal-pad'}
               onChange={(text) => {
@@ -147,7 +147,7 @@ const Login = (props) => {
                       color: Colors.textLabelColor,
                       fontSize: wp(4),
                     }}>
-                    Verify OTP
+                    Verify OTP *
                   </Text>
                   <View
                     style={{

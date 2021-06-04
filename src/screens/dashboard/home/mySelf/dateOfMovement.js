@@ -120,7 +120,7 @@ const DateOfMovement = (props) => {
           <Input
             placeholder={'Choose Date'}
             disabled={true}
-            label={'Choose Date'}
+            label={'Choose Date *'}
             value={
               dateArrayDisplay?.join(', ') || data?.movement_dates?.join(', ')
             }

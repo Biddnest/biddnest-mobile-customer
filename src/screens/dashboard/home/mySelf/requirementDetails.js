@@ -30,12 +30,12 @@ import CustomLabel from './CustomLabel';
 import {APICall} from '../../../../redux/actions/user';
 import {STORE} from '../../../../redux';
 import {useSelector} from 'react-redux';
-import {Picker} from '@react-native-picker/picker';
 import TwoButton from '../../../../components/twoButton';
 import SearchableItem from '../../../../components/searchableItem';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ripple from 'react-native-material-ripple';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import SelectionModal from '../../../../components/selectionModal';
 
 const RequirementDetails = (props) => {
   const {
@@ -264,149 +264,118 @@ const RequirementDetails = (props) => {
   };
 
   const renderItem = ({item, index}) => {
+    if (item?.inventory_id === -1) {
+      return (
+        <Pressable
+          onPress={() => {
+            setAddData({
+              name: null,
+              material: null,
+              size: null,
+              quantity:
+                configData?.inventory_quantity_type.range ===
+                movementType?.inventory_quantity_type
+                  ? {
+                      min: 250,
+                      max: 750,
+                    }
+                  : 1,
+            });
+            setAddItem(true);
+          }}
+          key={item.id}
+          style={{
+            backgroundColor: Colors.white,
+            borderColor: Colors.darkBlue,
+            borderWidth: 1.2,
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: hp(1.5),
+            padding: wp(2),
+            borderRadius: hp(1),
+            marginRight: hp(1.3),
+          }}>
+          <View
+            style={{
+              ...styles.backgroundCircle,
+              ...STYLES.common,
+              backgroundColor: Colors.pageBG,
+            }}>
+            <AntDesign name={'plus'} size={hp(3)} color={Colors.darkBlue} />
+          </View>
+          <View
+            style={{
+              marginLeft: wp(2),
+            }}>
+            <Text
+              style={{
+                fontFamily: 'Gilroy-SemiBold',
+                color: Colors.inputTextColor,
+                fontSize: wp(4.5),
+              }}>
+              {'Add More'}
+            </Text>
+          </View>
+        </Pressable>
+      );
+    }
     return (
       <View
         key={item.id}
         style={{
-          width: '95%',
-          justifyContent: 'center',
-          alignSelf: 'center',
+          backgroundColor: Colors.pageBG,
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginBottom: hp(1.5),
+          padding: wp(2),
+          borderRadius: hp(1),
+          marginRight: hp(1.3),
         }}>
-        <Text
+        <Pressable
+          onPress={() => {
+            setEditData(item);
+            setConfirmationModalVisible(false);
+            setEditItem(true);
+          }}
           style={{
-            fontFamily: 'Gilroy-Bold',
-            color: Colors.inputTextColor,
-            fontSize: wp(4.5),
+            ...styles.backgroundCircle,
+            ...STYLES.common,
           }}>
-          {item?.itemName || item.name}
-        </Text>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <View style={{width: '38%', marginRight: '2%'}}>
-            <Text
-              numberOfLines={1}
-              style={{
-                fontFamily: 'Roboto-Regular',
-                color: Colors.inputTextColor,
-                fontSize: wp(3.5),
-              }}>
-              {item?.material}, {item?.size}
-            </Text>
-          </View>
-          {(configData?.inventory_quantity_type.range ===
-            movementType?.inventory_quantity_type && (
-            <View
-              style={{
-                width: '28%',
-                flexDirection: 'row',
-                height: hp(4),
-                backgroundColor: Colors.silver,
-                borderRadius: 5,
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-              }}>
+          <SimpleLineIcons
+            name={'pencil'}
+            size={hp(2.5)}
+            color={Colors.darkBlue}
+          />
+        </Pressable>
+        <View
+          style={{
+            marginLeft: wp(2),
+          }}>
+          <Text
+            style={{
+              fontFamily: 'Gilroy-SemiBold',
+              color: Colors.inputTextColor,
+              fontSize: wp(4.5),
+            }}>
+            {configData?.inventory_quantity_type.range ===
+            movementType?.inventory_quantity_type
+              ? item?.quantity?.min + '-' + item?.quantity?.max
+              : item?.quantity}{' '}
+            {item?.itemName || item.name}
+          </Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{marginRight: '2%'}}>
               <Text
+                numberOfLines={1}
                 style={{
-                  color: Colors.inputTextColor,
-                }}>
-                {item?.quantity?.min}-{item?.quantity?.max}
-              </Text>
-            </View>
-          )) || (
-            <View
-              style={{
-                width: '28%',
-                flexDirection: 'row',
-                height: hp(4),
-                backgroundColor: Colors.silver,
-                borderRadius: 5,
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-              }}>
-              <Pressable
-                onPress={() => {
-                  let temp = [...inventoryItems];
-                  let t1 = temp[index];
-                  if (t1?.quantity > 1) {
-                    t1.quantity =
-                      typeof t1?.quantity === 'string'
-                        ? parseInt(t1?.quantity) - 1 || 0
-                        : t1?.quantity - 1 || 0;
-                    setInventoryItems(temp);
-                    handleStateChange('inventory_items', temp);
-                  }
-                }}>
-                <MaterialCommunityIcons
-                  name={'minus'}
-                  size={hp(2.5)}
-                  color={Colors.inputTextColor}
-                />
-              </Pressable>
-              <Text
-                style={{
+                  fontFamily: 'Roboto-Regular',
                   color: Colors.inputTextColor,
                   fontSize: wp(3.5),
+                  textTransform: 'capitalize',
                 }}>
-                {item?.quantity || 0}
+                {item?.material}, {item?.size}
               </Text>
-              <Pressable
-                onPress={() => {
-                  let temp = [...inventoryItems];
-                  let t1 = temp[index];
-                  t1.quantity =
-                    typeof t1?.quantity === 'string'
-                      ? parseInt(t1?.quantity) + 1 || 0
-                      : t1?.quantity + 1 || 0;
-                  setInventoryItems(temp);
-                  handleStateChange('inventory_items', temp);
-                }}>
-                <MaterialCommunityIcons
-                  name={'plus'}
-                  size={hp(2.5)}
-                  color={Colors.inputTextColor}
-                />
-              </Pressable>
             </View>
-          )}
-          <View
-            style={{
-              width: '28%',
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
-            }}>
-            <Pressable
-              onPress={() => {
-                setEditData(item);
-                setConfirmationModalVisible(false);
-                setEditItem(true);
-              }}
-              style={{
-                ...styles.backgroundCircle,
-                ...STYLES.common,
-              }}>
-              <SimpleLineIcons
-                name={'pencil'}
-                size={hp(2.5)}
-                color={Colors.darkBlue}
-              />
-            </Pressable>
-            <Pressable
-              onPress={() => {
-                let temp = [...inventoryItems];
-                temp.splice(index, 1);
-                setInventoryItems(temp);
-                handleStateChange('inventory_items', temp);
-              }}
-              style={{
-                ...styles.backgroundCircle,
-                ...STYLES.common,
-              }}>
-              <Ionicons
-                name={'trash-outline'}
-                size={hp(2.5)}
-                color={Colors.darkBlue}
-              />
-            </Pressable>
           </View>
         </View>
       </View>
@@ -489,23 +458,26 @@ const RequirementDetails = (props) => {
             ? `${selectedSubCategory?.name} ITEM LIST`
             : `${movementType?.name} ITEM LIST`}
         </Text>
-        <View style={{marginTop: hp(3)}}>
+        <View
+          style={{
+            width: '100%',
+            borderWidth: 1,
+            marginTop: hp(3),
+            marginBottom: hp(2),
+            borderColor: Colors.pageBG,
+          }}
+        />
+        <View>
           <FlatList
             keyExtractor={(item, index) => index.toString()}
             bounces={false}
-            data={inventoryItems}
-            extraData={inventoryItems}
+            data={[...inventoryItems, {inventory_id: -1}]}
+            contentContainerStyle={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+            }}
+            extraData={[...inventoryItems, {inventory_id: -1}]}
             renderItem={renderItem}
-            ItemSeparatorComponent={() => (
-              <View
-                style={{
-                  borderWidth: 0.7,
-                  borderColor: Colors.silver,
-                  marginVertical: hp(2),
-                }}
-              />
-            )}
-            onRefresh={() => {}}
             refreshing={isWait}
             ListEmptyComponent={() => (
               <Text
@@ -520,27 +492,6 @@ const RequirementDetails = (props) => {
                 quote for you
               </Text>
             )}
-          />
-          <Button
-            label={'I NEED MORE SPACE'}
-            backgroundColor={Colors.white}
-            spaceBottom={0}
-            onPress={() => {
-              setAddData({
-                name: null,
-                material: null,
-                size: null,
-                quantity:
-                  configData?.inventory_quantity_type.range ===
-                  movementType?.inventory_quantity_type
-                    ? {
-                        min: 250,
-                        max: 750,
-                      }
-                    : 1,
-              });
-              setAddItem(true);
-            }}
           />
         </View>
       </View>
@@ -700,7 +651,7 @@ const RequirementDetails = (props) => {
             width: wp(90),
             paddingHorizontal: 10,
           }}>
-          <Text style={styles.textLabel}>{'Item Name'}</Text>
+          <Text style={styles.textLabel}>{'Item Name *'}</Text>
           <View style={styles.outerView}>
             <Text numberOfLines={1} style={styles.innerText}>
               {addItem
@@ -718,7 +669,7 @@ const RequirementDetails = (props) => {
           <View style={{width: '90%', marginTop: hp(2)}}>
             <TextInput
               value={editItem ? editData?.itemName : addData?.itemName}
-              label={'Item Name'}
+              label={'Item Name *'}
               placeHolder={'Add Custom item'}
               onChange={(text) => {
                 if (editItem) {
@@ -751,7 +702,7 @@ const RequirementDetails = (props) => {
             <View style={{width: '45%', marginTop: hp(1)}}>
               <TextInput
                 value={editItem ? editData?.material : addData?.material}
-                label={'Material/Variant'}
+                label={'Material/Variant *'}
                 placeHolder={'Material/Variant'}
                 onChange={(text) => {
                   if (editItem) {
@@ -763,46 +714,24 @@ const RequirementDetails = (props) => {
               />
             </View>
           )) || (
-            <View
-              style={{
-                width: wp(45),
-                paddingHorizontal: 10,
-                marginBottom: hp(2),
-              }}>
-              <Text style={styles.textLabel}>{'Material/Variant'}</Text>
-              <View
-                style={[
-                  styles.outerView,
-                  {width: '100%', paddingHorizontal: 0},
-                ]}>
-                <Picker
-                  style={{
-                    height: '99%',
-                    width: '100%',
-                  }}
-                  selectedValue={
-                    editItem ? editData?.material : addData?.material
-                  }
-                  onValueChange={(text) => {
-                    if (editItem) {
-                      setEditData({...editData, material: text});
-                    } else {
-                      setAddData({...addData, material: text});
-                    }
-                  }}>
-                  {selectedInventory?.material?.map((item, index) => {
-                    return (
-                      <Picker.Item label={item?.label} value={item?.value} />
-                    );
-                  })}
-                </Picker>
-              </View>
-            </View>
+            <SelectionModal
+              width={wp(45)}
+              value={editItem ? editData?.material : addData?.material}
+              label={'Material/Variant *'}
+              items={selectedInventory?.material}
+              onChangeItem={(text) => {
+                if (editItem) {
+                  setEditData({...editData, material: text});
+                } else {
+                  setAddData({...addData, material: text});
+                }
+              }}
+            />
           )}
           {((addData?.name === '-Other-' || editData?.name === '-Other-') && (
             <View style={{width: '45%', marginTop: hp(1)}}>
               <TextInput
-                label={'Size'}
+                label={'Size *'}
                 value={editItem ? editData?.size : addData?.size}
                 placeHolder={'Size'}
                 onChange={(text) => {
@@ -815,40 +744,19 @@ const RequirementDetails = (props) => {
               />
             </View>
           )) || (
-            <View
-              style={{
-                width: wp(45),
-                paddingHorizontal: 10,
-                marginBottom: hp(2),
-              }}>
-              <Text style={styles.textLabel}>{'Size'}</Text>
-              <View
-                style={[
-                  styles.outerView,
-                  {width: '100%', paddingHorizontal: 0},
-                ]}>
-                <Picker
-                  style={{
-                    height: '99%',
-                    width: '100%',
-                  }}
-                  // selectedValue={editItem ? editData?.size : addData?.size}
-                  selectedValue={editItem ? editData?.size : addData?.size}
-                  onValueChange={(text) => {
-                    if (editItem) {
-                      setEditData({...editData, size: text});
-                    } else {
-                      setAddData({...addData, size: text});
-                    }
-                  }}>
-                  {selectedInventory?.size?.map((item, index) => {
-                    return (
-                      <Picker.Item label={item?.label} value={item?.value} />
-                    );
-                  })}
-                </Picker>
-              </View>
-            </View>
+            <SelectionModal
+              width={wp(45)}
+              value={editItem ? editData?.size : addData?.size}
+              label={'Size *'}
+              items={selectedInventory?.size}
+              onChangeItem={(text) => {
+                if (editItem) {
+                  setEditData({...editData, size: text});
+                } else {
+                  setAddData({...addData, size: text});
+                }
+              }}
+            />
           )}
         </View>
         <View style={{width: '90%'}}>
@@ -864,7 +772,7 @@ const RequirementDetails = (props) => {
                   color: Colors.textLabelColor,
                   fontSize: wp(4),
                 }}>
-                Quantity
+                Quantity *
               </Text>
               <MultiSlider
                 values={
@@ -919,7 +827,7 @@ const RequirementDetails = (props) => {
                     : hp(2),
               }}>
               <TextInput
-                label={'Quantity'}
+                label={'Quantity *'}
                 // isRight={error.firstName}
                 placeHolder={'Quantity'}
                 value={
@@ -985,11 +893,31 @@ const RequirementDetails = (props) => {
             </View>
           )}
         </View>
-        <FlatButton
-          onPress={() => {
-            let temp = [...inventoryItems];
-            let error = [];
-            if (editItem) {
+        {(editItem && (
+          <TwoButton
+            isLoading={isLoading}
+            leftLabel={'delete'}
+            rightLabel={'SAVE'}
+            leftOnPress={() => {
+              let temp = [...inventoryItems];
+              let index = temp.findIndex(
+                (i) =>
+                  i.name === editData.name &&
+                  i.material === editData.material &&
+                  i.size === editData.size &&
+                  i.itemName === editData.itemName,
+              );
+              temp.splice(index, 1);
+              setInventoryItems(temp);
+              handleStateChange('inventory_items', temp);
+              setAddItem(false);
+              setAddData({});
+              setEditItem(false);
+              setEditData({});
+            }}
+            rightOnPress={() => {
+              let temp = [...inventoryItems];
+              let error = [];
               if (
                 (configData?.inventory_quantity_type.range !==
                   movementType?.inventory_quantity_type &&
@@ -1043,7 +971,13 @@ const RequirementDetails = (props) => {
               } else {
                 CustomAlert('Quantity not valid');
               }
-            } else {
+            }}
+          />
+        )) || (
+          <FlatButton
+            onPress={() => {
+              let temp = [...inventoryItems];
+              let error = [];
               if (
                 addData?.inventory_id !== null
                   ? addData.name !== null &&
@@ -1094,10 +1028,10 @@ const RequirementDetails = (props) => {
               } else {
                 CustomAlert('All Fields are mendatory');
               }
-            }
-          }}
-          label={editItem ? 'SAVE' : 'ADD ITEM'}
-        />
+            }}
+            label={'ADD ITEM'}
+          />
+        )}
       </CustomModalAndroid>
       <CustomModalAndroid
         visible={!!changeCategoryVisible?.id}
@@ -1446,7 +1380,7 @@ const styles = StyleSheet.create({
     height: hp(5),
     width: hp(5),
     borderRadius: hp(2.5),
-    backgroundColor: '#EFEFF3',
+    backgroundColor: Colors.white,
   },
   sliderText: {
     fontFamily: 'Roboto-Light',

@@ -13,9 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import TextInput from '../../../components/textInput';
 import Button from '../../../components/button';
 import {useSelector} from 'react-redux';
-import DropDownAndroid from '../../../components/dropDown';
-import {STYLES} from '../../../constant/commonStyle';
-import {Picker} from '@react-native-picker/picker';
+import SelectionModal from '../../../components/selectionModal';
 
 const RaiseTicket = (props) => {
   const public_booking_id = props?.route?.params?.public_booking_id || null;
@@ -56,47 +54,22 @@ const RaiseTicket = (props) => {
       <LinearGradient
         colors={[Colors.pageBG, Colors.white]}
         style={{flex: 1, padding: wp(5), alignItems: 'center'}}>
-        <View
+        <SelectionModal
           style={{
-            width: wp(90),
-            paddingHorizontal: 10,
-            marginBottom: hp(2),
-          }}>
-          <Text
-            style={{
-              fontFamily: 'Roboto-Bold',
-              color: Colors.textLabelColor,
-              fontSize: wp(4),
-              marginBottom: hp(1),
-            }}>
-            {'Category'}
-          </Text>
-          <View
-            style={{
-              borderWidth: 2,
-              borderRadius: 10,
-              height: hp(6),
-              borderColor: error?.category === false ? 'red' : Colors.silver,
-              backgroundColor: Colors.white,
-              borderBottomWidth: 2,
-              ...STYLES.common,
-            }}>
-            <Picker
-              style={{
-                height: '99%',
-                width: '100%',
-              }}
-              // selectedValue={editItem ? editData?.name : addData?.name}
-              onValueChange={(text) => setData({...data, category: text})}>
-              {dropdownDefault.map((item, index) => {
-                return <Picker.Item label={item?.label} value={item?.value} />;
-              })}
-            </Picker>
-          </View>
-        </View>
+            marginBottom: hp(3),
+            borderColor: error?.category === false ? 'red' : Colors.silver,
+          }}
+          width={wp(90)}
+          value={data?.category}
+          label={'Category *'}
+          items={dropdownDefault}
+          onChangeItem={(text) => {
+            setData({...data, category: text});
+          }}
+        />
         <TextInput
           isRight={error?.heading}
-          label={'Subject'}
+          label={'Subject *'}
           placeHolder={'Subject'}
           value={data?.heading}
           placeholderStyle={{color: 'red'}}
@@ -108,7 +81,7 @@ const RaiseTicket = (props) => {
           null}
         <TextInput
           isRight={error?.desc}
-          label={'Description'}
+          label={'Description *'}
           placeHolder={'Description'}
           numberOfLines={8}
           height={hp(20)}

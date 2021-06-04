@@ -223,7 +223,7 @@ const MovingForm = (props) => {
           <TextInput
             disable={true}
             selection={{start: 0}}
-            label={props.movingFrom ? 'Drop Location' : 'Pickup Location'}
+            label={props.movingFrom ? 'Drop Location *' : 'Pickup Location *'}
             isRight={error?.geocode}
             value={
               props.movingFrom
@@ -246,7 +246,7 @@ const MovingForm = (props) => {
         {/*  onChange={(text) => handleState('address', text)}*/}
         {/*/>*/}
         <TextInput
-          label={'Address Line 1'}
+          label={'Address Line 1 *'}
           isRight={error.address_line1}
           placeHolder={'Flat no, Street no'}
           value={
@@ -257,7 +257,7 @@ const MovingForm = (props) => {
           onChange={(text) => handleState('address_line1', text)}
         />
         <TextInput
-          label={'Address Line 2'}
+          label={'Address Line 2 *'}
           isRight={error.address_line2}
           placeHolder={'Landmark, Area'}
           selection={isKeyboardOpen ? {end: 0} : {start: 0}}
@@ -269,7 +269,7 @@ const MovingForm = (props) => {
           onChange={(text) => handleState('address_line2', text)}
         />
         <TextInput
-          label={'City'}
+          label={'City *'}
           isRight={error.city}
           value={
             props.movingFrom ? destination?.meta?.city : source?.meta?.city
@@ -278,7 +278,7 @@ const MovingForm = (props) => {
           onChange={(text) => handleState('city', text)}
         />
         <TextInput
-          label={'State'}
+          label={'State *'}
           isRight={error.state}
           value={
             props.movingFrom ? destination?.meta?.state : source?.meta?.state
@@ -287,7 +287,7 @@ const MovingForm = (props) => {
           onChange={(text) => handleState('state', text)}
         />
         <TextInput
-          label={'Pincode'}
+          label={'Pincode *'}
           isRight={error.pincode}
           keyboard={'decimal-pad'}
           value={
@@ -310,7 +310,7 @@ const MovingForm = (props) => {
               width: Platform.OS === 'android' ? wp(56) : '76%',
             }}>
             <TextInput
-              label={'Floor'}
+              label={'Floor *'}
               isRight={error.floor}
               value={
                 props.movingFrom
