@@ -575,8 +575,9 @@ const BookingInitialQuote = (props) => {
                             fontSize: wp(4),
                             color: Colors.inputTextColor,
                             marginRight: 5,
+                            textTransform: 'uppercase'
                           }}>
-                          DIDN'T LIKE?
+                          Not satisfied with prices?
                         </Text>
                         <Text
                           style={{

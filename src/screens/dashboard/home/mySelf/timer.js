@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, ScrollView, Pressable} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  ScrollView,
+  Pressable,
+  Image,
+} from 'react-native';
 import {Colors, hp, wp} from '../../../../constant/colors';
 import Button from '../../../../components/button';
 import {
@@ -10,12 +17,10 @@ import {
 } from '../../../../constant/commonFun';
 import CustomModalAndroid from '../../../../components/customModal';
 import {STYLES} from '../../../../constant/commonStyle';
-import Feather from 'react-native-vector-icons/Feather';
 import {STORE} from '../../../../redux';
 import {APICall} from '../../../../redux/actions/user';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import BookedConfirm from '../../../../assets/svg/booked_confirm.svg';
 
 const Timer = (props) => {
   const [orderPlacedVisible, setOrderPlacedVisible] = useState(false);
@@ -122,7 +127,11 @@ const Timer = (props) => {
             ...styles.circleView,
             ...STYLES.common,
           }}>
-          <BookedConfirm height={wp(25)} width={wp(25)} />
+          <Image
+            source={require('../../../../assets/images/support_icon.png')}
+            style={{height: wp(25), width: wp(25)}}
+            resizeMode={'contain'}
+          />
         </View>
         <Text
           style={[

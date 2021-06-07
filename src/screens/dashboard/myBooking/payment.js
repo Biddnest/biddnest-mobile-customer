@@ -30,7 +30,6 @@ import HTML from 'react-native-render-html';
 import moment from 'moment';
 import {Base64} from 'js-base64';
 import CustomModalAndroid from '../../../components/customModal';
-import BookedConfirm from '../../../assets/svg/booked_confirm.svg';
 
 const Payment = (props) => {
   const entities = new Html5Entities();
@@ -486,10 +485,10 @@ const Payment = (props) => {
             });
             setPlacedSuccessVisible(false);
           }}>
-          <BookedConfirm
-            height={wp(30)}
-            width={wp(30)}
-            style={{marginTop: hp(5)}}
+          <Image
+            source={require('../../../assets/images/support_icon.png')}
+            style={{height: wp(30), width: wp(30)}}
+            resizeMode={'contain'}
           />
           <Text style={styles.bidText}>
             Thankyou, Your booking has been Confirmed

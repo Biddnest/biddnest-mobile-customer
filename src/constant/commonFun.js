@@ -92,15 +92,19 @@ export const pad_with_zeroes = (number, length) => {
   return my_string;
 };
 
-export const ImageSelection = (type) => {
+export const ImageSelection = (type, multiple = false) => {
+  let obj = {
+    width: 400,
+    height: 400,
+    cropping: true,
+    includeBase64: true,
+    // multiple: multiple,
+    cropperToolbarWidgetColor: Colors.btnBG,
+    cropperActiveWidgetColor: Colors.btnBG,
+  };
   return new Promise((resolve, reject) => {
     if (type === 'camera') {
-      ImagePicker.openCamera({
-        width: 400,
-        height: 400,
-        cropping: true,
-        includeBase64: true,
-      })
+      ImagePicker.openCamera(obj)
         .then((response) => {
           resolve('data:image/jpeg;base64,' + response.data);
           reject(false);
@@ -109,12 +113,7 @@ export const ImageSelection = (type) => {
           console.log(err);
         });
     } else {
-      ImagePicker.openPicker({
-        width: 400,
-        height: 400,
-        cropping: true,
-        includeBase64: true,
-      })
+      ImagePicker.openPicker(obj)
         .then((response) => {
           resolve('data:image/jpeg;base64,' + response.data);
           reject(false);

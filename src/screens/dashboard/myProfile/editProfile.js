@@ -91,6 +91,7 @@ const EditProfile = (props) => {
     ImageSelection(type)
       .then((res) => {
         handleState('avatar', res);
+        setImageSelect(false);
       })
       .catch((err) => {});
   };

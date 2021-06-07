@@ -382,7 +382,7 @@ const RequirementDetails = (props) => {
     );
   };
   const setImage = (type) => {
-    ImageSelection(type)
+    ImageSelection(type, true)
       .then((res) => {
         handleState('images', res);
       })
