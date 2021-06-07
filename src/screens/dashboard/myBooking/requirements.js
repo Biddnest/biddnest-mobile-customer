@@ -19,6 +19,7 @@ import {
   resetNavigator,
 } from '../../../constant/commonFun';
 import Lightbox from 'react-native-lightbox';
+import moment from 'moment';
 
 const Requirements = (props) => {
   const entities = new Html5Entities();
@@ -27,6 +28,14 @@ const Requirements = (props) => {
     useSelector((state) => state.Login?.configData?.enums?.service) || {};
   let meta =
     (orderDetails?.meta && JSON.parse(orderDetails?.meta?.toString())) || {};
+  let source_meta =
+    (orderDetails?.source_meta &&
+      JSON.parse(orderDetails?.source_meta?.toString())) ||
+    {};
+  let dateArray = [];
+  orderDetails?.movement_dates?.forEach((item) => {
+    dateArray.push(moment(item?.date).format('Do MMM'));
+  });
 
   useEffect(() => {
     fetchOrderDetails();
@@ -50,6 +59,33 @@ const Requirements = (props) => {
     }
   };
 
+  const renderRightDate = (dates) => {
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          maxWidth: '65%',
+          justifyContent: 'flex-end',
+        }}>
+        {dates?.map((item, index) => {
+          return (
+            <View style={styles.categoryView} key={index}>
+              <Text
+                style={{
+                  color: Colors.inputTextColor,
+                  fontSize: wp(3.8),
+                  fontFamily: 'Roboto-Bold',
+                }}>
+                {item}
+              </Text>
+            </View>
+          );
+        })}
+      </View>
+    );
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: Colors.white}}>
       <ScrollView
@@ -60,10 +96,26 @@ const Requirements = (props) => {
         <View>
           <View
             style={{
-              marginHorizontal: wp(10),
+              marginHorizontal: wp(5),
               marginTop: hp(2),
             }}>
             <View style={[STYLES.flexBox, {marginTop: 0}]}>
+              <Text style={STYLES.leftText}>movement type</Text>
+              <Text style={STYLES.rightText}>
+                {source_meta?.shared_service ? 'Shared' : 'Dedicated'}
+              </Text>
+            </View>
+            <View style={STYLES.flexBox}>
+              <Text style={STYLES.leftText}>Booking For</Text>
+              <Text style={STYLES.rightText}>
+                {meta?.self_booking ? 'MySelf' : 'Others'}
+              </Text>
+            </View>
+            <View style={STYLES.flexBox}>
+              <Text style={STYLES.leftText}>Moving date</Text>
+              {renderRightDate(dateArray)}
+            </View>
+            <View style={STYLES.flexBox}>
               <Text style={STYLES.leftText}>category</Text>
               <Text style={[STYLES.rightText, {marginBottom: hp(2)}]}>
                 {orderDetails?.service?.name}
@@ -223,5 +275,16 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Bold',
     fontSize: wp(4),
     color: Colors.inputTextColor,
+  },
+  categoryView: {
+    marginBottom: hp(0.8),
+    width: wp(18),
+    paddingVertical: 5,
+    borderColor: Colors.darkBlue,
+    borderWidth: 2,
+    borderRadius: 8,
+    backgroundColor: Colors.white,
+    marginLeft: hp(1.3),
+    alignItems: 'center',
   },
 });

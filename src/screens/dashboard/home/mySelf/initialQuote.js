@@ -30,12 +30,13 @@ import Ripple from 'react-native-material-ripple';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Economic from '../../../../assets/svg/economic.svg';
 import Premium from '../../../../assets/svg/premium.svg';
+import CustomModalAndroid from '../../../../components/customModal';
 
 const InitialQuote = (props) => {
   const {apiResponse} = props;
   const configData =
     useSelector((state) => state.Login?.configData?.keys) || {};
-  const [offerType, setOfferType] = useState(0);
+  const [offerType, setOfferType] = useState(null);
   const [rejectData, setRejectData] = useState({
     reason: '',
     desc: '',
@@ -45,6 +46,7 @@ const InitialQuote = (props) => {
   const [rejectVisible, setRejectVisible] = useState(false);
   const [economicInfo, setEconomicInfo] = useState(false);
   const [premiumInfo, setPremiumInfo] = useState(false);
+  const [warningModal, setWarningModal] = useState(false);
   const [tab, setTab] = useState([
     'Order Details',
     'Requirements',
@@ -94,7 +96,6 @@ const InitialQuote = (props) => {
   apiResponse?.movement_dates?.forEach((item) => {
     dateArray.push(moment(item?.date).format('Do MMM'));
   });
-  let meta = JSON.parse(apiResponse?.meta);
 
   const renderText = (key, value) => {
     return (
@@ -110,33 +111,6 @@ const InitialQuote = (props) => {
           ]}>
           {value}
         </Text>
-      </View>
-    );
-  };
-
-  const renderRightDate = (dates) => {
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          maxWidth: '65%',
-          justifyContent: 'flex-end',
-        }}>
-        {dates?.map((item, index) => {
-          return (
-            <View style={styles.categoryView} key={index}>
-              <Text
-                style={{
-                  color: Colors.inputTextColor,
-                  fontSize: wp(3.8),
-                  fontFamily: 'Roboto-Bold',
-                }}>
-                {item}
-              </Text>
-            </View>
-          );
-        })}
       </View>
     );
   };
@@ -252,7 +226,7 @@ const InitialQuote = (props) => {
           <ScrollView
             showsVerticalScrollIndicator={false}
             bounces={false}
-            style={{flex: 1, marginBottom: hp(8)}}>
+            style={{flex: 1, marginBottom: hp(2)}}>
             <Text
               style={{
                 fontFamily: 'Roboto-Italic',
@@ -292,7 +266,10 @@ const InitialQuote = (props) => {
                         borderWidth: index === offerType ? 1.5 : 1,
                       },
                     ]}
-                    onPress={() => setOfferType(index)}>
+                    onPress={() => {
+                      setOfferType(index);
+                      setWarningModal(true);
+                    }}>
                     <View
                       style={{
                         height: hp(11),
@@ -373,46 +350,47 @@ const InitialQuote = (props) => {
                   </Pressable>
                 );
               })}
-            </View>
-            <View
-              style={{
-                width: wp(85),
-                alignSelf: 'center',
-              }}>
-              <View style={styles.flexBox}>
-                <Text style={styles.leftText}>movement type</Text>
-                <Text style={styles.rightText}>
-                  {source_meta?.shared_service ? 'Shared' : 'Dedicated'}
-                </Text>
-              </View>
-              <View style={styles.flexBox}>
-                <Text style={styles.leftText}>Booking For</Text>
-                <Text style={styles.rightText}>
-                  {meta?.self_booking ? 'MySelf' : 'Others'}
-                </Text>
-              </View>
-              <View style={styles.flexBox}>
-                <Text style={styles.leftText}>Moving date</Text>
-                {renderRightDate(dateArray)}
-              </View>
+              <Pressable
+                style={styles.inputForm}
+                onPress={() => setRejectVisible(true)}>
+                <View
+                  style={{
+                    marginLeft: wp(2),
+                    flex: 1,
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <View>
+                    <Text
+                      style={{
+                        fontFamily: 'Roboto-Regular',
+                        fontSize: wp(4),
+                        color: Colors.inputTextColor,
+                        marginRight: 5,
+                      }}>
+                      DIDN'T LIKE?
+                    </Text>
+                    <Text
+                      style={{
+                        color: Colors.inputTextColor,
+                        flex: 1,
+                        fontFamily: 'Roboto-Regular',
+                        fontSize: wp(3.5),
+                        marginTop: hp(0.5),
+                      }}>
+                      Talk to our agent
+                    </Text>
+                  </View>
+                  <MaterialIcons
+                    name="arrow-forward-ios"
+                    size={hp(3.5)}
+                    color={'#3B4B58'}
+                  />
+                </View>
+              </Pressable>
             </View>
           </ScrollView>
-          <View
-            style={{
-              position: 'absolute',
-              width: wp(100),
-              bottom: 0,
-            }}>
-            <TwoButton
-              isLoading={isLoading}
-              leftLabel={'Reject'}
-              rightLabel={'Place order'}
-              leftOnPress={() => setRejectVisible(true)}
-              rightOnPress={() =>
-                props.handleBooking(offerType === 0 ? 'economic' : 'premium')
-              }
-            />
-          </View>
         </View>
       )}
       <MapModalAndroid
@@ -500,6 +478,38 @@ const InitialQuote = (props) => {
           }
         }}
       />
+      <CustomModalAndroid
+        visible={warningModal}
+        title={'Warning'}
+        onPress={() => setWarningModal(false)}>
+        <View
+          style={{
+            marginTop: hp(4),
+            marginBottom: hp(2),
+            marginHorizontal: wp(15),
+          }}>
+          <Text
+            style={{
+              fontFamily: 'Roboto-Regular',
+              fontSize: wp(4),
+              color: Colors.inputTextColor,
+              marginBottom: hp(2),
+              textAlign: 'center',
+            }}>
+            Are you sure? you want to go with{' '}
+            {offerType === 0 ? 'Economic' : 'Premium'}?
+          </Text>
+        </View>
+        <TwoButton
+          leftLabel={'no'}
+          rightLabel={'Yes'}
+          isLoading={isLoading}
+          leftOnPress={() => setWarningModal(false)}
+          rightOnPress={() =>
+            props.handleBooking(offerType === 0 ? 'economic' : 'premium')
+          }
+        />
+      </CustomModalAndroid>
     </View>
   );
 };

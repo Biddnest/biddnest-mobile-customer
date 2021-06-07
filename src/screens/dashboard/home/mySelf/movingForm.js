@@ -831,6 +831,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.btnBG,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: hp(1.3),
   },
   mapView: {
     height: hp(67),
