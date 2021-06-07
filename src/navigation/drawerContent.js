@@ -23,6 +23,8 @@ import {RESET_STORE} from '../redux/types';
 import {useDispatch, useSelector} from 'react-redux';
 import Ripple from 'react-native-material-ripple';
 import InAppReview from 'react-native-in-app-review';
+import ActiveProfile from '../assets/svg/active_profile.svg';
+import {backgroundColor} from 'react-native-calendars/src/style';
 
 export function DrawerContent(props) {
   const dispatch = useDispatch();
@@ -173,7 +175,7 @@ export function DrawerContent(props) {
               resizeMode={'contain'}
             />
           </View>
-          <View style={{width: wp(45), paddingLeft: wp(2)}}>
+          <View style={{width: wp(35), paddingLeft: wp(2)}}>
             <Text numberOfLines={1} style={styles.userText}>
               {userData?.fname} {userData?.lname}
             </Text>
@@ -188,22 +190,17 @@ export function DrawerContent(props) {
               {userData?.phone}
             </Text>
           </View>
-          {/*<View style={{width: wp(15)}}>*/}
-          {/*  <Pressable*/}
-          {/*    style={styles.logoutWrapper}*/}
-          {/*    onPress={() => {*/}
-          {/*      dispatch({*/}
-          {/*        type: RESET_STORE,*/}
-          {/*      });*/}
-          {/*      resetNavigator(props, 'Login');*/}
-          {/*    }}>*/}
-          {/*    <MaterialIcons*/}
-          {/*      name={'logout'}*/}
-          {/*      color={Colors.white}*/}
-          {/*      size={wp(6)}*/}
-          {/*    />*/}
-          {/*  </Pressable>*/}
-          {/*</View>*/}
+          <View style={{width: wp(15)}}>
+            <Pressable
+              style={styles.logoutWrapper}
+              onPress={() => props.navigation.navigate('MyProfile')}>
+              <MaterialIcons
+                name={'person'}
+                color={Colors.white}
+                size={wp(6)}
+              />
+            </Pressable>
+          </View>
         </View>
       </ImageBackground>
       <View style={styles.bottomView}>
