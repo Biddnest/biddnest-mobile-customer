@@ -13,6 +13,7 @@ import {sendOTP, signOut, verifyOTP} from '../../redux/actions/user';
 import {LOGIN_USER_DATA} from '../../redux/types';
 import OneSignal from 'react-native-onesignal';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
+import CountDown from '../../components/countDown';
 
 const Login = (props) => {
   const dispatch = useDispatch();
@@ -265,7 +266,7 @@ const Login = (props) => {
                       });
                   }}
                 />
-                {resendOTP && (
+                {(resendOTP && (
                   <Text
                     style={{
                       color: Colors.grey,
@@ -281,6 +282,34 @@ const Login = (props) => {
                       Resend
                     </Text>
                   </Text>
+                )) || (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        color: Colors.grey,
+                        fontSize: wp(3.8),
+                      }}>
+                      Resend OTP enable in{' '}
+                    </Text>
+                    <CountDown
+                      key={new Date()}
+                      until={30}
+                      onFinish={() => {}}
+                      digitStyle={{height: '100%'}}
+                      digitTxtStyle={{
+                        fontFamily: 'Roboto-Bold',
+                        color: Colors.textLabelColor,
+                      }}
+                      separatorStyle={{color: '#000'}}
+                      timeToShow={['M', 'S']}
+                      timeLabels={{m: null, s: null}}
+                      showSeparator
+                    />
+                  </View>
                 )}
               </View>
             )}

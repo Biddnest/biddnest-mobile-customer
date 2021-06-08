@@ -482,7 +482,10 @@ const InitialQuote = (props) => {
       <CustomModalAndroid
         visible={warningModal}
         title={'Warning'}
-        onPress={() => setWarningModal(false)}>
+        onPress={() => {
+          setOfferType(null);
+          setWarningModal(false);
+        }}>
         <View
           style={{
             marginTop: hp(4),
@@ -505,7 +508,10 @@ const InitialQuote = (props) => {
           leftLabel={'no'}
           rightLabel={'Yes'}
           isLoading={isLoading}
-          leftOnPress={() => setWarningModal(false)}
+          leftOnPress={() => {
+            setOfferType(null);
+            setWarningModal(false);
+          }}
           rightOnPress={() =>
             props.handleBooking(offerType === 0 ? 'economic' : 'premium')
           }

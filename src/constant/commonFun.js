@@ -98,7 +98,7 @@ export const ImageSelection = (type, multiple = false) => {
     height: 400,
     cropping: true,
     includeBase64: true,
-    // multiple: multiple,
+    multiple: multiple,
     cropperToolbarWidgetColor: Colors.btnBG,
     cropperActiveWidgetColor: Colors.btnBG,
   };
@@ -115,7 +115,15 @@ export const ImageSelection = (type, multiple = false) => {
     } else {
       ImagePicker.openPicker(obj)
         .then((response) => {
-          resolve('data:image/jpeg;base64,' + response.data);
+          let temp = [];
+          if (multiple) {
+            response.forEach((item) => {
+              temp.push('data:image/jpeg;base64,' + item?.data);
+            });
+            resolve(temp);
+          } else {
+            resolve('data:image/jpeg;base64,' + response.data);
+          }
           reject(false);
         })
         .catch((err) => {

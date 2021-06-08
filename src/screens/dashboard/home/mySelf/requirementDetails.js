@@ -78,9 +78,14 @@ const RequirementDetails = (props) => {
       temp.customer[key] = value;
     } else {
       if (key === 'images') {
-        let t1 = [...temp.images];
-        t1.push(value);
-        temp[key] = t1;
+        if (typeof value === 'string') {
+          let t1 = [...temp.images];
+          t1.push(value);
+          temp[key] = t1;
+        } else {
+          let t1 = [...temp.images, ...value];
+          temp[key] = t1;
+        }
       } else {
         temp[key] = value;
       }
