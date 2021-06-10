@@ -30,12 +30,13 @@ import {
 } from '../../../constant/commonFun';
 import {
   APICall,
+  getLiveOrders,
   getServices,
   getSlider,
   getTestimonials,
 } from '../../../redux/actions/user';
 import {useDispatch, useSelector} from 'react-redux';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
 import {STORE} from '../../../redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {CustomTabs} from 'react-native-custom-tabs';
@@ -46,9 +47,19 @@ import HTML from 'react-native-render-html';
 import ChatBot from '../../../assets/svg/chat_bot.svg';
 import Ripple from 'react-native-material-ripple';
 import {AirbnbRating} from 'react-native-elements';
+import {
+  Freshchat,
+  FreshchatConfig,
+  FreshchatUser,
+} from 'react-native-freshchat-sdk';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 export const HomeHeader = (props) => {
-  const navigation = useNavigation();
+  const configData =
+    useSelector((state) => state.Login?.configData?.contact_us?.details) || '';
+  let data = JSON.parse(configData.toString());
+  const [openModal, setOpenModal] = useState(false);
   return (
     <View
       style={[
@@ -86,7 +97,7 @@ export const HomeHeader = (props) => {
       <Pressable
         style={{...STYLES.common, width: wp(13)}}
         onPress={() => {
-          navigation.navigate('ContactUs');
+          setOpenModal(true);
         }}>
         <ChatBot width={hp(6.5)} height={hp(6.5)} />
       </Pressable>
@@ -97,6 +108,44 @@ export const HomeHeader = (props) => {
           <MaterialIcons name={'edit'} color={Colors.darkBlue} size={hp(3.5)} />
         </Pressable>
       ) : null}
+      <CustomModalAndroid
+        visible={openModal}
+        title={'Support'}
+        onPress={() => setOpenModal(false)}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            marginVertical: hp(3),
+            width: wp(100),
+          }}>
+          <View style={styles.common}>
+            <Ripple
+              rippleColor={Colors.darkBlue}
+              style={[STYLES.selectionView, STYLES.common]}
+              onPress={() => {
+                setOpenModal(false);
+                data?.contact_no?.length > 0 &&
+                  Linking.openURL(`tel:${data?.contact_no[0]}`);
+              }}>
+              <Ionicons name={'call'} color={Colors.darkBlue} size={hp(6)} />
+            </Ripple>
+            <Text style={STYLES.selectionText}>Call</Text>
+          </View>
+          <View style={styles.common}>
+            <Ripple
+              rippleColor={Colors.darkBlue}
+              onPress={() => {
+                setOpenModal(false);
+                Freshchat.showConversations();
+              }}
+              style={[STYLES.selectionView, STYLES.common]}>
+              <Entypo name={'chat'} color={Colors.darkBlue} size={hp(6)} />
+            </Ripple>
+            <Text style={STYLES.selectionText}>Chat</Text>
+          </View>
+        </View>
+      </CustomModalAndroid>
     </View>
   );
 };
@@ -117,6 +166,9 @@ const Home = (props) => {
   const [testimonialData, setTestimonialData] = useState(
     useSelector((state) => state.Login?.testimonials?.testimonials) || [],
   );
+  const [liveOrders, setLiveOrders] = useState(
+    useSelector((state) => state.Login?.liveOrders?.booking) || [],
+  );
   const [couponVisible, setCouponVisible] = useState(false);
   const [bookingSelectionVisible, setBookingSelectionVisible] = useState(false);
   const [movementType, setMovementType] = useState();
@@ -128,8 +180,53 @@ const Home = (props) => {
   // const [activeSlide2, setActiveSlide2] = useState(0);
   let activeSlide2 = 0;
   const carousel1 = useRef(null);
-  const carousel2 = useRef(null);
   const scrollViewRef = useRef(null);
+  let freshchatConfig = new FreshchatConfig(
+    'd9f3ecb4-0f18-40d5-b975-f4f51ac3ff6d',
+    '52d19af3-621e-4f74-8ad2-fe3414da9cdf',
+  );
+
+  useEffect(() => {
+    if (userData?.id) {
+      AsyncStorage.getItem('restoreId').then((data) => {
+        if (data.length > 0) {
+          let freshchatUser = new FreshchatUser();
+          freshchatUser.firstName = userData?.fname;
+          freshchatUser.lastName = userData?.lname;
+          freshchatUser.email = userData?.email;
+          freshchatUser.phoneCountryCode = '+91';
+          freshchatUser.phone = userData?.phone;
+          Freshchat.setUser(freshchatUser, (error) => {
+            console.log(error);
+          });
+          Freshchat.identifyUser(userData?.id?.toString(), data, (error) => {
+            console.log(error);
+          });
+        } else {
+          freshchatConfig.domain = 'msdk.in.freshchat.com';
+          freshchatConfig.teamMemberInfoVisible = true;
+          freshchatConfig.cameraCaptureEnabled = true;
+          freshchatConfig.gallerySelectionEnabled = true;
+          freshchatConfig.responseExpectationEnabled = true;
+          Freshchat.init(freshchatConfig);
+
+          Freshchat.identifyUser(userData?.id?.toString(), null, (error) => {
+            console.log(error);
+          });
+          Freshchat.getUser((user) => {
+            let restoreId = user.restoreId;
+            AsyncStorage.setItem('restoreId', restoreId);
+          });
+        }
+      });
+
+      Freshchat.addEventListener(
+        Freshchat.EVENT_USER_RESTORE_ID_GENERATED,
+        () => {},
+      );
+      // Freshchat.showConversations()
+    }
+  }, []);
 
   useEffect(() => {
     if (isFocused && userData?.fname) {
@@ -182,6 +279,17 @@ const Home = (props) => {
               setLoading(false);
               if (res.status === 'success' && res?.data?.services) {
                 setServiceData(res?.data?.services);
+                setInterval(() => {
+                  if (activeSlide2 === 2) {
+                    activeSlide2 = 0;
+                  } else {
+                    activeSlide2 = activeSlide2 + 1;
+                  }
+                  scrollViewRef?.current?.scrollToIndex({
+                    animated: true,
+                    index: activeSlide2 === 2 ? 0 : activeSlide2 + 1,
+                  });
+                }, 5000);
               } else {
                 CustomAlert(res.message);
               }
@@ -230,18 +338,20 @@ const Home = (props) => {
           setLoading(false);
           CustomConsole(err);
         });
+      dispatch(getLiveOrders())
+        .then((res) => {
+          setLoading(false);
+          if (res?.status === 'success') {
+            setLiveOrders(res?.data?.booking);
+          } else {
+            CustomAlert(res?.message);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          CustomConsole(err);
+        });
     }
-    setInterval(() => {
-      if (activeSlide2 === 2) {
-        activeSlide2 = 0;
-      } else {
-        activeSlide2 = activeSlide2 + 1;
-      }
-      scrollViewRef?.current?.scrollToIndex({
-        animated: true,
-        index: activeSlide2 === 2 ? 0 : activeSlide2 + 1,
-      });
-    }, 5000);
   }, [isFocused]);
   const renderItem = ({item, index}) => {
     let mainSize = [];
@@ -375,6 +485,49 @@ const Home = (props) => {
           }
           return null;
         })}
+        {liveOrders.length > 0 && (
+          <Pressable
+            style={styles.inputForm}
+            onPress={() => props.navigation.navigate('MyBooking')}>
+            <View
+              style={{
+                marginLeft: wp(2),
+                flex: 1,
+                justifyContent: 'space-between',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <View>
+                <Text
+                  style={{
+                    fontFamily: 'Gilroy-Bold',
+                    fontSize: wp(4),
+                    color: Colors.inputTextColor,
+                    textAlign: 'center',
+                    marginRight: 5,
+                    textTransform: 'uppercase',
+                  }}>
+                  You have an Ongoing order
+                </Text>
+                <Text
+                  style={{
+                    color: Colors.inputTextColor,
+                    flex: 1,
+                    fontFamily: 'Roboto-Regular',
+                    fontSize: wp(3.5),
+                    marginTop: hp(0.5),
+                  }}>
+                  Tap here to go
+                </Text>
+              </View>
+              <MaterialIcons
+                name="arrow-forward-ios"
+                size={hp(3.5)}
+                color={'#3B4B58'}
+              />
+            </View>
+          </Pressable>
+        )}
         <View style={styles.movementView}>
           <Text
             style={{
@@ -511,6 +664,7 @@ const Home = (props) => {
                   ref={scrollViewRef}
                   key={item.id}
                   bounces={false}
+                  initialScrollIndex={0}
                   horizontal
                   showsHorizontalScrollIndicator={false}
                   data={item?.banners}
@@ -812,6 +966,15 @@ const Home = (props) => {
           </Text>
         </Pressable>
       </CustomModalAndroid>
+      <Pressable
+        onPress={() => Freshchat.showConversations()}
+        style={{
+          position: 'absolute',
+          right: hp(2),
+          bottom: hp(2),
+        }}>
+        <ChatBot width={hp(8.5)} height={hp(8.5)} />
+      </Pressable>
     </LinearGradient>
   );
 };
@@ -877,5 +1040,18 @@ const styles = StyleSheet.create({
     fontSize: wp(4),
     color: '#3B4B58',
     marginTop: hp(1),
+  },
+  inputForm: {
+    paddingVertical: hp(2),
+    paddingHorizontal: hp(2),
+    borderWidth: 1.5,
+    borderRadius: 15,
+    backgroundColor: Colors.white,
+    borderColor: Colors.silver,
+    marginTop: hp(2),
+    width: wp(92),
+    alignItems: 'center',
+    flexDirection: 'row',
+    alignSelf: 'center',
   },
 });
