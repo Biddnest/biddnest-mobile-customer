@@ -333,12 +333,14 @@ const MyBooking = (props) => {
           <Text style={styles.leftText}>category</Text>
           <Text style={styles.rightText}>{item?.service?.name}</Text>
         </View>
-        {/*<View style={styles.flexBox}>*/}
-        {/*  <Text style={styles.leftText}>status</Text>*/}
-        {/*  <Text style={[styles.rightText, {textTransform: 'capitalize'}]}>*/}
-        {/*    {status}*/}
-        {/*  </Text>*/}
-        {/*</View>*/}
+        <View style={styles.flexBox}>
+          <Text style={styles.leftText}>booking type</Text>
+          <Text style={[styles.rightText, {textTransform: 'capitalize'}]}>
+            {configData?.booking_type?.economic == item?.booking_type
+              ? 'Economic'
+              : 'Premium'}
+          </Text>
+        </View>
       </Pressable>
     );
   };

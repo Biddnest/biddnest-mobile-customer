@@ -53,7 +53,7 @@ const ContactUs = (props) => {
         if (res?.data?.status === 'success') {
           setRecentOrder(res?.data?.data?.booking);
         } else {
-          CustomAlert(res?.data?.message);
+          // CustomAlert(res?.data?.message);
         }
       })
       .catch((err) => {
@@ -73,7 +73,7 @@ const ContactUs = (props) => {
         if (res?.data?.status === 'success') {
           setContactUs(res?.data?.data?.details);
         } else {
-          // CustomAlert(res?.data?.message);
+          CustomAlert(res?.data?.message);
         }
       })
       .catch((err) => {

@@ -10,7 +10,6 @@ import DrawerNavigation from './drawerNavigation';
 import {navigationRef} from './RootNavigation';
 import SingleTicket from '../screens/dashboard/drawer/singleTicket';
 import WalkThroughPage from '../screens/auth/walkThroughPage';
-import ChatBotButton from '../components/chatBotButton';
 
 const Stack = createStackNavigator();
 const MyTheme = {

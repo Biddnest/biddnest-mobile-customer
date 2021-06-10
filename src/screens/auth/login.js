@@ -50,9 +50,6 @@ const Login = (props) => {
           setLoading(false);
           if (res.status === 'success') {
             CustomAlert(res.message + res.data.otp);
-            setTimeout(() => {
-              setResendOTP(true);
-            }, 30000);
             setOtpResponse(res.data);
             setOtpSend(true);
           } else {
@@ -298,7 +295,7 @@ const Login = (props) => {
                     <CountDown
                       key={new Date()}
                       until={30}
-                      onFinish={() => {}}
+                      onFinish={() => setResendOTP(true)}
                       digitStyle={{height: '100%'}}
                       digitTxtStyle={{
                         fontFamily: 'Roboto-Bold',

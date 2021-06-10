@@ -9,9 +9,6 @@ import Thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import {logger} from 'redux-logger';
-import ChatBotButton from '../components/chatBotButton';
-import Orientation from 'react-native-orientation-locker';
-import {isTablet} from 'react-native-device-info';
 
 const PERSIST_CONFIG = {
   key: 'root',

@@ -1,14 +1,22 @@
-import React from 'react';
-import {Image, Pressable, View, Text, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {Image, Pressable, View, Text, StyleSheet, Linking} from 'react-native';
 import {boxShadow, Colors, hp, wp} from '../constant/colors';
 import BackArrow from '../assets/svg/back_arrow.svg';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {STYLES} from '../constant/commonStyle';
 import ChatBot from '../assets/svg/chat_bot.svg';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import CustomModalAndroid from './customModal';
+import Entypo from 'react-native-vector-icons/Entypo';
+import {Freshchat} from 'react-native-freshchat-sdk';
 
 const SimpleHeader = (props) => {
   const navigation = useNavigation();
+  const configData =
+    useSelector((state) => state.Login?.configData?.contact_us?.details) || '';
+  let data = JSON.parse(configData.toString());
+  const [openModal, setOpenModal] = useState(false);
   return (
     <View
       style={[
@@ -50,6 +58,42 @@ const SimpleHeader = (props) => {
         }}>
         <ChatBot width={hp(6.5)} height={hp(6.5)} />
       </Pressable>
+      <CustomModalAndroid
+        visible={openModal}
+        title={'Support'}
+        onPress={() => setOpenModal(false)}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            marginVertical: hp(3),
+            width: wp(100),
+          }}>
+          <View style={styles.common}>
+            <Pressable
+              style={[STYLES.selectionView, STYLES.common]}
+              onPress={() => {
+                setOpenModal(false);
+                data?.contact_no?.length > 0 &&
+                  Linking.openURL(`tel:${data?.contact_no[0]}`);
+              }}>
+              <Ionicons name={'call'} color={Colors.darkBlue} size={hp(6)} />
+            </Pressable>
+            <Text style={STYLES.selectionText}>Call</Text>
+          </View>
+          <View style={styles.common}>
+            <Pressable
+              onPress={() => {
+                setOpenModal(false);
+                Freshchat.showConversations();
+              }}
+              style={[STYLES.selectionView, STYLES.common]}>
+              <Entypo name={'chat'} color={Colors.darkBlue} size={hp(6)} />
+            </Pressable>
+            <Text style={STYLES.selectionText}>Chat</Text>
+          </View>
+        </View>
+      </CustomModalAndroid>
     </View>
   );
 };
