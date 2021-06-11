@@ -54,6 +54,7 @@ import {
 } from 'react-native-freshchat-sdk';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
+import {LOGIN_USER_DATA} from '../../../redux/types';
 
 export const HomeHeader = (props) => {
   const configData =
@@ -154,6 +155,7 @@ const Home = (props) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const userData = useSelector((state) => state.Login?.loginData?.user) || {};
+  const userData1 = useSelector((state) => state.Login?.loginData) || {};
   const sliderSize =
     useSelector((state) => state.Login?.configData?.enums?.slider) || {};
   const configData = useSelector((state) => state.Login?.configData) || {};
@@ -188,43 +190,70 @@ const Home = (props) => {
 
   useEffect(() => {
     if (userData?.id) {
-      AsyncStorage.getItem('restoreId').then((data) => {
-        if (data.length > 0) {
-          let freshchatUser = new FreshchatUser();
-          freshchatUser.firstName = userData?.fname;
-          freshchatUser.lastName = userData?.lname;
-          freshchatUser.email = userData?.email;
-          freshchatUser.phoneCountryCode = '+91';
-          freshchatUser.phone = userData?.phone;
-          Freshchat.setUser(freshchatUser, (error) => {
+      if (
+        userData?.freshchat_restore_id &&
+        userData?.freshchat_restore_id?.length > 0
+      ) {
+        let freshchatUser = new FreshchatUser();
+        freshchatUser.firstName = userData?.fname;
+        freshchatUser.lastName = userData?.lname;
+        freshchatUser.email = userData?.email;
+        freshchatUser.phoneCountryCode = '+91';
+        freshchatUser.phone = userData?.phone;
+        Freshchat.setUser(freshchatUser, (error) => {
+          console.log(error);
+        });
+        Freshchat.identifyUser(
+          userData?.id?.toString(),
+          userData?.freshchat_restore_id,
+          (error) => {
             console.log(error);
-          });
-          Freshchat.identifyUser(userData?.id?.toString(), data, (error) => {
-            console.log(error);
-          });
-        } else {
-          freshchatConfig.domain = 'msdk.in.freshchat.com';
-          freshchatConfig.teamMemberInfoVisible = true;
-          freshchatConfig.cameraCaptureEnabled = true;
-          freshchatConfig.gallerySelectionEnabled = true;
-          freshchatConfig.responseExpectationEnabled = true;
-          Freshchat.init(freshchatConfig);
+          },
+        );
+      } else {
+        freshchatConfig.domain = 'msdk.in.freshchat.com';
+        freshchatConfig.teamMemberInfoVisible = true;
+        freshchatConfig.cameraCaptureEnabled = true;
+        freshchatConfig.gallerySelectionEnabled = true;
+        freshchatConfig.responseExpectationEnabled = true;
+        Freshchat.init(freshchatConfig);
 
-          Freshchat.identifyUser(userData?.id?.toString(), null, (error) => {
-            console.log(error);
-          });
-          Freshchat.getUser((user) => {
-            let restoreId = user.restoreId;
-            AsyncStorage.setItem('restoreId', restoreId);
-          });
-        }
-      });
+        Freshchat.identifyUser(userData?.id?.toString(), null, (error) => {
+          console.log(error);
+        });
+      }
 
       Freshchat.addEventListener(
         Freshchat.EVENT_USER_RESTORE_ID_GENERATED,
-        () => {},
+        () => {
+          Freshchat.getUser((user) => {
+            let restoreId = user.restoreId;
+            let obj = {
+              url: 'freshchat/restore/id',
+              method: 'put',
+              headers: {
+                Authorization:
+                  'Bearer ' + STORE.getState().Login?.loginData?.token,
+              },
+              data: {
+                freshchat_restore_id: restoreId.toString(),
+              },
+            };
+            if (restoreId) {
+              let temp = {...userData1};
+              temp.user.freshchat_restore_id = restoreId;
+              APICall(obj)
+                .then((res) => {
+                  dispatch({
+                    type: LOGIN_USER_DATA,
+                    payload: temp,
+                  });
+                })
+                .catch((e) => console.log(e));
+            }
+          });
+        },
       );
-      // Freshchat.showConversations()
     }
   }, []);
 
