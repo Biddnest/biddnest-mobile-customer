@@ -189,7 +189,7 @@ const Home = (props) => {
   );
 
   useEffect(() => {
-    if (userData?.id) {
+    if (userData1?.token) {
       if (
         userData?.freshchat_restore_id &&
         userData?.freshchat_restore_id?.length > 0
@@ -213,7 +213,7 @@ const Home = (props) => {
       } else {
         freshchatConfig.domain = 'msdk.in.freshchat.com';
         freshchatConfig.teamMemberInfoVisible = true;
-        freshchatConfig.cameraCaptureEnabled = true;
+        freshchatConfig.cameraCaptureEnabled = false;
         freshchatConfig.gallerySelectionEnabled = true;
         freshchatConfig.responseExpectationEnabled = true;
         Freshchat.init(freshchatConfig);
