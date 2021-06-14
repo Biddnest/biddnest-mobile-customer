@@ -6,19 +6,20 @@ import {
   View,
 } from 'react-native';
 import {CommonActions} from '@react-navigation/native';
-import ImagePicker from 'react-native-image-picker';
 import Toast from 'react-native-simple-toast';
-import {Colors, IMAGE_OPTIONS} from './colors';
+import Snackbar from 'react-native-snackbar';
+import {Colors} from './colors';
 import {
-  check,
   openSettings,
-  PERMISSIONS, request,
+  PERMISSIONS,
+  request,
   RESULTS,
 } from 'react-native-permissions';
 import Geolocation from 'react-native-geolocation-service';
 import {STYLES} from './commonStyle';
 import React from 'react';
 import moment from 'moment';
+import ImagePicker from 'react-native-image-crop-picker';
 
 export const resetNavigator = (props, screenName) => {
   props.navigation.dispatch(
@@ -66,7 +67,21 @@ export const DiffMin = (dt1) => {
 };
 
 export const CustomAlert = (msg = '') => {
-  return Toast.show(msg, Toast.LONG);
+  setTimeout(() => {
+    Snackbar.dismiss();
+  }, 10000);
+  return Snackbar.show({
+    text: msg,
+    duration: Snackbar.LENGTH_INDEFINITE,
+    action: {
+      text: 'CLOSE',
+      textColor: Colors.btnBG,
+      onPress: () => {
+        Snackbar.dismiss();
+      },
+    },
+  });
+  // return Toast.show(msg, Toast.LONG);
 };
 
 export const pad_with_zeroes = (number, length) => {
@@ -77,22 +92,44 @@ export const pad_with_zeroes = (number, length) => {
   return my_string;
 };
 
-export const ImageSelection = () => {
+export const ImageSelection = (type, multiple = false) => {
+  let obj = {
+    width: 400,
+    height: 400,
+    cropping: true,
+    includeBase64: true,
+    multiple: multiple,
+    cropperToolbarWidgetColor: Colors.btnBG,
+    cropperActiveWidgetColor: Colors.btnBG,
+  };
   return new Promise((resolve, reject) => {
-    ImagePicker.showImagePicker(IMAGE_OPTIONS, (response) => {
-      console.log('Response = ', response);
-
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        resolve('data:image/jpeg;base64,' + response.data);
-      }
-      reject(false);
-    });
+    if (type === 'camera') {
+      ImagePicker.openCamera(obj)
+        .then((response) => {
+          resolve('data:image/jpeg;base64,' + response.data);
+          reject(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      ImagePicker.openPicker(obj)
+        .then((response) => {
+          let temp = [];
+          if (multiple) {
+            response.forEach((item) => {
+              temp.push('data:image/jpeg;base64,' + item?.data);
+            });
+            resolve(temp);
+          } else {
+            resolve('data:image/jpeg;base64,' + response.data);
+          }
+          reject(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   });
 };
 

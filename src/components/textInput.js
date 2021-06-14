@@ -2,6 +2,7 @@ import React from 'react';
 import {Input} from 'react-native-elements';
 import {hp, Colors, wp} from '../constant/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Pressable, Text} from 'react-native';
 
 const TextInput = (props) => {
   return (
@@ -15,8 +16,23 @@ const TextInput = (props) => {
       numberOfLines={props.numberOfLines || 1}
       value={props.value}
       onFocus={props.onFocus}
+      selection={props?.selection}
       onBlur={props.onBlur}
       label={props.label}
+      leftIcon={() => {
+        if (props?.isLeft) {
+          return (
+            <Text
+              style={{
+                fontFamily: 'Gilroy-SemiBold',
+                fontSize: wp(4),
+                color: Colors.inputTextColor,
+              }}>
+              +91
+            </Text>
+          );
+        }
+      }}
       rightIcon={() => {
         if (props.isRight === true) {
           return (
@@ -30,6 +46,12 @@ const TextInput = (props) => {
           return (
             <Ionicons name="close-outline" size={hp(3.5)} color={Colors.red} />
           );
+        } else if (props?.isRight === 'search') {
+          return (
+            <Pressable onPress={props.searchPress}>
+              <Ionicons name={props.icon} size={hp(3)} color={'#C9CDCF'} />
+            </Pressable>
+          );
         }
       }}
       onChangeText={props.onChange}
@@ -41,12 +63,16 @@ const TextInput = (props) => {
           ? props.height
             ? props.height
             : hp(12)
-          : hp(6.5),
+          : hp(6),
         marginTop: hp(1),
         borderColor: props.isRight === false ? Colors.red : Colors.silver,
         backgroundColor: Colors.white,
         borderBottomWidth: 2,
       }}
+      containerStyle={{
+        marginBottom: -hp(1),
+      }}
+      maxLength={props?.maxLength || 10000000}
       labelStyle={{
         fontFamily: 'Roboto-Bold',
         color: Colors.textLabelColor,

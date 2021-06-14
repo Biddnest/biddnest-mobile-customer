@@ -22,8 +22,6 @@ import FlatButton from '../../../components/flatButton';
 import {useSelector} from 'react-redux';
 import {STORE} from '../../../redux';
 import {APICall} from '../../../redux/actions/user';
-import CloseIcon from '../../../components/closeIcon';
-import TwoButton from '../../../components/twoButton';
 import CustomModalAndroid from '../../../components/customModal';
 import TextInput from '../../../components/textInput';
 import Button from '../../../components/button';
@@ -35,6 +33,7 @@ const SingleTicket = (props) => {
   const [isLoading, setLoading] = useState(false);
   const [replies, setReplies] = useState([]);
   const [reply, setReply] = useState('');
+  const [replyError, setReplyError] = useState(undefined);
   const [repliesModal, setRepliesModal] = useState(false);
   const ticketStatus =
     useSelector((state) => state.Login?.configData?.enums?.ticket?.status) ||
@@ -253,19 +252,15 @@ const SingleTicket = (props) => {
       )}
       <CustomModalAndroid
         visible={repliesModal}
+        title={'REPLY'}
         onPress={() => setRepliesModal(false)}>
-        <Text style={STYLES.modalHeader}>REPLY</Text>
-        <CloseIcon
-          onPress={() => {
-            setRepliesModal(false);
-          }}
-        />
         <View
           style={{
             width: '90%',
             marginVertical: hp(2),
           }}>
           <TextInput
+            isRight={replyError}
             placeHolder={'Reply'}
             label={''}
             numberOfLines={4}
@@ -279,32 +274,37 @@ const SingleTicket = (props) => {
           label={'SUBMIT'}
           onPress={() => {
             // API for reply
-            let obj = {
-              url: 'tickets/reply',
-              method: 'post',
-              headers: {
-                Authorization:
-                  'Bearer ' + STORE.getState().Login?.loginData?.token,
-              },
-              data: {
-                ticket_id: ticket?.id,
-                reply: reply,
-              },
-            };
-            APICall(obj)
-              .then((res) => {
-                setLoading(false);
-                if (res?.data?.status === 'success') {
-                  fetchReplies();
-                  setRepliesModal(false);
-                } else {
-                  CustomAlert(res?.data?.message);
-                }
-              })
-              .catch((err) => {
-                setLoading(false);
-                CustomConsole(err);
-              });
+            if (reply !== '') {
+              setReplyError(true);
+              let obj = {
+                url: 'tickets/reply',
+                method: 'post',
+                headers: {
+                  Authorization:
+                    'Bearer ' + STORE.getState().Login?.loginData?.token,
+                },
+                data: {
+                  ticket_id: ticket?.id,
+                  reply: reply,
+                },
+              };
+              APICall(obj)
+                .then((res) => {
+                  setLoading(false);
+                  if (res?.data?.status === 'success') {
+                    fetchReplies();
+                    setRepliesModal(false);
+                  } else {
+                    CustomAlert(res?.data?.message);
+                  }
+                })
+                .catch((err) => {
+                  setLoading(false);
+                  CustomConsole(err);
+                });
+            } else {
+              setReplyError(false);
+            }
           }}
         />
       </CustomModalAndroid>

@@ -9,7 +9,6 @@ import Thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import {logger} from 'redux-logger';
-import ChatBotButton from '../components/chatBotButton';
 
 const PERSIST_CONFIG = {
   key: 'root',
@@ -28,14 +27,18 @@ console.disableYellowBox = true;
 LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
 const MainNavigator = () => {
+  // useEffect(() => {
+  //   if (isTablet()) {
+  //     Orientation.unlockAllOrientations();
+  //   } else {
+  //     Orientation.lockToPortrait();
+  //   }
+  // }, []);
   return (
     <Provider store={STORE}>
       <PersistGate loading={null} persistor={PERSIST_STORE}>
         <SafeAreaView style={{flex: 1}}>
           <App />
-          {/*{STORE.getState().Login?.loginData?.token && (*/}
-          {/*  <ChatBotButton onPress={() => {}} />*/}
-          {/*)}*/}
         </SafeAreaView>
       </PersistGate>
     </Provider>

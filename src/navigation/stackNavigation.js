@@ -8,7 +8,6 @@ import MyProfile from '../screens/dashboard/myProfile';
 import BookingStepper from '../screens/dashboard/home/bookingStepper';
 import OrderTracking from '../screens/dashboard/myBooking/orderTracking';
 import Payment from '../screens/dashboard/myBooking/payment';
-import CardDetails from '../screens/dashboard/myBooking/cardDetails';
 import FinalQuote from '../screens/dashboard/myBooking/finalQuote';
 import EditProfile from '../screens/dashboard/myProfile/editProfile';
 import ReferFriend from '../screens/dashboard/drawer/referFriend';
@@ -17,6 +16,7 @@ import FAQs from '../screens/dashboard/drawer/faqs';
 import FAQDetails from '../screens/dashboard/drawer/faqs/faqDetails';
 import OrderTimer from '../screens/dashboard/myBooking/orderTimer';
 import RaiseTicket from '../screens/dashboard/myBooking/raiseTicket';
+import BookingInitialQuote from '../screens/dashboard/myBooking/bookingIntialQuote';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +41,8 @@ const MainStackNavigator = () => {
       <Stack.Screen name="FAQDetails" component={FAQDetails} />
       <Stack.Screen name="FinalQuote" component={FinalQuote} />
       <Stack.Screen name="RaiseTicket" component={RaiseTicket} />
+      <Stack.Screen name="OrderTimer" component={OrderTimer} />
+      <Stack.Screen name="OrderTracking" component={OrderTracking} />
     </Stack.Navigator>
   );
 };
@@ -51,8 +53,11 @@ const MyBookingStackNavigator = () => {
       <Stack.Screen name="MyBooking" component={MyBooking} />
       <Stack.Screen name="OrderTracking" component={OrderTracking} />
       <Stack.Screen name="Payment" component={Payment} />
-      <Stack.Screen name="CardDetails" component={CardDetails} />
       <Stack.Screen name="FinalQuote" component={FinalQuote} />
+      <Stack.Screen
+        name="BookingInitialQuote"
+        component={BookingInitialQuote}
+      />
       <Stack.Screen name="OrderTimer" component={OrderTimer} />
       <Stack.Screen name="RaiseTicket" component={RaiseTicket} />
     </Stack.Navigator>

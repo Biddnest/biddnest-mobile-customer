@@ -1,7 +1,13 @@
 import React from 'react';
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
-import CloseIcon from '../../../components/closeIcon';
 import {STYLES} from '../../../constant/commonStyle';
 import TwoButton from '../../../components/twoButton';
 import {useSelector} from 'react-redux';
@@ -38,9 +44,10 @@ const OrderDetailModal = (props) => {
               width: wp(13),
               backgroundColor: '#F2E6FF',
               borderRadius: wp(13) / 2,
+              overflow: 'hidden',
             }}>
             <Image
-              source={{uri: item?.image}}
+              source={{uri: item?.image || item?.inventory?.image}}
               resizeMode={'contain'}
               style={{
                 height: '100%',
@@ -61,7 +68,7 @@ const OrderDetailModal = (props) => {
               fontSize: wp(4),
               color: Colors.inputTextColor,
             }}>
-            {item?.name}
+            {item?.itemName || item?.name}
           </Text>
           <View
             style={{
@@ -94,7 +101,8 @@ const OrderDetailModal = (props) => {
                   {paddingHorizontal: 10, textTransform: 'none'},
                 ]}
                 numberOfLines={1}>
-                x{typeof quantity === 'string' ? quantity : quantity?.toString()}
+                x
+                {typeof quantity === 'string' ? quantity : quantity?.toString()}
               </Text>
             </View>
           </View>
@@ -109,35 +117,48 @@ const OrderDetailModal = (props) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Text style={STYLES.modalHeader}>{props.title}</Text>
-      <CloseIcon onPress={props.onCloseIcon} />
-      <FlatList
-        keyExtractor={(item, index) => index.toString()}
-        bounces={false}
-        data={props.data}
-        extraData={props.data}
-        renderItem={renderItem}
-        contentContainerStyle={{
-          marginHorizontal: wp(4),
-          marginBottom: hp(5),
-        }}
-        ItemSeparatorComponent={() => (
-          <View
-            style={{
-              borderWidth: 0.7,
-              borderColor: Colors.silver,
-            }}
-          />
-        )}
-      />
-      {props.title === 'CONFIRM ITEM LIST' ? (
-        <TwoButton
-          isLoading={props.isLoading}
-          leftLabel={'cancel'}
-          rightLabel={'confirm'}
-          leftOnPress={props.leftOnPress}
-          rightOnPress={props.rightOnPress}
+      <ScrollView
+        style={{
+          flex: 1,
+          maxHeight: hp(75),
+          marginBottom: props.title === 'CONFIRM ITEM LIST' ? hp(6) : 0,
+        }}>
+        <FlatList
+          keyExtractor={(item, index) => index.toString()}
+          bounces={false}
+          scrollEnabled={false}
+          data={props.data}
+          extraData={props.data}
+          renderItem={renderItem}
+          contentContainerStyle={{
+            marginHorizontal: wp(4),
+            flex: 1,
+          }}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                borderWidth: 0.7,
+                borderColor: Colors.silver,
+              }}
+            />
+          )}
         />
+      </ScrollView>
+      {props.title === 'CONFIRM ITEM LIST' ? (
+        <View
+          style={{
+            position: 'absolute',
+            width: '100%',
+            bottom: 0,
+          }}>
+          <TwoButton
+            isLoading={props.isLoading}
+            leftLabel={'cancel'}
+            rightLabel={'confirm'}
+            leftOnPress={props.leftOnPress}
+            rightOnPress={props.rightOnPress}
+          />
+        </View>
       ) : null}
     </View>
   );

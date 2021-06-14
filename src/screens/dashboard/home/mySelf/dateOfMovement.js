@@ -8,10 +8,11 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CustomModalAndroid from '../../../../components/customModal';
 import {Calendar} from 'react-native-calendars';
 import FlatButton from '../../../../components/flatButton';
-import CloseIcon from '../../../../components/closeIcon';
 import {STYLES} from '../../../../constant/commonStyle';
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import _ from 'lodash';
+import {CustomAlert} from '../../../../constant/commonFun';
 
 const DateOfMovement = (props) => {
   const {data, handleStateChange} = props;
@@ -97,7 +98,7 @@ const DateOfMovement = (props) => {
                   }}>
                   <Ionicons
                     name="close-sharp"
-                    size={hp(1.5)}
+                    size={hp(2)}
                     color={Colors.white}
                   />
                 </Pressable>
@@ -119,7 +120,7 @@ const DateOfMovement = (props) => {
           <Input
             placeholder={'Choose Date'}
             disabled={true}
-            label={'Choose Date'}
+            label={'Choose Date *'}
             value={
               dateArrayDisplay?.join(', ') || data?.movement_dates?.join(', ')
             }
@@ -136,7 +137,7 @@ const DateOfMovement = (props) => {
               borderWidth: 2,
               paddingHorizontal: 15,
               borderRadius: 10,
-              height: hp(6.5),
+              height: hp(6),
               marginTop: hp(1),
               borderColor: error ? Colors.red : Colors.silver,
               borderBottomWidth: 2,
@@ -156,31 +157,71 @@ const DateOfMovement = (props) => {
         </Pressable>
         <CustomModalAndroid
           visible={openCalender}
+          title={'Choose Date'}
           onPress={() => {
+            setDefaultSelectedDates();
             setCalender(false);
           }}>
-          <Text style={STYLES.modalHeader}>Choose Date</Text>
-          <CloseIcon
-            onPress={() => {
-              setDefaultSelectedDates();
-              setCalender(false);
-            }}
-          />
           <Calendar
             markedDates={dateArray}
             style={{width: wp(90), height: hp(50)}}
             current={new Date()}
             minDate={date.setDate(date.getDate() + 1)}
-            maxDate={date.setDate(date.getDate() + 13)}
+            maxDate={date.setDate(date.getDate() + 20)}
             onDayPress={(day) => {
               let temp = {...dateArray};
               if (day.dateString in temp) {
                 delete temp[day.dateString];
               } else {
-                temp[day.dateString] = {
-                  selected: true,
-                  selectedColor: Colors.btnBG,
-                };
+                if (Object.keys(temp)?.length < 5) {
+                  if (Object.keys(temp)?.length === 1) {
+                    let a = moment(Object.keys(temp)[0]);
+                    let b = moment(day.dateString);
+                    let dateDifference = b.diff(a, 'days');
+                    if (Math.abs(dateDifference) < 5) {
+                      let ary = new Array(Math.abs(dateDifference)).fill('');
+                      ary.forEach((item, index) => {
+                        if (Math.sign(dateDifference) === -1) {
+                          temp[
+                            moment(
+                              moment(Object.keys(temp)[0]).subtract(
+                                index + 1,
+                                'days',
+                              ),
+                            ).format('yyyy-MM-DD')
+                          ] = {
+                            selected: true,
+                            selectedColor: Colors.btnBG,
+                          };
+                        } else {
+                          temp[
+                            moment(
+                              moment(Object.keys(temp)[0]).add(
+                                index + 1,
+                                'days',
+                              ),
+                            ).format('yyyy-MM-DD')
+                          ] = {
+                            selected: true,
+                            selectedColor: Colors.btnBG,
+                          };
+                        }
+                      });
+                    } else {
+                      temp[day.dateString] = {
+                        selected: true,
+                        selectedColor: Colors.btnBG,
+                      };
+                    }
+                  } else {
+                    temp[day.dateString] = {
+                      selected: true,
+                      selectedColor: Colors.btnBG,
+                    };
+                  }
+                } else {
+                  CustomAlert('You can select maximum 5 dates');
+                }
               }
               setDateArray(temp);
             }}
@@ -197,9 +238,16 @@ const DateOfMovement = (props) => {
           <FlatButton
             label={'OKAY'}
             onPress={() => {
-              handleStateChange('movement_dates', Object.keys(dateArray));
+              let t = _.orderBy(
+                Object.keys(dateArray),
+                (o: any) => {
+                  return moment(o);
+                },
+                ['asc'],
+              );
+              handleStateChange('movement_dates', t);
               let temp = [];
-              Object.keys(dateArray).forEach((item) => {
+              t.forEach((item) => {
                 temp.push(moment(item).format('Do MMM'));
               });
               setDateArrayDisplay(temp);
@@ -247,21 +295,22 @@ const styles = StyleSheet.create({
   },
   categoryView: {
     marginBottom: hp(0.8),
-    paddingHorizontal: 10,
+    paddingHorizontal: wp(2),
     paddingVertical: 5,
     borderColor: Colors.darkBlue,
     borderWidth: 2,
     borderRadius: 8,
     backgroundColor: Colors.white,
-    marginRight: hp(1.3),
+    marginLeft: hp(1.3),
+    alignItems: 'center',
   },
   closeView: {
     position: 'absolute',
-    height: hp(2),
-    width: hp(2),
+    height: hp(2.5),
+    width: hp(2.5),
     backgroundColor: Colors.darkBlue,
-    right: -hp(1),
-    top: -hp(1),
-    borderRadius: hp(1),
+    right: -hp(1.3),
+    top: -hp(1.3),
+    borderRadius: hp(12.5),
   },
 });

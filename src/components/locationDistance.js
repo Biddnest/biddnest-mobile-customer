@@ -53,7 +53,7 @@ const LocationDistance = (props) => {
           justifyContent: 'space-between',
           flex: 1,
           alignItems: 'center',
-            marginLeft: 5
+          marginLeft: 5,
         }}>
         <View style={{width: '50%'}}>
           <Text
@@ -115,7 +115,7 @@ const LocationDistance = (props) => {
                   ? cDistance + ' KM'
                   : '314KM'}
               </Text>
-              {props.onEditClick && (
+              {props.onEditClick && props?.isEdit && (
                 <Pressable style={{marginLeft: 10}} onPress={props.onEditClick}>
                   <SimpleLineIcons
                     name={'pencil'}

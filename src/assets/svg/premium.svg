@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="72.667" height="69.99" viewBox="0 0 72.667 69.99">
+  <defs>
+    <linearGradient id="linear-gradient" x1="1.072" y1="0.128" x2="0" y2="0.937" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#0f0c75"/>
+      <stop offset="1" stop-color="#49039b"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_14075" data-name="Group 14075" transform="translate(-27.814 -406.104)">
+    <rect id="Rectangle_5129" data-name="Rectangle 5129" width="72.667" height="69.99" rx="10" transform="translate(27.814 406.104)" fill="url(#linear-gradient)"/>
+    <g id="royal-crown" transform="translate(45.998 361.991)">
+      <path id="Path_12865" data-name="Path 12865" d="M148.035,810.066a2.015,2.015,0,0,0-2.016-2.017h-23.1a2.017,2.017,0,0,0,0,4.033h23.1A2.018,2.018,0,0,0,148.035,810.066Z" transform="translate(-116.465 -716.915)" fill="#fdc403"/>
+      <path id="Path_12866" data-name="Path 12866" d="M2.4,76.829a.83.83,0,0,0,.1,0L5.692,88.4h24.62l3.2-11.571c.033,0,.062,0,.1,0a2.4,2.4,0,1,0-2.4-2.4,2.334,2.334,0,0,0,.117.737l-5.782,3.38-6.214-10.3a2.4,2.4,0,1,0-2.647,0l-6.214,10.3-5.782-3.38a2.442,2.442,0,0,0,.117-.737,2.4,2.4,0,1,0-2.4,2.4Z" transform="translate(0 0)" fill="#fdc403"/>
+    </g>
+  </g>
+</svg>

@@ -6,9 +6,11 @@ import {
   ScrollView,
   SafeAreaView,
   Pressable,
-  TouchableWithoutFeedback,
+  Text,
 } from 'react-native';
 import {wp, hp} from '../constant/colors';
+import CloseIcon from './closeIcon';
+import {STYLES} from '../constant/commonStyle';
 
 const CustomModalAndroid = (props) => {
   return (
@@ -33,14 +35,16 @@ const CustomModalAndroid = (props) => {
             onStartShouldSetResponder={() => true}
             style={[
               styles.modalView,
-              {
-                // paddingTop: props.paddingTop ? props.paddingTop : 35,
-                paddingTop: 0,
-              },
+              {maxHeight: props.maxHeight ? props.maxHeight : hp(80)},
             ]}>
+            {props.title && (
+              <Text style={STYLES.modalHeader}>{props?.title}</Text>
+            )}
+            {props.onPress && <CloseIcon onPress={props.onPress} />}
             <ScrollView
+              scrollEnabled={props.scrollEnabled}
               bounces={false}
-              showsVerticalScrollIndicator={false}
+              showsVerticalScrollIndicator={props?.showsVerticalScrollIndicator}
               contentContainerStyle={{alignItems: 'center'}}>
               {props.children}
             </ScrollView>

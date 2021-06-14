@@ -2,8 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import CustomModalAndroid from '../../../components/customModal';
 import {Colors, hp, wp} from '../../../constant/colors';
-import CloseIcon from '../../../components/closeIcon';
-import {Rating, AirbnbRating} from 'react-native-elements';
+import {AirbnbRating} from 'react-native-elements';
 import TwoButton from '../../../components/twoButton';
 import TextInput from '../../../components/textInput';
 import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
@@ -11,7 +10,6 @@ import {useSelector} from 'react-redux';
 import FlatButton from '../../../components/flatButton';
 import {STORE} from '../../../redux';
 import {APICall} from '../../../redux/actions/user';
-import {STYLES} from '../../../constant/commonStyle';
 
 const RateUs = (props) => {
   const configData =
@@ -37,17 +35,11 @@ const RateUs = (props) => {
   return (
     <CustomModalAndroid
       visible={props.visible}
+      title={'RATE US'}
       onPress={() => {
         setCurrentStep(0);
         props.onCloseIcon();
       }}>
-      <Text style={STYLES.modalHeader}>RATE US</Text>
-      <CloseIcon
-        onPress={() => {
-          setCurrentStep(0);
-          props.onCloseIcon();
-        }}
-      />
       {/*{currentStep === 4 && (*/}
       {/*  <View*/}
       {/*    style={{*/}

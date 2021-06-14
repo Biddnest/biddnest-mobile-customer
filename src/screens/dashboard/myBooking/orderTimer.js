@@ -15,6 +15,7 @@ import {
   CustomConsole,
   DiffMin,
   LoadingScreen,
+  resetNavigator,
 } from '../../../constant/commonFun';
 import {getOrderDetails} from '../../../redux/actions/user';
 import SimpleHeader from '../../../components/simpleHeader';
@@ -39,6 +40,7 @@ import MapView, {
 import MapModalAndroid from '../../../components/mapModal';
 import CloseIcon from '../../../components/closeIcon';
 import FlatButton from '../../../components/flatButton';
+import Ripple from 'react-native-material-ripple';
 
 const OrderTimer = (props) => {
   const [orderDetails, setOrderDetails] = useState(
@@ -46,7 +48,11 @@ const OrderTimer = (props) => {
   );
   const [timeOver, setTimeOver] = useState(false);
   const [isLoading, setLoading] = useState(true);
-  const [tab, setTab] = useState(['Order Details', 'Requirements', 'My Bid']);
+  const [tab, setTab] = useState([
+    'Order Details',
+    'Requirements',
+    'Est Price',
+  ]);
   const [selectedTab, setSelectedTab] = useState(2);
   const [mapVisible, setMapVisible] = useState(null);
   let coordinates =
@@ -68,7 +74,9 @@ const OrderTimer = (props) => {
     if (orderDetails?.public_booking_id) {
       getOrderDetails(orderDetails?.public_booking_id)
         .then((res) => {
-          if (res?.data?.status === 'success') {
+          if (res?.status == 400) {
+            resetNavigator(props, 'Dashboard');
+          } else if (res?.data?.status === 'success') {
             let temp = res?.data?.data?.booking;
             if (temp?.status === 4) {
               props.navigation.replace('FinalQuote', {orderData: temp});
@@ -236,7 +244,8 @@ const OrderTimer = (props) => {
           <View style={STYLES.tabView}>
             {tab.map((item, index) => {
               return (
-                <Pressable
+                <Ripple
+                  rippleColor={Colors.darkBlue}
                   key={index}
                   style={{
                     ...STYLES.common,
@@ -253,12 +262,15 @@ const OrderTimer = (props) => {
                     }}>
                     {item}
                   </Text>
-                </Pressable>
+                </Ripple>
               );
             })}
           </View>
           {selectedTab === 0 && (
-            <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+            <ScrollView
+              bounces={false}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{paddingBottom: hp(2)}}>
               <View
                 style={{
                   marginHorizontal: wp(5),
@@ -283,15 +295,11 @@ const OrderTimer = (props) => {
                 style={{
                   marginHorizontal: wp(5),
                   marginTop: hp(2),
-                }}>
-                {renderText('Pincode', source_meta?.pincode)}
-              </View>
-              <View
-                style={{
-                  marginHorizontal: wp(5),
-                  marginTop: hp(2),
                   flexDirection: 'row',
                 }}>
+                <View style={{flex: 1}}>
+                  {renderText('Pincode', source_meta?.pincode)}
+                </View>
                 <View style={{flex: 1}}>
                   {renderText('Floor', source_meta?.floor)}
                 </View>
@@ -329,15 +337,11 @@ const OrderTimer = (props) => {
                 style={{
                   marginHorizontal: wp(5),
                   marginTop: hp(2),
-                }}>
-                {renderText('Pincode', destination_meta?.pincode)}
-              </View>
-              <View
-                style={{
-                  marginHorizontal: wp(5),
-                  marginTop: hp(2),
                   flexDirection: 'row',
                 }}>
+                <View style={{flex: 1}}>
+                  {renderText('Pincode', destination_meta?.pincode)}
+                </View>
                 <View style={{flex: 1}}>
                   {renderText('Floor', destination_meta?.floor)}
                 </View>
@@ -393,9 +397,9 @@ const OrderTimer = (props) => {
                 )}
                 <View style={styles.separatorView} />
                 <View style={styles.flexView}>
-                  <Text style={styles.orderID}>ORDER ID</Text>
+                  <Text style={styles.orderID}>ENQUIRY ID</Text>
                   <Text style={styles.orderNo}>
-                    {orderDetails?.public_booking_id}
+                    {orderDetails?.public_enquiry_id}
                   </Text>
                 </View>
               </View>

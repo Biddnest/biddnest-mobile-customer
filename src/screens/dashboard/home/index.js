@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -14,20 +14,27 @@ import LinearGradient from 'react-native-linear-gradient';
 import CustomModalAndroid from '../../../components/customModal';
 import FlatButton from '../../../components/flatButton';
 import {STYLES} from '../../../constant/commonStyle';
-import CloseIcon from '../../../components/closeIcon';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Friends from '../../../assets/svg/friends.svg';
 import MenuIcon from '../../../assets/svg/menu_icon.svg';
 import HomeCall from '../../../assets/svg/home_call.svg';
 import MySelf from '../../../assets/svg/myself.svg';
 import Coupon from '../../../assets/svg/coupon.svg';
+import Quote from '../../../assets/svg/quote.svg';
+import BiddnestLogo from '../../../assets/svg/biddnest_logo.svg';
 import {
   CustomAlert,
   CustomConsole,
   getLocation,
   LoadingScreen,
 } from '../../../constant/commonFun';
-import {APICall, getServices, getSlider} from '../../../redux/actions/user';
+import {
+  APICall,
+  getLiveOrders,
+  getServices,
+  getSlider,
+  getTestimonials,
+} from '../../../redux/actions/user';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import {STORE} from '../../../redux';
@@ -35,8 +42,25 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {CustomTabs} from 'react-native-custom-tabs';
 import Shimmer from 'react-native-shimmer';
 import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
+import HTML from 'react-native-render-html';
+import ChatBot from '../../../assets/svg/chat_bot.svg';
+import Ripple from 'react-native-material-ripple';
+import {AirbnbRating} from 'react-native-elements';
+import {
+  Freshchat,
+  FreshchatConfig,
+  FreshchatUser,
+} from 'react-native-freshchat-sdk';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
+import {LOGIN_USER_DATA} from '../../../redux/types';
 
 export const HomeHeader = (props) => {
+  const configData =
+    useSelector((state) => state.Login?.configData?.contact_us?.details) || '';
+  let data = JSON.parse(configData.toString());
+  const [openModal, setOpenModal] = useState(false);
   return (
     <View
       style={[
@@ -50,11 +74,11 @@ export const HomeHeader = (props) => {
       <Pressable
         style={{width: wp(13), height: '100%', ...styles.common}}
         onPress={() => props.navigation.toggleDrawer()}>
-        <MenuIcon width={wp(5.5)} height={hp(2.7)} />
+        <MenuIcon width={wp(5)} height={hp(2.2)} />
       </Pressable>
       <View
         style={{
-          width: props.edit ? wp(74) : wp(87),
+          width: props.edit ? wp(64) : wp(74),
           height: '100%',
           ...styles.common,
         }}>
@@ -64,30 +88,65 @@ export const HomeHeader = (props) => {
               fontFamily: 'Gilroy-Bold',
               color: Colors.inputTextColor,
               fontSize: wp(5),
-              marginRight: props.edit ? wp(0) : wp(13),
+              marginRight: props.edit ? -wp(3) : wp(0),
               textTransform: 'capitalize',
             }}>
             {props.title}
           </Text>
-        )) || (
-          <Image
-            source={require('../../../assets/images/biddnest_logo.png')}
-            resizeMode={'contain'}
-            style={{
-              height: '65%',
-              width: '70%',
-              marginRight: wp(13),
-            }}
-          />
-        )}
+        )) || <BiddnestLogo height={'55%'} width={'70%'} />}
       </View>
+      <Pressable
+        style={{...STYLES.common, width: wp(13)}}
+        onPress={() => {
+          setOpenModal(true);
+        }}>
+        <ChatBot width={hp(6.5)} height={hp(6.5)} />
+      </Pressable>
       {props.edit ? (
         <Pressable
-          style={{...STYLES.common, width: wp(13)}}
+          style={{...STYLES.common, width: wp(10)}}
           onPress={props.onEditPress}>
           <MaterialIcons name={'edit'} color={Colors.darkBlue} size={hp(3.5)} />
         </Pressable>
       ) : null}
+      <CustomModalAndroid
+        visible={openModal}
+        title={'Support'}
+        onPress={() => setOpenModal(false)}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            marginVertical: hp(3),
+            width: wp(100),
+          }}>
+          <View style={styles.common}>
+            <Ripple
+              rippleColor={Colors.darkBlue}
+              style={[STYLES.selectionView, STYLES.common]}
+              onPress={() => {
+                setOpenModal(false);
+                data?.contact_no?.length > 0 &&
+                  Linking.openURL(`tel:${data?.contact_no[0]}`);
+              }}>
+              <Ionicons name={'call'} color={Colors.darkBlue} size={hp(6)} />
+            </Ripple>
+            <Text style={STYLES.selectionText}>Call</Text>
+          </View>
+          <View style={styles.common}>
+            <Ripple
+              rippleColor={Colors.darkBlue}
+              onPress={() => {
+                setOpenModal(false);
+                Freshchat.showConversations();
+              }}
+              style={[STYLES.selectionView, STYLES.common]}>
+              <Entypo name={'chat'} color={Colors.darkBlue} size={hp(6)} />
+            </Ripple>
+            <Text style={STYLES.selectionText}>Chat</Text>
+          </View>
+        </View>
+      </CustomModalAndroid>
     </View>
   );
 };
@@ -96,6 +155,7 @@ const Home = (props) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const userData = useSelector((state) => state.Login?.loginData?.user) || {};
+  const userData1 = useSelector((state) => state.Login?.loginData) || {};
   const sliderSize =
     useSelector((state) => state.Login?.configData?.enums?.slider) || {};
   const configData = useSelector((state) => state.Login?.configData) || {};
@@ -105,12 +165,97 @@ const Home = (props) => {
   const [sliderData, setSliderData] = useState(
     useSelector((state) => state.Login?.sliderData?.sliders) || [],
   );
+  const [testimonialData, setTestimonialData] = useState(
+    useSelector((state) => state.Login?.testimonials?.testimonials) || [],
+  );
+  const [liveOrders, setLiveOrders] = useState(
+    useSelector((state) => state.Login?.liveOrders?.booking) || [],
+  );
   const [couponVisible, setCouponVisible] = useState(false);
   const [bookingSelectionVisible, setBookingSelectionVisible] = useState(false);
   const [movementType, setMovementType] = useState();
   const [bookingFor, setBookingFor] = useState('Myself');
   const [isLoading, setLoading] = useState(true);
   const [contactUs, setContactUs] = useState({});
+  const [selectedTestimonial, setSelectedTestimonial] = useState({});
+  const [activeSlide1, setActiveSlide1] = useState(0);
+  // const [activeSlide2, setActiveSlide2] = useState(0);
+  let activeSlide2 = 0;
+  const carousel1 = useRef(null);
+  const scrollViewRef = useRef(null);
+  let freshchatConfig = new FreshchatConfig(
+    'd9f3ecb4-0f18-40d5-b975-f4f51ac3ff6d',
+    '52d19af3-621e-4f74-8ad2-fe3414da9cdf',
+  );
+
+  useEffect(() => {
+    if (userData1?.token) {
+      if (
+        userData?.freshchat_restore_id &&
+        userData?.freshchat_restore_id?.length > 0
+      ) {
+        let freshchatUser = new FreshchatUser();
+        freshchatUser.firstName = userData?.fname;
+        freshchatUser.lastName = userData?.lname;
+        freshchatUser.email = userData?.email;
+        freshchatUser.phoneCountryCode = '+91';
+        freshchatUser.phone = userData?.phone;
+        Freshchat.setUser(freshchatUser, (error) => {
+          console.log(error);
+        });
+        Freshchat.identifyUser(
+          userData?.id?.toString(),
+          userData?.freshchat_restore_id,
+          (error) => {
+            console.log(error);
+          },
+        );
+      } else {
+        freshchatConfig.domain = 'msdk.in.freshchat.com';
+        freshchatConfig.teamMemberInfoVisible = true;
+        freshchatConfig.cameraCaptureEnabled = false;
+        freshchatConfig.gallerySelectionEnabled = true;
+        freshchatConfig.responseExpectationEnabled = true;
+        Freshchat.init(freshchatConfig);
+
+        Freshchat.identifyUser(userData?.id?.toString(), null, (error) => {
+          console.log(error);
+        });
+      }
+
+      Freshchat.addEventListener(
+        Freshchat.EVENT_USER_RESTORE_ID_GENERATED,
+        () => {
+          Freshchat.getUser((user) => {
+            let restoreId = user.restoreId;
+            let obj = {
+              url: 'freshchat/restore/id',
+              method: 'put',
+              headers: {
+                Authorization:
+                  'Bearer ' + STORE.getState().Login?.loginData?.token,
+              },
+              data: {
+                freshchat_restore_id: restoreId.toString(),
+              },
+            };
+            if (restoreId) {
+              let temp = {...userData1};
+              temp.user.freshchat_restore_id = restoreId;
+              APICall(obj)
+                .then((res) => {
+                  dispatch({
+                    type: LOGIN_USER_DATA,
+                    payload: temp,
+                  });
+                })
+                .catch((e) => console.log(e));
+            }
+          });
+        },
+      );
+    }
+  }, []);
 
   useEffect(() => {
     if (isFocused && userData?.fname) {
@@ -122,9 +267,7 @@ const Home = (props) => {
         },
       };
       APICall(obj)
-        .then((res) => {
-          setLoading(false);
-        })
+        .then((res) => {})
         .catch((err) => {
           setLoading(false);
           CustomAlert(err?.data?.message);
@@ -165,6 +308,34 @@ const Home = (props) => {
               setLoading(false);
               if (res.status === 'success' && res?.data?.services) {
                 setServiceData(res?.data?.services);
+                setInterval(() => {
+                  if (activeSlide2 === 2) {
+                    activeSlide2 = 0;
+                  } else {
+                    activeSlide2 = activeSlide2 + 1;
+                  }
+                  scrollViewRef?.current?.scrollToIndex({
+                    animated: true,
+                    index: activeSlide2 === 2 ? 0 : activeSlide2 + 1,
+                  });
+                }, 5000);
+              } else {
+                CustomAlert(res.message);
+              }
+            })
+            .catch((err) => {
+              setLoading(false);
+              CustomAlert(err?.data?.message);
+            });
+          dispatch(getTestimonials())
+            .then((res) => {
+              setLoading(false);
+              if (res.status === 'success' && res?.data?.testimonials) {
+                setTestimonialData(res?.data?.testimonials);
+                setSelectedTestimonial(
+                  res?.data?.testimonials?.length > 0 &&
+                    res?.data?.testimonials[0],
+                );
               } else {
                 CustomAlert(res.message);
               }
@@ -186,11 +357,23 @@ const Home = (props) => {
       };
       APICall(obj1)
         .then((res) => {
-          setLoading(false);
           if (res?.data?.status === 'success') {
             setContactUs(res?.data?.data?.details);
           } else {
             CustomAlert(res?.data?.message);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          CustomConsole(err);
+        });
+      dispatch(getLiveOrders())
+        .then((res) => {
+          setLoading(false);
+          if (res?.status === 'success') {
+            setLiveOrders(res?.data?.booking);
+          } else {
+            CustomAlert(res?.message);
           }
         })
         .catch((err) => {
@@ -250,7 +433,7 @@ const Home = (props) => {
       <HomeHeader navigation={props.navigation} />
       {isLoading && <LoadingScreen />}
       <ScrollView
-        style={{flex: 1}}
+        style={{flex: 1, marginTop: hp(2)}}
         showsVerticalScrollIndicator={false}
         bounces={false}>
         {/*<LocationDistance inTransit={true} />*/}
@@ -268,25 +451,112 @@ const Home = (props) => {
         )}
         {sliderData.map((item, index) => {
           if (configData?.enums?.slider?.position?.main === item.position) {
+            let bottomSize = [];
+            Object.values(sliderSize.size).forEach((i, ind) => {
+              if (i === item?.size) {
+                bottomSize =
+                  sliderSize?.banner_dimensions[
+                    Object.keys(sliderSize.size)[ind]
+                  ];
+              }
+            });
             return (
-              <FlatList
-                key={item.id}
-                bounces={false}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                data={item?.banners}
-                renderItem={renderItem}
-                keyExtractor={(item, index) => index.toString()}
-                contentContainerStyle={{
-                  padding: wp(4),
-                  paddingRight: 0,
-                  paddingBottom: 0,
-                }}
-              />
+              <View key={item.id}>
+                <Carousel
+                  enableSnap={true}
+                  enableMomentum={false}
+                  key={item.id}
+                  contentContainerStyle={{
+                    padding: wp(4),
+                    paddingRight: 0,
+                    paddingBottom: 0,
+                  }}
+                  // loop={true}
+                  ref={carousel1}
+                  data={item?.banners}
+                  loopClonesPerSide={item?.banners?.length - 1}
+                  renderItem={renderItem}
+                  lockScrollWhileSnapping={true}
+                  sliderWidth={wp(100)}
+                  itemWidth={bottomSize.length > 0 && bottomSize[0]}
+                  autoplay={true}
+                  // slideStyle={{marginHorizontal: wp(2)}}
+                  layout="default"
+                  useNativeDriver
+                  inactiveSlideScale={0.8}
+                  autoplayDelay={5000}
+                  onSnapToItem={(index) => setActiveSlide1(index)}
+                />
+                <Pagination
+                  dotsLength={item?.banners?.length}
+                  activeDotIndex={activeSlide1}
+                  containerStyle={{
+                    backgroundColor: 'transparent',
+                    marginTop: -hp(2),
+                    marginBottom: -hp(3),
+                  }}
+                  dotStyle={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    backgroundColor: Colors.darkBlue,
+                  }}
+                  inactiveDotStyle={
+                    {
+                      // Define styles for inactive dots here
+                    }
+                  }
+                  inactiveDotOpacity={0.4}
+                  inactiveDotScale={0.6}
+                />
+              </View>
             );
           }
           return null;
         })}
+        {liveOrders.length > 0 && (
+          <Pressable
+            style={styles.inputForm}
+            onPress={() => props.navigation.navigate('MyBooking')}>
+            <View
+              style={{
+                marginLeft: wp(2),
+                flex: 1,
+                justifyContent: 'space-between',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <View>
+                <Text
+                  style={{
+                    fontFamily: 'Gilroy-Bold',
+                    fontSize: wp(4),
+                    color: Colors.inputTextColor,
+                    textAlign: 'center',
+                    marginRight: 5,
+                    textTransform: 'uppercase',
+                  }}>
+                  You have an Ongoing order
+                </Text>
+                <Text
+                  style={{
+                    color: Colors.inputTextColor,
+                    flex: 1,
+                    fontFamily: 'Roboto-Regular',
+                    fontSize: wp(3.5),
+                    marginTop: hp(0.5),
+                  }}>
+                  Tap here to go
+                </Text>
+              </View>
+              <MaterialIcons
+                name="arrow-forward-ios"
+                size={hp(3.5)}
+                color={'#3B4B58'}
+              />
+            </View>
+          </Pressable>
+        )}
         <View style={styles.movementView}>
           <Text
             style={{
@@ -296,7 +566,7 @@ const Home = (props) => {
               textAlign: 'center',
               marginTop: hp(1),
             }}>
-            MOVEMENT TYPE
+            WHAT WOULD YOU LIKE TO MOVE
           </Text>
           <FlatList
             bounces={false}
@@ -315,7 +585,8 @@ const Home = (props) => {
                   start={{x: 0, y: 0}}
                   end={{x: 1, y: 0}}
                   style={styles.movementLinear}>
-                  <Pressable
+                  <Ripple
+                    rippleColor={Colors.white}
                     onPress={() => {
                       setMovementType(item);
                       setBookingSelectionVisible(true);
@@ -340,119 +611,305 @@ const Home = (props) => {
                       }}>
                       {item.name}
                     </Text>
-                  </Pressable>
+                  </Ripple>
                 </LinearGradient>
               );
             }}
           />
         </View>
-        <View style={styles.assistantView}>
+        <View
+          style={[
+            styles.assistantView,
+            {
+              flexDirection: 'column',
+            },
+          ]}>
           <View>
-            <Text
-              style={{
-                fontFamily: 'Gilroy-Bold',
-                fontSize: wp(6),
-                color: Colors.darkBlue,
-              }}>
-              Need Assistance?
-            </Text>
-            <Text
-              style={{
-                fontFamily: 'Roboto-Medium',
-                color: '#434343',
-                fontSize: wp(3.6),
-                marginTop: hp(2),
-              }}>
-              We are just a call away! {'\n'}(9123445566)
-            </Text>
+            <Image
+              source={require('../../../assets/images/support_icon.png')}
+              style={{height: hp(20), width: hp(20)}}
+              resizeMode={'contain'}
+            />
           </View>
-          <Pressable
-            onPress={() => {
-              Linking.openURL(
-                `tel:${
-                  contactUs?.contact_no?.length > 0 && contactUs.contact_no[0]
-                }`,
-              );
-            }}>
-            <HomeCall width={hp(7)} height={hp(7)} />
-          </Pressable>
+          <View
+            style={[
+              {
+                flexDirection: 'row',
+                padding: wp(3),
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: wp(90),
+                alignSelf: 'center',
+              },
+            ]}>
+            <View>
+              <Text
+                style={{
+                  fontFamily: 'Gilroy-Bold',
+                  fontSize: wp(6),
+                  color: Colors.darkBlue,
+                }}>
+                Need Assistance?
+              </Text>
+              <Text
+                style={{
+                  fontFamily: 'Roboto-Medium',
+                  color: '#434343',
+                  fontSize: wp(3.6),
+                  marginTop: hp(1),
+                }}>
+                We are just a call away! {'\n'}(9123445566)
+              </Text>
+            </View>
+            <Ripple
+              rippleColor={Colors.white}
+              onPress={() => {
+                Linking.openURL(
+                  `tel:${
+                    contactUs?.contact_no?.length > 0 && contactUs.contact_no[0]
+                  }`,
+                );
+              }}>
+              <HomeCall width={hp(7)} height={hp(7)} />
+            </Ripple>
+          </View>
         </View>
         {sliderData.map((item, index) => {
           if (
             configData?.enums?.slider?.position?.secondary === item.position
           ) {
+            let bottomSize = [];
+            Object.values(sliderSize.size).forEach((i, ind) => {
+              if (i === item?.size) {
+                bottomSize =
+                  sliderSize?.banner_dimensions[
+                    Object.keys(sliderSize.size)[ind]
+                  ];
+              }
+            });
             return (
-              <FlatList
-                key={item.id}
-                bounces={false}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                data={item?.banners}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({item, index}) => {
-                  let bottomSize = [];
-                  Object.values(sliderSize.size).forEach((i, ind) => {
-                    if (i === item?.banner_size) {
-                      bottomSize =
-                        sliderSize?.banner_dimensions[
-                          Object.keys(sliderSize.size)[ind]
-                        ];
-                    }
-                  });
-                  return (
-                    <Pressable
-                      onPress={() => {
-                        if (item?.url && item.url !== '') {
-                          if (isAndroid) {
-                            CustomTabs.openURL(item?.url, {
-                              toolbarColor: Colors.darkBlue,
-                            })
-                              .then(() => {})
-                              .catch((err) => {
-                                console.log(err);
-                              });
-                          } else {
-                            Linking.openURL(item?.url);
+              <View key={item?.id}>
+                <FlatList
+                  ref={scrollViewRef}
+                  key={item.id}
+                  bounces={false}
+                  initialScrollIndex={0}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  data={item?.banners}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({item, index}) => {
+                    let bottomSize = [];
+                    Object.values(sliderSize.size).forEach((i, ind) => {
+                      if (i === item?.banner_size) {
+                        bottomSize =
+                          sliderSize?.banner_dimensions[
+                            Object.keys(sliderSize.size)[ind]
+                          ];
+                      }
+                    });
+                    return (
+                      <Pressable
+                        onPress={() => {
+                          if (item?.url && item.url !== '') {
+                            if (isAndroid) {
+                              CustomTabs.openURL(item?.url, {
+                                toolbarColor: Colors.darkBlue,
+                              })
+                                .then(() => {})
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            } else {
+                              Linking.openURL(item?.url);
+                            }
                           }
-                        }
-                      }}
-                      key={index}
-                      style={[
-                        styles.topScroll,
-                        {
-                          ...styles.common,
-                          height: bottomSize.length > 0 && bottomSize[1],
-                          width: bottomSize.length > 0 && bottomSize[0],
-                        },
-                      ]}>
-                      <Image
-                        style={{
-                          height: '100%',
-                          width: '100%',
                         }}
-                        source={{uri: item?.image}}
-                        resizeMode={'contain'}
                         key={index}
-                      />
-                    </Pressable>
-                  );
-                }}
-                contentContainerStyle={{
-                  padding: wp(4),
-                  paddingTop: 0,
-                  paddingRight: 0,
-                }}
-              />
+                        style={[
+                          styles.topScroll,
+                          {
+                            ...styles.common,
+                            height: bottomSize.length > 0 && bottomSize[1],
+                            width: bottomSize.length > 0 && bottomSize[0],
+                            marginLeft: wp(5),
+                          },
+                        ]}>
+                        <Image
+                          style={{
+                            height: '100%',
+                            width: '100%',
+                          }}
+                          source={{uri: item?.image}}
+                          resizeMode={'contain'}
+                          key={index}
+                        />
+                      </Pressable>
+                    );
+                  }}
+                  contentContainerStyle={{
+                    paddingRight: wp(5),
+                  }}
+                />
+                {/*<Pagination*/}
+                {/*  dotsLength={item?.banners?.length}*/}
+                {/*  activeDotIndex={activeSlide2}*/}
+                {/*  containerStyle={{*/}
+                {/*    backgroundColor: 'transparent',*/}
+                {/*    marginTop: -hp(2),*/}
+                {/*    marginBottom: -hp(3),*/}
+                {/*  }}*/}
+                {/*  dotStyle={{*/}
+                {/*    width: 10,*/}
+                {/*    height: 10,*/}
+                {/*    borderRadius: 5,*/}
+                {/*    backgroundColor: Colors.darkBlue,*/}
+                {/*  }}*/}
+                {/*  inactiveDotStyle={*/}
+                {/*    {*/}
+                {/*      // Define styles for inactive dots here*/}
+                {/*    }*/}
+                {/*  }*/}
+                {/*  inactiveDotOpacity={0.4}*/}
+                {/*  inactiveDotScale={0.6}*/}
+                {/*/>*/}
+              </View>
             );
           } else {
             return null;
           }
         })}
+        <Text
+          style={{
+            marginTop: hp(3),
+            textAlign: 'center',
+            color: Colors.darkBlue,
+            fontSize: wp(5),
+            fontFamily: 'Gilroy-Bold',
+          }}>
+          What Our Customers Say
+        </Text>
+        <View
+          style={[
+            styles.assistantView,
+            {
+              justifyContent: 'flex-start',
+              paddingVertical: hp(2),
+            },
+          ]}>
+          <View
+            style={{
+              marginHorizontal: wp(3),
+              marginVertical: hp(3),
+            }}>
+            <Quote height={hp(5)} width={hp(5)} />
+          </View>
+          <View
+            style={{
+              borderLeftWidth: 1,
+              borderColor: Colors.silver,
+              paddingLeft: wp(4),
+              flex: 1,
+            }}>
+            <Text
+              style={{
+                fontFamily: 'Gilroy-Bold',
+                color: Colors.darkBlue,
+                fontSize: wp(4),
+              }}>
+              {selectedTestimonial?.name}
+            </Text>
+            <View
+              style={{
+                flex: 1,
+                alignSelf: 'flex-start',
+                marginTop: hp(0.2),
+                marginBottom: hp(1),
+              }}>
+              <AirbnbRating
+                key={selectedTestimonial?.id}
+                readonly={true}
+                fractions={1}
+                defaultRating={
+                  (selectedTestimonial?.ratings &&
+                    parseInt(selectedTestimonial?.ratings)) ||
+                  3
+                }
+                ratingContainerStyle={{paddingHorizontal: wp(5)}}
+                ratingCount={5}
+                size={wp(4)}
+                showRating={false}
+              />
+            </View>
+            <HTML
+              defaultTextProps={{
+                width: wp(70),
+                marginTop: hp(1),
+              }}
+              baseFontStyle={{
+                fontFamily: 'Roboto-Light',
+                color: Colors.grey,
+                fontSize: wp(3.2),
+              }}
+              source={{html: selectedTestimonial?.desc}}
+              contentWidth={'90%'}
+            />
+          </View>
+        </View>
+        <View style={{alignItems: 'center'}}>
+          <FlatList
+            data={testimonialData}
+            bounces={false}
+            horizontal
+            contentContainerStyle={{marginBottom: hp(2)}}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}) => {
+              return (
+                <Pressable
+                  onPress={() => {
+                    setSelectedTestimonial(item);
+                  }}
+                  key={index}
+                  style={{
+                    marginLeft: wp(5),
+                    opacity: item?.id === selectedTestimonial?.id ? 1 : 0.3,
+                  }}>
+                  <View
+                    style={{
+                      height: hp(8),
+                      width: hp(8),
+                      borderRadius: hp(4),
+                      overflow: 'hidden',
+                    }}>
+                    <Image
+                      source={{uri: item?.image}}
+                      resizeMode={'contain'}
+                      style={{height: '100%', width: '100%'}}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      height: hp(0.8),
+                      width: hp(0.8),
+                      borderRadius: hp(0.4),
+                      backgroundColor:
+                        item?.id === selectedTestimonial?.id
+                          ? Colors.darkBlue
+                          : 'transparent',
+                      alignSelf: 'center',
+                      marginTop: hp(1),
+                    }}
+                  />
+                </Pressable>
+              );
+            }}
+          />
+        </View>
       </ScrollView>
       <CustomModalAndroid
         visible={couponVisible}
         onPress={() => setCouponVisible(false)}>
-        <CloseIcon onPress={() => setCouponVisible(false)} />
         <Coupon width={hp(25)} height={hp(25)} />
         <Text style={STYLES.modalHeader}>DISCOUNT COUPON</Text>
         <Text
@@ -469,9 +926,8 @@ const Home = (props) => {
       </CustomModalAndroid>
       <CustomModalAndroid
         visible={bookingSelectionVisible}
+        title={'WHOM ARE YOU BOOKING FOR?'}
         onPress={() => setBookingSelectionVisible(false)}>
-        <Text style={STYLES.modalHeader}>WHOM ARE YOU BOOKING FOR?</Text>
-        <CloseIcon onPress={() => setBookingSelectionVisible(false)} />
         <View
           style={{
             flexDirection: 'row',
@@ -480,31 +936,37 @@ const Home = (props) => {
             width: wp(100),
           }}>
           <View style={styles.common}>
-            <Pressable
+            <Ripple
+              rippleColor={Colors.white}
               style={[
                 styles.selectionView,
                 {
                   borderWidth: bookingFor === 'Myself' ? 2 : 0,
+                  backgroundColor:
+                    bookingFor === 'Myself' ? '#F2E6FF' : 'transparent',
                   ...STYLES.common,
                 },
               ]}
               onPress={() => setBookingFor('Myself')}>
               <MySelf width={hp(8)} height={hp(8)} />
-            </Pressable>
+            </Ripple>
             <Text style={styles.selectionText}>Myself</Text>
           </View>
           <View style={styles.common}>
-            <Pressable
+            <Ripple
+              rippleColor={Colors.white}
               onPress={() => setBookingFor('Others')}
               style={[
                 styles.selectionView,
                 {
                   borderWidth: bookingFor === 'Others' ? 2 : 0,
+                  backgroundColor:
+                    bookingFor === 'Others' ? '#F2E6FF' : 'transparent',
                   ...STYLES.common,
                 },
               ]}>
               <Friends width={hp(8)} height={hp(8)} />
-            </Pressable>
+            </Ripple>
             <Text style={styles.selectionText}>Somebody Else</Text>
           </View>
         </View>
@@ -533,6 +995,15 @@ const Home = (props) => {
           </Text>
         </Pressable>
       </CustomModalAndroid>
+      <Pressable
+        onPress={() => Freshchat.showConversations()}
+        style={{
+          position: 'absolute',
+          right: hp(2),
+          bottom: hp(2),
+        }}>
+        <ChatBot width={hp(8.5)} height={hp(8.5)} />
+      </Pressable>
     </LinearGradient>
   );
 };
@@ -547,11 +1018,11 @@ const styles = StyleSheet.create({
   topScroll: {
     borderRadius: 10,
     backgroundColor: Colors.silver,
-    marginRight: wp(4),
+    // marginRight: wp(3),
     overflow: 'hidden',
   },
   movementView: {
-    padding: wp(3),
+    padding: wp(2),
     borderRadius: 10,
     borderColor: Colors.silver,
     borderWidth: 1.5,
@@ -561,7 +1032,8 @@ const styles = StyleSheet.create({
     marginTop: hp(2),
   },
   movementLinear: {
-    flex: 1,
+    // flex: 1,
+    width: '30%',
     flexDirection: 'column',
     margin: 5,
     overflow: 'hidden',
@@ -570,7 +1042,7 @@ const styles = StyleSheet.create({
   },
   assistantView: {
     flexDirection: 'row',
-    padding: wp(5),
+    padding: wp(3),
     marginVertical: hp(2),
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -597,5 +1069,18 @@ const styles = StyleSheet.create({
     fontSize: wp(4),
     color: '#3B4B58',
     marginTop: hp(1),
+  },
+  inputForm: {
+    paddingVertical: hp(2),
+    paddingHorizontal: hp(2),
+    borderWidth: 1.5,
+    borderRadius: 15,
+    backgroundColor: Colors.white,
+    borderColor: Colors.silver,
+    marginTop: hp(2),
+    width: wp(92),
+    alignItems: 'center',
+    flexDirection: 'row',
+    alignSelf: 'center',
   },
 });

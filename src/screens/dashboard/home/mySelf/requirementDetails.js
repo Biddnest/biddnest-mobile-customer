@@ -16,14 +16,12 @@ import {STYLES} from '../../../../constant/commonStyle';
 import TextInput from '../../../../components/textInput';
 import CustomModalAndroid from '../../../../components/customModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import DropDownAndroid from '../../../../components/dropDown';
 import FlatButton from '../../../../components/flatButton';
 import {
   CustomAlert,
   CustomConsole,
   ImageSelection,
 } from '../../../../constant/commonFun';
-import CloseIcon from '../../../../components/closeIcon';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import OrderDetailModal from '../../myBooking/orderDetailModal';
@@ -32,8 +30,12 @@ import CustomLabel from './CustomLabel';
 import {APICall} from '../../../../redux/actions/user';
 import {STORE} from '../../../../redux';
 import {useSelector} from 'react-redux';
-import {Picker} from '@react-native-picker/picker';
-import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
+import TwoButton from '../../../../components/twoButton';
+import SearchableItem from '../../../../components/searchableItem';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ripple from 'react-native-material-ripple';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import SelectionModal from '../../../../components/selectionModal';
 
 const RequirementDetails = (props) => {
   const {
@@ -54,9 +56,16 @@ const RequirementDetails = (props) => {
   const [addItem, setAddItem] = useState(false);
   const [addData, setAddData] = useState({});
   const [editItem, setEditItem] = useState(false);
+  const [imageSelect, setImageSelect] = useState(false);
+  const [openPicker, setOpenPicker] = useState(false);
+  const [editableWarning, setEditableWarning] = useState(false);
+  const [changeCategoryVisible, setChangeCategoryVisible] = useState({});
   const [editData, setEditData] = useState({});
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(
     false,
+  );
+  const [defaultInventoryStore, setDefaultInventoryStore] = useState(
+    data?.inventory_items,
   );
   const [error, setError] = useState({
     inventory: undefined,
@@ -69,9 +78,14 @@ const RequirementDetails = (props) => {
       temp.customer[key] = value;
     } else {
       if (key === 'images') {
-        let t1 = [...temp.images];
-        t1.push(value);
-        temp[key] = t1;
+        if (typeof value === 'string') {
+          let t1 = [...temp.images];
+          t1.push(value);
+          temp[key] = t1;
+        } else {
+          let t1 = [...temp.images, ...value];
+          temp[key] = t1;
+        }
       } else {
         temp[key] = value;
       }
@@ -88,19 +102,30 @@ const RequirementDetails = (props) => {
       delete temp.icon;
       inv[index] = temp;
     });
-    if (inv.findIndex((item) => item.id === null) === -1 && isAndroid) {
-      inv.unshift({
-        label: '-Select-',
-        value: null,
-        category: '',
-        id: null,
-        image:
-          'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
-        material: '["wood","plastic","steel","fibre","glass"]',
-        name: '-Select-',
-        size: '["small","medium","large"]',
-      });
-    }
+    // if (inv.findIndex((item) => item.id === 'select') === -1 && isAndroid) {
+    //   inv.unshift({
+    //     label: '-Select-',
+    //     value: null,
+    //     category: '',
+    //     id: 'select',
+    //     image:
+    //       'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
+    //     material: '["wood","plastic","steel","fibre","glass"]',
+    //     name: '-Select-',
+    //     size: '["small","medium","large"]',
+    //   });
+    //   inv.push({
+    //     label: '-Other-',
+    //     value: 'other',
+    //     category: '',
+    //     id: null,
+    //     image:
+    //       'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
+    //     material: '["wood","plastic","steel","fibre","glass"]',
+    //     name: '-Other-',
+    //     size: '["small","medium","large"]',
+    //   });
+    // }
     if (JSON.stringify(inv) !== JSON.stringify(defaultInventories)) {
       setDefaultInventories(inv);
       if (inv.length > 0) {
@@ -115,12 +140,24 @@ const RequirementDetails = (props) => {
             value: item,
           });
         });
+        if (materialAry.findIndex((item) => item.value === null) === -1) {
+          materialAry.unshift({
+            label: '-Select-',
+            value: null,
+          });
+        }
         temp.size.forEach((item) => {
           sizeAry.push({
             label: item,
             value: item,
           });
         });
+        if (sizeAry.findIndex((item) => item.value === null) === -1) {
+          sizeAry.unshift({
+            label: '-Select-',
+            value: null,
+          });
+        }
         temp.material = materialAry;
         temp.size = sizeAry;
         setSelectedInventory(temp);
@@ -160,9 +197,11 @@ const RequirementDetails = (props) => {
                 image: item?.meta?.image,
               });
             });
+            setDefaultInventoryStore(temp);
             setInventoryItems(temp);
             handleStateChange('inventory_items', temp);
           } else {
+            setDefaultInventoryStore([]);
             setInventoryItems([]);
             handleStateChange('inventory_items', []);
           }
@@ -230,152 +269,144 @@ const RequirementDetails = (props) => {
   };
 
   const renderItem = ({item, index}) => {
+    if (item?.inventory_id === -1) {
+      return (
+        <Pressable
+          onPress={() => {
+            setAddData({
+              name: null,
+              material: null,
+              size: null,
+              quantity:
+                configData?.inventory_quantity_type.range ===
+                movementType?.inventory_quantity_type
+                  ? {
+                      min: 250,
+                      max: 750,
+                    }
+                  : 1,
+            });
+            setAddItem(true);
+          }}
+          key={item.id}
+          style={{
+            backgroundColor: Colors.white,
+            borderColor: Colors.darkBlue,
+            borderWidth: 1.2,
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: hp(1.5),
+            padding: wp(2),
+            borderRadius: hp(1),
+            marginRight: hp(1.3),
+          }}>
+          <View
+            style={{
+              ...styles.backgroundCircle,
+              ...STYLES.common,
+              backgroundColor: Colors.pageBG,
+            }}>
+            <AntDesign name={'plus'} size={hp(3)} color={Colors.darkBlue} />
+          </View>
+          <View
+            style={{
+              marginLeft: wp(2),
+            }}>
+            <Text
+              style={{
+                fontFamily: 'Gilroy-SemiBold',
+                color: Colors.inputTextColor,
+                fontSize: wp(4.5),
+              }}>
+              {'Add More'}
+            </Text>
+          </View>
+        </Pressable>
+      );
+    }
     return (
       <View
         key={item.id}
         style={{
-          width: '95%',
-          justifyContent: 'center',
-          alignSelf: 'center',
+          backgroundColor: Colors.pageBG,
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginBottom: hp(1.5),
+          padding: wp(2),
+          borderRadius: hp(1),
+          marginRight: hp(1.3),
         }}>
-        <Text
+        <Pressable
+          onPress={() => {
+            setEditData(item);
+            setConfirmationModalVisible(false);
+            setEditItem(true);
+          }}
           style={{
-            fontFamily: 'Gilroy-Bold',
-            color: Colors.inputTextColor,
-            fontSize: wp(4.5),
+            ...styles.backgroundCircle,
+            ...STYLES.common,
           }}>
-          {item.name}
-        </Text>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <View style={{width: '38%', marginRight: '2%'}}>
-            <Text
-              numberOfLines={1}
-              style={{
-                fontFamily: 'Roboto-Regular',
-                color: Colors.inputTextColor,
-                fontSize: wp(3.5),
-              }}>
-              {item?.material}, {item?.size}
-            </Text>
-          </View>
-          {(configData?.inventory_quantity_type.range ===
-            movementType?.inventory_quantity_type && (
-            <View
-              style={{
-                width: '28%',
-                flexDirection: 'row',
-                height: hp(4),
-                backgroundColor: Colors.silver,
-                borderRadius: 5,
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-              }}>
+          <SimpleLineIcons
+            name={'pencil'}
+            size={hp(2.5)}
+            color={Colors.darkBlue}
+          />
+        </Pressable>
+        <View
+          style={{
+            marginLeft: wp(2),
+          }}>
+          <Text
+            style={{
+              fontFamily: 'Gilroy-SemiBold',
+              color: Colors.inputTextColor,
+              fontSize: wp(4.5),
+            }}>
+            {configData?.inventory_quantity_type.range ===
+            movementType?.inventory_quantity_type
+              ? item?.quantity?.min + '-' + item?.quantity?.max
+              : item?.quantity}{' '}
+            {item?.itemName || item.name}
+          </Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{marginRight: '2%'}}>
               <Text
+                numberOfLines={1}
                 style={{
-                  color: Colors.inputTextColor,
-                }}>
-                {item?.quantity?.min}-{item?.quantity?.max}
-              </Text>
-            </View>
-          )) || (
-            <View
-              style={{
-                width: '28%',
-                flexDirection: 'row',
-                height: hp(4),
-                backgroundColor: Colors.silver,
-                borderRadius: 5,
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-              }}>
-              <Pressable
-                onPress={() => {
-                  let temp = [...inventoryItems];
-                  let t1 = temp[index];
-                  if (t1?.quantity > 1) {
-                    t1.quantity = t1?.quantity - 1 || 0;
-                    setInventoryItems(temp);
-                    handleStateChange('inventory_items', temp);
-                  }
-                }}>
-                <MaterialCommunityIcons
-                  name={'minus'}
-                  size={hp(2.5)}
-                  color={Colors.inputTextColor}
-                />
-              </Pressable>
-              <Text
-                style={{
+                  fontFamily: 'Roboto-Regular',
                   color: Colors.inputTextColor,
                   fontSize: wp(3.5),
+                  textTransform: 'capitalize',
                 }}>
-                {item?.quantity || 0}
+                {item?.material}, {item?.size}
               </Text>
-              <Pressable
-                onPress={() => {
-                  let temp = [...inventoryItems];
-                  let t1 = temp[index];
-                  t1.quantity = t1?.quantity + 1 || 0;
-                  setInventoryItems(temp);
-                  handleStateChange('inventory_items', temp);
-                }}>
-                <MaterialCommunityIcons
-                  name={'plus'}
-                  size={hp(2.5)}
-                  color={Colors.inputTextColor}
-                />
-              </Pressable>
             </View>
-          )}
-          <View
-            style={{
-              width: '28%',
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
-            }}>
-            <Pressable
-              onPress={() => {
-                setEditData(item);
-                setConfirmationModalVisible(false);
-                setEditItem(true);
-              }}
-              style={{
-                ...styles.backgroundCircle,
-                ...STYLES.common,
-              }}>
-              <SimpleLineIcons
-                name={'pencil'}
-                size={hp(2.5)}
-                color={Colors.darkBlue}
-              />
-            </Pressable>
-            <Pressable
-              onPress={() => {
-                let temp = [...inventoryItems];
-                temp.splice(index, 1);
-                setInventoryItems(temp);
-                handleStateChange('inventory_items', temp);
-              }}
-              style={{
-                ...styles.backgroundCircle,
-                ...STYLES.common,
-              }}>
-              <Ionicons
-                name={'trash-outline'}
-                size={hp(2.5)}
-                color={Colors.darkBlue}
-              />
-            </Pressable>
           </View>
         </View>
       </View>
     );
   };
+  const setImage = (type) => {
+    ImageSelection(type, true)
+      .then((res) => {
+        handleState('images', res);
+      })
+      .catch((err) => {});
+  };
   let imageData = [...data?.meta?.images];
   imageData.push('Plus');
   return (
     <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+      <Text
+        style={{
+          textAlign: 'center',
+          marginBottom: hp(2),
+          fontFamily: 'Gilroy-SemiBold',
+          fontSize: wp(4),
+          textTransform: 'uppercase',
+        }}>
+        Pick an item list
+      </Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -388,9 +419,7 @@ const RequirementDetails = (props) => {
             <Pressable
               key={index}
               onPress={() => {
-                handleState('subcategory', item.name);
-                getInventories(item.id);
-                handleSelectedSubCategory(item);
+                setChangeCategoryVisible(item);
               }}
               style={{
                 height: wp(20),
@@ -434,23 +463,26 @@ const RequirementDetails = (props) => {
             ? `${selectedSubCategory?.name} ITEM LIST`
             : `${movementType?.name} ITEM LIST`}
         </Text>
-        <View style={{marginTop: hp(3)}}>
+        <View
+          style={{
+            width: '100%',
+            borderWidth: 1,
+            marginTop: hp(3),
+            marginBottom: hp(2),
+            borderColor: Colors.pageBG,
+          }}
+        />
+        <View>
           <FlatList
             keyExtractor={(item, index) => index.toString()}
             bounces={false}
-            data={inventoryItems}
-            extraData={inventoryItems}
+            data={[...inventoryItems, {inventory_id: -1}]}
+            contentContainerStyle={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+            }}
+            extraData={[...inventoryItems, {inventory_id: -1}]}
             renderItem={renderItem}
-            ItemSeparatorComponent={() => (
-              <View
-                style={{
-                  borderWidth: 0.7,
-                  borderColor: Colors.silver,
-                  marginVertical: hp(2),
-                }}
-              />
-            )}
-            onRefresh={() => {}}
             refreshing={isWait}
             ListEmptyComponent={() => (
               <Text
@@ -465,27 +497,6 @@ const RequirementDetails = (props) => {
                 quote for you
               </Text>
             )}
-          />
-          <Button
-            label={'ADD ITEM'}
-            backgroundColor={Colors.white}
-            spaceBottom={0}
-            onPress={() => {
-              setAddData({
-                name: null,
-                material: null,
-                size: null,
-                quantity:
-                  configData?.inventory_quantity_type.range ===
-                  movementType?.inventory_quantity_type
-                    ? {
-                        min: 250,
-                        max: 750,
-                      }
-                    : 1,
-              });
-              setAddItem(true);
-            }}
           />
         </View>
       </View>
@@ -508,13 +519,7 @@ const RequirementDetails = (props) => {
               if (item === 'Plus') {
                 return (
                   <Pressable
-                    onPress={() =>
-                      ImageSelection()
-                        .then((res) => {
-                          handleState('images', res);
-                        })
-                        .catch((err) => {})
-                    }
+                    onPress={() => setImageSelect(true)}
                     style={{
                       height: wp(16),
                       width: wp(16),
@@ -613,7 +618,12 @@ const RequirementDetails = (props) => {
           }}
         />
       </View>
-      <CustomModalAndroid visible={confirmationModalVisible}>
+      <CustomModalAndroid
+        visible={confirmationModalVisible}
+        title={'CONFIRM ITEM LIST'}
+        maxHeight={hp(90)}
+        showsVerticalScrollIndicator={true}
+        onPress={() => setConfirmationModalVisible(false)}>
         <OrderDetailModal
           from={'RequirementDetails'}
           isLoading={isLoading}
@@ -622,189 +632,60 @@ const RequirementDetails = (props) => {
           onCloseIcon={() => setConfirmationModalVisible(false)}
           leftOnPress={() => setConfirmationModalVisible(false)}
           rightOnPress={() => {
-            // Booking API call
-            setLoading(true);
-            let obj = {
-              url: 'bookings/enquiry',
-              method: 'post',
-              headers: {
-                Authorization:
-                  'Bearer ' + STORE.getState().Login?.loginData?.token,
-              },
-              data: props.data,
-            };
-            APICall(obj)
-              .then((res) => {
-                setLoading(false);
-                if (res?.data?.status === 'success') {
-                  props.setApiResponse(res?.data?.data?.booking);
-                  if (props.bookingFor === 'Others') {
-                    props.onPageChange(4);
-                  } else {
-                    props.onPageChange(3);
-                  }
-                } else {
-                  CustomAlert(res?.data?.message);
-                }
-              })
-              .catch((err) => {
-                setLoading(false);
-                CustomConsole(err);
-              });
+            setEditableWarning(true);
+            setConfirmationModalVisible(false);
           }}
         />
       </CustomModalAndroid>
       <CustomModalAndroid
         visible={addItem || editItem}
+        title={editItem ? 'EDIT ITEM' : 'ADD ITEM'}
         onPress={() => {
           setAddItem(false);
           setAddData({});
           setEditItem(false);
           setEditData({});
         }}>
-        <Text style={STYLES.modalHeader}>
-          {editItem ? 'EDIT ITEM' : 'ADD ITEM'}
-        </Text>
-        <CloseIcon
+        <Pressable
           onPress={() => {
-            setAddItem(false);
-            setAddData({});
-            setEditItem(false);
-            setEditData({});
+            if (addItem) {
+              setOpenPicker(true);
+            }
           }}
-        />
-        {(isAndroid && (
-          <View
-            style={{
-              width: wp(90),
-              paddingHorizontal: 10,
-            }}>
-            <Text
-              style={{
-                fontFamily: 'Roboto-Bold',
-                color: Colors.textLabelColor,
-                fontSize: wp(4),
-                marginBottom: hp(1),
-              }}>
-              {'Item Name'}
+          style={{
+            width: wp(90),
+            paddingHorizontal: 10,
+          }}>
+          <Text style={styles.textLabel}>{'Item Name *'}</Text>
+          <View style={styles.outerView}>
+            <Text numberOfLines={1} style={styles.innerText}>
+              {addItem
+                ? addData?.name || '-Select-'
+                : editData?.name || '-Select-'}
             </Text>
-            <View
-              style={{
-                borderWidth: 2,
-                paddingHorizontal: 15,
-                borderRadius: 10,
-                height: hp(6.5),
-                borderColor: Colors.silver,
-                backgroundColor: Colors.white,
-                borderBottomWidth: 2,
-                ...STYLES.common,
-              }}>
-              <Picker
-                style={{
-                  height: '99%',
-                  width: '100%',
-                }}
-                selectedValue={editItem ? editData?.name : addData?.name}
-                onValueChange={(itemValue, itemIndex) => {
-                  if (itemValue) {
-                    let item = defaultInventories[itemIndex];
-                    let temp = {...item};
-                    temp.material = JSON.parse(item.material.toString());
-                    temp.size = JSON.parse(item.size.toString());
-
-                    temp.label = item.name;
-                    temp.value = item.name;
-                    let materialAry = [];
-                    let sizeAry = [];
-                    temp.material.forEach((i) => {
-                      materialAry.push({
-                        label: i,
-                        value: i,
-                      });
-                    });
-                    temp.size.forEach((i) => {
-                      sizeAry.push({
-                        label: i,
-                        value: i,
-                      });
-                    });
-                    temp.material = materialAry;
-                    temp.size = sizeAry;
-                    setSelectedInventory(temp);
-                    if (editItem) {
-                      setEditData({...editData, name: itemValue});
-                    } else {
-                      setAddData({
-                        name: itemValue,
-                        material: null,
-                        size: null,
-                        quantity:
-                          configData?.inventory_quantity_type.range ===
-                          movementType?.inventory_quantity_type
-                            ? {
-                                min: 200,
-                                max: 750,
-                              }
-                            : 1,
-                      });
-                    }
-                  }
-                }}>
-                {defaultInventories.map((item, index) => {
-                  return (
-                    <Picker.Item label={item?.label} value={item?.value} />
-                  );
-                })}
-              </Picker>
-            </View>
+            <MaterialIcons
+              name={!openPicker ? 'arrow-drop-down' : 'arrow-drop-up'}
+              size={hp(3.5)}
+              color={'#3B4B58'}
+            />
           </View>
-        )) || (
-          <View style={{zIndex: 5002}}>
-            <DropDownAndroid
-              value={editItem ? editData?.name : addData?.name}
-              label={'Item Name'}
-              width={wp(90)}
-              items={defaultInventories}
-              onChangeItem={(text, item) => {
-                let temp = {...item};
-
-                temp.material = JSON.parse(item.material.toString());
-                temp.size = JSON.parse(item.size.toString());
-
-                temp.label = item.name;
-                temp.value = item.name;
-                let materialAry = [];
-                let sizeAry = [];
-                temp.material.forEach((i) => {
-                  materialAry.push({
-                    label: i,
-                    value: i,
-                  });
-                });
-                temp.size.forEach((i) => {
-                  sizeAry.push({
-                    label: i,
-                    value: i,
-                  });
-                });
-                temp.material = materialAry;
-                temp.size = sizeAry;
-                setSelectedInventory(temp);
+        </Pressable>
+        {(addData?.name === '-Other-' || editData?.name === '-Other-') && (
+          <View style={{width: '90%', marginTop: hp(2)}}>
+            <TextInput
+              value={editItem ? editData?.itemName : addData?.itemName}
+              label={'Item Name *'}
+              placeHolder={'Add Custom item'}
+              onChange={(text) => {
                 if (editItem) {
-                  setEditData({...editData, name: text});
+                  setEditData({
+                    ...editData,
+                    itemName: text,
+                  });
                 } else {
                   setAddData({
-                    name: text,
-                    material: null,
-                    size: null,
-                    quantity:
-                      configData?.inventory_quantity_type.range ===
-                      movementType?.inventory_quantity_type
-                        ? {
-                            min: 200,
-                            max: 750,
-                          }
-                        : 1,
+                    ...addData,
+                    itemName: text,
                   });
                 }
               }}
@@ -813,40 +694,81 @@ const RequirementDetails = (props) => {
         )}
         <View
           style={[
-            {flexDirection: 'row', marginTop: hp(2)},
+            {
+              flexDirection: 'row',
+              marginTop:
+                addData?.name === '-Other-' || editData?.name === '-Other-'
+                  ? -hp(1)
+                  : hp(2),
+            },
             Platform.OS !== 'android' && {zIndex: 5001},
           ]}>
-          <DropDownAndroid
-            value={editItem ? editData?.material : addData?.material}
-            label={'Material'}
-            items={selectedInventory?.material}
-            onChangeItem={(text) => {
-              if (editItem) {
-                setEditData({...editData, material: text});
-              } else {
-                setAddData({...addData, material: text});
-              }
-            }}
-          />
-          <DropDownAndroid
-            label={'Size'}
-            value={editItem ? editData?.size : addData?.size}
-            items={selectedInventory?.size}
-            onChangeItem={(text) => {
-              if (editItem) {
-                setEditData({...editData, size: text});
-              } else {
-                setAddData({...addData, size: text});
-              }
-            }}
-          />
+          {((addData?.name === '-Other-' || editData?.name === '-Other-') && (
+            <View style={{width: '45%', marginTop: hp(1)}}>
+              <TextInput
+                value={editItem ? editData?.material : addData?.material}
+                label={'Material/Variant *'}
+                placeHolder={'Material/Variant'}
+                onChange={(text) => {
+                  if (editItem) {
+                    setEditData({...editData, material: text});
+                  } else {
+                    setAddData({...addData, material: text});
+                  }
+                }}
+              />
+            </View>
+          )) || (
+            <SelectionModal
+              width={wp(45)}
+              value={editItem ? editData?.material : addData?.material}
+              label={'Material/Variant *'}
+              items={selectedInventory?.material}
+              onChangeItem={(text) => {
+                if (editItem) {
+                  setEditData({...editData, material: text});
+                } else {
+                  setAddData({...addData, material: text});
+                }
+              }}
+            />
+          )}
+          {((addData?.name === '-Other-' || editData?.name === '-Other-') && (
+            <View style={{width: '45%', marginTop: hp(1)}}>
+              <TextInput
+                label={'Size *'}
+                value={editItem ? editData?.size : addData?.size}
+                placeHolder={'Size'}
+                onChange={(text) => {
+                  if (editItem) {
+                    setEditData({...editData, size: text});
+                  } else {
+                    setAddData({...addData, size: text});
+                  }
+                }}
+              />
+            </View>
+          )) || (
+            <SelectionModal
+              width={wp(45)}
+              value={editItem ? editData?.size : addData?.size}
+              label={'Size *'}
+              items={selectedInventory?.size}
+              onChangeItem={(text) => {
+                if (editItem) {
+                  setEditData({...editData, size: text});
+                } else {
+                  setAddData({...addData, size: text});
+                }
+              }}
+            />
+          )}
         </View>
         <View style={{width: '90%'}}>
           {(configData?.inventory_quantity_type.range ===
             movementType?.inventory_quantity_type && (
             <View
               style={{
-                marginTop: hp(2),
                 marginHorizontal: wp(3),
               }}>
               <Text
@@ -855,7 +777,7 @@ const RequirementDetails = (props) => {
                   color: Colors.textLabelColor,
                   fontSize: wp(4),
                 }}>
-                Quantity
+                Quantity *
               </Text>
               <MultiSlider
                 values={
@@ -904,10 +826,13 @@ const RequirementDetails = (props) => {
                 width: Platform.OS === 'android' ? wp(60) : wp(57),
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginTop: hp(2),
+                marginTop:
+                  addData?.name === '-Other-' || editData?.name === '-Other-'
+                    ? hp(0.01)
+                    : hp(2),
               }}>
               <TextInput
-                label={'Quantity'}
+                label={'Quantity *'}
                 // isRight={error.firstName}
                 placeHolder={'Quantity'}
                 value={
@@ -915,6 +840,7 @@ const RequirementDetails = (props) => {
                     ? editData?.quantity?.toString()
                     : addData?.quantity?.toString()
                 }
+                keyboard={'decimal-pad'}
                 onChange={(text) => {
                   if (editItem) {
                     setEditData({...editData, quantity: text});
@@ -972,48 +898,458 @@ const RequirementDetails = (props) => {
             </View>
           )}
         </View>
-        <FlatButton
-          onPress={() => {
-            let temp = [...inventoryItems];
-            let error = [];
-            if (editItem) {
+        {(editItem && (
+          <TwoButton
+            isLoading={isLoading}
+            leftLabel={'delete'}
+            rightLabel={'SAVE'}
+            leftOnPress={() => {
+              let temp = [...inventoryItems];
               let index = temp.findIndex(
-                (ele) => ele.inventory_id === editData.inventory_id,
+                (i) =>
+                  i.name === editData.name &&
+                  i.material === editData.material &&
+                  i.size === editData.size &&
+                  i.itemName === editData.itemName,
               );
-              temp[index] = editData;
-              handleStateChange('inventory_items', temp);
+              temp.splice(index, 1);
               setInventoryItems(temp);
+              handleStateChange('inventory_items', temp);
+              setAddItem(false);
+              setAddData({});
               setEditItem(false);
               setEditData({});
-            } else {
+            }}
+            rightOnPress={() => {
+              let temp = [...inventoryItems];
+              let error = [];
               if (
-                addData.name !== null &&
-                addData.material !== null &&
-                addData.size !== null
+                (configData?.inventory_quantity_type.range !==
+                  movementType?.inventory_quantity_type &&
+                  parseInt(editData?.quantity) !== 0) ||
+                configData?.inventory_quantity_type.range ===
+                  movementType?.inventory_quantity_type
               ) {
                 if (
-                  temp.findIndex(
-                    (item) => item.inventory_id === selectedInventory.id,
-                  ) === -1
+                  editData?.inventory_id !== null
+                    ? editData.name !== null &&
+                      editData.material !== null &&
+                      editData.size !== null
+                    : editData.name !== null &&
+                      editData.material !== null &&
+                      editData.size !== null &&
+                      editData?.itemName !== null &&
+                      editData?.itemName !== ''
                 ) {
-                  addData.inventory_id = selectedInventory.id;
-                  addData.image = selectedInventory.image;
-                  temp.push(addData);
-                  handleStateChange('inventory_items', temp);
-                  setInventoryItems(temp);
-                  setAddData({});
-                  setAddItem(false);
+                  let obj = temp.find((i) => {
+                    if (
+                      i.name === editData.name &&
+                      i.material === editData.material &&
+                      i.size === editData.size &&
+                      i.itemName === editData.itemName
+                    ) {
+                      return i;
+                    }
+                  });
+                  if (!obj) {
+                    let index = temp.findIndex(
+                      (ele) => ele.inventory_id === editData.inventory_id,
+                    );
+                    console.log(index);
+                    if (
+                      configData?.inventory_quantity_type.range !==
+                      movementType?.inventory_quantity_type
+                    ) {
+                      editData.quantity = parseInt(editData?.quantity);
+                    }
+                    temp[index] = editData;
+                    handleStateChange('inventory_items', temp);
+                    setInventoryItems(temp);
+                    setEditItem(false);
+                    setEditData({});
+                  } else {
+                    CustomAlert('The item has already been added.');
+                  }
                 } else {
-                  CustomAlert('The item has already been added."');
+                  CustomAlert('All Fields are mendatory');
+                }
+              } else {
+                CustomAlert('Quantity not valid');
+              }
+            }}
+          />
+        )) || (
+          <FlatButton
+            onPress={() => {
+              let temp = [...inventoryItems];
+              let error = [];
+              if (
+                addData?.inventory_id !== null
+                  ? addData.name !== null &&
+                    addData.material !== null &&
+                    addData.size !== null
+                  : addData.name !== null &&
+                    addData.material !== null &&
+                    addData.size !== null &&
+                    addData?.itemName !== null &&
+                    addData?.itemName !== ''
+              ) {
+                if (
+                  (configData?.inventory_quantity_type.range !==
+                    movementType?.inventory_quantity_type &&
+                    parseInt(addData?.quantity) !== 0) ||
+                  configData?.inventory_quantity_type.range ===
+                    movementType?.inventory_quantity_type
+                ) {
+                  let obj = temp.find((i) => {
+                    if (
+                      i.name === addData.name &&
+                      i.material === addData.material &&
+                      i.size === addData.size
+                    ) {
+                      return i;
+                    }
+                  });
+                  if (!obj) {
+                    addData.inventory_id = selectedInventory.id;
+                    addData.image = selectedInventory.image;
+                    if (
+                      configData?.inventory_quantity_type.range !==
+                      movementType?.inventory_quantity_type
+                    ) {
+                      addData.quantity = parseInt(addData?.quantity);
+                    }
+                    temp.push(addData);
+                    handleStateChange('inventory_items', temp);
+                    setInventoryItems(temp);
+                    setAddData({});
+                    setAddItem(false);
+                  } else {
+                    CustomAlert('The item has already been added.');
+                  }
+                } else {
+                  CustomAlert('Quantity not valid');
                 }
               } else {
                 CustomAlert('All Fields are mendatory');
               }
-            }
+            }}
+            label={'ADD ITEM'}
+          />
+        )}
+      </CustomModalAndroid>
+      <CustomModalAndroid
+        visible={!!changeCategoryVisible?.id}
+        title={'Warning'}
+        onPress={() => {
+          setChangeCategoryVisible({});
+        }}>
+        <View
+          style={{
+            marginTop: hp(4),
+            marginBottom: hp(2),
+            marginHorizontal: wp(15),
+          }}>
+          <Text
+            style={{
+              fontFamily: 'Roboto-Regular',
+              fontSize: wp(4),
+              color: Colors.inputTextColor,
+              marginBottom: hp(2),
+              textAlign: 'center',
+            }}>
+            Are you sure? you want to change category?
+          </Text>
+        </View>
+        <TwoButton
+          leftLabel={'no'}
+          rightLabel={'Yes'}
+          isLoading={isLoading}
+          leftOnPress={() => {
+            // handleState('subcategory', changeCategoryVisible.name);
+            // getInventories(changeCategoryVisible.id);
+            // handleSelectedSubCategory(changeCategoryVisible);
+            setChangeCategoryVisible({});
           }}
-          label={editItem ? 'SAVE' : 'ADD ITEM'}
+          rightOnPress={() => {
+            setChangeCategoryVisible({});
+            handleState('subcategory', changeCategoryVisible?.name);
+            handleSelectedSubCategory(changeCategoryVisible);
+            setWait(true);
+            let obj = {
+              url: `inventories?subservice_id=${changeCategoryVisible?.id}`,
+              method: 'get',
+              headers: {
+                Authorization:
+                  'Bearer ' + STORE.getState().Login?.loginData?.token,
+              },
+            };
+            APICall(obj)
+              .then((res) => {
+                if (res?.data?.status === 'success') {
+                  let temp = [];
+                  let previousDummyInv = [...defaultInventoryStore];
+                  let t = [...inventoryItems];
+                  if (res?.data?.data?.inventories?.length > 0) {
+                    res?.data?.data?.inventories.forEach((item) => {
+                      temp.push({
+                        inventory_id: item?.inventory_id,
+                        material: item?.material,
+                        size: item?.size,
+                        quantity:
+                          configData?.inventory_quantity_type.range ===
+                          movementType?.inventory_quantity_type
+                            ? {
+                                min: parseInt(item?.quantity?.min),
+                                max: parseInt(item?.quantity?.max),
+                              }
+                            : parseInt(item?.quantity),
+                        name: item?.meta?.name,
+                        image: item?.meta?.image,
+                      });
+                    });
+                    let temp2 = [...t, ...temp];
+                    var result = temp2.reduce((unique, o) => {
+                      if (
+                        !unique.some(
+                          (obj) =>
+                            obj.name === o.name &&
+                            obj.material === o.material &&
+                            obj.size === o.size &&
+                            obj.itemName === o.itemName,
+                        )
+                      ) {
+                        unique.push(o);
+                      }
+                      return unique;
+                    }, []);
+                    setDefaultInventoryStore(temp);
+                    setInventoryItems(result);
+                    handleStateChange('inventory_items', result);
+                  } else {
+                    setInventoryItems(t);
+                    setDefaultInventoryStore([]);
+                    handleStateChange('inventory_items', []);
+                  }
+                } else {
+                  CustomAlert(res?.data?.message);
+                }
+                setWait(false);
+              })
+              .catch((err) => {
+                setWait(false);
+                CustomConsole(err);
+              });
+          }}
         />
       </CustomModalAndroid>
+      <CustomModalAndroid
+        visible={editableWarning}
+        title={'Warning'}
+        onPress={() => {
+          setEditableWarning(false);
+        }}>
+        <View
+          style={{
+            marginTop: hp(4),
+            marginBottom: hp(2),
+            marginHorizontal: wp(15),
+          }}>
+          <Text
+            style={{
+              fontFamily: 'Roboto-Regular',
+              fontSize: wp(4),
+              color: Colors.inputTextColor,
+              marginBottom: hp(2),
+              textAlign: 'center',
+            }}>
+            Order details will not be editable after confirmation.
+          </Text>
+        </View>
+        <TwoButton
+          leftLabel={'cancel'}
+          rightLabel={'okay'}
+          isLoading={isLoading}
+          leftOnPress={() => {
+            setEditableWarning(false);
+          }}
+          rightOnPress={() => {
+            // Booking API call
+            setLoading(true);
+            let temp = {...props.data};
+            let t2 = [...temp?.inventory_items];
+            t2.forEach((item, index) => {
+              if (item?.inventory_id === null) {
+                item.name = item.itemName;
+                // delete t2[index].itemName;
+              }
+            });
+            temp.inventory_items = t2;
+            let obj = {
+              url: 'bookings/enquiry',
+              method: 'post',
+              headers: {
+                Authorization:
+                  'Bearer ' + STORE.getState().Login?.loginData?.token,
+              },
+              data: temp,
+            };
+            APICall(obj)
+              .then((res) => {
+                setLoading(false);
+                if (res?.data?.status === 'success') {
+                  props.setApiResponse(res?.data?.data?.booking);
+                  if (props.bookingFor === 'Others') {
+                    props.onPageChange(4);
+                  } else {
+                    props.onPageChange(3);
+                  }
+                } else {
+                  CustomAlert(res?.data?.message);
+                }
+              })
+              .catch((err) => {
+                setLoading(false);
+                CustomConsole(err);
+              });
+          }}
+        />
+      </CustomModalAndroid>
+      <CustomModalAndroid
+        visible={imageSelect}
+        title={'Upload From'}
+        onPress={() => {
+          setImageSelect(false);
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            marginVertical: hp(3),
+            width: wp(100),
+          }}>
+          <View style={styles.common}>
+            <Ripple
+              rippleColor={Colors.white}
+              style={[STYLES.selectionView, STYLES.common]}
+              onPress={() => setImage('camera')}>
+              <Ionicons name={'camera'} color={Colors.darkBlue} size={hp(6)} />
+            </Ripple>
+            <Text
+              style={[
+                STYLES.selectionText,
+                {
+                  textAlign: 'center',
+                },
+              ]}>
+              Camera
+            </Text>
+          </View>
+          <View style={styles.common}>
+            <Ripple
+              rippleColor={Colors.white}
+              onPress={() => setImage('gallery')}
+              style={[STYLES.selectionView, STYLES.common]}>
+              <AntDesign
+                name={'picture'}
+                color={Colors.darkBlue}
+                size={hp(6)}
+              />
+            </Ripple>
+            <Text
+              style={[
+                STYLES.selectionText,
+                {
+                  textAlign: 'center',
+                },
+              ]}>
+              Gallery
+            </Text>
+          </View>
+        </View>
+      </CustomModalAndroid>
+      <SearchableItem
+        visible={!!openPicker}
+        title={'Warning'}
+        onPress={() => {
+          setOpenPicker(false);
+        }}
+        onConfirmPress={(itemData) => {
+          setOpenPicker(false);
+          if (itemData) {
+            let temp = {...itemData};
+            temp.material = JSON.parse(itemData.material.toString());
+            temp.size = JSON.parse(itemData.size.toString());
+
+            temp.label = itemData.name;
+            temp.value = itemData.name;
+            let materialAry = [];
+            let sizeAry = [];
+            temp.material.forEach((i) => {
+              materialAry.push({
+                label: i,
+                value: i,
+              });
+            });
+            if (materialAry.findIndex((item) => item.value === null) === -1) {
+              materialAry.unshift({
+                label: '-Select-',
+                value: null,
+              });
+            }
+            temp.size.forEach((i) => {
+              sizeAry.push({
+                label: i,
+                value: i,
+              });
+            });
+            if (sizeAry.findIndex((item) => item.value === null) === -1) {
+              sizeAry.unshift({
+                label: '-Select-',
+                value: null,
+              });
+            }
+            temp.material = materialAry;
+            temp.size = sizeAry;
+            setSelectedInventory(temp);
+            if (editItem) {
+              setEditData({
+                ...editData,
+                inventory_id: itemData?.id,
+                name: itemData?.name,
+                itemName: itemData?.itemName,
+                material: null,
+                size: null,
+                quantity:
+                  configData?.inventory_quantity_type.range ===
+                  movementType?.inventory_quantity_type
+                    ? {
+                        min: 200,
+                        max: 750,
+                      }
+                    : 1,
+              });
+            } else {
+              setAddData({
+                name: itemData?.name,
+                inventory_id: itemData?.id,
+                itemName: itemData?.itemName,
+                material: null,
+                size: null,
+                quantity:
+                  configData?.inventory_quantity_type.range ===
+                  movementType?.inventory_quantity_type
+                    ? {
+                        min: 200,
+                        max: 750,
+                      }
+                    : 1,
+              });
+            }
+          }
+        }}
+        defaultInventories={defaultInventories}
+      />
     </ScrollView>
   );
 };
@@ -1032,8 +1368,8 @@ const styles = StyleSheet.create({
     marginTop: hp(2),
   },
   arrowView: {
-    height: hp(6.5),
-    width: hp(6.5),
+    height: hp(6),
+    width: hp(6),
     backgroundColor: Colors.white,
     borderRadius: 10,
     borderWidth: 2,
@@ -1049,11 +1385,35 @@ const styles = StyleSheet.create({
     height: hp(5),
     width: hp(5),
     borderRadius: hp(2.5),
-    backgroundColor: '#EFEFF3',
+    backgroundColor: Colors.white,
   },
   sliderText: {
     fontFamily: 'Roboto-Light',
     fontSize: wp(3.5),
+    color: Colors.inputTextColor,
+  },
+  textLabel: {
+    fontFamily: 'Roboto-Bold',
+    color: Colors.textLabelColor,
+    fontSize: wp(4),
+    marginBottom: hp(1),
+  },
+  outerView: {
+    borderWidth: 2,
+    borderRadius: 10,
+    height: hp(6),
+    borderColor: Colors.silver,
+    backgroundColor: Colors.white,
+    borderBottomWidth: 2,
+    alignItems: 'center',
+    paddingHorizontal: wp(5),
+    flexDirection: 'row',
+  },
+  innerText: {
+    width: '90%',
+    fontFamily: 'Gilroy-SemiBold',
+    fontSize: wp(4),
+    backgroundColor: Colors.textBG,
     color: Colors.inputTextColor,
   },
 });

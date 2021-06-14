@@ -91,13 +91,13 @@ export const PAYMENT_OPTION = [
 ];
 
 export const SIDE_DRAWER = [
-  {
-    iconFamily: 'Ionicons',
-    icon: 'home-outline',
-    topText: 'Home',
-    bottomText: 'Explore Biddnest',
-    navigate: 'Home',
-  },
+  // {
+  //   iconFamily: 'Ionicons',
+  //   icon: 'home-outline',
+  //   topText: 'Home',
+  //   bottomText: 'Explore Biddnest',
+  //   navigate: 'Home',
+  // },
   {
     iconFamily: 'Ionicons',
     icon: 'calendar-outline',
@@ -140,4 +140,18 @@ export const SIDE_DRAWER = [
     bottomText: 'Find answers for what you need',
     navigate: 'FAQs',
   },
+  {
+    iconFamily: 'MaterialIcons',
+    icon: 'logout',
+    topText: 'Logout',
+    bottomText: 'Redirect to login screen',
+    navigate: 'test',
+  },
+  // {
+  //   iconFamily: 'MaterialCommunityIcons',
+  //   icon: 'comment-question-outline',
+  //   topText: 'App Review',
+  //   bottomText: 'Find answers for what you need',
+  //   navigate: '',
+  // },
 ];

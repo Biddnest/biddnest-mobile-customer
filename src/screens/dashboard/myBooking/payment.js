@@ -4,6 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Colors, hp, wp, PAYMENT_OPTION} from '../../../constant/colors';
 import {
   FlatList,
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -13,29 +14,30 @@ import {
 import TextInput from '../../../components/textInput';
 import {STYLES} from '../../../constant/commonStyle';
 import Button from '../../../components/button';
-import AddNewCard from './addNewCard';
-import UPIPayment from './UPIPayment';
-import NetBanking from './netBanking';
 import {APICall, getOrderDetails} from '../../../redux/actions/user';
 import {
   CustomAlert,
   CustomConsole,
   LoadingScreen,
+  resetNavigator,
 } from '../../../constant/commonFun';
 import {STORE} from '../../../redux';
 import RazorpayCheckout from 'react-native-razorpay';
 import {useSelector} from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Html5Entities} from 'html-entities';
+import HTML from 'react-native-render-html';
+import moment from 'moment';
+import {Base64} from 'js-base64';
+import CustomModalAndroid from '../../../components/customModal';
 
 const Payment = (props) => {
   const entities = new Html5Entities();
   const inputCode = useRef(null);
   const configData =
     useSelector((state) => state.Login?.configData?.enums?.payment) || {};
-  const [addCardVisible, setCardVisible] = useState(false);
-  const [UPIVisible, setUPIVisible] = useState(false);
-  const [netBankingVisible, setNetBankingVisible] = useState(false);
+  const APIData =
+    useSelector((state) => state.Login?.configData?.config?.api) || '';
   const orderData = props?.route?.params?.orderData || {};
   const [orderDetails, setOrderDetails] = useState({});
   const [paymentSummery, setPaymentSummery] = useState({});
@@ -45,6 +47,7 @@ const Payment = (props) => {
   const userData = useSelector((state) => state.Login?.loginData?.user) || {};
   const [couponApplied, setCouponApplied] = useState(false);
   const [coupons, setCoupons] = useState([]);
+  const [placedSuccessVisible, setPlacedSuccessVisible] = useState(false);
 
   useEffect(() => {
     if (orderData?.public_booking_id) {
@@ -52,7 +55,9 @@ const Payment = (props) => {
       getOrderDetails(orderData?.public_booking_id)
         .then((res) => {
           setLoading(false);
-          if (res?.data?.status === 'success') {
+          if (res?.status == 400) {
+            resetNavigator(props, 'Dashboard');
+          } else if (res?.data?.status === 'success') {
             setOrderDetails(res?.data?.data?.booking);
           } else {
             CustomAlert(res?.data?.message);
@@ -137,13 +142,18 @@ const Payment = (props) => {
     setLoading(true);
     let options = {
       currency: payment?.currency || 'INR',
-      key: configData?.razorpay?.rzp_id,
+      key: Base64.decode(configData?.razorpay?.rzp_id),
       amount: parseFloat(paymentSummery?.grand_total).toFixed(2) * 100,
       order_id: payment?.rzp_order_id,
       theme: {color: Colors.darkBlue, hide_topbar: true},
-      name: 'test',
-      description: 'Credits towards consultation',
-      image: 'https://i.imgur.com/3g7nmJC.png',
+      name: APIData?.name,
+      description: `Movement on ${
+        orderData?.bid?.meta &&
+        moment(JSON.parse(orderData?.bid?.meta?.toString()).moving_date).format(
+          'Do MMM YYYY',
+        )
+      }`,
+      image: APIData?.logo,
       prefill: {
         email: userData?.email,
         contact: userData?.phone,
@@ -168,10 +178,7 @@ const Payment = (props) => {
           .then((res) => {
             setLoading(false);
             if (res?.data?.status === 'success') {
-              props.navigation.pop(1);
-              props.navigation.replace('OrderTracking', {
-                orderData: orderDetails,
-              });
+              setPlacedSuccessVisible(true);
             } else {
               CustomAlert(res?.data?.message);
             }
@@ -237,6 +244,7 @@ const Payment = (props) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
+              marginTop: hp(1),
             }}>
             <View
               style={{
@@ -314,14 +322,15 @@ const Payment = (props) => {
                 color: Colors.textLabelColor,
                 fontSize: wp(4),
                 fontFamily: 'Gilroy-SemiBold',
-                marginBottom: hp(2),
+                marginBottom: hp(0.5),
               }}>
-              Applied Coupons
+              Available Coupons
             </Text>
           )}
           <FlatList
             keyExtractor={(item, index) => index.toString()}
             refreshing={isLoading}
+            numColumns={2}
             showsVerticalScrollIndicator={false}
             data={coupons}
             extraData={coupons}
@@ -332,25 +341,26 @@ const Payment = (props) => {
                   style={[
                     styles.inputForm,
                     {
-                      marginTop: index === 0 ? 0 : hp(1),
+                      flex: 1,
+                      marginTop: wp(2),
                     },
                   ]}>
                   <View
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
-                      justifyContent: 'center',
                       marginVertical: wp(1),
+                      width: '100%',
                     }}>
                     <View
                       style={{
-                        borderWidth: 1.5,
+                        borderWidth: 1,
                         height: hp(5),
                         borderRadius: 6,
                         borderStyle: 'dashed',
                         borderColor: Colors.btnBG,
                         backgroundColor: Colors.white,
-                        width: '75%',
+                        flex: 1,
                         ...STYLES.common,
                       }}>
                       <Text
@@ -363,7 +373,15 @@ const Payment = (props) => {
                       </Text>
                     </View>
                     <Pressable
-                      style={{width: '15%', alignItems: 'flex-end'}}
+                      style={{
+                        width:
+                          coupons?.length === index + 1
+                            ? coupons?.length % 2 === 0
+                              ? '18%'
+                              : '8%'
+                            : '18%',
+                        marginLeft: '3%',
+                      }}
                       onPress={() => {
                         if (!applyButton) {
                           setApplyButton(true);
@@ -378,17 +396,20 @@ const Payment = (props) => {
                       />
                     </Pressable>
                   </View>
-                  <Text
-                    style={{
+                  <HTML
+                    defaultTextProps={{
                       width: wp(70),
-                      fontFamily: 'Roboto-Regular',
-                      fontSize: wp(3.5),
-                      color: '#99A0A5',
                       marginTop: hp(1),
+                    }}
+                    baseFontStyle={{
+                      fontFamily: 'Roboto-Regular',
+                      fontSize: wp(3),
                       textAlign: 'center',
-                    }}>
-                    {entities.decode(coupons[index].desc)}
-                  </Text>
+                      color: '#99A0A5',
+                    }}
+                    source={{html: coupons[index].desc}}
+                    contentWidth={'90%'}
+                  />
                 </View>
               );
             }}
@@ -400,7 +421,7 @@ const Payment = (props) => {
             style={{
               marginTop: coupons?.length > 0 ? hp(1) : 0,
               borderRadius: 10,
-              height: hp(6.5),
+              height: hp(6),
               backgroundColor: Colors.darkBlue,
               ...STYLES.common,
             }}>
@@ -410,7 +431,7 @@ const Payment = (props) => {
                 fontSize: wp(4),
                 fontFamily: 'Roboto-Regular',
               }}>
-              Total Price{'  '}
+              To be paid{'  '}
               <Text
                 style={{
                   fontSize: wp(5.5),
@@ -453,27 +474,27 @@ const Payment = (props) => {
               );
             }}
           />
-          {/*<Button*/}
-          {/*  spaceTop={hp(1)}*/}
-          {/*  width={wp(90)}*/}
-          {/*  backgroundColor={Colors.white}*/}
-          {/*  label={'USE ANOTHER CARD'}*/}
-          {/*  onPress={() => setCardVisible(true)}*/}
-          {/*/>*/}
         </ScrollView>
+        <CustomModalAndroid
+          visible={placedSuccessVisible}
+          title={'Payment Received'}
+          onPress={() => {
+            props.navigation.pop(1);
+            props.navigation.replace('OrderTracking', {
+              orderData: orderDetails,
+            });
+            setPlacedSuccessVisible(false);
+          }}>
+          <Image
+            source={require('../../../assets/images/support_icon.png')}
+            style={{height: wp(30), width: wp(30)}}
+            resizeMode={'contain'}
+          />
+          <Text style={styles.bidText}>
+            Thankyou, Your booking has been Confirmed
+          </Text>
+        </CustomModalAndroid>
       </View>
-      <AddNewCard
-        visible={addCardVisible}
-        onCloseIcon={() => setCardVisible(false)}
-      />
-      <UPIPayment
-        visible={UPIVisible}
-        onCloseIcon={() => setUPIVisible(false)}
-      />
-      <NetBanking
-        visible={netBankingVisible}
-        onCloseIcon={() => setNetBankingVisible(false)}
-      />
     </LinearGradient>
   );
 };
@@ -519,12 +540,22 @@ const styles = StyleSheet.create({
   inputForm: {
     paddingVertical: hp(2),
     paddingHorizontal: wp(2),
-    borderWidth: 1,
+    borderWidth: 0.8,
     borderRadius: 6,
     backgroundColor: '#FFFDF4',
     borderColor: Colors.btnBG,
     marginBottom: hp(1),
-    marginHorizontal: hp(2),
+    marginHorizontal: wp(2),
     alignItems: 'center',
+  },
+  bidText: {
+    marginTop: hp(3),
+    marginBottom: hp(5),
+    color: Colors.darkBlue,
+    fontFamily: 'Gilroy-SemiBold',
+    fontSize: wp(5),
+    marginHorizontal: wp(10),
+    textAlign: 'center',
+    lineHeight: hp(3.5),
   },
 });

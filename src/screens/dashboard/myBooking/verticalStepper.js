@@ -2,21 +2,21 @@ import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
 import moment from 'moment';
+import * as Animatable from 'react-native-animatable';
 
 const VerticalStepper = (props) => {
   const {orderDetails} = props;
-  const stepHeader = (title) => {
-    return (
-      <View style={{flexDirection: 'row'}}>
-        <View style={styles.dotView} />
-        <Text style={styles.stepHeaderText}>{title}</Text>
-      </View>
-    );
-  };
+  if (Object.keys(orderDetails).length === 0) {
+    return null;
+  }
   return (
     <View style={{marginHorizontal: wp(8), marginVertical: hp(2)}}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <View
+        <Animatable.View
+          key={props?.key}
+          animation={'fadeIn'}
+          iterationCount={orderDetails?.status <= 5 ? 'infinite' : 0}
+          direction="alternate"
           style={[
             styles.dotView,
             {
@@ -56,7 +56,11 @@ const VerticalStepper = (props) => {
         </Text>
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <View
+        <Animatable.View
+          key={props?.key}
+          animation={'fadeIn'}
+          iterationCount={orderDetails?.status === 6 ? 'infinite' : 0}
+          direction="alternate"
           style={[
             styles.dotView,
             {
@@ -96,7 +100,11 @@ const VerticalStepper = (props) => {
         </Text>
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <View
+        <Animatable.View
+          key={props?.key}
+          animation={'fadeIn'}
+          iterationCount={orderDetails?.status === 7 ? 'infinite' : 0}
+          direction="alternate"
           style={[
             styles.dotView,
             {
@@ -162,7 +170,7 @@ const styles = StyleSheet.create({
   stepBodyView: {
     borderLeftWidth: 1,
     borderColor: Colors.darkBlue,
-    marginLeft: wp(2),
+    marginLeft: hp(1.3),
     paddingLeft: wp(5),
     paddingBottom: hp(3),
   },

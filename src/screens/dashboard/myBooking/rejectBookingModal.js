@@ -1,7 +1,5 @@
-import {Platform, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
-import CloseIcon from '../../../components/closeIcon';
-import DropDownAndroid from '../../../components/dropDown';
 import TextInput from '../../../components/textInput';
 import CheckBox from '../../../components/checkBox';
 import FlatButton from '../../../components/flatButton';
@@ -14,19 +12,20 @@ import {
 } from '../../../constant/commonFun';
 import CustomModalAndroid from '../../../components/customModal';
 import React, {useState} from 'react';
-import {STYLES} from '../../../constant/commonStyle';
+import SelectionModal from '../../../components/selectionModal';
 
 const RejectBookingModal = (props) => {
   const [error, setError] = useState(undefined);
   const [isAgree, setAgree] = useState(true);
   return (
-    <CustomModalAndroid visible={props.visible} onPress={props.closeModal}>
-      <Text style={STYLES.modalHeader}>REASON FOR REJECTION</Text>
-      <CloseIcon onPress={props.closeModal} />
-      <DropDownAndroid
-        label={''}
+    <CustomModalAndroid
+      title={'REASON FOR REJECTION'}
+      visible={props.visible}
+      onPress={props.closeModal}>
+      <SelectionModal
         value={props.value}
         width={wp(90)}
+        label={''}
         items={props.dropDownDefault}
         onChangeItem={(text) => props.dropDownChange(text)}
       />
@@ -70,9 +69,9 @@ const RejectBookingModal = (props) => {
             // From Requirement Details screen
             let obj = {
               url: props.setApiResponse
-                ? 'bookings/cancel'
+                ? 'bookings/request/rejected'
                 : 'bookings/request/canceled',
-              method: props.setApiResponse ? 'delete' : 'post',
+              method: 'post',
               headers: {
                 Authorization:
                   'Bearer ' + STORE.getState().Login?.loginData?.token,
@@ -80,6 +79,7 @@ const RejectBookingModal = (props) => {
               data: {
                 ...props.rejectData,
                 public_booking_id: props?.public_booking_id,
+                request_callback: isAgree,
               },
             };
             APICall(obj)

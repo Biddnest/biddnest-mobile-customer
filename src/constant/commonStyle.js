@@ -103,4 +103,17 @@ export const STYLES = {
     fontSize: wp(4),
     fontFamily: 'Gilroy-Bold',
   },
+  selectionView: {
+    height: hp(12),
+    width: hp(12),
+    borderRadius: hp(6),
+    backgroundColor: '#F2E6FF',
+    borderColor: Colors.darkBlue,
+  },
+  selectionText: {
+    fontFamily: 'Gilroy-SemiBold',
+    fontSize: wp(4),
+    color: '#3B4B58',
+    marginTop: hp(1),
+  },
 };

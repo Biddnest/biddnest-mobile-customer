@@ -5,10 +5,15 @@ import {HomeHeader} from '../home';
 import {STYLES} from '../../../constant/commonStyle';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
-import {getLiveOrders, getPastOrders} from '../../../redux/actions/user';
+import {
+  getEnquiryOrders,
+  getLiveOrders,
+  getPastOrders,
+} from '../../../redux/actions/user';
 import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
 import moment from 'moment';
 import MapPin from '../../../assets/svg/map_pin.svg';
+import Ripple from 'react-native-material-ripple';
 
 const MyBooking = (props) => {
   const dispatch = useDispatch();
@@ -18,6 +23,9 @@ const MyBooking = (props) => {
   const userData = useSelector((state) => state.Login?.loginData?.user) || {};
   const [liveOrders, setLiveOrders] = useState(
     useSelector((state) => state.Login?.liveOrders?.booking) || [],
+  );
+  const [enquiryOrders, setEnquiryOrders] = useState(
+    useSelector((state) => state.Login?.enquiryOrders?.booking) || [],
   );
   const [pastOrders, setPastOrders] = useState(
     useSelector((state) => state.Login?.pastOrders?.booking) || [],
@@ -31,40 +39,58 @@ const MyBooking = (props) => {
   }, [isFocused, selectedTab]);
 
   const fetchOrderList = () => {
-    setLoading(true);
-    if (selectedTab === 0) {
-      dispatch(getLiveOrders())
-        .then((res) => {
-          setLoading(false);
-          if (res?.status === 'success') {
-            setLiveOrders(res?.data?.booking);
-          } else {
-            CustomAlert(res?.message);
-          }
-        })
-        .catch((err) => {
-          setLoading(false);
-          CustomConsole(err);
-        });
-    } else {
-      dispatch(getPastOrders())
-        .then((res) => {
-          setLoading(false);
-          if (res?.status === 'success') {
-            setPastOrders(res?.data?.booking);
-          } else {
-            CustomAlert(res?.message);
-          }
-        })
-        .catch((err) => {
-          setLoading(false);
-          CustomConsole(err);
-        });
+    if (!isLoading) {
+      setLoading(true);
+      if (selectedTab === 0) {
+        dispatch(getEnquiryOrders())
+          .then((res) => {
+            setLoading(false);
+            if (res?.status === 'success') {
+              setEnquiryOrders(res?.data?.booking);
+            } else {
+              CustomAlert(res?.message);
+            }
+          })
+          .catch((err) => {
+            setLoading(false);
+            CustomConsole(err);
+          });
+      } else if (selectedTab === 1) {
+        dispatch(getLiveOrders())
+          .then((res) => {
+            setLoading(false);
+            if (res?.status === 'success') {
+              setLiveOrders(res?.data?.booking);
+            } else {
+              CustomAlert(res?.message);
+            }
+          })
+          .catch((err) => {
+            setLoading(false);
+            CustomConsole(err);
+          });
+      } else {
+        dispatch(getPastOrders())
+          .then((res) => {
+            setLoading(false);
+            if (res?.status === 'success') {
+              setPastOrders(res?.data?.booking);
+            } else {
+              CustomAlert(res?.message);
+            }
+          })
+          .catch((err) => {
+            setLoading(false);
+            CustomConsole(err);
+          });
+      }
     }
   };
 
   const handleOrderClicked = (item) => {
-    if (item?.status === 2 || item?.status === 3) {
+    if (item?.status === 0) {
+      props.navigation.navigate('BookingInitialQuote', {orderData: item});
+    } else if (item?.status === 2 || item?.status === 3) {
       props.navigation.navigate('OrderTimer', {orderData: item});
     } else if (item?.status === 4) {
       props.navigation.navigate('FinalQuote', {orderData: item});
@@ -77,11 +103,70 @@ const MyBooking = (props) => {
       props.navigation.navigate('OrderTracking', {orderData: item});
     }
   };
+  const renderRightDate = (item, dates) => {
+    if (!item?.bid) {
+      return (
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            maxWidth: '69%',
+            justifyContent: 'flex-end',
+          }}>
+          {dates?.map((item, index) => {
+            return (
+              <View style={styles.categoryView} key={index}>
+                <Text
+                  style={{
+                    color: Colors.inputTextColor,
+                    fontSize: wp(3.8),
+                    fontFamily: 'Roboto-Bold',
+                  }}>
+                  {item}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+      );
+    }
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          width: '50%',
+          justifyContent: 'flex-end',
+        }}>
+        <View
+          style={[
+            styles.categoryView,
+            {
+              width: 'auto',
+              paddingHorizontal: wp(2),
+            },
+          ]}>
+          <Text
+            style={{
+              color: Colors.inputTextColor,
+              fontSize: wp(3.8),
+              fontFamily: 'Roboto-Bold',
+            }}>
+            {item?.bid &&
+              moment(JSON.parse(item?.bid?.meta)?.moving_date).format(
+                'D MMM yyyy',
+              )}
+          </Text>
+        </View>
+      </View>
+    );
+  };
   const renderItem = ({item, index}) => {
     let ind = Object.values(configData?.status).findIndex(
       (ele) => ele === item?.status,
     );
     let status = Object.keys(configData?.status)[ind]?.split('_').join(' ');
+    let statusInd = Object.keys(configData?.status)[ind];
     let source_meta =
       (item?.source_meta && JSON.parse(item?.source_meta?.toString())) || {};
     let destination_meta =
@@ -91,20 +176,72 @@ const MyBooking = (props) => {
     let meta = (item?.meta && JSON.parse(item?.meta?.toString())) || {};
     let dateArray = [];
     item?.movement_dates?.forEach((i) => {
-      dateArray.push(moment(i.date).format('D MMM yyyy'));
+      dateArray.push(moment(i.date).format('D MMM'));
     });
     return (
       <Pressable
-        style={styles.inputForm}
+        style={[
+          styles.inputForm,
+          {
+            backgroundColor:
+              selectedTab === 1
+                ? meta?.self_booking
+                  ? Colors.white
+                  : '#0f0c751a'
+                : Colors.white,
+          },
+        ]}
         key={index}
         onPress={() => handleOrderClicked(item)}>
         <View
           style={{
-            backgroundColor: Colors.white,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={[
+              styles.statusView,
+              {
+                backgroundColor: configData?.color[statusInd],
+                maxWidth: '45%',
+              },
+            ]}>
+            {status}
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'Roboto-Bold',
+              fontSize: wp(4),
+              color: Colors.inputTextColor,
+              width: '55%',
+              textAlign: 'right',
+            }}>
+            {item.status > 4
+              ? item?.public_booking_id
+              : item?.public_enquiry_id}
+          </Text>
+        </View>
+        <View
+          style={[
+            styles.separatorView,
+            {
+              marginBottom: hp(2),
+            },
+          ]}
+        />
+        <View
+          style={{
+            backgroundColor:
+              selectedTab === 1
+                ? meta?.self_booking
+                  ? Colors.white
+                  : 'transparent'
+                : Colors.white,
             flexDirection: 'row',
             alignItems: 'center',
           }}>
-          <MapPin height={hp(8)} width={wp(5)} />
+          <MapPin height={hp(7)} width={wp(5)} />
           <View
             style={{
               flexDirection: 'row',
@@ -156,7 +293,7 @@ const MyBooking = (props) => {
                   numberOfLines={1}
                   style={{
                     fontFamily: 'Gilroy-Bold',
-                    fontSize: wp(4.5),
+                    fontSize: wp(4),
                     color: Colors.inputTextColor,
                     maxWidth: wp(28),
                   }}>
@@ -167,29 +304,41 @@ const MyBooking = (props) => {
           </View>
         </View>
         <View style={styles.separatorView} />
-        {selectedTab === 0 && (
+        {selectedTab === 1 && (
           <View style={styles.flexBox}>
             <Text style={styles.leftText}>expected price</Text>
             <Text style={styles.rightText}>
-              Rs. {item?.final_estimated_quote}
+              ₹ {item?.final_estimated_quote}
             </Text>
           </View>
         )}
-        <View style={styles.flexBox}>
-          <Text style={styles.leftText}>moving date</Text>
-          <Text
-            style={[styles.rightText, {maxWidth: '60%', textAlign: 'right'}]}>
-            {dateArray.join('\n')}
-          </Text>
-        </View>
-        <View style={styles.flexBox}>
+        {((selectedTab === 0 || selectedTab === 1) && (
+          <View style={styles.flexBox}>
+            <Text style={styles.leftText}>moving date</Text>
+            {renderRightDate(item, dateArray)}
+            {/*<Text*/}
+            {/*  style={[styles.rightText, {maxWidth: '60%', textAlign: 'right'}]}>*/}
+            {/*  {dateArray.join('\n')}*/}
+            {/*</Text>*/}
+          </View>
+        )) ||
+          (item?.bid && (
+            <View style={styles.flexBox}>
+              <Text style={styles.leftText}>moving date</Text>
+              {renderRightDate(item, dateArray)}
+            </View>
+          ))}
+
+        <View style={[styles.flexBox, {marginTop: hp(1.2)}]}>
           <Text style={styles.leftText}>category</Text>
           <Text style={styles.rightText}>{item?.service?.name}</Text>
         </View>
         <View style={styles.flexBox}>
-          <Text style={styles.leftText}>status</Text>
+          <Text style={styles.leftText}>booking type</Text>
           <Text style={[styles.rightText, {textTransform: 'capitalize'}]}>
-            {status}
+            {configData?.booking_type?.economic == item?.booking_type
+              ? 'Economic'
+              : 'Premium'}
           </Text>
         </View>
       </Pressable>
@@ -199,36 +348,44 @@ const MyBooking = (props) => {
     <View style={styles.container}>
       <HomeHeader navigation={props.navigation} title={'MY BOOKINGS'} />
       <View style={{height: hp(7), flexDirection: 'row'}}>
-        {['Ongoing Orders', 'Past Orders'].map((item, index) => {
-          return (
-            <Pressable
-              key={index}
-              style={{
-                ...styles.tabViews,
-                ...STYLES.common,
-                borderColor:
-                  selectedTab === index ? Colors.darkBlue : '#ACABCD',
-                borderBottomWidth: selectedTab === index ? 2 : 0.8,
-              }}
-              onPress={() => setSelectedTab(index)}>
-              <Text
+        {['Enquiry Orders', 'Ongoing Orders', 'Past Orders'].map(
+          (item, index) => {
+            return (
+              <Ripple
+                rippleColor={Colors.darkBlue}
+                key={index}
                 style={{
-                  ...STYLES.tabText,
-                  color: selectedTab === index ? Colors.darkBlue : '#ACABCD',
-                }}>
-                {item}
-              </Text>
-            </Pressable>
-          );
-        })}
+                  ...styles.tabViews,
+                  ...STYLES.common,
+                  borderColor:
+                    selectedTab === index ? Colors.darkBlue : '#ACABCD',
+                  borderBottomWidth: selectedTab === index ? 2 : 0.8,
+                }}
+                onPress={() => setSelectedTab(index)}>
+                <Text
+                  style={{
+                    ...STYLES.tabText,
+                    color: selectedTab === index ? Colors.darkBlue : '#ACABCD',
+                  }}>
+                  {item}
+                </Text>
+              </Ripple>
+            );
+          },
+        )}
       </View>
       <View style={{flex: 1}}>
         <FlatList
           bounces={false}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom: hp(2)}}
           data={
             selectedTab === 0
+              ? enquiryOrders.length > 0
+                ? enquiryOrders
+                : []
+              : selectedTab === 1
               ? liveOrders.length > 0
                 ? liveOrders
                 : []
@@ -236,7 +393,13 @@ const MyBooking = (props) => {
               ? pastOrders
               : []
           }
-          extraData={selectedTab === 0 ? liveOrders : pastOrders}
+          extraData={
+            selectedTab === 0
+              ? enquiryOrders
+              : selectedTab === 1
+              ? liveOrders
+              : pastOrders
+          }
           renderItem={renderItem}
           onRefresh={fetchOrderList}
           refreshing={isLoading}
@@ -282,7 +445,7 @@ const styles = StyleSheet.create({
   locationText: {
     fontFamily: 'Roboto-Regular',
     color: Colors.inputTextColor,
-    fontSize: wp(4.5),
+    fontSize: wp(4),
     marginTop: hp(1),
   },
   separatorView: {
@@ -298,13 +461,34 @@ const styles = StyleSheet.create({
   },
   leftText: {
     fontFamily: 'Gilroy-Bold',
-    fontSize: wp(4.5),
+    fontSize: wp(4),
     color: Colors.inputTextColor,
     textTransform: 'capitalize',
   },
   rightText: {
     fontFamily: 'Roboto-Bold',
-    fontSize: wp(4.5),
+    fontSize: wp(4),
     color: Colors.inputTextColor,
+  },
+  statusView: {
+    paddingHorizontal: 7,
+    paddingVertical: 5,
+    backgroundColor: Colors.lightGreen,
+    color: Colors.white,
+    borderRadius: 5,
+    textTransform: 'capitalize',
+    fontFamily: 'Gilroy-Semibold',
+    fontSize: wp(3.2),
+  },
+  categoryView: {
+    marginBottom: hp(0.8),
+    width: wp(17),
+    paddingVertical: 5,
+    borderColor: Colors.darkBlue,
+    borderWidth: 2,
+    borderRadius: 8,
+    backgroundColor: Colors.white,
+    marginLeft: hp(1.3),
+    alignItems: 'center',
   },
 });

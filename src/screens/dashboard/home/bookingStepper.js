@@ -24,7 +24,11 @@ import InActiveRs from '../../../assets/svg/inactive_rs.svg';
 import ActiveRs from '../../../assets/svg/active_rs.svg';
 import ActiveFriends from '../../../assets/svg/active_friends.svg';
 import FinishFriends from '../../../assets/svg/finish_friends.svg';
-import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  resetNavigator,
+} from '../../../constant/commonFun';
 import {useDispatch} from 'react-redux';
 import {APICall, getAllInventories} from '../../../redux/actions/user';
 import {STORE} from '../../../redux';
@@ -94,7 +98,6 @@ const BookingStepper = (props) => {
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [apiResponse, setApiResponse] = useState({});
   const [confirmationVisible, setConfirmationVisible] = useState(false);
-
   useEffect(() => {
     dispatch(getAllInventories());
   }, []);
@@ -458,10 +461,7 @@ const BookingStepper = (props) => {
         navigation={props.navigation}
         onBack={() => {
           if (apiResponse?.public_booking_id) {
-            setConfirmationText(
-              'Are you sure want to cancel? All your progress will be lost & you will be taken back to home screen.',
-            );
-            setConfirmationVisible(true);
+            resetNavigator(props, 'Dashboard');
           } else {
             if (headerText === 'MOVING TO') {
               setMovingFrom(false);
@@ -483,16 +483,14 @@ const BookingStepper = (props) => {
         {((bookingFor === 'Others' && currentPosition > 1) ||
           (bookingFor === 'Myself' && currentPosition > 0)) && (
           <LocationDistance
-            onEditClick={() => setCurrentPosition(0)}
-            from={
-              data?.source?.meta?.city === data?.destination?.meta?.city
-                ? data?.source?.meta?.geocode
-                : data?.source?.meta?.city
-            }
+            isEdit={!apiResponse?.public_booking_id}
+            onEditClick={() => {
+              setMovingFrom(false);
+              setCurrentPosition(0);
+            }}
+            from={data?.source?.meta?.geocode + data?.source?.meta?.city}
             to={
-              data?.source?.meta?.city === data?.destination?.meta?.city
-                ? data?.source?.meta?.geocode
-                : data?.destination?.meta?.city
+              data?.destination?.meta?.geocode + data?.destination?.meta?.city
             }
             distance={{
               source: {

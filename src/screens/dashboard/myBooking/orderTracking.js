@@ -16,7 +16,6 @@ import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomModalAndroid from '../../../components/customModal';
-import CloseIcon from '../../../components/closeIcon';
 import TwoButton from '../../../components/twoButton';
 import VerticalStepper from './verticalStepper';
 import OrderDetailModal from './orderDetailModal';
@@ -30,11 +29,11 @@ import {
   CustomAlert,
   CustomConsole,
   LoadingScreen,
+  resetNavigator,
 } from '../../../constant/commonFun';
 import Button from '../../../components/button';
 import RateUs from '../drawer/rateUs';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-import Shimmer from 'react-native-shimmer';
 import MapPin from '../../../assets/svg/map_pin.svg';
 
 const OrderTracking = (props) => {
@@ -79,8 +78,16 @@ const OrderTracking = (props) => {
       getOrderDetails(orderData?.public_booking_id)
         .then((res) => {
           setLoading(false);
-          if (res?.data?.status === 'success') {
+          if (res?.status == 400) {
+            resetNavigator(props, 'Dashboard');
+          } else if (res?.data?.status === 'success') {
             setOrderDetails(res?.data?.data?.booking);
+            if (
+              res?.data?.data?.booking?.status === 8 &&
+              !res?.data?.data?.booking?.review?.id
+            ) {
+              setRateUsVisible(true);
+            }
           } else {
             CustomAlert(res?.data?.message);
           }
@@ -226,7 +233,12 @@ const OrderTracking = (props) => {
                 iconFamily: 'AntDesign',
               },
             ].map((item, index) => {
-              if (item?.title === 'Manage' && orderDetails?.status === 8) {
+              if (item?.title === 'Manage' && orderDetails?.status === 7) {
+                return null;
+              } else if (
+                item?.title === 'Manage' &&
+                orderDetails?.status === 8
+              ) {
                 return (
                   <Pressable
                     onPress={() => {
@@ -401,30 +413,35 @@ const OrderTracking = (props) => {
                           {orderDetails?.driver?.lname}
                         </Text>
                       </Text>
-                      <Text style={{...styles.driverContact, marginTop: 5}}>
-                        Phone{' '}
-                        <Text style={{fontFamily: 'Roboto-Regular'}}>
-                          {orderDetails?.driver?.phone}
-                        </Text>
-                      </Text>
+                      {orderDetails?.status !== 8 &&
+                        orderDetails?.status !== 9 && (
+                          <Text style={{...styles.driverContact, marginTop: 5}}>
+                            Phone{' '}
+                            <Text style={{fontFamily: 'Roboto-Regular'}}>
+                              {orderDetails?.driver?.phone}
+                            </Text>
+                          </Text>
+                        )}
                     </View>
-                    <Pressable
-                      onPress={() =>
-                        Linking.openURL(`tel:${orderDetails?.driver?.phone}`)
-                      }
-                      style={{
-                        height: wp(15),
-                        width: wp(15),
-                        borderRadius: wp(7.5),
-                        backgroundColor: '#F2E6FF',
-                        ...STYLES.common,
-                      }}>
-                      <Ionicons
-                        name={'call'}
-                        color={Colors.darkBlue}
-                        size={wp(6)}
-                      />
-                    </Pressable>
+                    {orderDetails?.status !== 8 && orderDetails?.status !== 9 && (
+                      <Pressable
+                        onPress={() =>
+                          Linking.openURL(`tel:${orderDetails?.driver?.phone}`)
+                        }
+                        style={{
+                          height: wp(15),
+                          width: wp(15),
+                          borderRadius: wp(7.5),
+                          backgroundColor: '#F2E6FF',
+                          ...STYLES.common,
+                        }}>
+                        <Ionicons
+                          name={'call'}
+                          color={Colors.darkBlue}
+                          size={wp(6)}
+                        />
+                      </Pressable>
+                    )}
                   </View>
                 )) || (
                   <Text
@@ -470,7 +487,7 @@ const OrderTracking = (props) => {
               </View>
             )}
           </View>
-          <VerticalStepper orderDetails={orderDetails} />
+          <VerticalStepper key={new Date()} orderDetails={orderDetails} />
           <View
             style={{...styles.inputForm, marginTop: 0, marginBottom: hp(2)}}>
             <View style={{...styles.flexBox, marginTop: 0}}>
@@ -501,7 +518,7 @@ const OrderTracking = (props) => {
             <View style={{...styles.flexBox}}>
               <Text style={styles.leftText}>price</Text>
               <Text style={{...styles.rightText, fontFamily: 'Roboto-Bold'}}>
-                Rs. {orderDetails?.final_quote}
+                ₹ {orderDetails?.final_quote}
               </Text>
             </View>
             <View style={styles.flexBox}>
@@ -522,7 +539,12 @@ const OrderTracking = (props) => {
           </View>
         </ScrollView>
       </LinearGradient>
-      <CustomModalAndroid visible={orderDetailsVisible}>
+      <CustomModalAndroid
+        visible={orderDetailsVisible}
+        title={'CHECKLIST'}
+        maxHeight={hp(90)}
+        showsVerticalScrollIndicator={true}
+        onPress={() => setOrderDetailsVisible(false)}>
         <OrderDetailModal
           title={'CHECKLIST'}
           onCloseIcon={() => setOrderDetailsVisible(false)}
@@ -531,29 +553,21 @@ const OrderTracking = (props) => {
       </CustomModalAndroid>
       <CustomModalAndroid
         visible={manageOrderVisible || cancelOrder || privacyPolicy}
+        title={
+          cancelOrder
+            ? 'CANCEL ORDER'
+            : privacyPolicy
+            ? 'Terms & Conditions'
+            : resecheduleOrder
+            ? 'RESCHEDULE'
+            : 'MANAGE ORDER'
+        }
         onPress={() => {
           setRescheduleOrder(false);
           setCancelOrder(false);
           setManageOrderVisible(false);
           setPrivacyPolicy(false);
         }}>
-        <Text style={STYLES.modalHeader}>
-          {cancelOrder
-            ? 'CANCEL ORDER'
-            : privacyPolicy
-            ? 'Terms & Conditions'
-            : resecheduleOrder
-            ? 'RESCHEDULE'
-            : 'MANAGE ORDER'}
-        </Text>
-        <CloseIcon
-          onPress={() => {
-            setRescheduleOrder(false);
-            setCancelOrder(false);
-            setManageOrderVisible(false);
-            setPrivacyPolicy(false);
-          }}
-        />
         <View
           style={{
             marginTop: hp(4),
@@ -683,12 +697,9 @@ const OrderTracking = (props) => {
       </CustomModalAndroid>
       <CustomModalAndroid
         visible={showPin}
+        title={orderDetails?.status === 6 ? 'Start trip pin' : 'End trip pin'}
         paddingTop={hp(0.1)}
         onPress={() => setShowPin(false)}>
-        <CloseIcon onPress={() => setShowPin(false)} />
-        <Text style={STYLES.modalHeader}>
-          {orderDetails?.status === 6 ? 'Start' : 'End'} trip pin
-        </Text>
         <View
           style={{
             height: hp(7),

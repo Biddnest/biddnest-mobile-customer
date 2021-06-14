@@ -1,6 +1,8 @@
 import instance from '../../constant/baseService';
+import {Alert} from 'react-native';
 import {
   CONFIG_DATA,
+  ENQUIRY_ORDERS,
   FORM_DATA,
   GET_ZONES,
   INVENTORY_DATA,
@@ -10,6 +12,7 @@ import {
   RESET_STORE,
   SERVICE_DATA,
   SLIDER_DATA,
+  TESTIMONIALS,
 } from '../types';
 import {CustomAlert} from '../../constant/commonFun';
 import {STORE} from '../index';
@@ -31,12 +34,19 @@ export const APICall = (obj) => {
               routes: [{name: 'Login'}],
             }),
           );
-        } else if (err?.response?.status === 500) {
-          CustomAlert('Server Down');
+        } else if (
+          err?.response?.status === 500 ||
+          err?.response?.status === 504
+        ) {
+          alert(
+            'We are unable to connect. Please make sure you are connected to the internet.',
+          );
         } else if (err?.response) {
           reject(err.response);
         } else {
-          CustomAlert('Server Down');
+          Alert.alert('Something Went wrong', 'Please try again later', [
+            {text: 'Okay', onPress: () => console.log('OK Pressed')},
+          ]);
         }
       });
   });
@@ -81,12 +91,52 @@ export const sendOTP = (data) => {
   });
 };
 
+export const editMobileNumber = (data) => {
+  return new Promise((resolve, reject) => {
+    let obj = {
+      url: 'profile/update-mobile',
+      method: 'put',
+      data: data,
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+    };
+    APICall(obj)
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
 export const verifyOTP = (data) => {
   return new Promise((resolve, reject) => {
     let obj = {
       url: 'auth/login/verify-otp',
       method: 'post',
       data: data,
+    };
+    APICall(obj)
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+export const profileVerifyOTP = (data) => {
+  return new Promise((resolve, reject) => {
+    let obj = {
+      url: 'profile/verify-otp',
+      method: 'put',
+      data: data,
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
     };
     APICall(obj)
       .then((res) => {
@@ -269,6 +319,32 @@ export const getLiveOrders = () => {
   };
 };
 
+export const getEnquiryOrders = () => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      let obj = {
+        url: 'bookings/history/enquiry',
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+      };
+      APICall(obj)
+        .then((res) => {
+          dispatch({
+            type: ENQUIRY_ORDERS,
+            payload: res?.data?.data || {},
+          });
+          resolve(res.data);
+        })
+        .catch((err) => {
+          CustomAlert(err?.data?.message);
+          reject(err);
+        });
+    });
+  };
+};
+
 export const getPastOrders = () => {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
@@ -310,6 +386,32 @@ export const getZones = () => {
           dispatch({
             type: GET_ZONES,
             payload: res?.data?.data?.zones || [],
+          });
+          resolve(res.data);
+        })
+        .catch((err) => {
+          CustomAlert(err?.data?.message);
+          reject(err);
+        });
+    });
+  };
+};
+
+export const getTestimonials = () => {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      let obj = {
+        url: 'testimonials',
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+      };
+      APICall(obj)
+        .then((res) => {
+          dispatch({
+            type: TESTIMONIALS,
+            payload: res?.data?.data?.testimonials || [],
           });
           resolve(res.data);
         })

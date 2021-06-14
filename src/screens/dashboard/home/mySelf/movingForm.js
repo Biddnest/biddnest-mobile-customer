@@ -24,12 +24,17 @@ import MapView, {PROVIDER_GOOGLE, PROVIDER_DEFAULT} from 'react-native-maps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CloseIcon from '../../../../components/closeIcon';
 import FlatButton from '../../../../components/flatButton';
-import {CustomAlert, getLocation} from '../../../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  getLocation,
+} from '../../../../constant/commonFun';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import InformationPopUp from '../../../../components/informationPopUp';
 import {useDispatch, useSelector} from 'react-redux';
-import {getZones} from '../../../../redux/actions/user';
+import {APICall, getZones} from '../../../../redux/actions/user';
 import {getDistance} from 'geolib';
+import {STORE} from '../../../../redux';
 navigator.geolocation = require('@react-native-community/geolocation');
 
 const MovingForm = (props) => {
@@ -47,6 +52,7 @@ const MovingForm = (props) => {
     address_line1: undefined,
     address_line2: undefined,
     pincode: undefined,
+    state: undefined,
     floor: undefined,
     city: undefined,
     geocode: undefined,
@@ -76,19 +82,24 @@ const MovingForm = (props) => {
   let movingFromData = props.movingFrom ? destination?.meta : source?.meta;
   useEffect(() => {
     dispatch(getZones());
+    getCurrentLocation();
   }, []);
 
   useEffect(() => {
     if (mapVisible) {
-      getLocation()
-        .then((res) => {
-          fetchLocationString(res);
-        })
-        .catch((err) => {
-          CustomAlert(err);
-        });
+      getCurrentLocation();
     }
   }, [mapVisible]);
+
+  const getCurrentLocation = () => {
+    getLocation()
+      .then((res) => {
+        fetchLocationString(res);
+      })
+      .catch((err) => {
+        CustomAlert(err);
+      });
+  };
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => setKeyboardOpen(true));
@@ -105,14 +116,14 @@ const MovingForm = (props) => {
     mapRef?.current?.animateToRegion({
       latitude: regionData?.latitude,
       longitude: regionData?.longitude,
-      latitudeDelta: MapConstantDelta,
-      longitudeDelta: MapConstantDelta,
+      latitudeDelta: regionData?.latitudeDelta || MapConstantDelta,
+      longitudeDelta: regionData?.longitudeDelta || MapConstantDelta,
     });
     setRegion({
       latitude: regionData?.latitude,
       longitude: regionData?.longitude,
-      latitudeDelta: MapConstantDelta,
-      longitudeDelta: MapConstantDelta,
+      latitudeDelta: regionData?.latitudeDelta || MapConstantDelta,
+      longitudeDelta: regionData?.longitudeDelta || MapConstantDelta,
     });
     setPanding(false);
     fetch(
@@ -144,7 +155,29 @@ const MovingForm = (props) => {
             ) {
               t1.state = item?.long_name;
             }
+            // else if (
+            //   item?.types?.findIndex((ele) => {
+            //     if (ele === 'street_number' || ele === 'route') {
+            //       return ele;
+            //     }
+            //   }) !== -1
+            // ) {
+            //   t1.address_line1 = t1.address_line1 + item?.long_name;
+            // } else if (
+            //   item?.types?.findIndex((ele) => {
+            //     if (
+            //       ele === 'sublocality_level_3' ||
+            //       ele === 'sublocality_level_2' ||
+            //       ele === 'sublocality_level_1'
+            //     ) {
+            //       return ele;
+            //     }
+            //   }) !== -1
+            // ) {
+            //   t1.address_line2 = t1.address_line2 + item?.long_name;
+            // }
             t1.geocode = temp?.results[0]?.formatted_address;
+            t1.address_line2 = temp?.results[0]?.formatted_address;
           });
         }
       });
@@ -189,7 +222,8 @@ const MovingForm = (props) => {
         <Pressable onPress={() => setMapVisible(true)}>
           <TextInput
             disable={true}
-            label={props.movingFrom ? 'To' : 'From'}
+            selection={{start: 0}}
+            label={props.movingFrom ? 'Drop Location *' : 'Pickup Location *'}
             isRight={error?.geocode}
             value={
               props.movingFrom
@@ -212,7 +246,7 @@ const MovingForm = (props) => {
         {/*  onChange={(text) => handleState('address', text)}*/}
         {/*/>*/}
         <TextInput
-          label={'Address Line 1'}
+          label={'Address Line 1 *'}
           isRight={error.address_line1}
           placeHolder={'Flat no, Street no'}
           value={
@@ -223,9 +257,10 @@ const MovingForm = (props) => {
           onChange={(text) => handleState('address_line1', text)}
         />
         <TextInput
-          label={'Address Line 2'}
+          label={'Address Line 2 *'}
           isRight={error.address_line2}
           placeHolder={'Landmark, Area'}
+          selection={isKeyboardOpen ? {end: 0} : {start: 0}}
           value={
             props.movingFrom
               ? destination?.meta?.address_line2
@@ -234,7 +269,7 @@ const MovingForm = (props) => {
           onChange={(text) => handleState('address_line2', text)}
         />
         <TextInput
-          label={'City'}
+          label={'City *'}
           isRight={error.city}
           value={
             props.movingFrom ? destination?.meta?.city : source?.meta?.city
@@ -243,7 +278,16 @@ const MovingForm = (props) => {
           onChange={(text) => handleState('city', text)}
         />
         <TextInput
-          label={'Pincode'}
+          label={'State *'}
+          isRight={error.state}
+          value={
+            props.movingFrom ? destination?.meta?.state : source?.meta?.state
+          }
+          placeHolder={'State'}
+          onChange={(text) => handleState('state', text)}
+        />
+        <TextInput
+          label={'Pincode *'}
           isRight={error.pincode}
           keyboard={'decimal-pad'}
           value={
@@ -266,13 +310,14 @@ const MovingForm = (props) => {
               width: Platform.OS === 'android' ? wp(56) : '76%',
             }}>
             <TextInput
-              label={'Floor'}
+              label={'Floor *'}
               isRight={error.floor}
               value={
                 props.movingFrom
                   ? destination?.meta?.floor.toString()
                   : source?.meta?.floor.toString()
               }
+              maxLength={2}
               keyboard={'decimal-pad'}
               placeHolder={'Floor'}
               onChange={(text) => handleState('floor', text)}
@@ -283,8 +328,8 @@ const MovingForm = (props) => {
             onPress={() => {
               if (
                 props.movingFrom
-                  ? destination?.meta?.floor < 50
-                  : source?.meta?.floor < 50
+                  ? destination?.meta?.floor < 99
+                  : source?.meta?.floor < 99
               ) {
                 handleState(
                   'floor',
@@ -360,7 +405,7 @@ const MovingForm = (props) => {
                 fontSize: wp(4),
                 marginLeft: 5,
               }}>
-              Is lift available?
+              Is service lift available?
             </Text>
           </View>
           <Switch
@@ -437,6 +482,9 @@ const MovingForm = (props) => {
               tempError.address_line2 = !(
                 !pageData.address_line2 || pageData.address_line2.length === 0
               );
+              tempError.state = !(
+                !pageData.state || pageData.state.length === 0
+              );
               tempError.pincode = !(
                 !pageData.pincode ||
                 pageData?.pincode?.length !== 6 ||
@@ -445,7 +493,7 @@ const MovingForm = (props) => {
               tempError.floor = !(
                 pageData?.floor?.toString()?.length === 0 ||
                 pageData?.floor < -3 ||
-                pageData?.floor > 50
+                pageData?.floor > 99
               );
               scrollViewRef?.current?.scrollToPosition(0, 0, true);
               setError(tempError);
@@ -456,6 +504,7 @@ const MovingForm = (props) => {
                 setError({
                   address_line1: undefined,
                   address_line2: undefined,
+                  state: undefined,
                   pincode: undefined,
                   floor: undefined,
                   city: undefined,
@@ -496,12 +545,18 @@ const MovingForm = (props) => {
               rotateEnabled={false}
               onMapReady={handleMapReady}
               // showsUserLocation
-              onRegionChangeComplete={(region) => {
-                if (!isKeyboardOpen) {
-                  fetchLocationString(region);
+              onRegionChangeComplete={(region1) => {
+                if (
+                  !isKeyboardOpen &&
+                  region1.latitude.toFixed(6) !== region.latitude.toFixed(6) &&
+                  region1.longitude.toFixed(6) !== region.longitude.toFixed(6)
+                ) {
+                  fetchLocationString(region1);
                 }
               }}
-              zoomControlEnabled={false}
+              zoomEnabled={true}
+              // minZoomLevel={0}
+              // maxZoomLevel={20}
               provider={
                 Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
               }
@@ -609,7 +664,7 @@ const MovingForm = (props) => {
               keyboardShouldPersistTaps={'handled'}
               fetchDetails={true}
               currentLocation={true}
-              currentLocationLabel={'Current location'}
+              currentLocationLabel={'Current Location'}
               query={{
                 key: 'AIzaSyCvVaeoUidYMQ8cdIJ_cEvrZNJeBeMpC-4',
                 language: 'en',
@@ -619,7 +674,7 @@ const MovingForm = (props) => {
                   borderWidth: 2,
                   paddingHorizontal: 10,
                   borderRadius: 10,
-                  height: hp(6.5),
+                  height: hp(6),
                   marginTop: hp(1),
                   borderColor: Colors.silver,
                   backgroundColor: Colors.white,
@@ -646,19 +701,57 @@ const MovingForm = (props) => {
           <View style={{marginTop: hp(2)}}>
             <FlatButton
               label={'OKAY'}
+              isLoading={isLoading}
               onPress={() => {
                 if (props.movingFrom) {
-                  let temp = {...destination};
-                  // temp.meta.address_line1 = mapData.address_line1;
-                  // temp.meta.address_line2 = mapData.address_line2;
-                  temp.meta.city = mapData.city;
-                  temp.meta.pincode = mapData.pincode;
-                  temp.meta.state = mapData.state;
-                  temp.meta.geocode = mapData.geocode;
-                  temp.lat = mapData.latitude;
-                  temp.lng = mapData.longitude;
-                  handleStateChange('destination', temp);
-                  setMapVisible(false);
+                  setLoading(true);
+                  let obj = {
+                    url: 'bookings/distance',
+                    method: 'post',
+                    headers: {
+                      Authorization:
+                        'Bearer ' + STORE.getState().Login?.loginData?.token,
+                    },
+                    data: {
+                      source: {
+                        lat: data?.source?.lat,
+                        lng: data?.source?.lng,
+                      },
+                      destination: {
+                        lat: mapData.latitude,
+                        lng: mapData.longitude,
+                      },
+                    },
+                  };
+                  APICall(obj)
+                    .then((res) => {
+                      setLoading(false);
+                      if (res?.data?.status === 'success') {
+                        if (res?.data?.data?.distance > 0) {
+                          let temp = {...destination};
+                          temp.meta.address_line1 = mapData.address_line1;
+                          temp.meta.address_line2 = mapData.address_line2;
+                          temp.meta.city = mapData.city;
+                          temp.meta.pincode = mapData.pincode;
+                          temp.meta.state = mapData.state;
+                          temp.meta.geocode = mapData.geocode;
+                          temp.lat = mapData.latitude;
+                          temp.lng = mapData.longitude;
+                          handleStateChange('destination', temp);
+                          setMapVisible(false);
+                        } else {
+                          alert(
+                            'Currently we are unable to deliver here. Please select a valid destination.',
+                          );
+                        }
+                      } else {
+                        CustomAlert(res?.data?.message);
+                      }
+                    })
+                    .catch((err) => {
+                      setLoading(false);
+                      CustomConsole(err);
+                    });
                 } else {
                   let count = 0;
                   zones.forEach((item, index) => {
@@ -676,8 +769,8 @@ const MovingForm = (props) => {
 
                   if (count > 0) {
                     let temp = {...source};
-                    // temp.meta.address_line1 = mapData.address_line1;
-                    // temp.meta.address_line2 = mapData.address_line2;
+                    temp.meta.address_line1 = mapData.address_line1;
+                    temp.meta.address_line2 = mapData.address_line2;
                     temp.meta.city = mapData.city;
                     temp.meta.pincode = mapData.pincode;
                     temp.meta.state = mapData.state;
@@ -687,7 +780,7 @@ const MovingForm = (props) => {
                     handleStateChange('source', temp);
                     setMapVisible(false);
                   } else {
-                    CustomAlert(
+                    alert(
                       'Your location is not currently serviceable by biddnest. We will be expanding soon.',
                     );
                   }
@@ -703,7 +796,7 @@ const MovingForm = (props) => {
               ? 'Mentioning this helps us being better prepaid for your moment'
               : 'If checked, our vendors will move your items along with other items in a shared vehicle \n\n Checking this option will effectively reduce the movement cost, else A dedicated vehicle will be used.'
           }
-          title={liftInfo ? 'lift' : 'Shared Service'}
+          title={liftInfo ? 'service lift' : 'Shared Service'}
           onCloseIcon={() => {
             if (liftInfo) {
               setLiftInfo(false);
@@ -730,14 +823,15 @@ const styles = StyleSheet.create({
     borderColor: '#DEE6ED',
   },
   arrowView: {
-    height: hp(6.5),
-    width: hp(6.5),
+    height: hp(6),
+    width: hp(6),
     backgroundColor: Colors.white,
     borderRadius: 10,
     borderWidth: 2,
     borderColor: Colors.btnBG,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: hp(1.3),
   },
   mapView: {
     height: hp(67),

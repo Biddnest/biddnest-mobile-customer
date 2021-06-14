@@ -2,6 +2,7 @@ import {ActivityIndicator, Pressable, Text, View} from 'react-native';
 import {Colors, hp, wp} from '../constant/colors';
 import {STYLES} from '../constant/commonStyle';
 import React from 'react';
+import Ripple from 'react-native-material-ripple';
 
 const TwoButton = (props) => {
   if (props.isLoading) {
@@ -16,7 +17,8 @@ const TwoButton = (props) => {
         width: wp(100),
         marginTop: hp(4),
       }}>
-      <Pressable
+      <Ripple
+        rippleColor={Colors.btnBG}
         onPress={props.leftOnPress}
         style={{
           flex: 1,
@@ -33,8 +35,9 @@ const TwoButton = (props) => {
           }}>
           {props.leftLabel}
         </Text>
-      </Pressable>
-      <Pressable
+      </Ripple>
+      <Ripple
+        rippleColor={Colors.white}
         onPress={props.rightOnPress}
         style={{flex: 1, backgroundColor: Colors.btnBG, ...STYLES.common}}>
         <Text
@@ -46,7 +49,7 @@ const TwoButton = (props) => {
           }}>
           {props.rightLabel}
         </Text>
-      </Pressable>
+      </Ripple>
     </View>
   );
 };

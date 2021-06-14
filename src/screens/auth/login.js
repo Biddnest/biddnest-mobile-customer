@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Keyboard} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Colors, hp, wp} from '../../constant/colors';
 import TextInput from '../../components/textInput';
 import Button from '../../components/button';
-import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Header from './header';
 import CheckBox from '../../components/checkBox';
 import LinearGradient from 'react-native-linear-gradient';
@@ -14,6 +13,7 @@ import {sendOTP, signOut, verifyOTP} from '../../redux/actions/user';
 import {LOGIN_USER_DATA} from '../../redux/types';
 import OneSignal from 'react-native-onesignal';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
+import CountDown from '../../components/countDown';
 
 const Login = (props) => {
   const dispatch = useDispatch();
@@ -24,6 +24,7 @@ const Login = (props) => {
   const [isAgree, setAgree] = React.useState(true);
   const [isLoading, setLoading] = useState(false);
   const [otpResponse, setOtpResponse] = useState({});
+  const [resendOTP, setResendOTP] = useState(false);
 
   useEffect(() => {
     dispatch(signOut());
@@ -31,6 +32,7 @@ const Login = (props) => {
 
   const sendOTPFun = () => {
     setLoading(true);
+    setResendOTP(false);
     setOTP();
     if (!phone?.length || phone?.length !== 10 || /\D/.test(phone)) {
       setPhoneValidate(false);
@@ -38,7 +40,7 @@ const Login = (props) => {
     } else if (!isAgree) {
       setPhoneValidate(true);
       setLoading(false);
-      CustomAlert('Agree to the Terms & Conditions');
+      CustomAlert('Please Agree to the Terms & Conditions');
     } else {
       setPhoneValidate(true);
 
@@ -82,11 +84,17 @@ const Login = (props) => {
           <View style={styles.bottomView}>
             <TextInput
               isRight={phoneValidate}
-              label={'Phone Number'}
+              isLeft={true}
+              label={'Phone Number *'}
               placeHolder={'Phone Number'}
               keyboard={'decimal-pad'}
               onChange={(text) => {
-                setOtpSend(false);
+                if (isLoading) {
+                  setLoading(false);
+                }
+                if (otpSend) {
+                  setOtpSend(false);
+                }
                 setPhone(text);
               }}
             />
@@ -137,7 +145,7 @@ const Login = (props) => {
                       color: Colors.textLabelColor,
                       fontSize: wp(4),
                     }}>
-                    Verify OTP
+                    Verify OTP *
                   </Text>
                   <View
                     style={{
@@ -171,6 +179,40 @@ const Login = (props) => {
                         fontSize: wp(5),
                         backgroundColor: Colors.textBG,
                         color: Colors.inputTextColor,
+                      }}
+                      onFulfill={(code) => {
+                        Keyboard.dismiss();
+                        setLoading(true);
+                        verifyOTP({
+                          phone,
+                          otp: code,
+                        })
+                          .then((res) => {
+                            setLoading(false);
+                            if (res.status === 'success') {
+                              dispatch({
+                                type: LOGIN_USER_DATA,
+                                payload: res.data,
+                              });
+                              if (otpResponse?.new === true) {
+                                props.navigation.navigate('Signup', {
+                                  phone,
+                                });
+                              } else {
+                                OneSignal.setExternalUserId(
+                                  res?.data?.user?.id?.toString(),
+                                  (results) => {},
+                                );
+                                resetNavigator(props, 'Dashboard');
+                              }
+                            } else {
+                              CustomAlert(res.message);
+                            }
+                          })
+                          .catch((err) => {
+                            setLoading(false);
+                            CustomAlert(err?.data?.message);
+                          });
                       }}
                     />
                   </View>
@@ -221,21 +263,51 @@ const Login = (props) => {
                       });
                   }}
                 />
-                <Text
-                  style={{
-                    color: Colors.grey,
-                    fontSize: wp(3.8),
-                  }}>
-                  Did not receive OTP?{' '}
+                {(resendOTP && (
                   <Text
-                    onPress={() => sendOTPFun()}
                     style={{
-                      fontFamily: 'Roboto-Bold',
-                      color: Colors.textLabelColor,
+                      color: Colors.grey,
+                      fontSize: wp(3.8),
                     }}>
-                    Resend
+                    Did not receive OTP?{' '}
+                    <Text
+                      onPress={() => sendOTPFun()}
+                      style={{
+                        fontFamily: 'Roboto-Bold',
+                        color: Colors.textLabelColor,
+                      }}>
+                      Resend
+                    </Text>
                   </Text>
-                </Text>
+                )) || (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        color: Colors.grey,
+                        fontSize: wp(3.8),
+                      }}>
+                      Resend OTP enable in{' '}
+                    </Text>
+                    <CountDown
+                      key={new Date()}
+                      until={30}
+                      onFinish={() => setResendOTP(true)}
+                      digitStyle={{height: '100%'}}
+                      digitTxtStyle={{
+                        fontFamily: 'Roboto-Bold',
+                        color: Colors.textLabelColor,
+                      }}
+                      separatorStyle={{color: '#000'}}
+                      timeToShow={['M', 'S']}
+                      timeLabels={{m: null, s: null}}
+                      showSeparator
+                    />
+                  </View>
+                )}
               </View>
             )}
           </View>

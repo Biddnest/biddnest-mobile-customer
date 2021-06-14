@@ -47,7 +47,7 @@ const DropDownAndroid = (props) => {
             />
           )}
           containerStyle={{
-            height: hp(6.5),
+            height: hp(6),
             // borderWidth: 1,
             // borderRadius: 10,
             // borderColor: Colors.silver,

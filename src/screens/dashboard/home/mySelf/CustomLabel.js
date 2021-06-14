@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     fontSize: wp(3.8),
     color: Colors.white,
     borderRadius: 5,
-    paddingVertical: 2,
+    paddingVertical: hp(0.3),
     overflow: 'hidden',
   },
 });

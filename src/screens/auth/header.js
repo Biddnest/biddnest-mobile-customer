@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, ImageBackground, Image, StyleSheet} from 'react-native';
 import {Colors, hp, wp} from '../../constant/colors';
+import Logo from '../../assets/svg/logo.svg';
 
 const Header = () => {
   return (
@@ -9,11 +10,7 @@ const Header = () => {
         source={require('../../assets/images/logo_background.png')}
         style={{height: '100%', width: '100%', ...styles.common}}
         resizeMode={'cover'}>
-        <Image
-          source={require('../../assets/images/logo.png')}
-          style={{height: '60%', width: '60%'}}
-          resizeMode={'contain'}
-        />
+        <Logo height={'60%'} width={'60%'} />
       </ImageBackground>
     </View>
   );

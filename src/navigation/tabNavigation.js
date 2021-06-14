@@ -33,6 +33,7 @@ const TabNavigation = (props: any) => {
           paddingBottom: hp(1),
           borderTopLeftRadius: wp(5),
           borderTopRightRadius: wp(5),
+          overflow: 'hidden',
         },
       }}
       screenOptions={({route}) => ({
@@ -81,9 +82,7 @@ const TabNavigation = (props: any) => {
         name="Home"
         component={MainStackNavigator}
         listeners={({navigation, route}) => ({
-          tabPress: (e) => {
-
-          },
+          tabPress: (e) => {},
         })}
       />
       <Tab.Screen name="MyBooking" component={MyBookingStackNavigator} />

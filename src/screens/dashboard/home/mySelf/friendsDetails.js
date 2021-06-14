@@ -1,22 +1,9 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, Pressable, Platform, Image} from 'react-native';
-import {Colors, hp, wp, boxShadow} from '../../../../constant/colors';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {View, StyleSheet, Text} from 'react-native';
+import {Colors, hp, wp} from '../../../../constant/colors';
 import TextInput from '../../../../components/textInput';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Switch from '../../../../components/switch';
 import Button from '../../../../components/button';
-import MapModalAndroid from '../../../../components/mapModal';
-import MapView, {
-  Marker,
-  PROVIDER_GOOGLE,
-  PROVIDER_DEFAULT,
-} from 'react-native-maps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import CloseIcon from '../../../../components/closeIcon';
-import {CustomAlert, resetNavigator} from '../../../../constant/commonFun';
-import {signUP} from '../../../../redux/actions/user';
-import {LOGIN_USER_DATA} from '../../../../redux/types';
 
 const FriendsDetails = (props) => {
   const {data, handleStateChange} = props;
