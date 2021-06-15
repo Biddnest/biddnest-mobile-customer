@@ -290,7 +290,7 @@ const Login = (props) => {
                         color: Colors.grey,
                         fontSize: wp(3.8),
                       }}>
-                      Resend OTP enable in{' '}
+                      Resend OTP in{' '}
                     </Text>
                     <CountDown
                       key={new Date()}

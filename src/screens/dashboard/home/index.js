@@ -190,19 +190,27 @@ const Home = (props) => {
 
   useEffect(() => {
     if (userData1?.token) {
+      let freshchatUser = new FreshchatUser();
+      freshchatConfig.domain = 'msdk.in.freshchat.com';
+      freshchatConfig.teamMemberInfoVisible = true;
+      freshchatConfig.cameraCaptureEnabled = false;
+      freshchatConfig.gallerySelectionEnabled = true;
+      freshchatConfig.responseExpectationEnabled = true;
+      Freshchat.init(freshchatConfig);
+
+      freshchatUser.firstName = userData?.fname;
+      freshchatUser.lastName = userData?.lname;
+      freshchatUser.email = userData?.email;
+      freshchatUser.phoneCountryCode = '+91';
+      freshchatUser.phone = userData?.phone;
+      Freshchat.setUser(freshchatUser, (error) => {
+        console.log(error);
+      });
+
       if (
         userData?.freshchat_restore_id &&
         userData?.freshchat_restore_id?.length > 0
       ) {
-        let freshchatUser = new FreshchatUser();
-        freshchatUser.firstName = userData?.fname;
-        freshchatUser.lastName = userData?.lname;
-        freshchatUser.email = userData?.email;
-        freshchatUser.phoneCountryCode = '+91';
-        freshchatUser.phone = userData?.phone;
-        Freshchat.setUser(freshchatUser, (error) => {
-          console.log(error);
-        });
         Freshchat.identifyUser(
           userData?.id?.toString(),
           userData?.freshchat_restore_id,
@@ -211,13 +219,6 @@ const Home = (props) => {
           },
         );
       } else {
-        freshchatConfig.domain = 'msdk.in.freshchat.com';
-        freshchatConfig.teamMemberInfoVisible = true;
-        freshchatConfig.cameraCaptureEnabled = false;
-        freshchatConfig.gallerySelectionEnabled = true;
-        freshchatConfig.responseExpectationEnabled = true;
-        Freshchat.init(freshchatConfig);
-
         Freshchat.identifyUser(userData?.id?.toString(), null, (error) => {
           console.log(error);
         });
