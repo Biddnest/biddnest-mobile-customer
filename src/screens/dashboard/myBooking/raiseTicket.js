@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View} from 'react-native';
 import SimpleHeader from '../../../components/simpleHeader';
 import {
   CustomAlert,
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     position: 'relative',
-    top: -hp(3),
+    top: Platform.OS === 'android' ? -hp(3) : -hp(1),
     alignSelf: 'flex-end',
     right: wp(5),
     color: Colors.red,

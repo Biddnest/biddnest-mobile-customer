@@ -303,11 +303,11 @@ const MovingForm = (props) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '100%',
+            width: Platform.OS === 'android' ? '100%' : '96%',
           }}>
           <View
             style={{
-              width: Platform.OS === 'android' ? wp(56) : '76%',
+              width: Platform.OS === 'android' ? wp(56) : '66%',
             }}>
             <TextInput
               label={'Floor *'}

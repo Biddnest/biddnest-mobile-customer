@@ -3,16 +3,15 @@ import {
   Modal,
   View,
   StyleSheet,
-  ScrollView,
   SafeAreaView,
   Pressable,
   Text,
   FlatList,
 } from 'react-native';
 import {wp, hp} from '../constant/colors';
-import CloseIcon from './closeIcon';
 import {STYLES} from '../constant/commonStyle';
 import TextInput from './textInput';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const SearchableItem = (props) => {
   const {defaultInventories} = props;
@@ -28,11 +27,10 @@ const SearchableItem = (props) => {
           props.onPress();
         }
       }}>
-      <View
+      <SafeAreaView
         style={{
           flexDirection: 'row',
         }}>
-        {props.onPress && <CloseIcon onPress={props.onPress} />}
         <View style={{width: wp(90)}}>
           <TextInput
             searchPress={() => {
@@ -54,7 +52,14 @@ const SearchableItem = (props) => {
             }}
           />
         </View>
-      </View>
+        {props.onPress && (
+          <Pressable
+            onPress={props.onPress}
+            style={{position: 'relative', top: hp(2)}}>
+            <Ionicons name="close-sharp" size={hp(3.3)} color={'#C9CDCF'} />
+          </Pressable>
+        )}
+      </SafeAreaView>
       <FlatList
         keyExtractor={(item, index) => index.toString()}
         bounces={false}
@@ -76,15 +81,12 @@ const SearchableItem = (props) => {
                 props.onConfirmPress({...item, itemName: null}, index);
               }}>
               <Text
-                style={[
-                  styles.headerText,
-                  {
-                    fontFamily: 'Roboto-Regular',
-                    marginTop: 5,
-                    fontSize: wp(3.5),
-                    textTransform: 'capitalize',
-                  },
-                ]}>
+                style={{
+                  fontFamily: 'Roboto-Regular',
+                  marginTop: 5,
+                  fontSize: wp(3.5),
+                  textTransform: 'capitalize',
+                }}>
                 {item?.name}
               </Text>
             </Pressable>
@@ -107,15 +109,12 @@ const SearchableItem = (props) => {
               });
             }}>
             <Text
-              style={[
-                styles.headerText,
-                {
-                  fontFamily: 'Roboto-Regular',
-                  marginTop: 5,
-                  fontSize: wp(3.5),
-                  textTransform: 'capitalize',
-                },
-              ]}>
+              style={{
+                fontFamily: 'Roboto-Regular',
+                marginTop: 5,
+                fontSize: wp(3.5),
+                textTransform: 'capitalize',
+              }}>
               {'Add Custom Item - '}
               <Text
                 style={{
@@ -137,23 +136,9 @@ const SearchableItem = (props) => {
 export default SearchableItem;
 
 const styles = StyleSheet.create({
-  centeredView: {
-    justifyContent: 'center',
+  textWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    height: '100%',
-    width: wp(100),
-  },
-  modalView: {
-    backgroundColor: 'white',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    position: 'absolute',
-    bottom: 0,
-    width: wp(100),
-    maxHeight: hp(80),
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
   },
 });

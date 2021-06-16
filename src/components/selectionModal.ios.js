@@ -1,9 +1,7 @@
 import React from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {Colors, hp, wp} from '../constant/colors';
-import DropDownPicker from 'react-native-dropdown-picker';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {Picker} from '@react-native-picker/picker';
+import {Dropdown} from 'react-native-material-dropdown';
 
 const SelectionModalAndroid = (props) => {
   return (
@@ -21,26 +19,35 @@ const SelectionModalAndroid = (props) => {
         }}>
         {props.label}
       </Text>
-      <View
-        style={[
-          styles.outerView,
-          {width: '100%', paddingHorizontal: 0, ...props?.style},
-        ]}>
-        <Picker
-          style={{
-            height: '99%',
-            width: '100%',
-          }}
-          selectedValue={props.value}
-          onValueChange={(item) => {
-            let temp = props.items.find((t, ind) => t.value === item);
-            props.onChangeItem(item, temp);
-          }}>
-          {props?.items?.map((item, index) => {
-            return <Picker.Item label={item?.label} value={item?.value} />;
-          })}
-        </Picker>
-      </View>
+      <Dropdown
+        labelFontSize={0}
+        containerStyle={[styles.outerView, {width: '100%', ...props?.style}]}
+        rippleOpacity={0}
+        inputContainerStyle={{
+          width: props.width ? props.width - wp(15) : wp(45),
+          borderBottomColor: 'transparent',
+          justifyContent: 'center',
+          flex: 1,
+        }}
+        onChangeText={(value, index, data) => {
+          props.onChangeItem(value, data);
+        }}
+        dropdownOffset={{top: hp(1.6)}}
+        itemTextStyle={{
+          fontFamily: 'Gilroy-SemiBold',
+          fontSize: wp(4),
+          color: Colors.inputTextColor,
+          textTransform: 'capitalize',
+        }}
+        style={{
+          fontFamily: 'Gilroy-SemiBold',
+          fontSize: wp(4),
+          color: Colors.inputTextColor,
+          textTransform: 'capitalize',
+        }}
+        value={props.value || '-Select-'}
+        data={props?.items}
+      />
     </View>
   );
 };
@@ -64,6 +71,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     alignItems: 'center',
     paddingHorizontal: wp(5),
-    flexDirection: 'row',
+    marginBottom: hp(2),
   },
 });

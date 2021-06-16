@@ -1037,6 +1037,88 @@ const RequirementDetails = (props) => {
             label={'ADD ITEM'}
           />
         )}
+        <SearchableItem
+          visible={!!openPicker}
+          title={'Warning'}
+          onPress={() => {
+            setOpenPicker(false);
+          }}
+          onConfirmPress={(itemData) => {
+            setOpenPicker(false);
+            if (itemData) {
+              let temp = {...itemData};
+              temp.material = JSON.parse(itemData.material.toString());
+              temp.size = JSON.parse(itemData.size.toString());
+
+              temp.label = itemData.name;
+              temp.value = itemData.name;
+              let materialAry = [];
+              let sizeAry = [];
+              temp.material.forEach((i) => {
+                materialAry.push({
+                  label: i,
+                  value: i,
+                });
+              });
+              if (materialAry.findIndex((item) => item.value === null) === -1) {
+                materialAry.unshift({
+                  label: '-Select-',
+                  value: null,
+                });
+              }
+              temp.size.forEach((i) => {
+                sizeAry.push({
+                  label: i,
+                  value: i,
+                });
+              });
+              if (sizeAry.findIndex((item) => item.value === null) === -1) {
+                sizeAry.unshift({
+                  label: '-Select-',
+                  value: null,
+                });
+              }
+              temp.material = materialAry;
+              temp.size = sizeAry;
+              setSelectedInventory(temp);
+              if (editItem) {
+                setEditData({
+                  ...editData,
+                  inventory_id: itemData?.id,
+                  name: itemData?.name,
+                  itemName: itemData?.itemName,
+                  material: null,
+                  size: null,
+                  quantity:
+                    configData?.inventory_quantity_type.range ===
+                    movementType?.inventory_quantity_type
+                      ? {
+                          min: 200,
+                          max: 750,
+                        }
+                      : 1,
+                });
+              } else {
+                setAddData({
+                  name: itemData?.name,
+                  inventory_id: itemData?.id,
+                  itemName: itemData?.itemName,
+                  material: null,
+                  size: null,
+                  quantity:
+                    configData?.inventory_quantity_type.range ===
+                    movementType?.inventory_quantity_type
+                      ? {
+                          min: 200,
+                          max: 750,
+                        }
+                      : 1,
+                });
+              }
+            }
+          }}
+          defaultInventories={defaultInventories}
+        />
       </CustomModalAndroid>
       <CustomModalAndroid
         visible={!!changeCategoryVisible?.id}
@@ -1268,88 +1350,6 @@ const RequirementDetails = (props) => {
           </View>
         </View>
       </CustomModalAndroid>
-      <SearchableItem
-        visible={!!openPicker}
-        title={'Warning'}
-        onPress={() => {
-          setOpenPicker(false);
-        }}
-        onConfirmPress={(itemData) => {
-          setOpenPicker(false);
-          if (itemData) {
-            let temp = {...itemData};
-            temp.material = JSON.parse(itemData.material.toString());
-            temp.size = JSON.parse(itemData.size.toString());
-
-            temp.label = itemData.name;
-            temp.value = itemData.name;
-            let materialAry = [];
-            let sizeAry = [];
-            temp.material.forEach((i) => {
-              materialAry.push({
-                label: i,
-                value: i,
-              });
-            });
-            if (materialAry.findIndex((item) => item.value === null) === -1) {
-              materialAry.unshift({
-                label: '-Select-',
-                value: null,
-              });
-            }
-            temp.size.forEach((i) => {
-              sizeAry.push({
-                label: i,
-                value: i,
-              });
-            });
-            if (sizeAry.findIndex((item) => item.value === null) === -1) {
-              sizeAry.unshift({
-                label: '-Select-',
-                value: null,
-              });
-            }
-            temp.material = materialAry;
-            temp.size = sizeAry;
-            setSelectedInventory(temp);
-            if (editItem) {
-              setEditData({
-                ...editData,
-                inventory_id: itemData?.id,
-                name: itemData?.name,
-                itemName: itemData?.itemName,
-                material: null,
-                size: null,
-                quantity:
-                  configData?.inventory_quantity_type.range ===
-                  movementType?.inventory_quantity_type
-                    ? {
-                        min: 200,
-                        max: 750,
-                      }
-                    : 1,
-              });
-            } else {
-              setAddData({
-                name: itemData?.name,
-                inventory_id: itemData?.id,
-                itemName: itemData?.itemName,
-                material: null,
-                size: null,
-                quantity:
-                  configData?.inventory_quantity_type.range ===
-                  movementType?.inventory_quantity_type
-                    ? {
-                        min: 200,
-                        max: 750,
-                      }
-                    : 1,
-              });
-            }
-          }
-        }}
-        defaultInventories={defaultInventories}
-      />
     </ScrollView>
   );
 };
