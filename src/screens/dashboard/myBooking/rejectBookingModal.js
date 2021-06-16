@@ -12,7 +12,7 @@ import {
 } from '../../../constant/commonFun';
 import CustomModalAndroid from '../../../components/customModal';
 import React, {useState} from 'react';
-import SelectionModal from '../../../components/selectionModal';
+import SelectionModalAndroid from '../../../components/selectionModal';
 
 const RejectBookingModal = (props) => {
   const [error, setError] = useState(undefined);
@@ -22,7 +22,7 @@ const RejectBookingModal = (props) => {
       title={'REASON FOR REJECTION'}
       visible={props.visible}
       onPress={props.closeModal}>
-      <SelectionModal
+      <SelectionModalAndroid
         value={props.value}
         width={wp(90)}
         label={''}

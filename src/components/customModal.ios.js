@@ -1,7 +1,16 @@
 import React from 'react';
-import {Modal, View, StyleSheet, ScrollView, Pressable} from 'react-native';
+import {
+  Modal,
+  View,
+  StyleSheet,
+  ScrollView,
+  Pressable,
+  Text,
+} from 'react-native';
 import {wp, hp} from '../constant/colors';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {STYLES} from '../constant/commonStyle';
+import CloseIcon from './closeIcon';
 
 const CustomModalAndroid = (props) => {
   return (
@@ -18,7 +27,7 @@ const CustomModalAndroid = (props) => {
         enableOnAndroid={false}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.centeredView}>
+        contentContainerStyle={{flex: 1, backgroundColor: 'rgba(0,0,0,0.5)'}}>
         <Pressable
           style={styles.centeredView}
           onPress={() => {
@@ -30,16 +39,17 @@ const CustomModalAndroid = (props) => {
             onStartShouldSetResponder={() => true}
             style={[
               styles.modalView,
-              {
-                // paddingTop: props.paddingTop ? props.paddingTop : 35,
-                paddingTop: 0,
-              },
+              {maxHeight: props.maxHeight ? props.maxHeight : hp(80)},
             ]}>
+            {props.title && (
+              <Text style={STYLES.modalHeader}>{props?.title}</Text>
+            )}
+            {props.onPress && <CloseIcon onPress={props.onPress} />}
             <ScrollView
+              scrollEnabled={props.scrollEnabled}
               bounces={false}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{alignItems: 'center'}}
-              style={styles.modalView}>
+              showsVerticalScrollIndicator={props?.showsVerticalScrollIndicator}
+              contentContainerStyle={{alignItems: 'center'}}>
               {props.children}
             </ScrollView>
           </View>
@@ -57,7 +67,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '100%',
     width: wp(100),
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalView: {
     backgroundColor: 'white',

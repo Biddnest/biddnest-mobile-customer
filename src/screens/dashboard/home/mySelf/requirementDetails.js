@@ -35,7 +35,7 @@ import SearchableItem from '../../../../components/searchableItem';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ripple from 'react-native-material-ripple';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import SelectionModal from '../../../../components/selectionModal';
+import SelectionModalAndroid from '../../../../components/selectionModal';
 
 const RequirementDetails = (props) => {
   const {
@@ -719,7 +719,7 @@ const RequirementDetails = (props) => {
               />
             </View>
           )) || (
-            <SelectionModal
+            <SelectionModalAndroid
               width={wp(45)}
               value={editItem ? editData?.material : addData?.material}
               label={'Material/Variant *'}
@@ -749,7 +749,7 @@ const RequirementDetails = (props) => {
               />
             </View>
           )) || (
-            <SelectionModal
+            <SelectionModalAndroid
               width={wp(45)}
               value={editItem ? editData?.size : addData?.size}
               label={'Size *'}

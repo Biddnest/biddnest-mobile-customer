@@ -5,7 +5,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Picker} from '@react-native-picker/picker';
 
-const SelectionModal = (props) => {
+const SelectionModalAndroid = (props) => {
   return (
     <View
       style={{
@@ -45,7 +45,7 @@ const SelectionModal = (props) => {
   );
 };
 
-export default SelectionModal;
+export default SelectionModalAndroid;
 
 const styles = StyleSheet.create({
   common: {

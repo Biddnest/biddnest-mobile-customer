@@ -13,7 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import TextInput from '../../../components/textInput';
 import Button from '../../../components/button';
 import {useSelector} from 'react-redux';
-import SelectionModal from '../../../components/selectionModal';
+import SelectionModalAndroid from '../../../components/selectionModal';
 
 const RaiseTicket = (props) => {
   const public_booking_id = props?.route?.params?.public_booking_id || null;
@@ -54,7 +54,7 @@ const RaiseTicket = (props) => {
       <LinearGradient
         colors={[Colors.pageBG, Colors.white]}
         style={{flex: 1, padding: wp(5), alignItems: 'center'}}>
-        <SelectionModal
+        <SelectionModalAndroid
           style={{
             marginBottom: hp(3),
             borderColor: error?.category === false ? 'red' : Colors.silver,

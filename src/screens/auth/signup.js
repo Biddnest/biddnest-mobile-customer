@@ -16,7 +16,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {LOGIN_USER_DATA} from '../../redux/types';
 import {STORE} from '../../redux';
 import OneSignal from 'react-native-onesignal';
-import SelectionModal from '../../components/selectionModal';
+import SelectionModalAndroid from '../../components/selectionModal';
 
 const Signup = (props) => {
   const dispatch = useDispatch();
@@ -112,7 +112,7 @@ const Signup = (props) => {
                 {flexDirection: 'row'},
                 Platform.OS !== 'android' && {zIndex: 5001},
               ]}>
-              <SelectionModal
+              <SelectionModalAndroid
                 width={wp(45)}
                 style={
                   error?.gender === false

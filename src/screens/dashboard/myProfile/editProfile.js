@@ -29,7 +29,7 @@ import CustomModalAndroid from '../../../components/customModal';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import FlatButton from '../../../components/flatButton';
 import Ripple from 'react-native-material-ripple';
-import SelectionModal from '../../../components/selectionModal';
+import SelectionModalAndroid from '../../../components/selectionModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
@@ -158,7 +158,7 @@ const EditProfile = (props) => {
                 {marginBottom: hp(3), width: wp(45)},
                 Platform.OS !== 'android' && {zIndex: 5001},
               ]}>
-              <SelectionModal
+              <SelectionModalAndroid
                 value={data.gender}
                 width={wp(45)}
                 label={'Gender *'}

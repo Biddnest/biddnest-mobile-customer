@@ -205,6 +205,7 @@ const MyBooking = (props) => {
               {
                 backgroundColor: configData?.color[statusInd],
                 maxWidth: '45%',
+                overflow: 'hidden',
               },
             ]}>
             {status}
