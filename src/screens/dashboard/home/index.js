@@ -780,133 +780,137 @@ const Home = (props) => {
             return null;
           }
         })}
-        <Text
-          style={{
-            marginTop: hp(3),
-            textAlign: 'center',
-            color: Colors.darkBlue,
-            fontSize: wp(5),
-            fontFamily: 'Gilroy-Bold',
-          }}>
-          What Our Customers Say
-        </Text>
-        <View
-          style={[
-            styles.assistantView,
-            {
-              justifyContent: 'flex-start',
-              paddingVertical: hp(2),
-            },
-          ]}>
-          <View
-            style={{
-              marginHorizontal: wp(3),
-              marginVertical: hp(3),
-            }}>
-            <Quote height={hp(5)} width={hp(5)} />
-          </View>
-          <View
-            style={{
-              borderLeftWidth: 1,
-              borderColor: Colors.silver,
-              paddingLeft: wp(4),
-              flex: 1,
-            }}>
+        {testimonialData?.length > 0 && (
+          <View>
             <Text
               style={{
-                fontFamily: 'Gilroy-Bold',
+                marginTop: hp(3),
+                textAlign: 'center',
                 color: Colors.darkBlue,
-                fontSize: wp(4),
+                fontSize: wp(5),
+                fontFamily: 'Gilroy-Bold',
               }}>
-              {selectedTestimonial?.name}
+              What Our Customers Say
             </Text>
             <View
-              style={{
-                flex: 1,
-                alignSelf: 'flex-start',
-                marginTop: hp(0.2),
-                marginBottom: hp(1),
-              }}>
-              <AirbnbRating
-                key={selectedTestimonial?.id}
-                readonly={true}
-                fractions={1}
-                defaultRating={
-                  (selectedTestimonial?.ratings &&
-                    parseInt(selectedTestimonial?.ratings)) ||
-                  3
-                }
-                ratingContainerStyle={{paddingHorizontal: wp(5)}}
-                ratingCount={5}
-                size={wp(4)}
-                showRating={false}
+              style={[
+                styles.assistantView,
+                {
+                  justifyContent: 'flex-start',
+                  paddingVertical: hp(2),
+                },
+              ]}>
+              <View
+                style={{
+                  marginHorizontal: wp(3),
+                  marginVertical: hp(3),
+                }}>
+                <Quote height={hp(5)} width={hp(5)} />
+              </View>
+              <View
+                style={{
+                  borderLeftWidth: 1,
+                  borderColor: Colors.silver,
+                  paddingLeft: wp(4),
+                  flex: 1,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Gilroy-Bold',
+                    color: Colors.darkBlue,
+                    fontSize: wp(4),
+                  }}>
+                  {selectedTestimonial?.name}
+                </Text>
+                <View
+                  style={{
+                    flex: 1,
+                    alignSelf: 'flex-start',
+                    marginTop: hp(0.2),
+                    marginBottom: hp(1),
+                  }}>
+                  <AirbnbRating
+                    key={selectedTestimonial?.id}
+                    readonly={true}
+                    fractions={1}
+                    defaultRating={
+                      (selectedTestimonial?.ratings &&
+                        parseInt(selectedTestimonial?.ratings)) ||
+                      3
+                    }
+                    ratingContainerStyle={{paddingHorizontal: wp(5)}}
+                    ratingCount={5}
+                    size={wp(4)}
+                    showRating={false}
+                  />
+                </View>
+                <HTML
+                  defaultTextProps={{
+                    width: wp(70),
+                    marginTop: hp(1),
+                  }}
+                  baseFontStyle={{
+                    fontFamily: 'Roboto-Light',
+                    color: Colors.grey,
+                    fontSize: wp(3.2),
+                  }}
+                  source={{html: selectedTestimonial?.desc}}
+                  contentWidth={'90%'}
+                />
+              </View>
+            </View>
+            <View style={{alignItems: 'center'}}>
+              <FlatList
+                data={testimonialData}
+                bounces={false}
+                horizontal
+                contentContainerStyle={{marginBottom: hp(2)}}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item, index}) => {
+                  return (
+                    <Pressable
+                      onPress={() => {
+                        setSelectedTestimonial(item);
+                      }}
+                      key={index}
+                      style={{
+                        marginLeft: wp(5),
+                        opacity: item?.id === selectedTestimonial?.id ? 1 : 0.3,
+                      }}>
+                      <View
+                        style={{
+                          height: hp(8),
+                          width: hp(8),
+                          borderRadius: hp(4),
+                          overflow: 'hidden',
+                        }}>
+                        <Image
+                          source={{uri: item?.image}}
+                          resizeMode={'contain'}
+                          style={{height: '100%', width: '100%'}}
+                        />
+                      </View>
+                      <View
+                        style={{
+                          height: hp(0.8),
+                          width: hp(0.8),
+                          borderRadius: hp(0.4),
+                          backgroundColor:
+                            item?.id === selectedTestimonial?.id
+                              ? Colors.darkBlue
+                              : 'transparent',
+                          alignSelf: 'center',
+                          marginTop: hp(1),
+                        }}
+                      />
+                    </Pressable>
+                  );
+                }}
               />
             </View>
-            <HTML
-              defaultTextProps={{
-                width: wp(70),
-                marginTop: hp(1),
-              }}
-              baseFontStyle={{
-                fontFamily: 'Roboto-Light',
-                color: Colors.grey,
-                fontSize: wp(3.2),
-              }}
-              source={{html: selectedTestimonial?.desc}}
-              contentWidth={'90%'}
-            />
           </View>
-        </View>
-        <View style={{alignItems: 'center'}}>
-          <FlatList
-            data={testimonialData}
-            bounces={false}
-            horizontal
-            contentContainerStyle={{marginBottom: hp(2)}}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({item, index}) => {
-              return (
-                <Pressable
-                  onPress={() => {
-                    setSelectedTestimonial(item);
-                  }}
-                  key={index}
-                  style={{
-                    marginLeft: wp(5),
-                    opacity: item?.id === selectedTestimonial?.id ? 1 : 0.3,
-                  }}>
-                  <View
-                    style={{
-                      height: hp(8),
-                      width: hp(8),
-                      borderRadius: hp(4),
-                      overflow: 'hidden',
-                    }}>
-                    <Image
-                      source={{uri: item?.image}}
-                      resizeMode={'contain'}
-                      style={{height: '100%', width: '100%'}}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      height: hp(0.8),
-                      width: hp(0.8),
-                      borderRadius: hp(0.4),
-                      backgroundColor:
-                        item?.id === selectedTestimonial?.id
-                          ? Colors.darkBlue
-                          : 'transparent',
-                      alignSelf: 'center',
-                      marginTop: hp(1),
-                    }}
-                  />
-                </Pressable>
-              );
-            }}
-          />
-        </View>
+        )}
       </ScrollView>
       <CustomModalAndroid
         visible={couponVisible}

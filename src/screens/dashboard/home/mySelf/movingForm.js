@@ -551,7 +551,9 @@ const MovingForm = (props) => {
                   region1.latitude.toFixed(6) !== region.latitude.toFixed(6) &&
                   region1.longitude.toFixed(6) !== region.longitude.toFixed(6)
                 ) {
-                  fetchLocationString(region1);
+                  if (Platform.OS === 'android') {
+                    fetchLocationString(region1);
+                  }
                 }
               }}
               zoomEnabled={true}
