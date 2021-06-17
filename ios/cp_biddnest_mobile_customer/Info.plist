@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>cp_biddnest_mobile_customer</string>
+	<string>Biddnest Customer</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -22,12 +22,6 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Allow location for batter user experience</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Allow location for batter user experience</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -45,6 +39,12 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Allowing user to capture image</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Allow location for batter user experience</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Allow location for batter user experience</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allowing user to select image/video from photos</string>
 	<key>UIAppFonts</key>

@@ -1000,15 +1000,6 @@ const Home = (props) => {
           </Text>
         </Pressable>
       </CustomModalAndroid>
-      <Pressable
-        onPress={() => Freshchat.showConversations()}
-        style={{
-          position: 'absolute',
-          right: hp(2),
-          bottom: hp(2),
-        }}>
-        <ChatBot width={hp(8.5)} height={hp(8.5)} />
-      </Pressable>
     </LinearGradient>
   );
 };

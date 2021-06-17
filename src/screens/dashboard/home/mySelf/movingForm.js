@@ -47,7 +47,6 @@ const MovingForm = (props) => {
   const [isLoading, setLoading] = useState(false);
   const [isPanding, setPanding] = useState(false);
   const [liftInfo, setLiftInfo] = useState(false);
-  const [sharedInfo, setSharedInfo] = useState(false);
   const [error, setError] = useState({
     address_line1: undefined,
     address_line2: undefined,
@@ -415,52 +414,6 @@ const MovingForm = (props) => {
             }
           />
         </View>
-        {!props.movingFrom && (
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginHorizontal: wp(3),
-              marginTop: hp(2),
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: wp(52),
-              }}>
-              <Pressable onPress={() => setSharedInfo(true)}>
-                <Ionicons
-                  name={'information-circle'}
-                  size={hp(3.5)}
-                  color={'#99A0A5'}
-                />
-              </Pressable>
-              <Text
-                style={{
-                  color:
-                    movingFromData?.shared_service === true ||
-                    movingFromData?.shared_service == 1
-                      ? Colors.textLabelColor
-                      : '#99A0A5',
-                  fontFamily: 'Roboto-Bold',
-                  fontSize: wp(4),
-                  marginLeft: 5,
-                }}>
-                Interested in shared services?
-              </Text>
-            </View>
-            <Switch
-              onChange={(text) => handleState('shared_service', text === 1)}
-              value={
-                props.movingFrom
-                  ? destination?.meta?.shared_service || false
-                  : source?.meta?.shared_service || false
-              }
-            />
-          </View>
-        )}
         <View style={{marginHorizontal: wp(3)}}>
           <Button
             label={'NEXT'}
@@ -792,19 +745,13 @@ const MovingForm = (props) => {
           </View>
         </MapModalAndroid>
         <InformationPopUp
-          visible={liftInfo || sharedInfo}
+          visible={liftInfo}
           label={
-            liftInfo
-              ? 'Mentioning this helps us being better prepaid for your moment'
-              : 'If checked, our vendors will move your items along with other items in a shared vehicle \n\n Checking this option will effectively reduce the movement cost, else A dedicated vehicle will be used.'
+            'Mentioning this helps us being better prepaid for your moment'
           }
-          title={liftInfo ? 'service lift' : 'Shared Service'}
+          title={'service lift'}
           onCloseIcon={() => {
-            if (liftInfo) {
-              setLiftInfo(false);
-            } else {
-              setSharedInfo(false);
-            }
+            setLiftInfo(false);
           }}
         />
       </View>

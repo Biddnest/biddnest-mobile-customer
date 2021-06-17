@@ -13,6 +13,8 @@ import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash';
 import {CustomAlert} from '../../../../constant/commonFun';
+import Switch from '../../../../components/switch';
+import InformationPopUp from '../../../../components/informationPopUp';
 
 const DateOfMovement = (props) => {
   const {data, handleStateChange} = props;
@@ -21,6 +23,8 @@ const DateOfMovement = (props) => {
   const [error, setError] = useState(undefined);
   const [dateArray, setDateArray] = useState({});
   const [dateArrayDisplay, setDateArrayDisplay] = useState([]);
+  const [sharedInfo, setSharedInfo] = useState(false);
+  let source = data?.source || {};
   let date = new Date();
 
   useEffect(() => {
@@ -45,6 +49,12 @@ const DateOfMovement = (props) => {
       };
     });
     setDateArray(temp);
+  };
+
+  const handleState = (key, value) => {
+    let temp = {...source};
+    temp.meta[key] = value;
+    handleStateChange('source', temp);
   };
 
   return (
@@ -155,6 +165,55 @@ const DateOfMovement = (props) => {
             }}
           />
         </Pressable>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginHorizontal: wp(3),
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              width: wp(52),
+            }}>
+            <Pressable onPress={() => setSharedInfo(true)}>
+              <Ionicons
+                name={'information-circle'}
+                size={hp(3.5)}
+                color={'#99A0A5'}
+              />
+            </Pressable>
+            <Text
+              style={{
+                color:
+                  source?.meta?.shared_service === true ||
+                  source?.meta?.shared_service == 1
+                    ? Colors.textLabelColor
+                    : '#99A0A5',
+                fontFamily: 'Roboto-Bold',
+                fontSize: wp(4),
+                marginLeft: 5,
+              }}>
+              Interested in shared services?
+            </Text>
+          </View>
+          <Switch
+            onChange={(text) => handleState('shared_service', text === 1)}
+            value={source?.meta?.shared_service || false}
+          />
+        </View>
+        <InformationPopUp
+          visible={sharedInfo}
+          label={
+            'If checked, our vendors will move your items along with other items in a shared vehicle \n\n Checking this option will effectively reduce the movement cost, else A dedicated vehicle will be used.'
+          }
+          title={'Shared Service'}
+          onCloseIcon={() => {
+            setSharedInfo(false);
+          }}
+        />
         <CustomModalAndroid
           visible={openCalender}
           title={'Choose Date'}

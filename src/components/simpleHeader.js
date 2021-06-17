@@ -5,14 +5,12 @@ import BackArrow from '../assets/svg/back_arrow.svg';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {STYLES} from '../constant/commonStyle';
 import ChatBot from '../assets/svg/chat_bot.svg';
-import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import CustomModalAndroid from './customModal';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {Freshchat} from 'react-native-freshchat-sdk';
 
 const SimpleHeader = (props) => {
-  const navigation = useNavigation();
   const configData =
     useSelector((state) => state.Login?.configData?.contact_us?.details) || '';
   let data = JSON.parse(configData.toString());
@@ -54,7 +52,7 @@ const SimpleHeader = (props) => {
       <Pressable
         style={{...STYLES.common, width: wp(13)}}
         onPress={() => {
-          navigation.navigate('ContactUs');
+          setOpenModal(true);
         }}>
         <ChatBot width={hp(6.5)} height={hp(6.5)} />
       </Pressable>
