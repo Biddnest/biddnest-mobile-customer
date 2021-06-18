@@ -83,7 +83,9 @@ const SimpleHeader = (props) => {
             <Pressable
               onPress={() => {
                 setOpenModal(false);
-                Freshchat.showConversations();
+                setTimeout(() => {
+                  Freshchat.showConversations();
+                }, 500);
               }}
               style={[STYLES.selectionView, STYLES.common]}>
               <Entypo name={'chat'} color={Colors.darkBlue} size={hp(6)} />

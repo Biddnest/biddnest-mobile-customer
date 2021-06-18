@@ -138,7 +138,9 @@ export const HomeHeader = (props) => {
               rippleColor={Colors.darkBlue}
               onPress={() => {
                 setOpenModal(false);
-                Freshchat.showConversations();
+                setTimeout(() => {
+                  Freshchat.showConversations();
+                }, 500);
               }}
               style={[STYLES.selectionView, STYLES.common]}>
               <Entypo name={'chat'} color={Colors.darkBlue} size={hp(6)} />
