@@ -296,7 +296,8 @@ const RequirementDetails = (props) => {
             flexDirection: 'row',
             alignItems: 'center',
             marginBottom: hp(1.5),
-            padding: wp(2),
+            paddingHorizontal: wp(2),
+            paddingVertical: wp(1.5),
             borderRadius: hp(1),
             marginRight: hp(1.3),
           }}>
@@ -360,7 +361,7 @@ const RequirementDetails = (props) => {
             style={{
               fontFamily: 'Gilroy-SemiBold',
               color: Colors.inputTextColor,
-              fontSize: wp(3.8),
+              fontSize: wp(3.2),
             }}>
             {configData?.inventory_quantity_type.range ===
             movementType?.inventory_quantity_type
@@ -375,7 +376,7 @@ const RequirementDetails = (props) => {
                 style={{
                   fontFamily: 'Roboto-Regular',
                   color: Colors.inputTextColor,
-                  fontSize: wp(3.5),
+                  fontSize: wp(3),
                   textTransform: 'capitalize',
                 }}>
                 {item?.material}, {item?.size}
