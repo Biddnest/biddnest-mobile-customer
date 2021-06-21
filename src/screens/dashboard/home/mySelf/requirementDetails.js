@@ -316,7 +316,7 @@ const RequirementDetails = (props) => {
               style={{
                 fontFamily: 'Gilroy-SemiBold',
                 color: Colors.inputTextColor,
-                fontSize: wp(4.5),
+                fontSize: wp(4),
               }}>
               {'Add More'}
             </Text>
@@ -360,7 +360,7 @@ const RequirementDetails = (props) => {
             style={{
               fontFamily: 'Gilroy-SemiBold',
               color: Colors.inputTextColor,
-              fontSize: wp(4.5),
+              fontSize: wp(3.8),
             }}>
             {configData?.inventory_quantity_type.range ===
             movementType?.inventory_quantity_type
