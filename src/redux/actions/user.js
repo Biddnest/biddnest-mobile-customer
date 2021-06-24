@@ -39,7 +39,7 @@ export const APICall = (obj) => {
           err?.response?.status === 504
         ) {
           alert(
-            'We are unable to connect. Please make sure you are connected to the internet.',
+            'Something went wrong, Could not proceed with your request!, Please try again later',
           );
         } else if (err?.response) {
           reject(err.response);
