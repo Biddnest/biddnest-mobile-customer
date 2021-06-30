@@ -246,12 +246,12 @@ const InitialQuote = (props) => {
               {[
                 {
                   title: 'ECONOMY',
-                  price: estimation?.economic?.toFixed(2),
+                  price: parseFloat(estimation?.economic).toFixed(2),
                   desc: 'Economy services includes moving only',
                 },
                 {
                   title: 'PREMIUM',
-                  price: estimation?.premium?.toFixed(2),
+                  price: parseFloat(estimation?.premium).toFixed(2),
                   desc: 'Premium services includes Packing and Moving',
                 },
               ].map((item, index) => {
