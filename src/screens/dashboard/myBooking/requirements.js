@@ -102,7 +102,12 @@ const Requirements = (props) => {
             <View style={[STYLES.flexBox, {marginTop: 0}]}>
               <Text style={STYLES.leftText}>movement type</Text>
               <Text style={STYLES.rightText}>
-                {source_meta?.shared_service ? 'Shared' : 'Dedicated'}
+                {source_meta?.shared_service == true ||
+                source_meta?.shared_service == 'true' ||
+                source_meta?.shared_service == 1 ||
+                source_meta?.shared_service == '1'
+                  ? 'Shared'
+                  : 'Dedicated'}
               </Text>
             </View>
             <View style={STYLES.flexBox}>
