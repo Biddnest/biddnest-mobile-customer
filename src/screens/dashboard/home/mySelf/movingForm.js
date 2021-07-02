@@ -13,6 +13,7 @@ import {
   wp,
   boxShadow,
   MapConstantDelta,
+  GoogleMapKey,
 } from '../../../../constant/colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import TextInput from '../../../../components/textInput';
@@ -126,10 +127,11 @@ const MovingForm = (props) => {
     });
     setPanding(false);
     fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${regionData.latitude},${regionData.longitude}&key=AIzaSyCvVaeoUidYMQ8cdIJ_cEvrZNJeBeMpC-4`,
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${regionData.latitude},${regionData.longitude}&key=${GoogleMapKey}`,
     )
       .then((response) => response.json())
       .then((responseJson) => {
+        console.log(responseJson);
         let temp = JSON.parse(JSON.stringify(responseJson));
         if (temp?.results && temp?.results?.length > 0) {
           googlePlaceRef?.current?.setAddressText(
@@ -621,7 +623,7 @@ const MovingForm = (props) => {
               currentLocation={true}
               currentLocationLabel={'Current Location'}
               query={{
-                key: 'AIzaSyCvVaeoUidYMQ8cdIJ_cEvrZNJeBeMpC-4',
+                key: GoogleMapKey,
                 language: 'en',
               }}
               styles={{

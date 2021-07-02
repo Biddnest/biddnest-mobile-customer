@@ -1,20 +1,16 @@
+import React from 'react';
+import {Image} from 'react-native';
 import {
   widthPercentageToDP,
   heightPercentageToDP,
 } from 'react-native-responsive-screen';
-import {Image} from 'react-native';
-import React from 'react';
-import Delivery from '../assets/svg/delivery.svg';
-import Packaging from '../assets/svg/packaging.svg';
-import Vendor from '../assets/svg/vendor.svg';
-import Bidding from '../assets/svg/bidding.svg';
-import Safety from '../assets/svg/safety.svg';
-import Pricing from '../assets/svg/pricing.svg';
 import CreditCard from '../assets/svg/credit_card.svg';
 import DebitCard from '../assets/svg/debit_card.svg';
 import NetBanking from '../assets/svg/netbanking.svg';
 
 export const MapConstantDelta = 0.01;
+
+export const GoogleMapKey = 'AIzaSyA1ML4vr8f_MlPZ19y8Gl79km4R1sGpLKo';
 
 export const Colors = {
   white: '#FFFFFF',
