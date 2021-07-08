@@ -28,6 +28,7 @@ import {
 import moment from 'moment';
 import {useSelector} from 'react-redux';
 import MapPin from '../../../assets/svg/map_pin.svg';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const ContactUs = (props) => {
   const [recentTicket, setRecentTicket] = useState([]);
@@ -303,7 +304,12 @@ const ContactUs = (props) => {
                     </Text>
                   </View>
                 </View>
-                <View
+                <Pressable
+                  onPress={() =>
+                    props.navigation.navigate('OrderTracking', {
+                      orderData: recentOrder,
+                    })
+                  }
                   style={{
                     height: hp(7),
                     width: hp(7),
@@ -312,12 +318,12 @@ const ContactUs = (props) => {
                     alignSelf: 'center',
                     ...STYLES.common,
                   }}>
-                  <Ionicons
-                    name={'call'}
+                  <AntDesign
+                    name={'link'}
                     color={Colors.darkBlue}
                     size={wp(5)}
                   />
-                </View>
+                </Pressable>
               </View>
             </View>
           </View>
@@ -399,24 +405,26 @@ const ContactUs = (props) => {
             </Pressable>
           </View>
         </View>
-        {recentTicket.length > 0 && (
-          <View style={styles.inputForm}>
-            <Text style={styles.headerText}>RECENT TICKETS</Text>
-            <View style={styles.separatorView} />
-            <View>
-              <FlatList
-                keyExtractor={(item, index) => index.toString()}
-                bounces={false}
-                showsVerticalScrollIndicator={false}
-                data={recentTicket || []}
-                renderItem={renderItem}
-                ItemSeparatorComponent={() => (
-                  <View style={styles.separatorView} />
-                )}
-              />
+        {recentTicket.length > 0 &&
+          recentTicket?.status > 4 &&
+          recentTicket?.status < 8 && (
+            <View style={styles.inputForm}>
+              <Text style={styles.headerText}>RECENT TICKETS</Text>
+              <View style={styles.separatorView} />
+              <View>
+                <FlatList
+                  keyExtractor={(item, index) => index.toString()}
+                  bounces={false}
+                  showsVerticalScrollIndicator={false}
+                  data={recentTicket || []}
+                  renderItem={renderItem}
+                  ItemSeparatorComponent={() => (
+                    <View style={styles.separatorView} />
+                  )}
+                />
+              </View>
             </View>
-          </View>
-        )}
+          )}
       </ScrollView>
       <View style={{alignSelf: 'center'}}>
         <Button

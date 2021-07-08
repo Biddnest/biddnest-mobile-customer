@@ -387,14 +387,28 @@ const RequirementDetails = (props) => {
       </View>
     );
   };
+  const arrayUnique = (array) => {
+    let a = array.concat();
+    for (let i = 0; i < a.length; ++i) {
+      for (let j = i + 1; j < a.length; ++j) {
+        if (a[i] === a[j]) {
+          a.splice(j--, 1);
+        }
+      }
+    }
+    return a;
+  };
+
   const setImage = (type) => {
+    let imageData = [...data?.meta?.images];
     ImageSelection(type, true)
       .then((res) => {
-        handleState('images', res);
+        let array3 = arrayUnique(imageData.concat(res));
+        handleState('images', array3);
       })
       .catch((err) => {});
   };
-  let imageData = [...data?.meta?.images];
+  let imageData = arrayUnique([...data?.meta?.images]);
   imageData.push('Plus');
   return (
     <ScrollView showsVerticalScrollIndicator={false} bounces={false}>

@@ -237,7 +237,7 @@ const DateOfMovement = (props) => {
                     let a = moment(Object.keys(temp)[0]);
                     let b = moment(day.dateString);
                     let dateDifference = b.diff(a, 'days');
-                    if (Math.abs(dateDifference) < 5) {
+                    if (Math.abs(dateDifference) < 15) {
                       let ary = new Array(Math.abs(dateDifference)).fill('');
                       ary.forEach((item, index) => {
                         if (Math.sign(dateDifference) === -1) {
@@ -304,13 +304,32 @@ const DateOfMovement = (props) => {
                 },
                 ['asc'],
               );
-              handleStateChange('movement_dates', t);
-              let temp = [];
-              t.forEach((item) => {
-                temp.push(moment(item).format('Do MMM'));
-              });
-              setDateArrayDisplay(temp);
-              setCalender(false);
+              if (t.length <= 5) {
+                handleStateChange('movement_dates', t);
+                let temp = [];
+                t.forEach((item) => {
+                  temp.push(moment(item).format('Do MMM'));
+                });
+                setDateArrayDisplay(temp);
+                setCalender(false);
+              } else {
+                let aryLength = t.length;
+                let dateDifference = moment(t[aryLength - 1]).diff(
+                  moment(t[0]),
+                  'days',
+                );
+                if (aryLength === dateDifference + 1) {
+                  handleStateChange('movement_dates', t);
+                  let temp = [];
+                  t.forEach((item) => {
+                    temp.push(moment(item).format('Do MMM'));
+                  });
+                  setDateArrayDisplay(temp);
+                  setCalender(false);
+                } else {
+                  CustomAlert('You can select maximum 5 dates');
+                }
+              }
             }}
           />
         </CustomModalAndroid>
