@@ -102,30 +102,6 @@ const RequirementDetails = (props) => {
       delete temp.icon;
       inv[index] = temp;
     });
-    // if (inv.findIndex((item) => item.id === 'select') === -1 && isAndroid) {
-    //   inv.unshift({
-    //     label: '-Select-',
-    //     value: null,
-    //     category: '',
-    //     id: 'select',
-    //     image:
-    //       'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
-    //     material: '["wood","plastic","steel","fibre","glass"]',
-    //     name: '-Select-',
-    //     size: '["small","medium","large"]',
-    //   });
-    //   inv.push({
-    //     label: '-Other-',
-    //     value: 'other',
-    //     category: '',
-    //     id: null,
-    //     image:
-    //       'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
-    //     material: '["wood","plastic","steel","fibre","glass"]',
-    //     name: '-Other-',
-    //     size: '["small","medium","large"]',
-    //   });
-    // }
     if (JSON.stringify(inv) !== JSON.stringify(defaultInventories)) {
       setDefaultInventories(inv);
       if (inv.length > 0) {
@@ -195,6 +171,7 @@ const RequirementDetails = (props) => {
                     : parseInt(item?.quantity),
                 name: item?.meta?.name,
                 image: item?.meta?.image,
+                meta: item?.meta,
               });
             });
             setDefaultInventoryStore(temp);
@@ -229,7 +206,7 @@ const RequirementDetails = (props) => {
         if (res?.data?.status === 'success') {
           if (res?.data?.data?.subservices.length > 0) {
             let temp = res?.data?.data?.subservices[0];
-            if (!selectedSubCategory) {
+            if (Object.keys(selectedSubCategory).length === 0) {
               handleSelectedSubCategory(temp);
               getInventories(temp.id);
               handleState('subcategory', temp.name);
@@ -339,17 +316,40 @@ const RequirementDetails = (props) => {
         }}>
         <Pressable
           onPress={() => {
-            setEditData(item);
+            let materialAry = JSON.parse(item?.meta?.material.toString());
+            let sizeAry = JSON.parse(item?.meta?.size.toString());
+            let finalMaterialAry = [];
+            let finalSizeAry = [];
+            materialAry.forEach((i) =>
+              finalMaterialAry.push({
+                value: i,
+                label: i,
+              }),
+            );
+            sizeAry.forEach((i) =>
+              finalSizeAry.push({
+                value: i,
+                label: i,
+              }),
+            );
+            setEditData({
+              ...item,
+              defaultMaterial: finalMaterialAry,
+              defaultSize: finalSizeAry,
+            });
             setConfirmationModalVisible(false);
             setEditItem(true);
           }}
           style={{
-            ...styles.backgroundCircle,
+            height: hp(4),
+            width: hp(4),
+            borderRadius: hp(2),
+            backgroundColor: Colors.white,
             ...STYLES.common,
           }}>
           <SimpleLineIcons
             name={'pencil'}
-            size={hp(2.5)}
+            size={hp(2)}
             color={Colors.darkBlue}
           />
         </Pressable>
@@ -738,7 +738,11 @@ const RequirementDetails = (props) => {
               width={wp(45)}
               value={editItem ? editData?.material : addData?.material}
               label={'Material/Variant *'}
-              items={selectedInventory?.material}
+              items={
+                editItem
+                  ? editData?.defaultMaterial
+                  : selectedInventory?.material
+              }
               onChangeItem={(text) => {
                 if (editItem) {
                   setEditData({...editData, material: text});
@@ -768,7 +772,7 @@ const RequirementDetails = (props) => {
               width={wp(45)}
               value={editItem ? editData?.size : addData?.size}
               label={'Size *'}
-              items={selectedInventory?.size}
+              items={editItem ? editData?.defaultSize : selectedInventory?.size}
               onChangeItem={(text) => {
                 if (editItem) {
                   setEditData({...editData, size: text});
@@ -970,7 +974,6 @@ const RequirementDetails = (props) => {
                     let index = temp.findIndex(
                       (ele) => ele.inventory_id === editData.inventory_id,
                     );
-                    console.log(index);
                     if (
                       configData?.inventory_quantity_type.range !==
                       movementType?.inventory_quantity_type
@@ -1203,6 +1206,7 @@ const RequirementDetails = (props) => {
                             : parseInt(item?.quantity),
                         name: item?.meta?.name,
                         image: item?.meta?.image,
+                        meta: item?.meta,
                       });
                     });
                     let temp2 = [...t, ...temp];
@@ -1282,6 +1286,10 @@ const RequirementDetails = (props) => {
               }
             });
             temp.inventory_items = t2;
+            temp.meta.subcategory =
+              Object.keys(selectedSubCategory).length > 0
+                ? selectedSubCategory?.name
+                : null;
             let obj = {
               url: 'bookings/enquiry',
               method: 'post',
