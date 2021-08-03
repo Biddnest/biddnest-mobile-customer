@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import SimpleHeader from '../../../components/simpleHeader';
 import {
@@ -20,23 +20,63 @@ const RaiseTicket = (props) => {
   const configData =
     useSelector((state) => state.Login?.configData?.enums?.ticket?.type) || {};
   const [isLoading, setLoading] = useState(false);
+  const [bookingList, setBookingList] = useState([]);
   const [data, setData] = useState({
+    public_booking_id: '',
     category: '',
     heading: '',
     desc: '',
   });
   const [error, setError] = useState({
+    public_booking_id: undefined,
     category: undefined,
     heading: undefined,
     desc: undefined,
   });
   let dropdownDefault = [];
+  useEffect(() => {
+    if (!public_booking_id) {
+      let obj = {
+        url: 'tickets/bookings',
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+      };
+      APICall(obj)
+        .then((res) => {
+          setLoading(false);
+          if (res?.data?.status === 'success') {
+            let temp = [];
+            res?.data?.data?.bookings.forEach((item) => {
+              temp.push({
+                label: item?.public_booking_id,
+                value: item?.public_booking_id,
+              });
+            });
+            setBookingList(temp);
+          } else {
+            CustomAlert(res?.data?.message);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          CustomConsole(err);
+        });
+    }
+  }, []);
   Object.keys(configData).forEach((item, index) => {
     dropdownDefault.push({
       label: item.split('_').join(' '),
       value: Object.values(configData)[index],
     });
   });
+  if (bookingList.findIndex((item) => item.value === null) === -1) {
+    bookingList.unshift({
+      label: '-Select-',
+      value: null,
+    });
+  }
   if (dropdownDefault.findIndex((item) => item.value === null) === -1) {
     dropdownDefault.unshift({
       label: '-Select-',
@@ -54,6 +94,20 @@ const RaiseTicket = (props) => {
       <LinearGradient
         colors={[Colors.pageBG, Colors.white]}
         style={{flex: 1, padding: wp(5), alignItems: 'center'}}>
+        {!public_booking_id && (
+          <SelectionModalAndroid
+            style={{
+              marginBottom: hp(3),
+              borderColor:
+                error?.public_booking_id === false ? 'red' : Colors.silver,
+            }}
+            width={wp(90)}
+            value={data?.public_booking_id}
+            label={'Choose Booking *'}
+            items={bookingList}
+            onChangeItem={(text) => setData({...data, public_booking_id: text})}
+          />
+        )}
         <SelectionModalAndroid
           style={{
             marginBottom: hp(3),
@@ -97,6 +151,9 @@ const RaiseTicket = (props) => {
           onPress={() => {
             setLoading(true);
             let tempError = {};
+            if (!public_booking_id) {
+              tempError.public_booking_id = !!(data?.public_booking_id !== '');
+            }
             tempError.category = !!(data?.category !== '');
             tempError.heading = !(!data?.heading || data?.heading.length < 6);
             tempError.desc = !(!data?.desc || data?.desc.length < 15);
@@ -114,7 +171,9 @@ const RaiseTicket = (props) => {
                 },
                 data: {
                   ...data,
-                  public_booking_id: public_booking_id,
+                  public_booking_id: public_booking_id
+                    ? public_booking_id
+                    : data?.public_booking_id,
                 },
               };
               APICall(obj)
