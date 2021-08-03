@@ -21,7 +21,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Switch from '../../../../components/switch';
 import Button from '../../../../components/button';
 import MapModalAndroid from '../../../../components/mapModal';
-import MapView, {PROVIDER_GOOGLE, PROVIDER_DEFAULT} from 'react-native-maps';
+import MapView, {
+  PROVIDER_GOOGLE,
+  PROVIDER_DEFAULT,
+  Marker,
+} from 'react-native-maps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CloseIcon from '../../../../components/closeIcon';
 import FlatButton from '../../../../components/flatButton';
@@ -73,6 +77,10 @@ const MovingForm = (props) => {
     latitudeDelta: MapConstantDelta,
     longitudeDelta: MapConstantDelta,
   });
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: 21.1702,
+    longitude: 72.8311,
+  });
   const zones = useSelector((state) => state.Login?.zones) || [];
   const scrollViewRef = useRef(null);
   const [address, setAddress] = useState('');
@@ -95,6 +103,10 @@ const MovingForm = (props) => {
     getLocation()
       .then((res) => {
         fetchLocationString(res);
+        setCurrentLocation({
+          latitude: res?.latitude,
+          longitude: res?.longitude,
+        });
       })
       .catch((err) => {
         CustomAlert(err);
@@ -131,7 +143,6 @@ const MovingForm = (props) => {
     )
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson);
         let temp = JSON.parse(JSON.stringify(responseJson));
         if (temp?.results && temp?.results?.length > 0) {
           googlePlaceRef?.current?.setAddressText(
@@ -534,12 +545,12 @@ const MovingForm = (props) => {
                 latitudeDelta: MapConstantDelta,
                 longitudeDelta: MapConstantDelta,
               }}>
-              {/*<Marker*/}
-              {/*  coordinate={{*/}
-              {/*    latitude: region.latitude,*/}
-              {/*    longitude: region.longitude,*/}
-              {/*  }}*/}
-              {/*/>*/}
+              <Marker
+                coordinate={{
+                  latitude: currentLocation.latitude,
+                  longitude: currentLocation.longitude,
+                }}
+              />
               {!props.movingFrom &&
                 zones.map((item, index) => {
                   return (
