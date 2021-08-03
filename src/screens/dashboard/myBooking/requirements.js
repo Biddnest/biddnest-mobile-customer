@@ -122,10 +122,22 @@ const Requirements = (props) => {
             </View>
             <View style={STYLES.flexBox}>
               <Text style={STYLES.leftText}>category</Text>
-              <Text style={[STYLES.rightText, {marginBottom: hp(2)}]}>
+              <Text
+                style={[
+                  STYLES.rightText,
+                  {marginBottom: meta?.subcategory ? 0 : hp(2)},
+                ]}>
                 {orderDetails?.service?.name}
               </Text>
             </View>
+            {meta?.subcategory && (
+              <View style={STYLES.flexBox}>
+                <Text style={STYLES.leftText}>sub category</Text>
+                <Text style={[STYLES.rightText, {marginBottom: hp(2)}]}>
+                  {meta?.subcategory}
+                </Text>
+              </View>
+            )}
           </View>
           <View style={[STYLES.inputForm, {marginTop: 0}]}>
             <Text
