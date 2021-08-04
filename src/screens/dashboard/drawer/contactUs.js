@@ -405,26 +405,26 @@ const ContactUs = (props) => {
             </Pressable>
           </View>
         </View>
-        {recentTicket.length > 0 &&
-          recentTicket?.status > 4 &&
-          recentTicket?.status < 8 && (
-            <View style={styles.inputForm}>
-              <Text style={styles.headerText}>RECENT TICKETS</Text>
-              <View style={styles.separatorView} />
-              <View>
-                <FlatList
-                  keyExtractor={(item, index) => index.toString()}
-                  bounces={false}
-                  showsVerticalScrollIndicator={false}
-                  data={recentTicket || []}
-                  renderItem={renderItem}
-                  ItemSeparatorComponent={() => (
-                    <View style={styles.separatorView} />
-                  )}
-                />
-              </View>
+        {recentTicket.length > 0 && (
+          // recentTicket?.status > 4 &&
+          // recentTicket?.status < 8 &&
+          <View style={styles.inputForm}>
+            <Text style={styles.headerText}>RECENT TICKETS</Text>
+            <View style={styles.separatorView} />
+            <View>
+              <FlatList
+                keyExtractor={(item, index) => index.toString()}
+                bounces={false}
+                showsVerticalScrollIndicator={false}
+                data={recentTicket || []}
+                renderItem={renderItem}
+                ItemSeparatorComponent={() => (
+                  <View style={styles.separatorView} />
+                )}
+              />
             </View>
-          )}
+          </View>
+        )}
       </ScrollView>
       <View style={{alignSelf: 'center'}}>
         <Button
