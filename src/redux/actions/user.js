@@ -18,6 +18,7 @@ import {CustomAlert} from '../../constant/commonFun';
 import {STORE} from '../index';
 import {CommonActions} from '@react-navigation/native';
 import {navigationRef} from '../../navigation/RootNavigation';
+import {isTablet} from 'react-native-device-info';
 
 export const APICall = (obj) => {
   return new Promise((resolve, reject) => {
@@ -220,7 +221,9 @@ export const getSlider = (data) => {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
       let obj = {
-        url: `sliders?lat=${data.latitude}&lng=${data.longitude}`,
+        url: `sliders/${isTablet() ? 'tab' : 'app'}?lat=${data.latitude}&lng=${
+          data.longitude
+        }`,
         method: 'get',
         headers: {
           Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
