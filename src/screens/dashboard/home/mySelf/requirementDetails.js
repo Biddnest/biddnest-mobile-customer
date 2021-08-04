@@ -316,22 +316,24 @@ const RequirementDetails = (props) => {
         }}>
         <Pressable
           onPress={() => {
-            let materialAry = JSON.parse(item?.meta?.material.toString());
-            let sizeAry = JSON.parse(item?.meta?.size.toString());
             let finalMaterialAry = [];
             let finalSizeAry = [];
-            materialAry.forEach((i) =>
-              finalMaterialAry.push({
-                value: i,
-                label: i,
-              }),
-            );
-            sizeAry.forEach((i) =>
-              finalSizeAry.push({
-                value: i,
-                label: i,
-              }),
-            );
+            if (item?.meta?.material) {
+              let materialAry = JSON.parse(item?.meta?.material.toString());
+              let sizeAry = JSON.parse(item?.meta?.size.toString());
+              materialAry.forEach((i) =>
+                finalMaterialAry.push({
+                  value: i,
+                  label: i,
+                }),
+              );
+              sizeAry.forEach((i) =>
+                finalSizeAry.push({
+                  value: i,
+                  label: i,
+                }),
+              );
+            }
             setEditData({
               ...item,
               defaultMaterial: finalMaterialAry,
@@ -740,7 +742,9 @@ const RequirementDetails = (props) => {
               label={'Material/Variant *'}
               items={
                 editItem
-                  ? editData?.defaultMaterial
+                  ? editData?.defaultMaterial?.length > 0
+                    ? editData?.defaultMaterial
+                    : selectedInventory?.material
                   : selectedInventory?.material
               }
               onChangeItem={(text) => {
@@ -772,7 +776,13 @@ const RequirementDetails = (props) => {
               width={wp(45)}
               value={editItem ? editData?.size : addData?.size}
               label={'Size *'}
-              items={editItem ? editData?.defaultSize : selectedInventory?.size}
+              items={
+                editItem
+                  ? editData?.defaultSize?.length > 0
+                    ? editData?.defaultSize
+                    : selectedInventory?.size
+                  : selectedInventory?.size
+              }
               onChangeItem={(text) => {
                 if (editItem) {
                   setEditData({...editData, size: text});
