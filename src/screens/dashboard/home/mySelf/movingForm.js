@@ -235,7 +235,7 @@ const MovingForm = (props) => {
           <TextInput
             disable={true}
             selection={{start: 0}}
-            label={props.movingFrom ? 'Drop Location *' : 'Pickup Location *'}
+            label={props.movingFrom ? 'To *' : 'From *'}
             isRight={error?.geocode}
             value={
               props.movingFrom
@@ -299,7 +299,7 @@ const MovingForm = (props) => {
           onChange={(text) => handleState('state', text)}
         />
         <TextInput
-          label={'Pincode *'}
+          label={'Pin code *'}
           isRight={error.pincode}
           keyboard={'decimal-pad'}
           value={

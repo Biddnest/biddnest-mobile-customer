@@ -95,7 +95,7 @@ const BookingStepper = (props) => {
     movement_dates: [],
     inventory_items: [],
   });
-  const [selectedSubCategory, setSelectedSubCategory] = useState(null);
+  const [selectedSubCategory, setSelectedSubCategory] = useState({});
   const [apiResponse, setApiResponse] = useState({});
   const [confirmationVisible, setConfirmationVisible] = useState(false);
   useEffect(() => {

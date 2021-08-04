@@ -73,7 +73,7 @@ const DateOfMovement = (props) => {
           }}>
           DATE OF MOVEMENT
         </Text>
-        <View style={{marginTop: hp(3)}}>
+        <View style={{marginTop: hp(3), width: '90%', alignSelf: 'center'}}>
           <Text
             style={{
               fontFamily: 'Roboto-Italic',

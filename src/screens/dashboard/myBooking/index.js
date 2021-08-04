@@ -5,12 +5,13 @@ import {HomeHeader} from '../home';
 import {STYLES} from '../../../constant/commonStyle';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
+import CountDown from '../../../components/countDown';
 import {
   getEnquiryOrders,
   getLiveOrders,
   getPastOrders,
 } from '../../../redux/actions/user';
-import {CustomAlert, CustomConsole} from '../../../constant/commonFun';
+import {CustomAlert, CustomConsole, DiffMin} from '../../../constant/commonFun';
 import moment from 'moment';
 import MapPin from '../../../assets/svg/map_pin.svg';
 import Ripple from 'react-native-material-ripple';
@@ -223,6 +224,43 @@ const MyBooking = (props) => {
               : item?.public_enquiry_id}
           </Text>
         </View>
+        {selectedTab === 0 && (item.status === 3 || item.status === 2) && (
+          <View>
+            <View
+              style={[
+                styles.separatorView,
+                {
+                  marginBottom: hp(2),
+                },
+              ]}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+              <View style={STYLES.priceView}>
+                <Text style={STYLES.participatedText}>
+                  ₹ {item?.final_estimated_quote}
+                </Text>
+              </View>
+              <View style={[STYLES.priceView, {width: '40%'}]}>
+                <CountDown
+                  key={new Date()}
+                  until={DiffMin(item?.bid_result_at)}
+                  // onFinish={() => fetchOrderData()}
+                  digitStyle={{height: '100%'}}
+                  digitTxtStyle={STYLES.participatedText}
+                  separatorStyle={{color: '#000'}}
+                  timeToShow={['H', 'M', 'S']}
+                  timeLabels={{h: null, m: null, s: null}}
+                  showSeparator
+                />
+              </View>
+            </View>
+          </View>
+        )}
         <View
           style={[
             styles.separatorView,

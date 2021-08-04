@@ -40,12 +40,12 @@ export function DrawerContent(props) {
           <MaterialCommunityIcons
             name={item.icon}
             color={Colors.darkBlue}
-            size={wp(6)}
+            size={wp(7)}
           />
         );
       case 'Feather':
         return (
-          <Feather name={item.icon} color={Colors.darkBlue} size={wp(6)} />
+          <Feather name={item.icon} color={Colors.darkBlue} size={wp(7)} />
         );
       case 'AntDesign':
         return (

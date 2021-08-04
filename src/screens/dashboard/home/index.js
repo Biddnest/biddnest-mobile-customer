@@ -957,7 +957,7 @@ const Home = (props) => {
               onPress={() => setBookingFor('Myself')}>
               <MySelf width={hp(8)} height={hp(8)} />
             </Ripple>
-            <Text style={styles.selectionText}>Myself</Text>
+            <Text style={styles.selectionText}>MYSELF</Text>
           </View>
           <View style={styles.common}>
             <Ripple
@@ -974,7 +974,7 @@ const Home = (props) => {
               ]}>
               <Friends width={hp(8)} height={hp(8)} />
             </Ripple>
-            <Text style={styles.selectionText}>Somebody Else</Text>
+            <Text style={styles.selectionText}>MY COMPANION</Text>
           </View>
         </View>
         <Pressable

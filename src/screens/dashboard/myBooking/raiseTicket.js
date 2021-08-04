@@ -152,7 +152,10 @@ const RaiseTicket = (props) => {
             setLoading(true);
             let tempError = {};
             if (!public_booking_id) {
-              tempError.public_booking_id = !!(data?.public_booking_id !== '');
+              tempError.public_booking_id = !!(
+                data?.public_booking_id !== '' &&
+                data?.public_booking_id != null
+              );
             }
             tempError.category = !!(data?.category !== '');
             tempError.heading = !(!data?.heading || data?.heading.length < 6);

@@ -63,7 +63,7 @@ export const STYLES = {
     borderRadius: wp(6),
     backgroundColor: Colors.pageBG,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   separatorView: {
     borderWidth: 0.8,
@@ -115,5 +115,18 @@ export const STYLES = {
     fontSize: wp(4),
     color: '#3B4B58',
     marginTop: hp(1),
+  },
+  participatedText: {
+    color: Colors.darkBlue,
+    fontSize: hp(2.8),
+    fontFamily: 'Gilroy-SemiBold',
+  },
+  priceView: {
+    backgroundColor: Colors.pageBG,
+    width: '45%',
+    height: hp(5),
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 };
