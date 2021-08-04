@@ -21,10 +21,13 @@ import {STORE} from '../../../../redux';
 import {APICall} from '../../../../redux/actions/user';
 import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useSelector} from 'react-redux';
 
 const Timer = (props) => {
   const [orderPlacedVisible, setOrderPlacedVisible] = useState(false);
   const [orderDetails, setOrderDetails] = useState({});
+  const configData =
+    useSelector((state) => state.Login?.configData?.timer) || {};
   const [time, setTime] = useState(
     DiffMin(props?.apiResponse?.bid_result_at) || 0,
   );
@@ -88,7 +91,11 @@ const Timer = (props) => {
               key={new Date()}
               size={hp(25)}
               isPlaying
-              duration={300}
+              duration={
+                orderDetails?.status === 2
+                  ? configData?.bid_time
+                  : configData?.rebid_time
+              }
               initialRemainingTime={time}
               children={children}
               colors={[[Colors.darkBlue, 0.4]]}

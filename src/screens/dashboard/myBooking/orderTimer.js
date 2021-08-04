@@ -41,11 +41,14 @@ import MapModalAndroid from '../../../components/mapModal';
 import CloseIcon from '../../../components/closeIcon';
 import FlatButton from '../../../components/flatButton';
 import Ripple from 'react-native-material-ripple';
+import {useSelector} from 'react-redux';
 
 const OrderTimer = (props) => {
   const [orderDetails, setOrderDetails] = useState(
     props?.route?.params?.orderData || {},
   );
+  const configData =
+    useSelector((state) => state.Login?.configData?.timer) || {};
   const [timeOver, setTimeOver] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [tab, setTab] = useState([
@@ -383,7 +386,11 @@ const OrderTimer = (props) => {
                       setTimeOver(true);
                     }}
                     isPlaying
-                    duration={300}
+                    duration={
+                      orderDetails?.status === 2
+                        ? configData?.bid_time
+                        : configData?.rebid_time
+                    }
                     initialRemainingTime={DiffMin(orderDetails?.bid_result_at)}
                     children={children}
                     colors={[[Colors.darkBlue, 0.4]]}
