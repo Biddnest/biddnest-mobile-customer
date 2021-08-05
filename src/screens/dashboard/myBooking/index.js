@@ -209,7 +209,7 @@ const MyBooking = (props) => {
                 overflow: 'hidden',
               },
             ]}>
-            {status}
+            {status === 'cancelrequest' ? 'Request To Cancel' : status}
           </Text>
           <Text
             style={{
