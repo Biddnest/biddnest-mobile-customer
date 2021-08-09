@@ -180,7 +180,6 @@ const ContactUs = (props) => {
                   : ticketStatus?.resolved === item?.status
                   ? Colors.lightGreen
                   : Colors.error,
-              height: hp(3.5),
               borderRadius: hp(2),
               paddingHorizontal: wp(3),
               paddingVertical: hp(1),

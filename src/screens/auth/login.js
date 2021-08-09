@@ -300,6 +300,7 @@ const Login = (props) => {
                       digitTxtStyle={{
                         fontFamily: 'Roboto-Bold',
                         color: Colors.textLabelColor,
+                        fontSize: hp(2.5),
                       }}
                       separatorStyle={{color: '#000'}}
                       timeToShow={['M', 'S']}

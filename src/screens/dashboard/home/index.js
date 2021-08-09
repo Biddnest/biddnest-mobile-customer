@@ -167,6 +167,7 @@ const Home = (props) => {
   const [sliderData, setSliderData] = useState(
     useSelector((state) => state.Login?.sliderData?.sliders) || [],
   );
+  const [sliderLoader, setSliderLoader] = useState(true);
   const [testimonialData, setTestimonialData] = useState(
     useSelector((state) => state.Login?.testimonials?.testimonials) || [],
   );
@@ -262,6 +263,7 @@ const Home = (props) => {
 
   useEffect(() => {
     if (isFocused && userData?.fname) {
+      setSliderLoader(true);
       let obj = {
         url: 'auth/verify',
         method: 'get',
@@ -299,6 +301,7 @@ const Home = (props) => {
             .then((res) => {
               if (res.status === 'success' && res?.data) {
                 setSliderData(res?.data?.sliders);
+                setSliderLoader(false);
               } else {
                 CustomAlert(res.message);
               }
@@ -440,7 +443,7 @@ const Home = (props) => {
         showsVerticalScrollIndicator={false}
         bounces={false}>
         {/*<LocationDistance inTransit={true} />*/}
-        {sliderData.length === 0 && (
+        {sliderLoader && (
           <Shimmer
             style={{
               height: hp(18),

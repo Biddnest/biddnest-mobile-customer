@@ -6,10 +6,7 @@ import Header from './header';
 import TextInput from '../../components/textInput';
 import Button from '../../components/button';
 import CheckBox from '../../components/checkBox';
-import {
-  CustomAlert,
-  resetNavigator,
-} from '../../constant/commonFun';
+import {CustomAlert, resetNavigator} from '../../constant/commonFun';
 import LinearGradient from 'react-native-linear-gradient';
 import {signUP} from '../../redux/actions/user';
 import {useDispatch, useSelector} from 'react-redux';
@@ -52,22 +49,22 @@ const Signup = (props) => {
     });
   }
   return (
-    <View style={[styles.container, {...styles.common}]}>
-      <Header />
-      <LinearGradient
-        colors={[Colors.darkBlue, '#333092']}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 0}}
-        style={{
-          height: hp(70),
-          width: wp(100),
-        }}>
-        <KeyboardAwareScrollView
-          enableOnAndroid={false}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            flex: 1,
+    <KeyboardAwareScrollView
+      enableOnAndroid={false}
+      keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{
+        flex: 1,
+      }}>
+      <View style={[styles.container, {...styles.common}]}>
+        <Header />
+        <LinearGradient
+          colors={[Colors.darkBlue, '#333092']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={{
+            height: hp(70),
+            width: wp(100),
           }}>
           <View style={styles.bottomView}>
             <Text
@@ -222,9 +219,9 @@ const Signup = (props) => {
               }}
             />
           </View>
-        </KeyboardAwareScrollView>
-      </LinearGradient>
-    </View>
+        </LinearGradient>
+      </View>
+    </KeyboardAwareScrollView>
   );
 };
 

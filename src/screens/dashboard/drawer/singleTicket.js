@@ -165,8 +165,8 @@ const SingleTicket = (props) => {
                   ticketStatus?.resolved === ticket?.status
                     ? Colors.lightGreen
                     : Colors.error,
-                height: hp(3.5),
                 paddingHorizontal: wp(3),
+                paddingVertical: hp(1),
                 borderRadius: hp(2),
                 ...STYLES.common,
               }}>
