@@ -21,6 +21,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {STYLES} from '../../constant/commonStyle';
 import {CustomTabs} from 'react-native-custom-tabs';
 import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
+import * as Sentry from '@sentry/react-native';
 
 const Splash = (props) => {
   const dispatch = useDispatch();
@@ -37,6 +38,10 @@ const Splash = (props) => {
       kOSSettingsKeyAutoPrompt: false,
       kOSSettingsKeyInAppLaunchURL: false,
       kOSSettingsKeyInFocusDisplayOption: 2,
+    });
+    Sentry.init({
+      dsn:
+        'https://cb2933829efd4941a6ecc455591e7c7a@o939247.ingest.sentry.io/5899802',
     });
     OneSignal.inFocusDisplaying(2); // Controls what should happen if a notification is received while the app is open. 2 means that the notification will go directly to the device's notification center.
 
