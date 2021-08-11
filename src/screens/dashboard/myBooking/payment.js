@@ -102,6 +102,7 @@ const Payment = (props) => {
         if (res?.data?.status === 'success') {
           setPaymentSummery(res?.data?.data?.payment_details);
         } else {
+          setLoading(false);
           CustomAlert(res?.data?.message);
         }
       })
@@ -130,6 +131,7 @@ const Payment = (props) => {
           // Razor pay
           paymentMethod(res?.data?.data?.payment, cardType);
         } else {
+          setLoading(false);
           CustomAlert(res?.data?.message);
         }
       })

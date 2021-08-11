@@ -237,7 +237,7 @@ const DateOfMovement = (props) => {
                     let a = moment(Object.keys(temp)[0]);
                     let b = moment(day.dateString);
                     let dateDifference = b.diff(a, 'days');
-                    if (Math.abs(dateDifference) < 15) {
+                    if (Math.abs(dateDifference) < 5) {
                       let ary = new Array(Math.abs(dateDifference)).fill('');
                       ary.forEach((item, index) => {
                         if (Math.sign(dateDifference) === -1) {

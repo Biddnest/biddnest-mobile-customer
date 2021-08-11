@@ -557,7 +557,6 @@ const RequirementDetails = (props) => {
               return (
                 <Pressable
                   key={index}
-                  onPress={() => handleSelectedSubCategory(item)}
                   style={{
                     height: wp(16),
                     width: wp(16),
