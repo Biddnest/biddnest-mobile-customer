@@ -228,7 +228,7 @@ const MovingForm = (props) => {
           color: Colors.inputTextColor,
           textAlign: 'center',
         }}>
-        MOVING {props.movingFrom ? 'TO' : 'FROM'}
+        MAKE MOVE
       </Text>
       <View style={{marginTop: hp(3)}}>
         <Pressable onPress={() => setMapVisible(true)}>
@@ -417,7 +417,7 @@ const MovingForm = (props) => {
                 fontSize: wp(4),
                 marginLeft: 5,
               }}>
-              Is service lift available?
+              My Flat/Apartment has SERVICE Lift.
             </Text>
           </View>
           <Switch
@@ -427,6 +427,17 @@ const MovingForm = (props) => {
             }
           />
         </View>
+        <Text
+          style={{
+            color: '#99A0A5',
+            marginTop: 10,
+            fontFamily: 'Roboto-Italic',
+            fontSize: wp(3.5),
+            marginHorizontal: wp(3),
+            textAlign: 'center',
+          }}>
+          This will help us to move your things in a better way
+        </Text>
         <View style={{marginHorizontal: wp(3)}}>
           <Button
             label={'NEXT'}

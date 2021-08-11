@@ -35,37 +35,38 @@ const OrderDetailModal = (props) => {
     }
     return (
       <View
-        style={{flexDirection: 'row', height: wp(13), marginVertical: hp(2)}}
+        style={{
+          flexDirection: 'row',
+          marginVertical: hp(0.5),
+          width: '100%',
+        }}
         key={index}>
-        <View style={{width: '20%', ...STYLES.common}}>
-          <View
+        <View
+          style={{
+            height: wp(13),
+            width: wp(13),
+            backgroundColor: '#F2E6FF',
+            borderRadius: wp(13) / 2,
+            overflow: 'hidden',
+          }}>
+          <Image
+            source={{uri: item?.image || item?.inventory?.image}}
+            resizeMode={'contain'}
             style={{
-              height: wp(13),
-              width: wp(13),
-              backgroundColor: '#F2E6FF',
-              borderRadius: wp(13) / 2,
-              overflow: 'hidden',
-            }}>
-            <Image
-              source={{uri: item?.image || item?.inventory?.image}}
-              resizeMode={'contain'}
-              style={{
-                height: '100%',
-                width: '100%',
-              }}
-            />
-          </View>
+              height: '100%',
+              width: '100%',
+            }}
+          />
         </View>
         <View
           style={{
-            width: '78%',
-            marginLeft: '2%',
-            justifyContent: 'space-between',
+            width: '85%',
+            marginLeft: '0.5%',
           }}>
           <Text
             style={{
               fontFamily: 'Roboto-Bold',
-              fontSize: wp(4),
+              fontSize: wp(3.5),
               color: Colors.inputTextColor,
             }}>
             {item?.itemName || item?.name}
@@ -75,6 +76,7 @@ const OrderDetailModal = (props) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
+              marginTop: hp(0.2),
             }}>
             <View
               style={[styles.textBox, {paddingHorizontal: 10, width: '40%'}]}>
@@ -168,7 +170,7 @@ export default OrderDetailModal;
 
 const styles = StyleSheet.create({
   subText: {
-    fontSize: wp(3.5),
+    fontSize: wp(3.2),
     fontFamily: 'Roboto-Regular',
     textTransform: 'capitalize',
   },

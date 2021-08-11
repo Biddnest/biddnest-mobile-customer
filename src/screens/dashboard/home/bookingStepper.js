@@ -45,7 +45,9 @@ const BookingStepper = (props) => {
   );
   const [movingFrom, setMovingFrom] = useState(false);
   const [confirmationText, setConfirmationText] = useState(
-    'Are you sure want to close this form? All your progress will be lost.',
+    'We are sorry to see you leave.\n' +
+      'You are just few steps away from movement.\n' +
+      'Are you sure?',
   );
   const [data, setData] = useState({
     booking_id: null,
@@ -107,19 +109,19 @@ const BookingStepper = (props) => {
         if (bookingFor === 'Others') {
           setHeaderText("FRIEND'S DETAILS");
         } else {
-          setHeaderText(movingFrom ? 'MOVING TO' : 'MOVING FROM');
+          setHeaderText('MAKE MOVE');
         }
         break;
       case 1:
         if (bookingFor === 'Others') {
-          setHeaderText(movingFrom ? 'MOVING TO' : 'MOVING FROM');
+          setHeaderText('MAKE MOVE');
         } else {
-          setHeaderText('DATE OF MOVEMENT');
+          setHeaderText('CHOOSE A DATE');
         }
         break;
       case 2:
         if (bookingFor === 'Others') {
-          setHeaderText('DATE OF MOVEMENT');
+          setHeaderText('CHOOSE A DATE');
         } else {
           setHeaderText('REQUIREMENT DETAILS');
         }
@@ -129,18 +131,18 @@ const BookingStepper = (props) => {
           setHeaderText('REQUIREMENT DETAILS');
         } else {
           if (apiResponse?.bid_result_at !== null) {
-            setHeaderText('TIMER');
+            setHeaderText('PROCEED FOR BIDDING');
           } else {
-            setHeaderText('INITIAL QUOTE');
+            setHeaderText('PRICE ESTIMATION');
           }
         }
         break;
       case 4:
         if (bookingFor === 'Others') {
           if (apiResponse?.bid_result_at !== null) {
-            setHeaderText('TIMER');
+            setHeaderText('PROCEED FOR BIDDING');
           } else {
-            setHeaderText('INITIAL QUOTE');
+            setHeaderText('PRICE ESTIMATION');
           }
         } else {
           setHeaderText('');
@@ -291,7 +293,7 @@ const BookingStepper = (props) => {
   const renderComponent = () => {
     switch (currentPosition) {
       case 0:
-        if (headerText !== 'MOVING TO') {
+        if (headerText !== 'MAKE MOVE') {
           // setHeaderText(headerText);
         }
         if (bookingFor === 'Others') {
@@ -319,7 +321,7 @@ const BookingStepper = (props) => {
           />
         );
       case 1:
-        if (headerText !== 'DATE OF MOVEMENT') {
+        if (headerText !== 'CHOOSE A DATE') {
           // setHeaderText(headerText);
         }
         if (bookingFor === 'Others') {
@@ -377,7 +379,7 @@ const BookingStepper = (props) => {
           />
         );
       case 3:
-        if (headerText !== 'Initial Quote') {
+        if (headerText !== 'PRICE ESTIMATION') {
           // setHeaderText(headerText);
         }
         if (bookingFor === 'Others') {
@@ -463,14 +465,16 @@ const BookingStepper = (props) => {
           if (apiResponse?.public_booking_id) {
             resetNavigator(props, 'Dashboard');
           } else {
-            if (headerText === 'MOVING TO') {
+            if (headerText === 'MAKE MOVE') {
               setMovingFrom(false);
             } else {
               if (currentPosition > 0) {
                 setCurrentPosition(currentPosition - 1);
               } else {
                 setConfirmationText(
-                  'Are you sure want to cancel? All your progress will be lost & you will be taken back to home screen.',
+                  'We are sorry to see you leave.\n' +
+                    'You are just few steps away from movement.\n' +
+                    'Are you sure?',
                 );
                 setConfirmationVisible(true);
                 // props.navigation.goBack();

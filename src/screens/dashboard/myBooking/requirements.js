@@ -204,7 +204,7 @@ const Requirements = (props) => {
                     textAlign: 'center',
                     textTransform: 'uppercase',
                   }}>
-                  Comments
+                  Comments/Instructions
                 </Text>
                 <Text
                   style={{

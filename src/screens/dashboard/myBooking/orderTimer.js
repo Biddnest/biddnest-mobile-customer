@@ -208,7 +208,7 @@ const OrderTimer = (props) => {
   return (
     <View style={{flex: 1, backgroundColor: Colors.pageBG}}>
       <SimpleHeader
-        headerText={'Order Tracking'}
+        headerText={'Proceed for Bidding'}
         navigation={props.navigation}
         onBack={() => props.navigation.goBack()}
       />

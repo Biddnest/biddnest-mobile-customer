@@ -41,7 +41,7 @@ const data = [
   {
     title: 'select destination',
     desc:
-      "Lorem ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.",
+      'Mention the movement type and confirm your pickup and dropout location as per your convenience.',
     image: (
       <Image
         source={require('../../assets/images/1.gif')}
@@ -53,7 +53,7 @@ const data = [
   {
     title: 'Share Requirement',
     desc:
-      "Lorem ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.",
+      'Provide your basic requirements and references regarding the move where you can also prefer shared services.',
     image: (
       <Image
         source={require('../../assets/images/2.gif')}
@@ -65,7 +65,7 @@ const data = [
   {
     title: 'Schedule & Confirm',
     desc:
-      "Lorem ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.",
+      'Choose a fixed date/Range of dates/Multiple dates and confirm your movement.',
     image: (
       <Image
         source={require('../../assets/images/3.gif')}
@@ -75,9 +75,8 @@ const data = [
     ),
   },
   {
-    title: 'Get Moving!',
-    desc:
-      "Lorem ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer.",
+    title: 'Move Like Moxie',
+    desc: 'Smooth, simple and swift move beyond borders.',
     image: (
       <Image
         source={require('../../assets/images/4.gif')}

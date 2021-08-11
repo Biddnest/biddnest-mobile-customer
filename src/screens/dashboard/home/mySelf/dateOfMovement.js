@@ -71,7 +71,7 @@ const DateOfMovement = (props) => {
             color: Colors.inputTextColor,
             textAlign: 'center',
           }}>
-          DATE OF MOVEMENT
+          Choose a Date
         </Text>
         <View style={{marginTop: hp(3), width: '90%', alignSelf: 'center'}}>
           <Text
@@ -79,10 +79,15 @@ const DateOfMovement = (props) => {
               fontFamily: 'Roboto-Italic',
               fontSize: wp(3.3),
               color: '#99A0A5',
-              textAlign: 'center',
+              // textAlign: 'center',
             }}>
-            If you have a fixed date of movement in mind opt for “Specific Date”
-            else you can chose a range of dates.
+            You can choose a Fixed date/Range of dates/Multiple dates to fix
+            your movement.{'\n'}
+            Fixed date – You can choose a fixed date for the movement. {'\n'}
+            Multiple dates – You can choose 5 different dates for the movement.
+            {'\n'}
+            Range of dates – You can choose preferable range of dates for the
+            movement (15 days maximum)
           </Text>
         </View>
         <View
@@ -128,9 +133,9 @@ const DateOfMovement = (props) => {
           style={{marginTop: hp(1.5)}}
           onPress={() => setCalender(true)}>
           <Input
-            placeholder={'Choose Date'}
+            placeholder={'Choose a Date'}
             disabled={true}
-            label={'Choose Date *'}
+            label={'Choose a Date *'}
             value={
               dateArrayDisplay?.join(', ') || data?.movement_dates?.join(', ')
             }
@@ -188,22 +193,34 @@ const DateOfMovement = (props) => {
             <Text
               style={{
                 color:
-                  source?.meta?.shared_service === true ||
-                  source?.meta?.shared_service == 1
+                  dateArrayDisplay?.length > 1 ||
+                  data?.movement_dates?.length > 1
                     ? Colors.textLabelColor
                     : '#99A0A5',
                 fontFamily: 'Roboto-Bold',
                 fontSize: wp(4),
                 marginLeft: 5,
               }}>
-              Interested in shared services?
+              I would prefer shared Service.
             </Text>
           </View>
           <Switch
-            onChange={(text) => handleState('shared_service', text === 1)}
-            value={source?.meta?.shared_service || false}
+            // onChange={(text) => handleState('shared_service', text === 1)}
+            value={dateArrayDisplay?.length > 1}
           />
         </View>
+        <Text
+          style={{
+            color: '#99A0A5',
+            marginTop: 10,
+            fontFamily: 'Roboto-Italic',
+            fontSize: wp(3.5),
+            marginHorizontal: wp(3),
+            textAlign: 'center',
+          }}>
+          If you prefer, we will efficiently move your things in a shared
+          vehicle cost effectively
+        </Text>
         <InformationPopUp
           visible={sharedInfo}
           label={
@@ -339,6 +356,10 @@ const DateOfMovement = (props) => {
           label={'NEXT'}
           isLoading={isLoading}
           onPress={() => {
+            handleState(
+              'shared_service',
+              dateArrayDisplay?.length > 1 || data?.movement_dates?.length > 1,
+            );
             setLoading(true);
             if (data?.movement_dates?.length > 0) {
               setError(false);

@@ -264,7 +264,7 @@ const BookingInitialQuote = (props) => {
   return (
     <View style={{flex: 1, backgroundColor: Colors.pageBG}}>
       <SimpleHeader
-        headerText={'Order Tracking'}
+        headerText={'Price Estimation'}
         navigation={props.navigation}
         onBack={() => props.navigation.goBack()}
       />
@@ -430,8 +430,9 @@ const BookingInitialQuote = (props) => {
                     marginHorizontal: wp(6),
                     marginTop: hp(2),
                   }}>
-                  Please note that this is the baseline price, you will be
-                  receiving the Vendor bid list with the final quotations
+                  This is just an estimated price. We are working with our
+                  moving partners to provide the best package. Wait to be
+                  excited.
                 </Text>
                 <View
                   style={{
@@ -568,7 +569,7 @@ const BookingInitialQuote = (props) => {
                             fontSize: wp(4),
                             color: Colors.inputTextColor,
                             marginRight: 5,
-                            textTransform: 'uppercase'
+                            textTransform: 'uppercase',
                           }}>
                           Not satisfied with prices?
                         </Text>

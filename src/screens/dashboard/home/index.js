@@ -572,7 +572,7 @@ const Home = (props) => {
               textAlign: 'center',
               marginTop: hp(1),
             }}>
-            WHAT WOULD YOU LIKE TO MOVE
+            MOVEMENT TYPE
           </Text>
           <FlatList
             bounces={false}
@@ -936,7 +936,7 @@ const Home = (props) => {
       </CustomModalAndroid>
       <CustomModalAndroid
         visible={bookingSelectionVisible}
-        title={'WHOM ARE YOU BOOKING FOR?'}
+        title={'MOVE FOR?'}
         onPress={() => setBookingSelectionVisible(false)}>
         <View
           style={{

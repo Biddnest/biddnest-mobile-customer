@@ -272,11 +272,8 @@ const RequirementDetails = (props) => {
             borderWidth: 1.2,
             flexDirection: 'row',
             alignItems: 'center',
-            marginBottom: hp(1.5),
-            paddingHorizontal: wp(2),
-            paddingVertical: wp(1.5),
+            padding: wp(1.5),
             borderRadius: hp(1),
-            marginRight: hp(1.3),
           }}>
           <View
             style={{
@@ -284,17 +281,17 @@ const RequirementDetails = (props) => {
               ...STYLES.common,
               backgroundColor: Colors.pageBG,
             }}>
-            <AntDesign name={'plus'} size={hp(3)} color={Colors.darkBlue} />
+            <AntDesign name={'plus'} size={hp(2)} color={Colors.darkBlue} />
           </View>
           <View
             style={{
-              marginLeft: wp(2),
+              marginLeft: wp(1),
             }}>
             <Text
               style={{
                 fontFamily: 'Gilroy-SemiBold',
                 color: Colors.inputTextColor,
-                fontSize: wp(4),
+                fontSize: wp(3),
               }}>
               {'Add More'}
             </Text>
@@ -309,10 +306,10 @@ const RequirementDetails = (props) => {
           backgroundColor: Colors.pageBG,
           flexDirection: 'row',
           alignItems: 'center',
-          marginBottom: hp(1.5),
-          padding: wp(2),
+          marginBottom: hp(0.5),
+          padding: wp(1),
           borderRadius: hp(1),
-          marginRight: hp(1.3),
+          marginRight: hp(0.5),
         }}>
         <Pressable
           onPress={() => {
@@ -343,27 +340,27 @@ const RequirementDetails = (props) => {
             setEditItem(true);
           }}
           style={{
-            height: hp(4),
-            width: hp(4),
+            height: hp(3.5),
+            width: hp(3.5),
             borderRadius: hp(2),
             backgroundColor: Colors.white,
             ...STYLES.common,
           }}>
           <SimpleLineIcons
             name={'pencil'}
-            size={hp(2)}
+            size={hp(1.8)}
             color={Colors.darkBlue}
           />
         </Pressable>
         <View
           style={{
-            marginLeft: wp(2),
+            marginLeft: wp(1),
           }}>
           <Text
             style={{
               fontFamily: 'Gilroy-SemiBold',
               color: Colors.inputTextColor,
-              fontSize: wp(3.2),
+              fontSize: wp(3),
             }}>
             {configData?.inventory_quantity_type.range ===
             movementType?.inventory_quantity_type
@@ -378,7 +375,7 @@ const RequirementDetails = (props) => {
                 style={{
                   fontFamily: 'Roboto-Regular',
                   color: Colors.inputTextColor,
-                  fontSize: wp(3),
+                  fontSize: wp(2.8),
                   textTransform: 'capitalize',
                 }}>
                 {item?.material}, {item?.size}
@@ -422,7 +419,7 @@ const RequirementDetails = (props) => {
           fontSize: wp(4),
           textTransform: 'uppercase',
         }}>
-        Pick an item list
+        Studio
       </Text>
       <ScrollView
         horizontal
@@ -597,11 +594,11 @@ const RequirementDetails = (props) => {
         </View>
       </View>
       <View style={[styles.inputForm, {paddingTop: hp(2), paddingBottom: 0}]}>
-        <Text style={STYLES.textHeader}>COMMENTS IF ANY</Text>
+        <Text style={STYLES.textHeader}>COMMENTS/Instructions</Text>
         <View style={{marginTop: hp(2), marginBottom: 0}}>
           <TextInput
             label={''}
-            placeHolder={'Comments if any'}
+            placeHolder={'You can share any additional information here'}
             numberOfLines={4}
             value={data?.meta?.customer?.remarks}
             onChange={(text) => handleState('remarks', text)}
@@ -1414,9 +1411,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   backgroundCircle: {
-    height: hp(5),
-    width: hp(5),
-    borderRadius: hp(2.5),
+    height: hp(4),
+    width: hp(4),
+    borderRadius: hp(2),
     backgroundColor: Colors.white,
   },
   sliderText: {
