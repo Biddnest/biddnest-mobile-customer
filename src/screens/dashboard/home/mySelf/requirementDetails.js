@@ -725,7 +725,7 @@ const RequirementDetails = (props) => {
               <TextInput
                 value={editItem ? editData?.material : addData?.material}
                 label={'Material/Variant *'}
-                placeHolder={'Material/Variant'}
+                placeHolder={'Material'}
                 onChange={(text) => {
                   if (editItem) {
                     setEditData({...editData, material: text});

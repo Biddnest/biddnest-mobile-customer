@@ -299,7 +299,7 @@ const InitialQuote = (props) => {
                         </Text>
                         <Pressable
                           onPress={() => {
-                            if (item.title === 'Economy') {
+                            if (item.title === 'ECONOMY') {
                               setEconomicInfo(true);
                             } else {
                               setPremiumInfo(true);

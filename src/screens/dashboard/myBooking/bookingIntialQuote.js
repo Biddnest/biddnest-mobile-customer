@@ -7,7 +7,6 @@ import {
   ScrollView,
   Platform,
   Linking,
-  RefreshControl,
 } from 'react-native';
 import {Colors, hp, wp} from '../../../constant/colors';
 import {STYLES} from '../../../constant/commonStyle';
@@ -270,13 +269,7 @@ const BookingInitialQuote = (props) => {
         onBack={() => props.navigation.goBack()}
       />
       {isLoading && <LoadingScreen />}
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={getData} />
-        }
-        showsVerticalScrollIndicator={false}
-        bounces={false}
-        contentContainerStyle={{flex: 1, justifyContent: 'center'}}>
+      <View style={{flex: 1, justifyContent: 'center'}}>
         <LinearGradient
           colors={[Colors.pageBG, Colors.white]}
           style={{flex: 1}}>
@@ -503,7 +496,7 @@ const BookingInitialQuote = (props) => {
                             </Text>
                             <Pressable
                               onPress={() => {
-                                if (item.title === 'Economy') {
+                                if (item.title === 'ECONOMY') {
                                   setEconomicInfo(true);
                                 } else {
                                   setPremiumInfo(true);
@@ -727,7 +720,7 @@ const BookingInitialQuote = (props) => {
             }
           />
         </CustomModalAndroid>
-      </ScrollView>
+      </View>
     </View>
   );
 };
