@@ -146,7 +146,6 @@ const Requirements = (props) => {
                 fontSize: wp(4),
                 color: Colors.inputTextColor,
                 textAlign: 'center',
-                marginVertical: hp(1.5),
               }}>
               ITEM LIST
             </Text>
@@ -168,7 +167,7 @@ const Requirements = (props) => {
                           styles.headerText,
                           {
                             fontFamily: 'Roboto-Regular',
-                            marginTop: 5,
+                            marginTop: hp(0.3),
                             fontSize: wp(3.5),
                             textTransform: 'capitalize',
                           },
@@ -189,7 +188,12 @@ const Requirements = (props) => {
                 );
               }}
               ItemSeparatorComponent={() => (
-                <View style={[STYLES.separatorView, {marginBottom: hp(2)}]} />
+                <View
+                  style={[
+                    STYLES.separatorView,
+                    {marginBottom: hp(1), marginTop: hp(1)},
+                  ]}
+                />
               )}
             />
           </View>

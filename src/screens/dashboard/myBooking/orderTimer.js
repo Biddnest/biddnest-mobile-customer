@@ -215,7 +215,9 @@ const OrderTimer = (props) => {
       {isLoading && <LoadingScreen />}
       <ScrollView
         refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={getData} />
+          selectedTab !== 1 && (
+            <RefreshControl refreshing={isLoading} onRefresh={getData} />
+          )
         }
         showsVerticalScrollIndicator={false}
         bounces={false}

@@ -304,11 +304,33 @@ const ContactUs = (props) => {
                   </View>
                 </View>
                 <Pressable
-                  onPress={() =>
-                    props.navigation.navigate('OrderTracking', {
-                      orderData: recentOrder,
-                    })
-                  }
+                  onPress={() => {
+                    if (recentOrder?.status === 0) {
+                      props.navigation.navigate('BookingInitialQuote', {
+                        orderData: recentOrder,
+                      });
+                    } else if (
+                      recentOrder?.status === 2 ||
+                      recentOrder?.status === 3
+                    ) {
+                      props.navigation.navigate('OrderTimer', {
+                        orderData: recentOrder,
+                      });
+                    } else if (recentOrder?.status === 4) {
+                      props.navigation.navigate('FinalQuote', {
+                        orderData: recentOrder,
+                      });
+                    } else if (
+                      recentOrder?.status === 5 ||
+                      recentOrder?.status === 6 ||
+                      recentOrder?.status === 7 ||
+                      recentOrder?.status === 8
+                    ) {
+                      props.navigation.navigate('OrderTracking', {
+                        orderData: recentOrder,
+                      });
+                    }
+                  }}
                   style={{
                     height: hp(7),
                     width: hp(7),
