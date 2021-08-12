@@ -329,6 +329,10 @@ const ContactUs = (props) => {
                       props.navigation.navigate('OrderTracking', {
                         orderData: recentOrder,
                       });
+                    } else {
+                      props.navigation.navigate('OrderDetails', {
+                        orderData: recentOrder,
+                      });
                     }
                   }}
                   style={{

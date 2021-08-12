@@ -22,6 +22,7 @@ import {STYLES} from '../../constant/commonStyle';
 import {CustomTabs} from 'react-native-custom-tabs';
 import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 import * as Sentry from '@sentry/react-native';
+import DeviceInfo from 'react-native-device-info';
 
 const Splash = (props) => {
   const dispatch = useDispatch();
@@ -107,14 +108,28 @@ const Splash = (props) => {
       .then((res) => {
         setLoading(false);
         if (res.status === 'success') {
-          if (res?.data?.config?.app?.version_code == 1) {
+          if (
+            res?.data?.config?.app?.version_code == DeviceInfo.getBuildNumber()
+          ) {
             if (userData?.fname) {
               resetNavigator(props, 'Dashboard');
             } else {
               resetNavigator(props, 'WalkThroughPage');
             }
           } else {
-            Linking.openURL('https://play.google.com/store/apps');
+            Alert.alert(
+              'Update Available',
+              'App must be updated for use new features',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => {
+                    Linking.openURL('https://play.google.com/store/apps');
+                  },
+                },
+              ],
+              {cancelable: false},
+            );
           }
         }
       })

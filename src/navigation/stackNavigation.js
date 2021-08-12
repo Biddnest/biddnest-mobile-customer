@@ -17,6 +17,7 @@ import FAQDetails from '../screens/dashboard/drawer/faqs/faqDetails';
 import OrderTimer from '../screens/dashboard/myBooking/orderTimer';
 import RaiseTicket from '../screens/dashboard/myBooking/raiseTicket';
 import BookingInitialQuote from '../screens/dashboard/myBooking/bookingIntialQuote';
+import OrderDetails from '../screens/dashboard/drawer/orderDetails';
 
 const Stack = createStackNavigator();
 
@@ -41,8 +42,14 @@ const MainStackNavigator = () => {
       <Stack.Screen name="FAQDetails" component={FAQDetails} />
       <Stack.Screen name="FinalQuote" component={FinalQuote} />
       <Stack.Screen name="RaiseTicket" component={RaiseTicket} />
+      <Stack.Screen name="OrderDetails" component={OrderDetails} />
       <Stack.Screen name="OrderTimer" component={OrderTimer} />
       <Stack.Screen name="OrderTracking" component={OrderTracking} />
+      <Stack.Screen name="Payment" component={Payment} />
+      <Stack.Screen
+        name="BookingInitialQuote"
+        component={BookingInitialQuote}
+      />
     </Stack.Navigator>
   );
 };
@@ -54,6 +61,7 @@ const MyBookingStackNavigator = () => {
       <Stack.Screen name="OrderTracking" component={OrderTracking} />
       <Stack.Screen name="Payment" component={Payment} />
       <Stack.Screen name="FinalQuote" component={FinalQuote} />
+      <Stack.Screen name="OrderDetails" component={OrderDetails} />
       <Stack.Screen
         name="BookingInitialQuote"
         component={BookingInitialQuote}
