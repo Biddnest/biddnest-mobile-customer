@@ -17,12 +17,13 @@ import SelectionModalAndroid from '../../../components/selectionModal';
 
 const RaiseTicket = (props) => {
   const public_booking_id = props?.route?.params?.public_booking_id || null;
+  const category = props?.route?.params?.category || null;
   const configData =
     useSelector((state) => state.Login?.configData?.enums?.ticket?.type) || {};
   const [isLoading, setLoading] = useState(false);
   const [bookingList, setBookingList] = useState([]);
   const [data, setData] = useState({
-    public_booking_id: '',
+    public_booking_id: null,
     category: '',
     heading: '',
     desc: '',
@@ -94,7 +95,7 @@ const RaiseTicket = (props) => {
       <LinearGradient
         colors={[Colors.pageBG, Colors.white]}
         style={{flex: 1, padding: wp(5), alignItems: 'center'}}>
-        {!public_booking_id && (
+        {category !== 4 && !public_booking_id && (
           <SelectionModalAndroid
             style={{
               marginBottom: hp(3),
@@ -108,19 +109,21 @@ const RaiseTicket = (props) => {
             onChangeItem={(text) => setData({...data, public_booking_id: text})}
           />
         )}
-        <SelectionModalAndroid
-          style={{
-            marginBottom: hp(3),
-            borderColor: error?.category === false ? 'red' : Colors.silver,
-          }}
-          width={wp(90)}
-          value={data?.category}
-          label={'Category *'}
-          items={dropdownDefault}
-          onChangeItem={(text) => {
-            setData({...data, category: text});
-          }}
-        />
+        {category !== 4 && (
+          <SelectionModalAndroid
+            style={{
+              marginBottom: hp(3),
+              borderColor: error?.category === false ? 'red' : Colors.silver,
+            }}
+            width={wp(90)}
+            value={data?.category}
+            label={'Category *'}
+            items={dropdownDefault}
+            onChangeItem={(text) => {
+              setData({...data, category: text});
+            }}
+          />
+        )}
         <TextInput
           isRight={error?.heading}
           label={'Subject *'}
@@ -151,13 +154,18 @@ const RaiseTicket = (props) => {
           onPress={() => {
             setLoading(true);
             let tempError = {};
-            if (!public_booking_id) {
+            if (
+              (data?.category === 3 || data?.category === 2) &&
+              !public_booking_id
+            ) {
               tempError.public_booking_id = !!(
                 data?.public_booking_id !== '' &&
                 data?.public_booking_id != null
               );
+            } else {
+              tempError.public_booking_id = true;
             }
-            tempError.category = !!(data?.category !== '');
+            tempError.category = category !== 4 ? data?.category !== '' : true;
             tempError.heading = !(!data?.heading || data?.heading.length < 6);
             tempError.desc = !(!data?.desc || data?.desc.length < 15);
             setError(tempError);
@@ -177,6 +185,7 @@ const RaiseTicket = (props) => {
                   public_booking_id: public_booking_id
                     ? public_booking_id
                     : data?.public_booking_id,
+                  category: category === 4 ? category : data?.category,
                 },
               };
               APICall(obj)

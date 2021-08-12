@@ -460,24 +460,28 @@ const ContactUs = (props) => {
           label={'REQUEST A CALL BACK'}
           onPress={() => {
             // call Request a call back api
-            setRequestCallBackLoading(true);
-            let obj = {
-              url: 'tickets/callback',
-              method: 'post',
-              headers: {
-                Authorization:
-                  'Bearer ' + STORE.getState().Login?.loginData?.token,
-              },
-            };
-            APICall(obj)
-              .then((res) => {
-                setRequestCallBackLoading(false);
-                CustomAlert('Request a Call Back Successfully');
-              })
-              .catch((err) => {
-                setRequestCallBackLoading(false);
-                CustomConsole(err);
-              });
+            props.navigation.navigate('RaiseTicket', {
+              public_booking_id: null,
+              category: 4,
+            });
+            // setRequestCallBackLoading(true);
+            // let obj = {
+            //   url: 'tickets/callback',
+            //   method: 'post',
+            //   headers: {
+            //     Authorization:
+            //       'Bearer ' + STORE.getState().Login?.loginData?.token,
+            //   },
+            // };
+            // APICall(obj)
+            //   .then((res) => {
+            //     setRequestCallBackLoading(false);
+            //     CustomAlert('Request a Call Back Successfully');
+            //   })
+            //   .catch((err) => {
+            //     setRequestCallBackLoading(false);
+            //     CustomConsole(err);
+            //   });
           }}
           spaceBottom={0}
           width={wp(90)}
