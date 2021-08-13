@@ -193,8 +193,8 @@ const DateOfMovement = (props) => {
             <Text
               style={{
                 color:
-                  dateArrayDisplay?.length > 1 ||
-                  data?.movement_dates?.length > 1
+                  source?.meta?.shared_service === true ||
+                  source?.meta?.shared_service == 1
                     ? Colors.textLabelColor
                     : '#99A0A5',
                 fontFamily: 'Roboto-Bold',
@@ -205,8 +205,8 @@ const DateOfMovement = (props) => {
             </Text>
           </View>
           <Switch
-            // onChange={(text) => handleState('shared_service', text === 1)}
-            value={dateArrayDisplay?.length > 1}
+            onChange={(text) => handleState('shared_service', text === 1)}
+            value={source?.meta?.shared_service || false}
           />
         </View>
         <Text
@@ -356,10 +356,6 @@ const DateOfMovement = (props) => {
           label={'NEXT'}
           isLoading={isLoading}
           onPress={() => {
-            handleState(
-              'shared_service',
-              dateArrayDisplay?.length > 1 || data?.movement_dates?.length > 1,
-            );
             setLoading(true);
             if (data?.movement_dates?.length > 0) {
               setError(false);

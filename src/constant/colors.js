@@ -116,6 +116,13 @@ export const SIDE_DRAWER = [
     navigate: 'TermsAndConditions',
   },
   {
+    iconFamily: 'MaterialIcons',
+    icon: 'privacy-tip',
+    topText: 'Privacy Policy',
+    bottomText: 'Read more about our privacy',
+    navigate: 'PrivacyPolicy',
+  },
+  {
     iconFamily: 'Ionicons',
     icon: 'share-social-outline',
     topText: 'Refer a friend',
