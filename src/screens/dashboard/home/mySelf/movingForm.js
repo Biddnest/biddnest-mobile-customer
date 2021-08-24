@@ -40,6 +40,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {APICall, getZones} from '../../../../redux/actions/user';
 import {getDistance} from 'geolib';
 import {STORE} from '../../../../redux';
+import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 navigator.geolocation = require('@react-native-community/geolocation');
 
 const MovingForm = (props) => {
@@ -231,9 +232,28 @@ const MovingForm = (props) => {
         MAKE MOVE
       </Text>
       <View style={{marginTop: hp(3)}}>
-        <Pressable onPress={() => setMapVisible(true)}>
+        {isAndroid ? (
+          <Pressable onPress={() => setMapVisible(true)}>
+            <TextInput
+              disable={true}
+              selection={{start: 0}}
+              label={props.movingFrom ? 'To *' : 'From *'}
+              isRight={error?.geocode}
+              value={
+                props.movingFrom
+                  ? destination?.meta?.geocode
+                  : source?.meta?.geocode
+              }
+              placeHolder={'Choose on map'}
+            />
+          </Pressable>
+        ) : (
           <TextInput
-            disable={true}
+            caretHidden={true}
+            onFocus={() => {
+              Keyboard.dismiss();
+              setMapVisible(true);
+            }}
             selection={{start: 0}}
             label={props.movingFrom ? 'To *' : 'From *'}
             isRight={error?.geocode}
@@ -244,7 +264,8 @@ const MovingForm = (props) => {
             }
             placeHolder={'Choose on map'}
           />
-        </Pressable>
+        )}
+
         {/*<TextInput*/}
         {/*  label={'Address'}*/}
         {/*  isRight={error.address}*/}

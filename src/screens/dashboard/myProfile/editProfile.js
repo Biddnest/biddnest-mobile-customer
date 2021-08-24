@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Colors, hp, wp} from '../../../constant/colors';
 import {
   Image,
-  Linking,
+  Keyboard,
   Platform,
   Pressable,
   StyleSheet,
@@ -32,6 +32,7 @@ import Ripple from 'react-native-material-ripple';
 import SelectionModalAndroid from '../../../components/selectionModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 
 const EditProfile = (props) => {
   const dispatch = useDispatch();
@@ -142,17 +143,33 @@ const EditProfile = (props) => {
             />
           </View>
           <View style={{flexDirection: 'row'}}>
-            <Pressable
-              style={{width: wp(45)}}
-              onPress={() => setOTPModal(true)}>
-              <TextInput
-                disable={true}
-                value={data?.phone}
-                label={'Phone Number *'}
-                placeHolder={'9739912345'}
-                onChange={(text) => handleState('phone', text)}
-              />
-            </Pressable>
+            {isAndroid ? (
+              <Pressable
+                style={{width: wp(45)}}
+                onPress={() => setOTPModal(true)}>
+                <TextInput
+                  disable={true}
+                  value={data?.phone}
+                  label={'Phone Number *'}
+                  placeHolder={'9739912345'}
+                  onChange={(text) => handleState('phone', text)}
+                />
+              </Pressable>
+            ) : (
+              <View style={{width: wp(45)}}>
+                <TextInput
+                  caretHidden={true}
+                  onFocus={() => {
+                    Keyboard.dismiss();
+                    setOTPModal(true);
+                  }}
+                  value={data?.phone}
+                  label={'Phone Number *'}
+                  placeHolder={'9739912345'}
+                  onChange={(text) => handleState('phone', text)}
+                />
+              </View>
+            )}
             <View
               style={[
                 {marginBottom: hp(3), width: wp(45)},

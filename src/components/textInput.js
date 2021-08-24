@@ -3,6 +3,7 @@ import {Input} from 'react-native-elements';
 import {hp, Colors, wp} from '../constant/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Pressable, Text} from 'react-native';
+import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 
 const TextInput = (props) => {
   return (
@@ -18,6 +19,7 @@ const TextInput = (props) => {
       onFocus={props.onFocus}
       selection={props?.selection}
       onBlur={props.onBlur}
+      caretHidden={props.caretHidden}
       label={props.label}
       leftIcon={() => {
         if (props?.isLeft) {
@@ -63,7 +65,9 @@ const TextInput = (props) => {
           ? props.height
             ? props.height
             : hp(12)
-          : hp(6),
+          : isAndroid
+          ? hp(6)
+          : hp(6.5),
         marginTop: hp(1),
         borderColor: props.isRight === false ? Colors.red : Colors.silver,
         backgroundColor: Colors.white,

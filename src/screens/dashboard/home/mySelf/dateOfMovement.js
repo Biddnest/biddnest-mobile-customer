@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, Pressable, ScrollView} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Pressable,
+  ScrollView,
+  Keyboard,
+} from 'react-native';
 import {Colors, hp, wp} from '../../../../constant/colors';
 import Button from '../../../../components/button';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -15,6 +22,7 @@ import _ from 'lodash';
 import {CustomAlert} from '../../../../constant/commonFun';
 import Switch from '../../../../components/switch';
 import InformationPopUp from '../../../../components/informationPopUp';
+import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 
 const DateOfMovement = (props) => {
   const {data, handleStateChange} = props;
@@ -129,12 +137,42 @@ const DateOfMovement = (props) => {
             );
           })}
         </View>
-        <Pressable
-          style={{marginTop: hp(1.5)}}
-          onPress={() => setCalender(true)}>
+        {isAndroid ? (
+          <Pressable
+            style={{marginTop: hp(1.5)}}
+            onPress={() => setCalender(true)}>
+            <Input
+              placeholder={'Choose a Date'}
+              disabled={true}
+              label={'Choose a Date *'}
+              value={
+                dateArrayDisplay?.join(', ') || data?.movement_dates?.join(', ')
+              }
+              rightIcon={() => {
+                return (
+                  <MaterialIcons
+                    name="calendar-today"
+                    size={hp(3)}
+                    color={Colors.grey}
+                  />
+                );
+              }}
+              inputContainerStyle={{
+                ...styles.inputContainerStyle,
+                borderColor: error ? Colors.red : Colors.silver,
+              }}
+              labelStyle={styles.labelStyle}
+              inputStyle={styles.inputStyle}
+            />
+          </Pressable>
+        ) : (
           <Input
             placeholder={'Choose a Date'}
-            disabled={true}
+            onFocus={() => {
+              Keyboard.dismiss();
+              setCalender(true);
+            }}
+            caretHidden={true}
             label={'Choose a Date *'}
             value={
               dateArrayDisplay?.join(', ') || data?.movement_dates?.join(', ')
@@ -149,27 +187,13 @@ const DateOfMovement = (props) => {
               );
             }}
             inputContainerStyle={{
-              borderWidth: 2,
-              paddingHorizontal: 15,
-              borderRadius: 10,
-              height: hp(6),
-              marginTop: hp(1),
+              ...styles.inputContainerStyle,
               borderColor: error ? Colors.red : Colors.silver,
-              borderBottomWidth: 2,
             }}
-            labelStyle={{
-              fontFamily: 'Roboto-Bold',
-              color: Colors.textLabelColor,
-              fontSize: wp(4),
-            }}
-            inputStyle={{
-              fontSize: wp(4),
-              backgroundColor: Colors.textBG,
-              color: Colors.inputTextColor,
-              height: '99%',
-            }}
+            labelStyle={styles.labelStyle}
+            inputStyle={styles.inputStyle}
           />
-        </Pressable>
+        )}
         <View
           style={{
             flexDirection: 'row',
@@ -407,5 +431,24 @@ const styles = StyleSheet.create({
     right: -hp(1.3),
     top: -hp(1.3),
     borderRadius: hp(12.5),
+  },
+  inputContainerStyle: {
+    borderWidth: 2,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    height: isAndroid ? hp(6) : hp(6.5),
+    marginTop: hp(1),
+    borderBottomWidth: 2,
+  },
+  labelStyle: {
+    fontFamily: 'Roboto-Bold',
+    color: Colors.textLabelColor,
+    fontSize: wp(4),
+  },
+  inputStyle: {
+    fontSize: wp(4),
+    backgroundColor: Colors.textBG,
+    color: Colors.inputTextColor,
+    height: '99%',
   },
 });
