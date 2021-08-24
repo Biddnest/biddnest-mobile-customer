@@ -30,6 +30,7 @@ import HTML from 'react-native-render-html';
 import moment from 'moment';
 import {Base64} from 'js-base64';
 import CustomModalAndroid from '../../../components/customModal';
+import * as Sentry from '@sentry/react-native';
 
 const Payment = (props) => {
   const entities = new Html5Entities();
@@ -193,7 +194,7 @@ const Payment = (props) => {
       .catch((error) => {
         // handle failure
         setLoading(false);
-        // CustomAlert(`Error: ${error.code} | ${error.description}`);
+        Sentry.captureMessage(error.description);
       });
   };
   return (

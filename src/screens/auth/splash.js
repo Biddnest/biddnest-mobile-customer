@@ -108,24 +108,42 @@ const Splash = (props) => {
       .then((res) => {
         setLoading(false);
         if (res.status === 'success') {
-          if (
-            res?.data?.config?.app?.version_code == DeviceInfo.getBuildNumber()
-          ) {
-            if (userData?.fname) {
-              resetNavigator(props, 'Dashboard');
+          if (res?.data?.config?.service_live) {
+            if (
+              res?.data?.config?.app?.version_code <=
+              DeviceInfo.getBuildNumber()
+            ) {
+              if (userData?.fname) {
+                resetNavigator(props, 'Dashboard');
+              } else {
+                resetNavigator(props, 'WalkThroughPage');
+              }
             } else {
-              resetNavigator(props, 'WalkThroughPage');
+              Alert.alert(
+                'Update Available',
+                'App must be updated for use new features',
+                [
+                  {
+                    text: 'OK',
+                    onPress: () => {
+                      Linking.openURL(
+                        isAndroid
+                          ? 'https://play.google.com/store/apps'
+                          : 'https://www.apple.com/in/store',
+                      );
+                    },
+                  },
+                ],
+                {cancelable: false},
+              );
             }
           } else {
             Alert.alert(
-              'Update Available',
-              'App must be updated for use new features',
+              'Please try again later',
+              res?.data?.config?.message,
               [
                 {
                   text: 'OK',
-                  onPress: () => {
-                    Linking.openURL('https://play.google.com/store/apps');
-                  },
                 },
               ],
               {cancelable: false},

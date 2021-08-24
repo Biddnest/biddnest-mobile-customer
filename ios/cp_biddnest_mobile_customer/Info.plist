@@ -38,15 +38,15 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Allowing user to capture image</string>
+    <string>Allowing user to capture image for send images of booking items</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Allowing user to select image/video from photos for send images of booking items</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Allow location for batter user experience</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Allow location for batter user experience</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allowing user to select image/video from photos</string>
+    <string>Allow location for fetch nearest booking request</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Allow location for fetch nearest booking request</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Allow location for fetch nearest booking request</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Gilroy-Black.ttf</string>
