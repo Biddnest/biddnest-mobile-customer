@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Platform} from 'react-native';
+import {View, Text, StyleSheet, Platform, Linking} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Colors, hp, wp} from '../../constant/colors';
 import Header from './header';
@@ -147,6 +147,11 @@ const Signup = (props) => {
                 }}>
                 I agree to the{' '}
                 <Text
+                  onPress={() =>
+                    Linking.openURL(
+                      'https://www.biddnest.com/site/page/terms-and-conditions',
+                    )
+                  }
                   style={{
                     fontFamily: 'Roboto-Bold',
                     color: Colors.textLabelColor,

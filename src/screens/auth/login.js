@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Keyboard} from 'react-native';
+import {View, Text, StyleSheet, Keyboard, Linking} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Colors, hp, wp} from '../../constant/colors';
 import TextInput from '../../components/textInput';
@@ -116,6 +116,11 @@ const Login = (props) => {
                     }}>
                     I agree to the{' '}
                     <Text
+                      onPress={() =>
+                        Linking.openURL(
+                          'https://www.biddnest.com/site/page/terms-and-conditions',
+                        )
+                      }
                       style={{
                         fontFamily: 'Roboto-Bold',
                         color: Colors.textLabelColor,

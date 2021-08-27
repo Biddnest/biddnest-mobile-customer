@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, Image, ScrollView} from 'react-native';
+import {View, StyleSheet, Text, Image, ScrollView, Linking} from 'react-native';
 import {Colors, hp, wp, boxShadow} from '../../../constant/colors';
 import Button from '../../../components/button';
 import {STYLES} from '../../../constant/commonStyle';
@@ -179,7 +179,19 @@ const FinalQuote = (props) => {
                 color: Colors.grey,
                 fontSize: wp(3.8),
               }}>
-              I agree to the Terms & conditions
+              I agree to the{' '}
+              <Text
+                onPress={() =>
+                  Linking.openURL(
+                    'https://www.biddnest.com/site/page/terms-and-conditions',
+                  )
+                }
+                style={{
+                  fontFamily: 'Roboto-Bold',
+                  color: Colors.textLabelColor,
+                }}>
+                Terms & conditions
+              </Text>
             </Text>
           </View>
         </ScrollView>
