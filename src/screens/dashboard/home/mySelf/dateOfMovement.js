@@ -32,6 +32,9 @@ const DateOfMovement = (props) => {
   const [dateArray, setDateArray] = useState({});
   const [dateArrayDisplay, setDateArrayDisplay] = useState([]);
   const [sharedInfo, setSharedInfo] = useState(false);
+  const [sharedService, setSharedService] = useState(
+    data?.source?.meta?.shared_service,
+  );
   let source = data?.source || {};
   let date = new Date();
 
@@ -58,6 +61,12 @@ const DateOfMovement = (props) => {
     });
     setDateArray(temp);
   };
+
+  useEffect(() => {
+    if (sharedService !== data?.source?.meta?.shared_service) {
+      handleState('shared_service', sharedService);
+    }
+  }, [sharedService]);
 
   const handleState = (key, value) => {
     let temp = {...source};
@@ -114,6 +123,7 @@ const DateOfMovement = (props) => {
                     let temp = [...data?.movement_dates];
                     temp.splice(index, 1);
                     handleStateChange('movement_dates', temp);
+                    setSharedService(temp?.length > 1);
                   }}
                   style={{
                     ...styles.closeView,
@@ -229,8 +239,8 @@ const DateOfMovement = (props) => {
             </Text>
           </View>
           <Switch
-            onChange={(text) => handleState('shared_service', text === 1)}
-            value={source?.meta?.shared_service || false}
+            onChange={(text) => setSharedService(text === 1)}
+            value={sharedService}
           />
         </View>
         <Text
@@ -353,6 +363,7 @@ const DateOfMovement = (props) => {
                 });
                 setDateArrayDisplay(temp);
                 setCalender(false);
+                setSharedService(temp?.length > 1);
               } else {
                 let aryLength = t.length;
                 let dateDifference = moment(t[aryLength - 1]).diff(
@@ -367,6 +378,7 @@ const DateOfMovement = (props) => {
                   });
                   setDateArrayDisplay(temp);
                   setCalender(false);
+                  setSharedService(temp?.length > 1);
                 } else {
                   CustomAlert('You can select maximum 5 dates');
                 }
@@ -381,6 +393,7 @@ const DateOfMovement = (props) => {
           isLoading={isLoading}
           onPress={() => {
             setLoading(true);
+            handleState('shared_service', sharedService);
             if (data?.movement_dates?.length > 0) {
               setError(false);
               setLoading(false);
