@@ -19,6 +19,7 @@ import RaiseTicket from '../screens/dashboard/myBooking/raiseTicket';
 import BookingInitialQuote from '../screens/dashboard/myBooking/bookingIntialQuote';
 import OrderDetails from '../screens/dashboard/drawer/orderDetails';
 import PrivacyPolicy from '../screens/dashboard/drawer/privacyPolicy';
+import Notification from '../screens/dashboard/drawer/notification';
 
 const Stack = createStackNavigator();
 
@@ -48,6 +49,7 @@ const MainStackNavigator = () => {
       <Stack.Screen name="OrderTimer" component={OrderTimer} />
       <Stack.Screen name="OrderTracking" component={OrderTracking} />
       <Stack.Screen name="Payment" component={Payment} />
+      <Stack.Screen name="Notification" component={Notification} />
       <Stack.Screen
         name="BookingInitialQuote"
         component={BookingInitialQuote}

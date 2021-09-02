@@ -102,6 +102,13 @@ export const SIDE_DRAWER = [
     navigate: 'MyBooking',
   },
   {
+    iconFamily: 'Ionicons',
+    icon: 'ios-notifications-outline',
+    topText: 'Notifications',
+    bottomText: 'Notification',
+    navigate: 'Notification',
+  },
+  {
     iconFamily: 'Feather',
     icon: 'info',
     topText: 'About Us',
