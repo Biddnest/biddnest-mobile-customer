@@ -29,10 +29,10 @@ const Notification = (props) => {
     fetchNotification();
   }, []);
 
-  const fetchNotification = (pageNo = 1, url) => {
+  const fetchNotification = (pageNo = 1) => {
     setRefresh(true);
     let obj = {
-      url: url ? url : `notifications?page=${pageNo}`,
+      url: `notifications?page=${pageNo}`,
       method: 'get',
       headers: {
         Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
@@ -95,6 +95,7 @@ const Notification = (props) => {
                 fontFamily: 'Roboto-Regular',
                 color: Colors.textLabelColor,
                 textAlign: 'right',
+                marginRight: wp(1),
                 fontSize: wp(3),
               }}>
               {moment(item?.created_at).fromNow()}
@@ -142,11 +143,11 @@ const Notification = (props) => {
           onRefresh={fetchNotification}
           refreshing={isRefresh}
           onEndReached={() => {
-            if (data?.notifications?.length > 8) {
-              fetchNotification(
-                data?.paging?.current_page || 1,
-                data?.paging?.next_page,
-              );
+            if (
+              data?.notifications?.length > 8 &&
+              data?.paging?.current_page < data?.paging?.total_pages
+            ) {
+              fetchNotification(data?.paging?.current_page + 1 || 1);
             }
           }}
           ListEmptyComponent={() => (
