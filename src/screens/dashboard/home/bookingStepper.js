@@ -465,7 +465,7 @@ const BookingStepper = (props) => {
           if (apiResponse?.public_booking_id) {
             resetNavigator(props, 'Dashboard');
           } else {
-            if (headerText === 'MAKE MOVE') {
+            if (movingFrom) {
               setMovingFrom(false);
             } else {
               if (currentPosition > 0) {
@@ -521,6 +521,7 @@ const BookingStepper = (props) => {
       </LinearGradient>
       <BackConfirmation
         visible={confirmationVisible}
+        data={data}
         closeIcon={() => setConfirmationVisible(false)}
         text={confirmationText}
         navigation={props.navigation}

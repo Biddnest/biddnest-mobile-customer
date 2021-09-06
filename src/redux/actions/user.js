@@ -217,6 +217,26 @@ export const storeFormData = (data) => {
   };
 };
 
+export const trackUserData = (data) => {
+  return new Promise((resolve, reject) => {
+    let obj = {
+      url: 'bookings/track',
+      method: 'post',
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+      data: data,
+    };
+    APICall(obj)
+      .then((res) => {
+        resolve(res?.data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
 export const getSlider = (data) => {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
