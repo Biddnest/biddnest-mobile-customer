@@ -31,9 +31,14 @@ import moment from 'moment';
 import {Base64} from 'js-base64';
 import CustomModalAndroid from '../../../components/customModal';
 import * as Sentry from '@sentry/react-native';
+import {Input} from 'react-native-elements';
+import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
+import {Calendar} from 'react-native-calendars';
+import FlatButton from '../../../components/flatButton';
+import _ from 'lodash';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const Payment = (props) => {
-  const entities = new Html5Entities();
   const inputCode = useRef(null);
   const configData =
     useSelector((state) => state.Login?.configData?.enums?.payment) || {};
@@ -49,6 +54,11 @@ const Payment = (props) => {
   const [couponApplied, setCouponApplied] = useState(false);
   const [coupons, setCoupons] = useState([]);
   const [placedSuccessVisible, setPlacedSuccessVisible] = useState(false);
+  const [openCalender, setCalender] = useState(false);
+  const [error, setError] = useState(undefined);
+  const [dateArray, setDateArray] = useState([]);
+  const [dateSelection, setDateSelection] = useState([]);
+  const [movingDate, setMovingDate] = useState();
 
   useEffect(() => {
     if (orderData?.public_booking_id) {
@@ -89,6 +99,24 @@ const Payment = (props) => {
     }
     fetchPaymentSummery();
   }, []);
+  useEffect(() => {
+    let temp = [];
+    if (dateArray?.length > 1) {
+      dateArray?.forEach((item, index) => {
+        temp[item] = {
+          customStyles: {
+            text: {
+              color: Colors.inputTextColor,
+            },
+          },
+        };
+      });
+      setDateSelection(temp);
+    } else {
+      setError(false);
+      dateArray?.length > 0 && setMovingDate(dateArray[0]);
+    }
+  }, [dateArray]);
   const fetchPaymentSummery = () => {
     let obj = {
       url: `bookings/payment/summary?public_booking_id=${orderData?.public_booking_id}`,
@@ -102,6 +130,8 @@ const Payment = (props) => {
         setLoading(false);
         if (res?.data?.status === 'success') {
           setPaymentSummery(res?.data?.data?.payment_details);
+          res?.data?.data?.dates &&
+            setDateArray(Object.values(JSON.parse(res?.data?.data?.dates)));
         } else {
           setLoading(false);
           CustomAlert(res?.data?.message);
@@ -123,6 +153,7 @@ const Payment = (props) => {
       data: {
         public_booking_id: orderData?.public_booking_id,
         coupon_code: coupon_code.length > 0 ? coupon_code : null,
+        moving_date: moment(movingDate).format('D-MM-YYYY'),
       },
     };
     APICall(obj)
@@ -150,12 +181,7 @@ const Payment = (props) => {
       order_id: payment?.rzp_order_id,
       theme: {color: Colors.darkBlue, hide_topbar: true},
       name: APIData?.name,
-      description: `Movement on ${
-        orderData?.bid?.meta &&
-        moment(JSON.parse(orderData?.bid?.meta?.toString()).moving_date).format(
-          'Do MMM YYYY',
-        )
-      }`,
+      description: `Movement on ${moment(movingDate).format('Do MMM YYYY')}`,
       image: APIData?.logo,
       prefill: {
         email: userData?.email,
@@ -242,6 +268,33 @@ const Payment = (props) => {
               ₹ {parseFloat(paymentSummery?.grand_total).toFixed(2)}
             </Text>
           </View>
+          {dateArray?.length > 1 && (
+            <Pressable
+              style={{marginTop: hp(1.5), marginBottom: -hp(2)}}
+              onPress={() => setCalender(true)}>
+              <Input
+                placeholder={'Choose a Date'}
+                disabled={true}
+                label={'Choose a Date *'}
+                value={movingDate && moment(movingDate).format('Do MMMM YYYY')}
+                rightIcon={() => {
+                  return (
+                    <MaterialIcons
+                      name="calendar-today"
+                      size={hp(3)}
+                      color={Colors.grey}
+                    />
+                  );
+                }}
+                inputContainerStyle={{
+                  ...styles.inputContainerStyle,
+                  borderColor: error ? Colors.red : Colors.silver,
+                }}
+                labelStyle={styles.labelStyle}
+                inputStyle={styles.inputStyle}
+              />
+            </Pressable>
+          )}
           <View
             style={{
               flexDirection: 'row',
@@ -456,7 +509,14 @@ const Payment = (props) => {
               return (
                 <View style={styles.movementLinear} key={index}>
                   <Pressable
-                    onPress={() => paymentInitiate(item.value)}
+                    onPress={() => {
+                      if (movingDate) {
+                        paymentInitiate(item.value);
+                      } else {
+                        CustomAlert('Please choose a date');
+                        setError(true);
+                      }
+                    }}
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
@@ -496,6 +556,61 @@ const Payment = (props) => {
           <Text style={styles.bidText}>
             Thankyou, Your booking has been Confirmed
           </Text>
+        </CustomModalAndroid>
+        <CustomModalAndroid
+          visible={openCalender}
+          title={'Choose Date'}
+          onPress={() => {
+            setCalender(false);
+          }}>
+          <Calendar
+            markingType={'custom'}
+            markedDates={dateSelection}
+            style={{width: wp(90), height: hp(50)}}
+            current={new Date()}
+            onDayPress={(day) => {
+              let temp = {...dateSelection};
+              dateArray.forEach((i, index) => {
+                if (i === day?.dateString) {
+                  temp[day?.dateString] = temp[day?.dateString]?.customStyles
+                    ?.text?.color
+                    ? {
+                        selected: true,
+                        selectedColor: Colors.btnBG,
+                      }
+                    : {
+                        customStyles: {
+                          text: {
+                            color: Colors.inputTextColor,
+                          },
+                        },
+                      };
+                } else {
+                  temp[i] = {
+                    customStyles: {
+                      text: {
+                        color: Colors.inputTextColor,
+                      },
+                    },
+                  };
+                }
+              });
+              setDateSelection(temp);
+              setMovingDate(day?.dateString);
+            }}
+            monthFormat={'MMM yyyy'}
+            showWeekNumbers={true}
+            onPressArrowLeft={(subtractMonth) => subtractMonth()}
+            onPressArrowRight={(addMonth) => addMonth()}
+            disableAllTouchEventsForDisabledDays={true}
+            enableSwipeMonths={true}
+            theme={{
+              dayTextColor: Colors.silver,
+              todayTextColor: Colors.silver,
+              arrowColor: Colors.btnBG,
+            }}
+          />
+          <FlatButton label={'OKAY'} onPress={() => setCalender(false)} />
         </CustomModalAndroid>
       </View>
     </LinearGradient>
@@ -560,5 +675,24 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(10),
     textAlign: 'center',
     lineHeight: hp(3.5),
+  },
+  inputContainerStyle: {
+    borderWidth: 2,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    height: isAndroid ? hp(6) : hp(6.5),
+    marginTop: hp(1),
+    borderBottomWidth: 2,
+  },
+  labelStyle: {
+    fontFamily: 'Roboto-Bold',
+    color: Colors.textLabelColor,
+    fontSize: wp(4),
+  },
+  inputStyle: {
+    fontSize: wp(4),
+    backgroundColor: Colors.textBG,
+    color: Colors.inputTextColor,
+    height: '99%',
   },
 });

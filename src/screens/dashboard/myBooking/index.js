@@ -105,7 +105,7 @@ const MyBooking = (props) => {
     }
   };
   const renderRightDate = (item, dates) => {
-    if (!item?.bid) {
+    if (item?.status <= 4) {
       return (
         <View
           style={{
@@ -176,9 +176,19 @@ const MyBooking = (props) => {
       {};
     let meta = (item?.meta && JSON.parse(item?.meta?.toString())) || {};
     let dateArray = [];
-    item?.movement_dates?.forEach((i) => {
-      dateArray.push(moment(i.date).format('D MMM'));
-    });
+    let temp = item?.bid?.moving_dates
+      ? JSON.parse(item?.bid?.moving_dates)
+      : item?.movement_dates;
+    if (item?.bid?.moving_dates) {
+      temp?.forEach((i) => {
+        dateArray.push(moment(i).format('D MMM'));
+      });
+    } else {
+      temp?.forEach((i) => {
+        dateArray.push(moment(i?.date).format('D MMM'));
+      });
+    }
+
     return (
       <Pressable
         style={[
