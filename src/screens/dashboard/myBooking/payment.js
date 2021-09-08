@@ -5,6 +5,7 @@ import {Colors, hp, wp, PAYMENT_OPTION} from '../../../constant/colors';
 import {
   FlatList,
   Image,
+  Keyboard,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -32,7 +33,10 @@ import {Base64} from 'js-base64';
 import CustomModalAndroid from '../../../components/customModal';
 import * as Sentry from '@sentry/react-native';
 import {Input} from 'react-native-elements';
-import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
+import {
+  isAndroid,
+  isIos,
+} from 'react-native-calendars/src/expandableCalendar/commons';
 import {Calendar} from 'react-native-calendars';
 import FlatButton from '../../../components/flatButton';
 import _ from 'lodash';
@@ -268,9 +272,14 @@ const Payment = (props) => {
               ₹ {parseFloat(paymentSummery?.grand_total).toFixed(2)}
             </Text>
           </View>
-          {dateArray?.length > 1 && (
+          {dateArray?.length > 1 && isAndroid && (
             <Pressable
-              style={{marginTop: hp(1.5), marginBottom: -hp(2)}}
+              style={{
+                marginTop: hp(1.5),
+                marginBottom: -hp(2),
+                width: wp(95),
+                alignSelf: 'center',
+              }}
               onPress={() => setCalender(true)}>
               <Input
                 placeholder={'Choose a Date'}
@@ -294,6 +303,40 @@ const Payment = (props) => {
                 inputStyle={styles.inputStyle}
               />
             </Pressable>
+          )}
+          {dateArray?.length > 1 && isIos && (
+            <View
+              style={{
+                marginTop: hp(1.5),
+                marginBottom: -hp(2),
+                width: wp(95),
+                alignSelf: 'center',
+              }}>
+              <Input
+                placeholder={'Choose a Date'}
+                onFocus={() => {
+                  Keyboard.dismiss();
+                  setCalender(true);
+                }}
+                label={'Choose a Date *'}
+                value={movingDate && moment(movingDate).format('Do MMMM YYYY')}
+                rightIcon={() => {
+                  return (
+                    <MaterialIcons
+                      name="calendar-today"
+                      size={hp(3)}
+                      color={Colors.grey}
+                    />
+                  );
+                }}
+                inputContainerStyle={{
+                  ...styles.inputContainerStyle,
+                  borderColor: error ? Colors.red : Colors.silver,
+                }}
+                labelStyle={styles.labelStyle}
+                inputStyle={styles.inputStyle}
+              />
+            </View>
           )}
           <View
             style={{
@@ -510,11 +553,15 @@ const Payment = (props) => {
                 <View style={styles.movementLinear} key={index}>
                   <Pressable
                     onPress={() => {
-                      if (movingDate) {
-                        paymentInitiate(item.value);
+                      if (dateArray?.length > 0) {
+                        if (movingDate) {
+                          paymentInitiate(item.value);
+                        } else {
+                          CustomAlert('Please choose a date');
+                          setError(true);
+                        }
                       } else {
-                        CustomAlert('Please choose a date');
-                        setError(true);
+                        paymentInitiate(item.value);
                       }
                     }}
                     style={{
@@ -683,6 +730,7 @@ const styles = StyleSheet.create({
     height: isAndroid ? hp(6) : hp(6.5),
     marginTop: hp(1),
     borderBottomWidth: 2,
+    backgroundColor: Colors.white,
   },
   labelStyle: {
     fontFamily: 'Roboto-Bold',

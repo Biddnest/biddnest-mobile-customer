@@ -452,6 +452,7 @@ const styles = StyleSheet.create({
     height: isAndroid ? hp(6) : hp(6.5),
     marginTop: hp(1),
     borderBottomWidth: 2,
+    backgroundColor: Colors.white,
   },
   labelStyle: {
     fontFamily: 'Roboto-Bold',
