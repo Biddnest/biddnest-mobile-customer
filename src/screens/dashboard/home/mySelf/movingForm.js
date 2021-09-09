@@ -518,13 +518,60 @@ const MovingForm = (props) => {
                 });
                 setLoading(false);
                 if (props.movingFrom) {
-                  if (props.bookingFor === 'Others') {
-                    props.onPageChange(2);
-                  } else {
-                    props.onPageChange(1);
-                  }
+                  let obj = {
+                    url: 'bookings/track/destination',
+                    method: 'put',
+                    headers: {
+                      Authorization:
+                        'Bearer ' + STORE.getState().Login?.loginData?.token,
+                    },
+                    data: {
+                      public_booking_id: data?.booking_id,
+                      destination: data?.destination,
+                    },
+                  };
+                  APICall(obj)
+                    .then((res) => {
+                      if (res?.data?.status === 'success') {
+                        if (props.bookingFor === 'Others') {
+                          props.onPageChange(2);
+                        } else {
+                          props.onPageChange(1);
+                        }
+                      } else {
+                        CustomAlert(res?.data?.message);
+                      }
+                    })
+                    .catch((err) => {
+                      CustomAlert(err?.data?.message);
+                      CustomConsole(err);
+                    });
                 } else {
-                  props.changeTo();
+                  let obj = {
+                    url: 'bookings/track/source',
+                    method: 'put',
+                    headers: {
+                      Authorization:
+                        'Bearer ' + STORE.getState().Login?.loginData?.token,
+                    },
+                    data: {
+                      public_booking_id: data?.booking_id,
+                      service_id: data?.service_id,
+                      source: data?.source,
+                    },
+                  };
+                  APICall(obj)
+                    .then((res) => {
+                      if (res?.data?.status === 'success') {
+                        props.changeTo();
+                      } else {
+                        CustomAlert(res?.data?.message);
+                      }
+                    })
+                    .catch((err) => {
+                      CustomAlert(err?.data?.message);
+                      CustomConsole(err);
+                    });
                 }
               } else {
                 scrollViewRef?.current?.scrollToPosition(0, 0, true);

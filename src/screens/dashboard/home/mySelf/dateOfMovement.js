@@ -19,10 +19,12 @@ import {STYLES} from '../../../../constant/commonStyle';
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash';
-import {CustomAlert} from '../../../../constant/commonFun';
+import {CustomAlert, CustomConsole} from '../../../../constant/commonFun';
 import Switch from '../../../../components/switch';
 import InformationPopUp from '../../../../components/informationPopUp';
 import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
+import {STORE} from '../../../../redux';
+import {APICall} from '../../../../redux/actions/user';
 
 const DateOfMovement = (props) => {
   const {data, handleStateChange} = props;
@@ -397,11 +399,39 @@ const DateOfMovement = (props) => {
             if (data?.movement_dates?.length > 0) {
               setError(false);
               setLoading(false);
-              if (props.bookingFor === 'Others') {
-                props.onPageChange(3);
-              } else {
-                props.onPageChange(2);
-              }
+              let obj = {
+                url: 'bookings/track/dates',
+                method: 'put',
+                headers: {
+                  Authorization:
+                    'Bearer ' + STORE.getState().Login?.loginData?.token,
+                },
+                data: {
+                  public_booking_id: data?.booking_id,
+                  movement_dates: data?.movement_dates,
+                  source: {
+                    meta: {
+                      shared_service: sharedService,
+                    },
+                  },
+                },
+              };
+              APICall(obj)
+                .then((res) => {
+                  if (res?.data?.status === 'success') {
+                    if (props.bookingFor === 'Others') {
+                      props.onPageChange(3);
+                    } else {
+                      props.onPageChange(2);
+                    }
+                  } else {
+                    CustomAlert(res?.data?.message);
+                  }
+                })
+                .catch((err) => {
+                  CustomAlert(err?.data?.message);
+                  CustomConsole(err);
+                });
             } else {
               setLoading(false);
               setError(true);

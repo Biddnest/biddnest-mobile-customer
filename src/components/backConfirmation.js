@@ -18,9 +18,9 @@ const BackConfirmation = (props) => {
         rightLabel={'ok'}
         leftOnPress={closeIcon}
         rightOnPress={() => {
-          if (data?.source?.meta?.geocode !== '') {
-            trackUserData(data);
-          }
+          // if (data?.source?.meta?.geocode !== '') {
+          //   trackUserData(data);
+          // }
           closeIcon();
           navigation.goBack();
         }}

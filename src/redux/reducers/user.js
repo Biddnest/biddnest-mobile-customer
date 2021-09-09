@@ -1,7 +1,6 @@
 import {
   CONFIG_DATA,
   ENQUIRY_ORDERS,
-  FORM_DATA,
   GET_ZONES,
   INVENTORY_DATA,
   LIVE_ORDERS,
@@ -42,9 +41,6 @@ export default (state = INITIAL_STATE, action) => {
     }
     case GET_ZONES: {
       return {...state, zones: action.payload};
-    }
-    case FORM_DATA: {
-      return {...state, formData: action.payload};
     }
     case TESTIMONIALS: {
       return {...state, testimonials: action.payload};

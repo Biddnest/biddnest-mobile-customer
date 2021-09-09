@@ -1297,13 +1297,17 @@ const RequirementDetails = (props) => {
                 ? selectedSubCategory?.name
                 : null;
             let obj = {
-              url: 'bookings/enquiry',
-              method: 'post',
+              url: 'bookings/track/inventory',
+              method: 'put',
               headers: {
                 Authorization:
                   'Bearer ' + STORE.getState().Login?.loginData?.token,
               },
-              data: temp,
+              data: {
+                public_booking_id: data?.booking_id,
+                meta: temp?.meta,
+                inventory_items: temp.inventory_items,
+              },
             };
             APICall(obj)
               .then((res) => {
@@ -1321,6 +1325,7 @@ const RequirementDetails = (props) => {
               })
               .catch((err) => {
                 setLoading(false);
+                CustomAlert(err?.data?.message);
                 CustomConsole(err);
               });
           }}

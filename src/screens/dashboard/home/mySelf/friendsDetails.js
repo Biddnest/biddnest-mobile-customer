@@ -4,6 +4,9 @@ import {Colors, hp, wp} from '../../../../constant/colors';
 import TextInput from '../../../../components/textInput';
 import Button from '../../../../components/button';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {STORE} from '../../../../redux';
+import {APICall} from '../../../../redux/actions/user';
+import {CustomAlert, CustomConsole} from '../../../../constant/commonFun';
 
 const FriendsDetails = (props) => {
   const {data, handleStateChange} = props;
@@ -92,7 +95,36 @@ const FriendsDetails = (props) => {
               Object.values(tempError).findIndex((item) => item === false) ===
               -1
             ) {
-              props.onPageChange(1);
+              let obj = {
+                url: 'bookings/track/customer',
+                method: 'post',
+                headers: {
+                  Authorization:
+                    'Bearer ' + STORE.getState().Login?.loginData?.token,
+                },
+                data: {
+                  contact_details: contact_details,
+                  meta: {
+                    self_booking: false,
+                  },
+                },
+              };
+              APICall(obj)
+                .then((res) => {
+                  if (res?.data?.status === 'success') {
+                    handleStateChange(
+                      'booking_id',
+                      res?.data?.data?.booking?.public_booking_id,
+                    );
+                    props.onPageChange(1);
+                  } else {
+                    CustomAlert(res?.data?.message);
+                  }
+                })
+                .catch((err) => {
+                  CustomAlert(err?.data?.message);
+                  CustomConsole(err);
+                });
             } else {
               setLoading(false);
             }

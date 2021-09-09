@@ -3,7 +3,6 @@ import {Alert} from 'react-native';
 import {
   CONFIG_DATA,
   ENQUIRY_ORDERS,
-  FORM_DATA,
   GET_ZONES,
   INVENTORY_DATA,
   LIVE_ORDERS,
@@ -204,15 +203,6 @@ export const signOut = () => {
   return (dispatch) => {
     dispatch({
       type: RESET_STORE,
-    });
-  };
-};
-
-export const storeFormData = (data) => {
-  return (dispatch) => {
-    dispatch({
-      type: FORM_DATA,
-      payload: data,
     });
   };
 };

@@ -40,6 +40,7 @@ const BookingStepper = (props) => {
   const [currentPosition, setCurrentPosition] = useState(0);
   const bookingFor = props?.route?.params?.bookingFor || 'Myself';
   const movementType = props?.route?.params?.movementType || {};
+  const booking_id = props?.route?.params?.booking_id || null;
   const [headerText, setHeaderText] = useState(
     bookingFor === 'Myself' ? 'MOVING TO' : '',
   );
@@ -50,7 +51,7 @@ const BookingStepper = (props) => {
       'Are you sure?',
   );
   const [data, setData] = useState({
-    booking_id: null,
+    booking_id: booking_id,
     service_id: movementType?.id,
     source: {
       lat: 21.1702,

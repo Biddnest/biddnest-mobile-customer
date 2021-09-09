@@ -983,10 +983,48 @@ const Home = (props) => {
         <Pressable
           onPress={() => {
             setBookingSelectionVisible(false);
-            props.navigation.navigate('BookingStepper', {
-              bookingFor,
-              movementType,
-            });
+            if (bookingFor === 'Myself') {
+              let obj = {
+                url: 'bookings/track/customer',
+                method: 'post',
+                headers: {
+                  Authorization:
+                    'Bearer ' + STORE.getState().Login?.loginData?.token,
+                },
+                data: {
+                  contact_details: {
+                    name: '',
+                    phone: '',
+                    email: '',
+                  },
+                  meta: {
+                    self_booking: true,
+                  },
+                },
+              };
+              APICall(obj)
+                .then((res) => {
+                  if (res?.data?.status === 'success') {
+                    props.navigation.navigate('BookingStepper', {
+                      bookingFor,
+                      movementType,
+                      booking_id: res?.data?.data?.booking?.public_booking_id,
+                    });
+                  } else {
+                    CustomAlert(res?.data?.message);
+                  }
+                })
+                .catch((err) => {
+                  CustomAlert(err?.data?.message);
+                  CustomConsole(err);
+                });
+            } else {
+              props.navigation.navigate('BookingStepper', {
+                bookingFor,
+                movementType,
+                booking_id: null,
+              });
+            }
           }}
           style={{
             height: hp(7),
