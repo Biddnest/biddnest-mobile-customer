@@ -241,7 +241,8 @@ const DateOfMovement = (props) => {
             </Text>
           </View>
           <Switch
-            onChange={(text) => setSharedService(text === 1)}
+            // onChange={(text) => setSharedService(text === 1)}
+            onChange={() => {}}
             value={sharedService}
           />
         </View>
