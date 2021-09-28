@@ -18,6 +18,7 @@ import CustomModalAndroid from '../../../../components/customModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FlatButton from '../../../../components/flatButton';
 import {
+  ArrayUnique,
   CustomAlert,
   CustomConsole,
   ImageSelection,
@@ -386,28 +387,17 @@ const RequirementDetails = (props) => {
       </View>
     );
   };
-  const arrayUnique = (array) => {
-    let a = array.concat();
-    for (let i = 0; i < a.length; ++i) {
-      for (let j = i + 1; j < a.length; ++j) {
-        if (a[i] === a[j]) {
-          a.splice(j--, 1);
-        }
-      }
-    }
-    return a;
-  };
 
   const setImage = (type) => {
     let imageData = [...data?.meta?.images];
     ImageSelection(type, true)
       .then((res) => {
-        let array3 = arrayUnique(imageData.concat(res));
+        let array3 = ArrayUnique(imageData.concat(res));
         handleState('images', array3);
       })
       .catch((err) => {});
   };
-  let imageData = arrayUnique([...data?.meta?.images]);
+  let imageData = ArrayUnique([...data?.meta?.images]);
   imageData.push('Plus');
   return (
     <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
@@ -534,15 +524,7 @@ const RequirementDetails = (props) => {
                 return (
                   <Pressable
                     onPress={() => setImageSelect(true)}
-                    style={{
-                      height: wp(16),
-                      width: wp(16),
-                      borderRadius: wp(3),
-                      backgroundColor: Colors.btnBG,
-                      marginRight: wp(3),
-                      marginTop: hp(1),
-                      ...STYLES.common,
-                    }}>
+                    style={[STYLES.common, STYLES.imageWrapper]}>
                     <MaterialCommunityIcons
                       name={'plus'}
                       size={hp(5)}
@@ -554,20 +536,19 @@ const RequirementDetails = (props) => {
               return (
                 <Pressable
                   key={index}
-                  style={{
-                    height: wp(16),
-                    width: wp(16),
-                    borderRadius: wp(3),
-                    backgroundColor: Colors.silver,
-                    marginRight: wp(3),
-                    marginTop: hp(1),
-                  }}>
+                  style={[
+                    STYLES.imageWrapper,
+                    {
+                      backgroundColor: Colors.silver,
+                    },
+                  ]}>
                   <Image
                     source={{uri: item}}
                     resizeMode={'contain'}
                     style={{
                       height: '100%',
                       width: '100%',
+                      borderRadius: wp(3),
                     }}
                   />
                   <Pressable
@@ -578,13 +559,7 @@ const RequirementDetails = (props) => {
                       temp.images = t1;
                       handleStateChange('meta', temp);
                     }}
-                    style={{
-                      position: 'absolute',
-                      right: -4,
-                      top: -4,
-                      height: 18,
-                      width: 18,
-                    }}>
+                    style={STYLES.crossView}>
                     <ImageCross width={18} height={18} />
                   </Pressable>
                 </Pressable>

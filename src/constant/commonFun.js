@@ -84,6 +84,18 @@ export const CustomAlert = (msg = '') => {
   // return Toast.show(msg, Toast.LONG);
 };
 
+export const ArrayUnique = (array) => {
+  let a = array.concat();
+  for (let i = 0; i < a.length; ++i) {
+    for (let j = i + 1; j < a.length; ++j) {
+      if (a[i] === a[j]) {
+        a.splice(j--, 1);
+      }
+    }
+  }
+  return a;
+};
+
 export const pad_with_zeroes = (number, length) => {
   let my_string = '' + number;
   while (my_string.length < length) {
