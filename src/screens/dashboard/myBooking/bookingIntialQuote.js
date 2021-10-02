@@ -127,12 +127,9 @@ const BookingInitialQuote = (props) => {
           } else {
             CustomAlert(res?.data?.message);
           }
-          setLoading(false);
         })
-        .catch((err) => {
-          CustomConsole(err);
-          setLoading(false);
-        });
+        .catch((err) => CustomConsole(err))
+        .finally(() => setLoading(false));
     } else {
       setLoading(false);
     }

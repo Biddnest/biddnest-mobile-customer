@@ -69,7 +69,6 @@ const Payment = (props) => {
       setLoading(true);
       getOrderDetails(orderData?.public_booking_id)
         .then((res) => {
-          setLoading(false);
           if (res?.status == 400) {
             resetNavigator(props, 'Dashboard');
           } else if (res?.data?.status === 'success') {
@@ -78,10 +77,8 @@ const Payment = (props) => {
             CustomAlert(res?.data?.message);
           }
         })
-        .catch((err) => {
-          setLoading(false);
-          CustomConsole(err);
-        });
+        .catch((err) => CustomConsole(err))
+        .finally(() => setLoading(false));
       let obj = {
         url: `coupon/get?public_booking_id=${orderData?.public_booking_id}`,
         method: 'get',
@@ -131,20 +128,16 @@ const Payment = (props) => {
     };
     APICall(obj)
       .then((res) => {
-        setLoading(false);
         if (res?.data?.status === 'success') {
           setPaymentSummery(res?.data?.data?.payment_details);
           res?.data?.data?.dates &&
             setDateArray(Object.values(JSON.parse(res?.data?.data?.dates)));
         } else {
-          setLoading(false);
           CustomAlert(res?.data?.message);
         }
       })
-      .catch((err) => {
-        setLoading(false);
-        CustomConsole(err);
-      });
+      .catch((err) => CustomConsole(err))
+      .finally(() => setLoading(false));
   };
   const paymentInitiate = (cardType) => {
     setLoading(true);
@@ -162,19 +155,15 @@ const Payment = (props) => {
     };
     APICall(obj)
       .then((res) => {
-        setLoading(false);
         if (res?.data?.status === 'success') {
           // Razor pay
           paymentMethod(res?.data?.data?.payment, cardType);
         } else {
-          setLoading(false);
           CustomAlert(res?.data?.message);
         }
       })
-      .catch((err) => {
-        setLoading(false);
-        CustomConsole(err);
-      });
+      .catch((err) => CustomConsole(err))
+      .finally(() => setLoading(false));
   };
   const paymentMethod = (payment, cardType) => {
     setLoading(true);
@@ -209,17 +198,14 @@ const Payment = (props) => {
         };
         APICall(obj)
           .then((res) => {
-            setLoading(false);
             if (res?.data?.status === 'success') {
               setPlacedSuccessVisible(true);
             } else {
               CustomAlert(res?.data?.message);
             }
           })
-          .catch((err) => {
-            setLoading(false);
-            CustomConsole(err);
-          });
+          .catch((err) => CustomConsole(err))
+          .finally(() => setLoading(false));
       })
       .catch((error) => {
         // handle failure
@@ -397,7 +383,6 @@ const Payment = (props) => {
                     };
                     APICall(obj)
                       .then((res) => {
-                        setLoading(false);
                         if (res?.data?.status === 'success') {
                           setCouponApplied(true);
                           setPaymentSummery(res?.data?.data?.payment_details);
@@ -406,10 +391,8 @@ const Payment = (props) => {
                           CustomAlert(res?.data?.message);
                         }
                       })
-                      .catch((err) => {
-                        setLoading(false);
-                        CustomConsole(err);
-                      });
+                      .catch((err) => CustomConsole(err))
+                      .finally(() => setLoading(false));
                   }
                 }}
               />

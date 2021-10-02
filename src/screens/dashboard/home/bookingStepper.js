@@ -515,7 +515,7 @@ const BookingStepper = (props) => {
             customStyles={STYLES.stepperStyle}
             currentPosition={currentPosition}
             renderStepIndicator={renderStepIndicator}
-            // onPress={onPageChange}
+            onPress={onPageChange}
           />
         </View>
         {renderComponent()}

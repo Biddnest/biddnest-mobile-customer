@@ -7,7 +7,11 @@ import Button from '../../components/button';
 import Header from './header';
 import CheckBox from '../../components/checkBox';
 import LinearGradient from 'react-native-linear-gradient';
-import {CustomAlert, resetNavigator} from '../../constant/commonFun';
+import {
+  CustomAlert,
+  CustomConsole,
+  resetNavigator,
+} from '../../constant/commonFun';
 import {useDispatch} from 'react-redux';
 import {sendOTP, signOut, verifyOTP} from '../../redux/actions/user';
 import {LOGIN_USER_DATA} from '../../redux/types';
@@ -47,7 +51,6 @@ const Login = (props) => {
       // Send OTP
       sendOTP({phone})
         .then((res) => {
-          setLoading(false);
           if (res.status === 'success') {
             CustomAlert(res.message + res.data.otp);
             setOtpResponse(res.data);
@@ -56,10 +59,8 @@ const Login = (props) => {
             CustomAlert(res.message);
           }
         })
-        .catch((err) => {
-          setLoading(false);
-          CustomAlert(err?.data?.message);
-        });
+        .catch((err) => CustomAlert(err?.data?.message))
+        .finally(() => setLoading(false));
     }
   };
 
@@ -193,7 +194,6 @@ const Login = (props) => {
                           otp: code,
                         })
                           .then((res) => {
-                            setLoading(false);
                             if (res.status === 'success') {
                               dispatch({
                                 type: LOGIN_USER_DATA,
@@ -214,10 +214,8 @@ const Login = (props) => {
                               CustomAlert(res.message);
                             }
                           })
-                          .catch((err) => {
-                            setLoading(false);
-                            CustomAlert(err?.data?.message);
-                          });
+                          .catch((err) => CustomAlert(err?.data?.message))
+                          .finally(() => setLoading(false));
                       }}
                     />
                   </View>
@@ -241,7 +239,6 @@ const Login = (props) => {
                       otp,
                     })
                       .then((res) => {
-                        setLoading(false);
                         if (res.status === 'success') {
                           dispatch({
                             type: LOGIN_USER_DATA,
@@ -262,10 +259,8 @@ const Login = (props) => {
                           CustomAlert(res.message);
                         }
                       })
-                      .catch((err) => {
-                        setLoading(false);
-                        CustomAlert(err?.data?.message);
-                      });
+                      .catch((err) => CustomAlert(err?.data?.message))
+                      .finally(() => setLoading(false));
                   }}
                 />
                 {(resendOTP && (

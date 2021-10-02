@@ -58,7 +58,6 @@ const SingleTicket = (props) => {
     };
     APICall(obj)
       .then((res) => {
-        setLoading(false);
         if (res?.data?.status === 'success') {
           setReplies(res?.data?.data?.ticket?.reply);
           setTicket(res?.data?.data?.ticket);
@@ -67,10 +66,8 @@ const SingleTicket = (props) => {
           CustomAlert(res?.data?.message);
         }
       })
-      .catch((err) => {
-        setLoading(false);
-        CustomConsole(err);
-      });
+      .catch((err) => CustomConsole(err))
+      .finally(() => setLoading(false));
   };
   const renderItem = ({item, index}) => {
     if (item?.admin_id) {
@@ -290,7 +287,6 @@ const SingleTicket = (props) => {
               };
               APICall(obj)
                 .then((res) => {
-                  setLoading(false);
                   if (res?.data?.status === 'success') {
                     fetchReplies();
                     setRepliesModal(false);
@@ -298,10 +294,8 @@ const SingleTicket = (props) => {
                     CustomAlert(res?.data?.message);
                   }
                 })
-                .catch((err) => {
-                  setLoading(false);
-                  CustomConsole(err);
-                });
+                .catch((err) => CustomConsole(err))
+                .finally(() => setLoading(false));
             } else {
               setReplyError(false);
             }

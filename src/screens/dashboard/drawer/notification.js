@@ -40,8 +40,6 @@ const Notification = (props) => {
     };
     APICall(obj)
       .then((res) => {
-        setLoading(false);
-        setRefresh(false);
         if (res?.data?.status === 'success') {
           if (pageNo === 1) {
             setData(res?.data?.data);
@@ -59,10 +57,10 @@ const Notification = (props) => {
           CustomAlert(res?.data?.message);
         }
       })
-      .catch((err) => {
-        setLoading(false);
+      .catch((err) => CustomConsole(err))
+      .finally(() => {
         setRefresh(false);
-        CustomConsole(err);
+        setLoading(false);
       });
   };
 

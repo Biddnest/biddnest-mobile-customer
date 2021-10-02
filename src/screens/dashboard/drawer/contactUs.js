@@ -50,17 +50,14 @@ const ContactUs = (props) => {
     };
     APICall(obj)
       .then((res) => {
-        setLoading(false);
         if (res?.data?.status === 'success') {
           setRecentOrder(res?.data?.data?.booking);
         } else {
           // CustomAlert(res?.data?.message);
         }
       })
-      .catch((err) => {
-        setLoading(false);
-        CustomConsole(err);
-      });
+      .catch((err) => CustomConsole(err))
+      .finally(() => setLoading(false));
     let obj1 = {
       url: 'contact-us',
       method: 'get',
@@ -70,17 +67,14 @@ const ContactUs = (props) => {
     };
     APICall(obj1)
       .then((res) => {
-        setLoading(false);
         if (res?.data?.status === 'success') {
           setContactUs(res?.data?.data?.details);
         } else {
           CustomAlert(res?.data?.message);
         }
       })
-      .catch((err) => {
-        setLoading(false);
-        CustomConsole(err);
-      });
+      .catch((err) => CustomConsole(err))
+      .finally(() => setLoading(false));
   }, []);
   const fetchTicket = () => {
     let obj = {
@@ -92,17 +86,14 @@ const ContactUs = (props) => {
     };
     APICall(obj)
       .then((res) => {
-        setLoading(false);
         if (res?.data?.status === 'success') {
           setRecentTicket(res?.data?.data?.ticket);
         } else {
           CustomAlert(res?.data?.message);
         }
       })
-      .catch((err) => {
-        setLoading(false);
-        CustomConsole(err);
-      });
+      .catch((err) => CustomConsole(err))
+      .finally(() => setLoading(false));
   };
   const renderItem = ({item, index}) => {
     let status = '';

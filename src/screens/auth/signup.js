@@ -214,10 +214,8 @@ const Signup = (props) => {
                         CustomAlert(res.message);
                       }
                     })
-                    .catch((err) => {
-                      setLoading(false);
-                      CustomAlert(err.data.message);
-                    });
+                    .catch((err) => CustomAlert(err?.data?.message))
+                    .finally(() => setLoading(false));
                 } else {
                   setLoading(false);
                 }

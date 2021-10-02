@@ -122,7 +122,6 @@ const RateUs = (props) => {
               };
               APICall(obj)
                 .then((res) => {
-                  setLoading(false);
                   if (res?.data?.status === 'success') {
                     setCurrentStep(0);
                     props.successRedirect();
@@ -130,10 +129,8 @@ const RateUs = (props) => {
                     CustomAlert(res?.data?.message);
                   }
                 })
-                .catch((err) => {
-                  setLoading(false);
-                  CustomConsole(err);
-                });
+                .catch((err) => CustomConsole(err))
+                .finally(() => setLoading(false));
             } else {
               setCurrentStep(currentStep + 1);
             }

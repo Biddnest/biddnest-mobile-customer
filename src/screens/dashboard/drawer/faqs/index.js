@@ -26,17 +26,14 @@ const FAQS = (props) => {
     };
     APICall(obj)
       .then((res) => {
-        setLoading(false);
         if (res?.data?.status === 'success') {
           setFaqs(res?.data?.data?.faqs?.categories);
         } else {
           CustomAlert(res?.data?.message);
         }
       })
-      .catch((err) => {
-        setLoading(false);
-        CustomConsole(err);
-      });
+      .catch((err) => CustomConsole(err))
+      .finally(() => setLoading(false));
   };
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>

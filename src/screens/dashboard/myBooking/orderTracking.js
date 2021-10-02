@@ -656,7 +656,6 @@ const OrderTracking = (props) => {
                 obj.url = 'bookings/request/canceled';
                 APICall(obj)
                   .then((res) => {
-                    setLoading(false);
                     if (res?.data?.status === 'success') {
                       setCancelOrder(false);
                       setManageOrderVisible(false);
@@ -665,10 +664,8 @@ const OrderTracking = (props) => {
                       CustomAlert(res?.data?.message);
                     }
                   })
-                  .catch((err) => {
-                    setLoading(false);
-                    CustomConsole(err);
-                  });
+                  .catch((err) => CustomConsole(err))
+                  .finally(() => setLoading(false));
               } else if (privacyPolicy) {
                 setLoading(false);
                 setPrivacyPolicy(false);
@@ -678,17 +675,14 @@ const OrderTracking = (props) => {
                 obj.url = 'bookings/request/reschedule';
                 APICall(obj)
                   .then((res) => {
-                    setLoading(false);
                     if (res?.data?.status === 'success') {
                       setRescheduleOrder(true);
                     } else {
                       CustomAlert(res?.data?.message);
                     }
                   })
-                  .catch((err) => {
-                    setLoading(false);
-                    CustomConsole(err);
-                  });
+                  .catch((err) => CustomConsole(err))
+                  .finally(() => setLoading(false));
                 // setManageOrderVisible(false);
               }
             }}

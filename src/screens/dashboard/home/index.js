@@ -311,7 +311,6 @@ const Home = (props) => {
             });
           dispatch(getServices(locationData, props))
             .then((res) => {
-              setLoading(false);
               if (res.status === 'success' && res?.data?.services) {
                 setServiceData(res?.data?.services);
                 setInterval(() => {
@@ -329,13 +328,11 @@ const Home = (props) => {
                 CustomAlert(res.message);
               }
             })
-            .catch((err) => {
-              setLoading(false);
-              CustomAlert(err?.data?.message);
-            });
+            .catch((err) => CustomAlert(err?.data?.message))
+            .finally(() => setLoading(false));
+
           dispatch(getTestimonials())
             .then((res) => {
-              setLoading(false);
               if (res.status === 'success' && res?.data?.testimonials) {
                 setTestimonialData(res?.data?.testimonials);
                 setSelectedTestimonial(
@@ -346,10 +343,8 @@ const Home = (props) => {
                 CustomAlert(res.message);
               }
             })
-            .catch((err) => {
-              setLoading(false);
-              CustomAlert(err?.data?.message);
-            });
+            .catch((err) => CustomAlert(err?.data?.message))
+            .finally(() => setLoading(false));
         })
         .catch((err) => {
           CustomConsole(err);
@@ -369,23 +364,19 @@ const Home = (props) => {
             CustomAlert(res?.data?.message);
           }
         })
-        .catch((err) => {
-          setLoading(false);
-          CustomConsole(err);
-        });
+        .catch((err) => CustomConsole(err))
+        .finally(() => setLoading(false));
+
       dispatch(getLiveOrders())
         .then((res) => {
-          setLoading(false);
           if (res?.status === 'success') {
             setLiveOrders(res?.data?.booking);
           } else {
             CustomAlert(res?.message);
           }
         })
-        .catch((err) => {
-          setLoading(false);
-          CustomConsole(err);
-        });
+        .catch((err) => CustomConsole(err))
+        .finally(() => setLoading(false));
     }
   }, [isFocused]);
   const renderItem = ({item, index}) => {

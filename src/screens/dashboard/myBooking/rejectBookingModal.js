@@ -84,7 +84,6 @@ const RejectBookingModal = (props) => {
             };
             APICall(obj)
               .then((res) => {
-                props.setLoading(false);
                 if (res?.data?.status === 'success') {
                   props.setApiResponse &&
                     props.setApiResponse(res?.data?.booking);
@@ -94,10 +93,8 @@ const RejectBookingModal = (props) => {
                   CustomAlert(res?.data?.message);
                 }
               })
-              .catch((err) => {
-                props.setLoading(false);
-                CustomConsole(err);
-              });
+              .catch((err) => CustomConsole(err))
+              .finally(() => props.setLoading(false));
           }
         }}
       />

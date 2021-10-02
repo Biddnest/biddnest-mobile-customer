@@ -25,7 +25,6 @@ const PrivacyPolicy = (props) => {
     };
     APICall(obj)
       .then((res) => {
-        setLoading(false);
         if (res?.data?.status === 'success') {
           const entities = new Html5Entities();
           let temp = entities.decode(res?.data?.data?.page?.content);
@@ -34,10 +33,8 @@ const PrivacyPolicy = (props) => {
           CustomAlert(res?.data?.message);
         }
       })
-      .catch((err) => {
-        setLoading(false);
-        CustomConsole(err);
-      });
+      .catch((err) => CustomConsole(err))
+      .finally(() => setLoading(false));
   }, []);
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>

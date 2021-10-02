@@ -73,7 +73,6 @@ const EditProfile = (props) => {
       // Send OTP
       editMobileNumber({phone})
         .then((res) => {
-          setLoading(false);
           if (res.status === 'success') {
             CustomAlert(res.message + res.data.otp);
             setOtpResponse(res.data);
@@ -82,10 +81,8 @@ const EditProfile = (props) => {
             CustomAlert(res.message);
           }
         })
-        .catch((err) => {
-          setLoading(false);
-          CustomAlert(err?.data?.message);
-        });
+        .catch((err) => CustomAlert(err?.data?.message))
+        .finally(() => setLoading(false));
     }
   };
   const setImage = (type) => {
@@ -360,7 +357,6 @@ const EditProfile = (props) => {
                 ) {
                   dispatch(updateProfile(data))
                     .then((res) => {
-                      setLoading(false);
                       if (res.status === 'success') {
                         setData(res?.data?.user);
                         props.navigation.goBack();
@@ -368,10 +364,8 @@ const EditProfile = (props) => {
                         CustomAlert(res.message);
                       }
                     })
-                    .catch((err) => {
-                      setLoading(false);
-                      CustomAlert(err.data.message);
-                    });
+                    .catch((err) => CustomAlert(err?.data?.message))
+                    .finally(() => setLoading(false));
                 } else {
                   setLoading(false);
                 }
@@ -493,7 +487,6 @@ const EditProfile = (props) => {
                     otp,
                   })
                     .then((res) => {
-                      setLoading(false);
                       if (res.status === 'success') {
                         setData({
                           ...data,
@@ -508,10 +501,8 @@ const EditProfile = (props) => {
                         CustomAlert(res.message);
                       }
                     })
-                    .catch((err) => {
-                      setLoading(false);
-                      CustomAlert(err?.data?.message);
-                    });
+                    .catch((err) => CustomAlert(err?.data?.message))
+                    .finally(() => setLoading(false));
                 }}
               />
             </View>

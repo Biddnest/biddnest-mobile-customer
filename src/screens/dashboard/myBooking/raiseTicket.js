@@ -66,7 +66,6 @@ const RaiseTicket = (props) => {
       };
       APICall(obj)
         .then((res) => {
-          setLoading(false);
           if (res?.data?.status === 'success') {
             let temp = [];
             res?.data?.data?.bookings.forEach((item) => {
@@ -80,10 +79,8 @@ const RaiseTicket = (props) => {
             CustomAlert(res?.data?.message);
           }
         })
-        .catch((err) => {
-          setLoading(false);
-          CustomConsole(err);
-        });
+        .catch((err) => CustomConsole(err))
+        .finally(() => setLoading(false));
     }
   }, []);
   Object.keys(configData).forEach((item, index) => {
@@ -294,7 +291,6 @@ const RaiseTicket = (props) => {
                 };
                 APICall(obj)
                   .then((res) => {
-                    setLoading(false);
                     if (res?.data?.status === 'success') {
                       CustomAlert('Ticket Raised Successfully');
                       props.navigation.goBack();
@@ -302,10 +298,8 @@ const RaiseTicket = (props) => {
                       CustomAlert(res?.data?.message);
                     }
                   })
-                  .catch((err) => {
-                    setLoading(false);
-                    CustomConsole(err);
-                  });
+                  .catch((err) => CustomConsole(err))
+                  .finally(() => setLoading(false));
               } else {
                 setLoading(false);
               }

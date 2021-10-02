@@ -45,45 +45,36 @@ const MyBooking = (props) => {
       if (selectedTab === 0) {
         dispatch(getEnquiryOrders())
           .then((res) => {
-            setLoading(false);
             if (res?.status === 'success') {
               setEnquiryOrders(res?.data?.booking);
             } else {
               CustomAlert(res?.message);
             }
           })
-          .catch((err) => {
-            setLoading(false);
-            CustomConsole(err);
-          });
+          .catch((err) => CustomConsole(err))
+          .finally(() => setLoading(false));
       } else if (selectedTab === 1) {
         dispatch(getLiveOrders())
           .then((res) => {
-            setLoading(false);
             if (res?.status === 'success') {
               setLiveOrders(res?.data?.booking);
             } else {
               CustomAlert(res?.message);
             }
           })
-          .catch((err) => {
-            setLoading(false);
-            CustomConsole(err);
-          });
+          .catch((err) => CustomConsole(err))
+          .finally(() => setLoading(false));
       } else {
         dispatch(getPastOrders())
           .then((res) => {
-            setLoading(false);
             if (res?.status === 'success') {
               setPastOrders(res?.data?.booking);
             } else {
               CustomAlert(res?.message);
             }
           })
-          .catch((err) => {
-            setLoading(false);
-            CustomConsole(err);
-          });
+          .catch((err) => CustomConsole(err))
+          .finally(() => setLoading(false));
       }
     }
   };

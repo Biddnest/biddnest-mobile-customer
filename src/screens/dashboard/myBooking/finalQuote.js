@@ -52,7 +52,6 @@ const FinalQuote = (props) => {
       setLoading(true);
       getOrderDetails(orderData?.public_booking_id)
         .then((res) => {
-          setLoading(false);
           if (res?.status == 400) {
             resetNavigator(props, 'Dashboard');
           } else if (res?.data?.status === 'success') {
@@ -61,10 +60,8 @@ const FinalQuote = (props) => {
             CustomAlert(res?.data?.message);
           }
         })
-        .catch((err) => {
-          setLoading(false);
-          CustomConsole(err);
-        });
+        .catch((err) => CustomConsole(err))
+        .finally(() => setLoading(false));
     }
   }, []);
 

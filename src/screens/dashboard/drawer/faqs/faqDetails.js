@@ -30,17 +30,14 @@ const FAQDetails = (props) => {
     };
     APICall(obj)
       .then((res) => {
-        setLoading(false);
         if (res?.data?.status === 'success') {
           setFaqQue(res?.data?.data?.faqs);
         } else {
           CustomAlert(res?.data?.message);
         }
       })
-      .catch((err) => {
-        setLoading(false);
-        CustomConsole(err);
-      });
+      .catch((err) => CustomConsole(err))
+      .finally(() => setLoading(false));
   };
 
   const renderItem = ({item, index}) => {

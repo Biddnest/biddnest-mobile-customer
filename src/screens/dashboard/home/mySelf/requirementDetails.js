@@ -48,9 +48,6 @@ const RequirementDetails = (props) => {
   } = props;
   const configData =
     useSelector((state) => state.Login?.configData?.enums?.service) || {};
-  // const [defaultInventories, setDefaultInventories] = useState(
-  //   useSelector((state) => state.Login?.inventoriesData?.inventories) || [],
-  // );
   const [defaultInventories, setDefaultInventories] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [isWait, setWait] = useState(false);
@@ -65,9 +62,6 @@ const RequirementDetails = (props) => {
   const [editData, setEditData] = useState({});
   const [confirmationModalVisible, setConfirmationModalVisible] = useState(
     false,
-  );
-  const [defaultInventoryStore, setDefaultInventoryStore] = useState(
-    data?.inventory_items,
   );
   const [error, setError] = useState({
     inventory: undefined,
@@ -104,24 +98,6 @@ const RequirementDetails = (props) => {
       inv[index] = temp;
     });
     if (JSON.stringify(inv) !== JSON.stringify(defaultInventories)) {
-      if (inv?.length > 0) {
-        let temp = [];
-        inv.map((item, index) => {
-          temp.push({
-            category: item?.meta?.category,
-            id: item?.meta?.id,
-            image: item?.meta?.image,
-            label: item?.meta?.name,
-            material: item?.meta?.material,
-            name: item?.meta?.name,
-            size: item?.meta?.size,
-            value: item?.meta?.name,
-          });
-        });
-        setDefaultInventories(temp);
-      } else {
-        setDefaultInventories([]);
-      }
       if (inv.length > 0) {
         let temp = {...inv[0]};
         temp.material = JSON.parse(temp.material.toString());
@@ -172,26 +148,21 @@ const RequirementDetails = (props) => {
     APICall(obj)
       .then((res) => {
         if (res?.data?.status === 'success') {
-          let temp = [];
           if (res?.data?.data?.extra_inventories?.length > 0) {
-            let temp = [];
-            res?.data?.data?.extra_inventories.map((item, index) => {
-              temp.push({
-                category: item?.meta?.category,
-                id: item?.meta?.id,
-                image: item?.meta?.image,
-                label: item?.meta?.name,
-                material: item?.meta?.material,
-                name: item?.meta?.name,
-                size: item?.meta?.size,
-                value: item?.meta?.name,
-              });
+            let temp1 = [];
+            res?.data?.data?.extra_inventories?.forEach((item, index) => {
+              let temp = {...item};
+              temp.label = temp.name;
+              temp.value = temp.name;
+              delete temp.icon;
+              temp1[index] = temp;
             });
-            setDefaultInventories(temp);
+            setDefaultInventories(temp1);
           } else {
             setDefaultInventories([]);
           }
           if (res?.data?.data?.inventories?.length > 0) {
+            let temp = [];
             res?.data?.data?.inventories.forEach((item) => {
               temp.push({
                 inventory_id: item?.inventory_id,
@@ -208,25 +179,23 @@ const RequirementDetails = (props) => {
                 name: item?.meta?.name,
                 image: item?.meta?.image,
                 meta: item?.meta,
+                is_custom: false,
               });
             });
-            setDefaultInventoryStore(temp);
             setInventoryItems(temp);
             handleStateChange('inventory_items', temp);
           } else {
-            setDefaultInventoryStore([]);
             setInventoryItems([]);
             handleStateChange('inventory_items', []);
           }
         } else {
           CustomAlert(res?.data?.message);
         }
-        setWait(false);
       })
       .catch((err) => {
-        setWait(false);
         CustomConsole(err);
-      });
+      })
+      .finally(() => setWait(false));
   };
 
   console.log(defaultInventories);
@@ -350,7 +319,7 @@ const RequirementDetails = (props) => {
           borderRadius: hp(1),
           marginRight: hp(0.5),
         }}>
-        {item?.isCustom ? (
+        {item?.is_custom ? (
           <Pressable
             onPress={() => {
               let finalMaterialAry = [];
@@ -521,8 +490,8 @@ const RequirementDetails = (props) => {
             keyExtractor={(item, index) => index.toString()}
             bounces={false}
             data={
-              inventoryItems.filter((item) => item.isCustom === true).length ===
-              selectedSubCategory?.max_extra_items
+              inventoryItems.filter((item) => item.is_custom === true)
+                .length === selectedSubCategory?.max_extra_items
                 ? [...inventoryItems]
                 : [...inventoryItems, {inventory_id: -1}]
             }
@@ -531,8 +500,8 @@ const RequirementDetails = (props) => {
               flexWrap: 'wrap',
             }}
             extraData={
-              inventoryItems.filter((item) => item.isCustom === true).length ===
-              selectedSubCategory?.max_extra_items
+              inventoryItems.filter((item) => item.is_custom === true)
+                .length === selectedSubCategory?.max_extra_items
                 ? [...inventoryItems]
                 : [...inventoryItems, {inventory_id: -1}]
             }
@@ -1063,7 +1032,7 @@ const RequirementDetails = (props) => {
                   if (!obj) {
                     addData.inventory_id = selectedInventory.id;
                     addData.image = selectedInventory.image;
-                    addData.isCustom = true;
+                    addData.is_custom = true;
                     if (
                       configData?.inventory_quantity_type.range !==
                       movementType?.inventory_quantity_type
@@ -1199,100 +1168,13 @@ const RequirementDetails = (props) => {
           rightLabel={'Yes'}
           isLoading={isLoading}
           leftOnPress={() => {
-            // handleState('subcategory', changeCategoryVisible.name);
-            // getInventories(changeCategoryVisible.id);
-            // handleSelectedSubCategory(changeCategoryVisible);
             setChangeCategoryVisible({});
           }}
           rightOnPress={() => {
             setChangeCategoryVisible({});
             handleState('subcategory', changeCategoryVisible?.name);
             handleSelectedSubCategory(changeCategoryVisible);
-            setWait(true);
-            let obj = {
-              url: `inventories?subservice_id=${changeCategoryVisible?.id}`,
-              method: 'get',
-              headers: {
-                Authorization:
-                  'Bearer ' + STORE.getState().Login?.loginData?.token,
-              },
-            };
-            APICall(obj)
-              .then((res) => {
-                if (res?.data?.status === 'success') {
-                  let temp = [];
-                  let previousDummyInv = [...defaultInventoryStore];
-                  let t = [...inventoryItems];
-                  if (res?.data?.data?.extra_inventories?.length > 0) {
-                    let temp = [];
-                    res?.data?.data?.extra_inventories.map((item, index) => {
-                      temp.push({
-                        category: item?.meta?.category,
-                        id: item?.meta?.id,
-                        image: item?.meta?.image,
-                        label: item?.meta?.name,
-                        material: item?.meta?.material,
-                        name: item?.meta?.name,
-                        size: item?.meta?.size,
-                        value: item?.meta?.name,
-                      });
-                    });
-                    setDefaultInventories(temp);
-                  } else {
-                    setDefaultInventories([]);
-                  }
-                  if (res?.data?.data?.inventories?.length > 0) {
-                    res?.data?.data?.inventories.forEach((item) => {
-                      temp.push({
-                        inventory_id: item?.inventory_id,
-                        material: item?.material,
-                        size: item?.size,
-                        quantity:
-                          configData?.inventory_quantity_type.range ===
-                          movementType?.inventory_quantity_type
-                            ? {
-                                min: parseInt(item?.quantity?.min),
-                                max: parseInt(item?.quantity?.max),
-                              }
-                            : parseInt(item?.quantity),
-                        name: item?.meta?.name,
-                        image: item?.meta?.image,
-                        meta: item?.meta,
-                      });
-                    });
-                    // let temp2 = [...t, ...temp];
-                    let temp2 = [...temp];
-                    var result = temp2.reduce((unique, o) => {
-                      if (
-                        !unique.some(
-                          (obj) =>
-                            obj.name === o.name &&
-                            obj.material === o.material &&
-                            obj.size === o.size &&
-                            obj.itemName === o.itemName,
-                        )
-                      ) {
-                        unique.push(o);
-                      }
-                      return unique;
-                    }, []);
-                    setDefaultInventoryStore(temp);
-                    setInventoryItems(result);
-                    handleStateChange('inventory_items', result);
-                  } else {
-                    setInventoryItems(t);
-                    setDefaultInventoryStore([]);
-                    handleStateChange('inventory_items', []);
-                  }
-                } else {
-                  CustomAlert(res?.data?.message);
-                }
-                setWait(false);
-              })
-              .catch((err) => {
-                setWait(false);
-                CustomConsole(err);
-              });
+            getInventories(changeCategoryVisible?.id);
           }}
         />
       </CustomModalAndroid>
@@ -1357,7 +1239,6 @@ const RequirementDetails = (props) => {
             };
             APICall(obj)
               .then((res) => {
-                setLoading(false);
                 if (res?.data?.status === 'success') {
                   props.setApiResponse(res?.data?.data?.booking);
                   if (props.bookingFor === 'Others') {
@@ -1370,10 +1251,10 @@ const RequirementDetails = (props) => {
                 }
               })
               .catch((err) => {
-                setLoading(false);
                 CustomAlert(err?.data?.message);
                 CustomConsole(err);
-              });
+              })
+              .finally(() => setLoading(false));
           }}
         />
       </CustomModalAndroid>
