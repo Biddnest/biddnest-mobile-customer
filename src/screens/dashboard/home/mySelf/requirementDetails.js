@@ -48,9 +48,10 @@ const RequirementDetails = (props) => {
   } = props;
   const configData =
     useSelector((state) => state.Login?.configData?.enums?.service) || {};
-  const [defaultInventories, setDefaultInventories] = useState(
-    useSelector((state) => state.Login?.inventoriesData?.inventories) || [],
-  );
+  // const [defaultInventories, setDefaultInventories] = useState(
+  //   useSelector((state) => state.Login?.inventoriesData?.inventories) || [],
+  // );
+  const [defaultInventories, setDefaultInventories] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [isWait, setWait] = useState(false);
   const [selectedInventory, setSelectedInventory] = useState({});
@@ -93,7 +94,6 @@ const RequirementDetails = (props) => {
     }
     handleStateChange('meta', temp);
   };
-
   useEffect(() => {
     let inv = [...defaultInventories];
     defaultInventories.forEach((item, index) => {
@@ -104,7 +104,24 @@ const RequirementDetails = (props) => {
       inv[index] = temp;
     });
     if (JSON.stringify(inv) !== JSON.stringify(defaultInventories)) {
-      setDefaultInventories(inv);
+      if (inv?.length > 0) {
+        let temp = [];
+        inv.map((item, index) => {
+          temp.push({
+            category: item?.meta?.category,
+            id: item?.meta?.id,
+            image: item?.meta?.image,
+            label: item?.meta?.name,
+            material: item?.meta?.material,
+            name: item?.meta?.name,
+            size: item?.meta?.size,
+            value: item?.meta?.name,
+          });
+        });
+        setDefaultInventories(temp);
+      } else {
+        setDefaultInventories([]);
+      }
       if (inv.length > 0) {
         let temp = {...inv[0]};
         temp.material = JSON.parse(temp.material.toString());
@@ -156,6 +173,24 @@ const RequirementDetails = (props) => {
       .then((res) => {
         if (res?.data?.status === 'success') {
           let temp = [];
+          if (res?.data?.data?.extra_inventories?.length > 0) {
+            let temp = [];
+            res?.data?.data?.extra_inventories.map((item, index) => {
+              temp.push({
+                category: item?.meta?.category,
+                id: item?.meta?.id,
+                image: item?.meta?.image,
+                label: item?.meta?.name,
+                material: item?.meta?.material,
+                name: item?.meta?.name,
+                size: item?.meta?.size,
+                value: item?.meta?.name,
+              });
+            });
+            setDefaultInventories(temp);
+          } else {
+            setDefaultInventories([]);
+          }
           if (res?.data?.data?.inventories?.length > 0) {
             res?.data?.data?.inventories.forEach((item) => {
               temp.push({
@@ -194,6 +229,8 @@ const RequirementDetails = (props) => {
       });
   };
 
+  console.log(defaultInventories);
+
   useEffect(() => {
     let obj = {
       url: `subservices?service_id=${movementType?.id}`,
@@ -207,6 +244,7 @@ const RequirementDetails = (props) => {
         if (res?.data?.status === 'success') {
           if (res?.data?.data?.subservices.length > 0) {
             let temp = res?.data?.data?.subservices[0];
+            getInventories(temp.id);
             if (Object.keys(selectedSubCategory).length === 0) {
               handleSelectedSubCategory(temp);
               getInventories(temp.id);
@@ -312,47 +350,49 @@ const RequirementDetails = (props) => {
           borderRadius: hp(1),
           marginRight: hp(0.5),
         }}>
-        <Pressable
-          onPress={() => {
-            let finalMaterialAry = [];
-            let finalSizeAry = [];
-            if (item?.meta?.material) {
-              let materialAry = JSON.parse(item?.meta?.material.toString());
-              let sizeAry = JSON.parse(item?.meta?.size.toString());
-              materialAry.forEach((i) =>
-                finalMaterialAry.push({
-                  value: i,
-                  label: i,
-                }),
-              );
-              sizeAry.forEach((i) =>
-                finalSizeAry.push({
-                  value: i,
-                  label: i,
-                }),
-              );
-            }
-            setEditData({
-              ...item,
-              defaultMaterial: finalMaterialAry,
-              defaultSize: finalSizeAry,
-            });
-            setConfirmationModalVisible(false);
-            setEditItem(true);
-          }}
-          style={{
-            height: hp(3.5),
-            width: hp(3.5),
-            borderRadius: hp(2),
-            backgroundColor: Colors.white,
-            ...STYLES.common,
-          }}>
-          <SimpleLineIcons
-            name={'pencil'}
-            size={hp(1.8)}
-            color={Colors.darkBlue}
-          />
-        </Pressable>
+        {item?.isCustom ? (
+          <Pressable
+            onPress={() => {
+              let finalMaterialAry = [];
+              let finalSizeAry = [];
+              if (item?.meta?.material) {
+                let materialAry = JSON.parse(item?.meta?.material.toString());
+                let sizeAry = JSON.parse(item?.meta?.size.toString());
+                materialAry.forEach((i) =>
+                  finalMaterialAry.push({
+                    value: i,
+                    label: i,
+                  }),
+                );
+                sizeAry.forEach((i) =>
+                  finalSizeAry.push({
+                    value: i,
+                    label: i,
+                  }),
+                );
+              }
+              setEditData({
+                ...item,
+                defaultMaterial: finalMaterialAry,
+                defaultSize: finalSizeAry,
+              });
+              setConfirmationModalVisible(false);
+              setEditItem(true);
+            }}
+            style={{
+              height: hp(3.5),
+              width: hp(3.5),
+              borderRadius: hp(2),
+              backgroundColor: Colors.white,
+              ...STYLES.common,
+            }}>
+            <SimpleLineIcons
+              name={'pencil'}
+              size={hp(1.8)}
+              color={Colors.darkBlue}
+            />
+          </Pressable>
+        ) : null}
         <View
           style={{
             marginLeft: wp(1),
@@ -480,12 +520,22 @@ const RequirementDetails = (props) => {
           <FlatList
             keyExtractor={(item, index) => index.toString()}
             bounces={false}
-            data={[...inventoryItems, {inventory_id: -1}]}
+            data={
+              inventoryItems.filter((item) => item.isCustom === true).length ===
+              selectedSubCategory?.max_extra_items
+                ? [...inventoryItems]
+                : [...inventoryItems, {inventory_id: -1}]
+            }
             contentContainerStyle={{
               flexDirection: 'row',
               flexWrap: 'wrap',
             }}
-            extraData={[...inventoryItems, {inventory_id: -1}]}
+            extraData={
+              inventoryItems.filter((item) => item.isCustom === true).length ===
+              selectedSubCategory?.max_extra_items
+                ? [...inventoryItems]
+                : [...inventoryItems, {inventory_id: -1}]
+            }
             renderItem={renderItem}
             refreshing={isWait}
             ListEmptyComponent={() => (
@@ -585,6 +635,7 @@ const RequirementDetails = (props) => {
           label={'SHOW QUOTATION'}
           isLoading={isLoading}
           onPress={() => {
+            console.log(data);
             let tempError = {};
             setLoading(true);
             if (data?.inventory_items.length === 0) {
@@ -1012,6 +1063,7 @@ const RequirementDetails = (props) => {
                   if (!obj) {
                     addData.inventory_id = selectedInventory.id;
                     addData.image = selectedInventory.image;
+                    addData.isCustom = true;
                     if (
                       configData?.inventory_quantity_type.range !==
                       movementType?.inventory_quantity_type
@@ -1171,6 +1223,24 @@ const RequirementDetails = (props) => {
                   let temp = [];
                   let previousDummyInv = [...defaultInventoryStore];
                   let t = [...inventoryItems];
+                  if (res?.data?.data?.extra_inventories?.length > 0) {
+                    let temp = [];
+                    res?.data?.data?.extra_inventories.map((item, index) => {
+                      temp.push({
+                        category: item?.meta?.category,
+                        id: item?.meta?.id,
+                        image: item?.meta?.image,
+                        label: item?.meta?.name,
+                        material: item?.meta?.material,
+                        name: item?.meta?.name,
+                        size: item?.meta?.size,
+                        value: item?.meta?.name,
+                      });
+                    });
+                    setDefaultInventories(temp);
+                  } else {
+                    setDefaultInventories([]);
+                  }
                   if (res?.data?.data?.inventories?.length > 0) {
                     res?.data?.data?.inventories.forEach((item) => {
                       temp.push({
@@ -1190,7 +1260,8 @@ const RequirementDetails = (props) => {
                         meta: item?.meta,
                       });
                     });
-                    let temp2 = [...t, ...temp];
+                    // let temp2 = [...t, ...temp];
+                    let temp2 = [...temp];
                     var result = temp2.reduce((unique, o) => {
                       if (
                         !unique.some(
