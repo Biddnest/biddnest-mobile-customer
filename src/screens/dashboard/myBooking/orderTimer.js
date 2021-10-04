@@ -364,51 +364,63 @@ const OrderTimer = (props) => {
           )}
           {selectedTab === 2 && (
             <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
-              <Text
-                style={{
-                  fontFamily: 'Roboto-Italic',
-                  fontSize: wp(3.5),
-                  color: '#99A0A5',
-                  textAlign: 'center',
-                  marginHorizontal: wp(6),
-                  marginTop: hp(2),
-                }}>
-                You’ll get the estimated price once the time is up
-              </Text>
-              <View style={styles.inputForm}>
-                <View style={{marginVertical: hp(0.8)}}>
-                  <CountdownCircleTimer
-                    key={new Date()}
-                    size={hp(25)}
-                    onComplete={() => {
-                      getData();
-                      setTimeOver(true);
-                    }}
-                    isPlaying
-                    duration={
-                      orderDetails?.status === 2
-                        ? configData?.bid_time
-                        : configData?.rebid_time
-                    }
-                    initialRemainingTime={DiffMin(orderDetails?.bid_result_at)}
-                    children={children}
-                    colors={[[Colors.darkBlue, 0.4]]}
-                  />
-                </View>
-                <Text style={styles.mainText}>Time Left</Text>
-                {timeOver && (
-                  <Text style={styles.mainText}>
-                    Your result will be displayed soon
+              {(orderDetails?.status !== 15 && (
+                <>
+                  <Text
+                    style={{
+                      fontFamily: 'Roboto-Italic',
+                      fontSize: wp(3.5),
+                      color: '#99A0A5',
+                      textAlign: 'center',
+                      marginHorizontal: wp(6),
+                      marginTop: hp(2),
+                    }}>
+                    You’ll get the estimated price once the time is up
                   </Text>
-                )}
-                <View style={styles.separatorView} />
-                <View style={styles.flexView}>
-                  <Text style={styles.orderID}>ENQUIRY ID</Text>
-                  <Text style={styles.orderNo}>
-                    {orderDetails?.public_enquiry_id}
+                  <View style={styles.inputForm}>
+                    <View style={{marginVertical: hp(0.8)}}>
+                      <CountdownCircleTimer
+                        key={new Date()}
+                        size={hp(25)}
+                        onComplete={() => {
+                          getData();
+                          setTimeOver(true);
+                        }}
+                        isPlaying
+                        duration={
+                          orderDetails?.status === 2
+                            ? configData?.bid_time
+                            : configData?.rebid_time
+                        }
+                        initialRemainingTime={DiffMin(
+                          orderDetails?.bid_result_at,
+                        )}
+                        children={children}
+                        colors={[[Colors.darkBlue, 0.4]]}
+                      />
+                    </View>
+                    <Text style={styles.mainText}>Time Left</Text>
+                    {timeOver && (
+                      <Text style={styles.mainText}>
+                        Your result will be displayed soon
+                      </Text>
+                    )}
+                    <View style={styles.separatorView} />
+                    <View style={styles.flexView}>
+                      <Text style={styles.orderID}>ENQUIRY ID</Text>
+                      <Text style={styles.orderNo}>
+                        {orderDetails?.public_enquiry_id}
+                      </Text>
+                    </View>
+                  </View>
+                </>
+              )) || (
+                <View style={styles.inputForm}>
+                  <Text style={styles.orderID}>
+                    Your result will be confirmed shortly
                   </Text>
                 </View>
-              </View>
+              )}
             </ScrollView>
           )}
           <MapModalAndroid

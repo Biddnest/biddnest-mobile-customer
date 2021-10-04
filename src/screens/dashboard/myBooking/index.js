@@ -82,7 +82,11 @@ const MyBooking = (props) => {
   const handleOrderClicked = (item) => {
     if (item?.status === 0) {
       props.navigation.navigate('BookingInitialQuote', {orderData: item});
-    } else if (item?.status === 2 || item?.status === 3) {
+    } else if (
+      item?.status === 2 ||
+      item?.status === 3 ||
+      item?.status === 15
+    ) {
       props.navigation.navigate('OrderTimer', {orderData: item});
     } else if (item?.status === 4) {
       props.navigation.navigate('FinalQuote', {orderData: item});
@@ -96,7 +100,7 @@ const MyBooking = (props) => {
     }
   };
   const renderRightDate = (item, dates) => {
-    if (item?.status <= 4) {
+    if (item?.status <= 4 || item?.status === 15) {
       return (
         <View
           style={{
@@ -179,6 +183,28 @@ const MyBooking = (props) => {
         dateArray.push(moment(i?.date).format('D MMM'));
       });
     }
+
+    const renderComponent = () => {
+      if (selectedTab === 0 || selectedTab === 1) {
+        return (
+          <View style={styles.flexBox}>
+            <Text style={styles.leftText}>moving date</Text>
+            {renderRightDate(item, dateArray)}
+            {/*<Text*/}
+            {/*  style={[styles.rightText, {maxWidth: '60%', textAlign: 'right'}]}>*/}
+            {/*  {dateArray.join('\n')}*/}
+            {/*</Text>*/}
+          </View>
+        );
+      } else if (item?.bid) {
+        return (
+          <View style={styles.flexBox}>
+            <Text style={styles.leftText}>moving date</Text>
+            {renderRightDate(item, dateArray)}
+          </View>
+        );
+      }
+    };
 
     return (
       <Pressable
@@ -352,23 +378,7 @@ const MyBooking = (props) => {
             </Text>
           </View>
         )}
-        {((selectedTab === 0 || selectedTab === 1) && (
-          <View style={styles.flexBox}>
-            <Text style={styles.leftText}>moving date</Text>
-            {renderRightDate(item, dateArray)}
-            {/*<Text*/}
-            {/*  style={[styles.rightText, {maxWidth: '60%', textAlign: 'right'}]}>*/}
-            {/*  {dateArray.join('\n')}*/}
-            {/*</Text>*/}
-          </View>
-        )) ||
-          (item?.bid && (
-            <View style={styles.flexBox}>
-              <Text style={styles.leftText}>moving date</Text>
-              {renderRightDate(item, dateArray)}
-            </View>
-          ))}
-
+        {renderComponent()}
         <View style={[styles.flexBox, {marginTop: hp(1.2)}]}>
           <Text style={styles.leftText}>category</Text>
           <Text style={styles.rightText}>{item?.service?.name}</Text>

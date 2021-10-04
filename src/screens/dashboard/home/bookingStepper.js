@@ -102,9 +102,6 @@ const BookingStepper = (props) => {
   const [apiResponse, setApiResponse] = useState({});
   const [confirmationVisible, setConfirmationVisible] = useState(false);
   useEffect(() => {
-    dispatch(getAllInventories());
-  }, []);
-  useEffect(() => {
     switch (currentPosition) {
       case 0:
         if (bookingFor === 'Others') {

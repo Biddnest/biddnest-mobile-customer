@@ -198,8 +198,6 @@ const RequirementDetails = (props) => {
       .finally(() => setWait(false));
   };
 
-  console.log(defaultInventories);
-
   useEffect(() => {
     let obj = {
       url: `subservices?service_id=${movementType?.id}`,
@@ -604,7 +602,6 @@ const RequirementDetails = (props) => {
           label={'SHOW QUOTATION'}
           isLoading={isLoading}
           onPress={() => {
-            console.log(data);
             let tempError = {};
             setLoading(true);
             if (data?.inventory_items.length === 0) {
