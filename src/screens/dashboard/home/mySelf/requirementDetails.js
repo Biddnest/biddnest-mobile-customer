@@ -51,7 +51,24 @@ const RequirementDetails = (props) => {
   const [defaultInventories, setDefaultInventories] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [isWait, setWait] = useState(false);
-  const [selectedInventory, setSelectedInventory] = useState({});
+  const [selectedInventory, setSelectedInventory] = useState({
+    id: null,
+    label: '',
+    material: [
+      {
+        label: '-Select-',
+        value: null,
+      },
+    ],
+    name: '',
+    size: [
+      {
+        label: '-Select-',
+        value: null,
+      },
+    ],
+    value: [],
+  });
   const [addItem, setAddItem] = useState(false);
   const [addData, setAddData] = useState({});
   const [editItem, setEditItem] = useState(false);
