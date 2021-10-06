@@ -136,7 +136,7 @@ const FriendsDetails = (props) => {
   );
 };
 
-export default FriendsDetails;
+export default React.memo(FriendsDetails);
 
 const styles = StyleSheet.create({
   inputForm: {

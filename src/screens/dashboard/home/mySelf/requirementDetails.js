@@ -1329,7 +1329,7 @@ const RequirementDetails = (props) => {
   );
 };
 
-export default RequirementDetails;
+export default React.memo(RequirementDetails);
 
 const styles = StyleSheet.create({
   inputForm: {

@@ -197,34 +197,31 @@ const Requirements = (props) => {
               )}
             />
           </View>
-          {meta?.customer &&
-            JSON.parse(meta?.customer?.toString()).remarks !== null && (
-              <View style={STYLES.inputForm}>
-                <Text
-                  style={{
-                    fontFamily: 'Roboto-Regular',
-                    fontSize: wp(4),
-                    color: Colors.inputTextColor,
-                    textAlign: 'center',
-                    textTransform: 'uppercase',
-                  }}>
-                  Comments/Instructions
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: 'Roboto-Italic',
-                    fontSize: wp(3.6),
-                    color: Colors.inputTextColor,
-                    marginTop: hp(2),
-                  }}>
-                  {meta?.customer
-                    ? entities.decode(
-                        JSON.parse(meta?.customer?.toString()).remarks,
-                      )
-                    : 'No Any comments'}
-                </Text>
-              </View>
-            )}
+          {meta?.customer?.remarks !== null && (
+            <View style={STYLES.inputForm}>
+              <Text
+                style={{
+                  fontFamily: 'Roboto-Regular',
+                  fontSize: wp(4),
+                  color: Colors.inputTextColor,
+                  textAlign: 'center',
+                  textTransform: 'uppercase',
+                }}>
+                Comments/Instructions
+              </Text>
+              <Text
+                style={{
+                  fontFamily: 'Roboto-Italic',
+                  fontSize: wp(3.6),
+                  color: Colors.inputTextColor,
+                  marginTop: hp(2),
+                }}>
+                {meta?.customer
+                  ? entities.decode(meta?.customer?.remarks)
+                  : 'No Any comments'}
+              </Text>
+            </View>
+          )}
           {meta?.images?.length > 0 && (
             <View style={STYLES.inputForm}>
               <Text

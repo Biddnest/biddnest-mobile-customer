@@ -444,7 +444,7 @@ const DateOfMovement = (props) => {
   );
 };
 
-export default DateOfMovement;
+export default React.memo(DateOfMovement);
 
 const styles = StyleSheet.create({
   inputForm: {

@@ -851,7 +851,7 @@ const MovingForm = (props) => {
   );
 };
 
-export default MovingForm;
+export default React.memo(MovingForm);
 
 const styles = StyleSheet.create({
   inputForm: {

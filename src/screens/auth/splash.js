@@ -67,6 +67,7 @@ const Splash = (props) => {
       if (
         temp?.booking_status === 2 ||
         temp?.booking_status === 3 ||
+        temp?.booking_status === 14 ||
         temp?.booking_status === 15
       ) {
         props.navigation.navigate('OrderTimer', {

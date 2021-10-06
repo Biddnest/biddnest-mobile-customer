@@ -521,7 +521,7 @@ const InitialQuote = (props) => {
   );
 };
 
-export default InitialQuote;
+export default React.memo(InitialQuote);
 
 const styles = StyleSheet.create({
   inputForm: {

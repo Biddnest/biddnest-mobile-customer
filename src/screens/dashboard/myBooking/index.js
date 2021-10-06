@@ -85,6 +85,7 @@ const MyBooking = (props) => {
     } else if (
       item?.status === 2 ||
       item?.status === 3 ||
+      item?.status === 14 ||
       item?.status === 15
     ) {
       props.navigation.navigate('OrderTimer', {orderData: item});
@@ -100,7 +101,7 @@ const MyBooking = (props) => {
     }
   };
   const renderRightDate = (item, dates) => {
-    if (item?.status <= 4 || item?.status === 15) {
+    if (item?.status <= 4 || item?.status === 14 || item?.status === 15) {
       return (
         <View
           style={{
@@ -162,6 +163,9 @@ const MyBooking = (props) => {
       (ele) => ele === item?.status,
     );
     let status = Object.keys(configData?.status)[ind]?.split('_').join(' ');
+    if (status === 'awaiting bid result') {
+      status = 'Bidding';
+    }
     let statusInd = Object.keys(configData?.status)[ind];
     let source_meta =
       (item?.source_meta && JSON.parse(item?.source_meta?.toString())) || {};
@@ -185,7 +189,7 @@ const MyBooking = (props) => {
     }
 
     const renderComponent = () => {
-      if (selectedTab === 0 || selectedTab === 1) {
+      if (selectedTab === 0 || selectedTab === 1 || item?.bid) {
         return (
           <View style={styles.flexBox}>
             <Text style={styles.leftText}>moving date</Text>
@@ -194,13 +198,6 @@ const MyBooking = (props) => {
             {/*  style={[styles.rightText, {maxWidth: '60%', textAlign: 'right'}]}>*/}
             {/*  {dateArray.join('\n')}*/}
             {/*</Text>*/}
-          </View>
-        );
-      } else if (item?.bid) {
-        return (
-          <View style={styles.flexBox}>
-            <Text style={styles.leftText}>moving date</Text>
-            {renderRightDate(item, dateArray)}
           </View>
         );
       }
@@ -231,7 +228,10 @@ const MyBooking = (props) => {
             style={[
               styles.statusView,
               {
-                backgroundColor: configData?.color[statusInd],
+                backgroundColor:
+                  item?.status === 14
+                    ? configData?.color.biding
+                    : configData?.color[statusInd],
                 maxWidth: '45%',
                 overflow: 'hidden',
               },
@@ -251,43 +251,44 @@ const MyBooking = (props) => {
               : item?.public_enquiry_id}
           </Text>
         </View>
-        {selectedTab === 0 && (item.status === 3 || item.status === 2) && (
-          <View>
-            <View
-              style={[
-                styles.separatorView,
-                {
-                  marginBottom: hp(2),
-                },
-              ]}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-              <View style={STYLES.priceView}>
-                <Text style={STYLES.participatedText}>
-                  ₹ {item?.final_estimated_quote}
-                </Text>
-              </View>
-              <View style={[STYLES.priceView, {width: '40%'}]}>
-                <CountDown
-                  key={new Date()}
-                  until={DiffMin(item?.bid_result_at)}
-                  // onFinish={() => fetchOrderData()}
-                  digitStyle={{height: '100%'}}
-                  digitTxtStyle={STYLES.participatedText}
-                  separatorStyle={{color: '#000'}}
-                  timeToShow={['H', 'M', 'S']}
-                  timeLabels={{h: null, m: null, s: null}}
-                  showSeparator
-                />
+        {selectedTab === 0 &&
+          (item.status === 3 || item.status === 2 || item.status === 14) && (
+            <View>
+              <View
+                style={[
+                  styles.separatorView,
+                  {
+                    marginBottom: hp(2),
+                  },
+                ]}
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>
+                <View style={STYLES.priceView}>
+                  <Text style={STYLES.participatedText}>
+                    ₹ {item?.final_estimated_quote}
+                  </Text>
+                </View>
+                <View style={[STYLES.priceView, {width: '40%'}]}>
+                  <CountDown
+                    key={new Date()}
+                    until={DiffMin(item?.bid_result_at)}
+                    // onFinish={() => fetchOrderData()}
+                    digitStyle={{height: '100%'}}
+                    digitTxtStyle={STYLES.participatedText}
+                    separatorStyle={{color: '#000'}}
+                    timeToShow={['H', 'M', 'S']}
+                    timeLabels={{h: null, m: null, s: null}}
+                    showSeparator
+                  />
+                </View>
               </View>
             </View>
-          </View>
-        )}
+          )}
         <View
           style={[
             styles.separatorView,
@@ -363,7 +364,7 @@ const MyBooking = (props) => {
                     color: Colors.inputTextColor,
                     maxWidth: wp(28),
                   }}>
-                  {meta?.distance} KM
+                  {meta?.distance?.toFixed(2)} KM
                 </Text>
               </View>
             </View>

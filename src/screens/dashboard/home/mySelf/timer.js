@@ -166,7 +166,7 @@ const Timer = (props) => {
   );
 };
 
-export default Timer;
+export default React.memo(Timer);
 
 const styles = StyleSheet.create({
   inputForm: {

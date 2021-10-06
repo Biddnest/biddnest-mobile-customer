@@ -204,7 +204,7 @@ const OrderTracking = (props) => {
                       fontSize: wp(4.5),
                       color: Colors.inputTextColor,
                     }}>
-                    {meta?.distance} KM
+                    {meta?.distance?.toFixed(2)} KM
                   </Text>
                 </View>
               </View>

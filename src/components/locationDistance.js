@@ -111,8 +111,8 @@ const LocationDistance = (props) => {
                 }}>
                 {props.finalDistance
                   ? props.finalDistance + ' KM'
-                  : props.distance
-                  ? cDistance + ' KM'
+                  : parseFloat(props.distance).toFixed(2)
+                  ? parseFloat(cDistance).toFixed(2) + ' KM'
                   : '314KM'}
               </Text>
               {props.onEditClick && props?.isEdit && (
