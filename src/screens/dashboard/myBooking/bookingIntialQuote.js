@@ -519,15 +519,18 @@ const BookingInitialQuote = (props) => {
                                 color: Colors.inputTextColor,
                                 flex: 1,
                               }}>
-                              ₹ {item.price}*
+                              {item?.price === null || isNaN(item?.price)
+                                ? ''
+                                : `₹ ${item?.price}*`}
                               <Text
                                 style={{
                                   fontFamily: 'Roboto-Regular',
                                   fontSize: wp(3.2),
                                   marginLeft: wp(2),
                                 }}>
-                                {' '}
-                                Base price
+                                {item?.price === null || isNaN(item?.price)
+                                  ? 'Choose this'
+                                  : ' Base price'}
                               </Text>
                             </Text>
                             <MaterialIcons
