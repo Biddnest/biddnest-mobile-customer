@@ -505,8 +505,10 @@ const RequirementDetails = (props) => {
             keyExtractor={(item, index) => index.toString()}
             bounces={false}
             data={
-              inventoryItems.filter((item) => item.is_custom === true)
-                .length === selectedSubCategory?.max_extra_items
+              selectedSubCategory?.name === 'custom'
+                ? [...inventoryItems, {inventory_id: -1}]
+                : inventoryItems.filter((item) => item.is_custom === true)
+                    .length === selectedSubCategory?.max_extra_items
                 ? [...inventoryItems]
                 : [...inventoryItems, {inventory_id: -1}]
             }
