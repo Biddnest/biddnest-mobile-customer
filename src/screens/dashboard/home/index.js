@@ -47,11 +47,6 @@ import HTML from 'react-native-render-html';
 import ChatBot from '../../../assets/svg/chat_bot.svg';
 import Ripple from 'react-native-material-ripple';
 import {AirbnbRating} from 'react-native-elements';
-import {
-  Freshchat,
-  FreshchatConfig,
-  FreshchatUser,
-} from 'react-native-freshchat-sdk';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {LOGIN_USER_DATA} from '../../../redux/types';
@@ -138,9 +133,9 @@ export const HomeHeader = (props) => {
               rippleColor={Colors.darkBlue}
               onPress={() => {
                 setOpenModal(false);
-                setTimeout(() => {
-                  Freshchat.showConversations();
-                }, 500);
+                // setTimeout(() => {
+                //   Freshchat.showConversations();
+                // }, 500);
               }}
               style={[STYLES.selectionView, STYLES.common]}>
               <Entypo name={'chat'} color={Colors.darkBlue} size={hp(6)} />
@@ -186,80 +181,6 @@ const Home = (props) => {
   let activeSlide2 = 0;
   const carousel1 = useRef(null);
   const scrollViewRef = useRef(null);
-  let freshchatConfig = new FreshchatConfig(
-    'd9f3ecb4-0f18-40d5-b975-f4f51ac3ff6d',
-    '52d19af3-621e-4f74-8ad2-fe3414da9cdf',
-  );
-
-  useEffect(() => {
-    if (userData1?.token) {
-      let freshchatUser = new FreshchatUser();
-      freshchatConfig.domain = 'msdk.in.freshchat.com';
-      freshchatConfig.teamMemberInfoVisible = true;
-      freshchatConfig.cameraCaptureEnabled = false;
-      freshchatConfig.gallerySelectionEnabled = true;
-      freshchatConfig.responseExpectationEnabled = true;
-      Freshchat.init(freshchatConfig);
-
-      freshchatUser.firstName = userData?.fname;
-      freshchatUser.lastName = userData?.lname;
-      freshchatUser.email = userData?.email;
-      freshchatUser.phoneCountryCode = '+91';
-      freshchatUser.phone = userData?.phone;
-      Freshchat.setUser(freshchatUser, (error) => {
-        console.log(error);
-      });
-
-      if (
-        userData?.freshchat_restore_id &&
-        userData?.freshchat_restore_id?.length > 0
-      ) {
-        Freshchat.identifyUser(
-          userData?.id?.toString(),
-          userData?.freshchat_restore_id,
-          (error) => {
-            console.log(error);
-          },
-        );
-      } else {
-        Freshchat.identifyUser(userData?.id?.toString(), null, (error) => {
-          console.log(error);
-        });
-      }
-
-      Freshchat.addEventListener(
-        Freshchat.EVENT_USER_RESTORE_ID_GENERATED,
-        () => {
-          Freshchat.getUser((user) => {
-            let restoreId = user.restoreId;
-            let obj = {
-              url: 'freshchat/restore/id',
-              method: 'put',
-              headers: {
-                Authorization:
-                  'Bearer ' + STORE.getState().Login?.loginData?.token,
-              },
-              data: {
-                freshchat_restore_id: restoreId.toString(),
-              },
-            };
-            if (restoreId) {
-              let temp = {...userData1};
-              temp.user.freshchat_restore_id = restoreId;
-              APICall(obj)
-                .then((res) => {
-                  dispatch({
-                    type: LOGIN_USER_DATA,
-                    payload: temp,
-                  });
-                })
-                .catch((e) => console.log(e));
-            }
-          });
-        },
-      );
-    }
-  }, []);
 
   useEffect(() => {
     if (isFocused && userData?.fname) {

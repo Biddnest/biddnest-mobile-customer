@@ -519,7 +519,9 @@ const BookingInitialQuote = (props) => {
                                 color: Colors.inputTextColor,
                                 flex: 1,
                               }}>
-                              {item?.price === null || isNaN(item?.price)
+                              {item?.price === null ||
+                              isNaN(item?.price) ||
+                              item?.price === -1
                                 ? ''
                                 : `₹ ${item?.price}*`}
                               <Text
@@ -528,7 +530,9 @@ const BookingInitialQuote = (props) => {
                                   fontSize: wp(3.2),
                                   marginLeft: wp(2),
                                 }}>
-                                {item?.price === null || isNaN(item?.price)
+                                {item?.price === null ||
+                                isNaN(item?.price) ||
+                                item?.price === -1
                                   ? 'Choose this'
                                   : ' Base price'}
                               </Text>

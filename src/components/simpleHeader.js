@@ -8,7 +8,6 @@ import ChatBot from '../assets/svg/chat_bot.svg';
 import {useSelector} from 'react-redux';
 import CustomModalAndroid from './customModal';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {Freshchat} from 'react-native-freshchat-sdk';
 
 const SimpleHeader = (props) => {
   const configData =
@@ -83,9 +82,7 @@ const SimpleHeader = (props) => {
             <Pressable
               onPress={() => {
                 setOpenModal(false);
-                setTimeout(() => {
-                  Freshchat.showConversations();
-                }, 500);
+
               }}
               style={[STYLES.selectionView, STYLES.common]}>
               <Entypo name={'chat'} color={Colors.darkBlue} size={hp(6)} />

@@ -163,7 +163,7 @@ const MyBooking = (props) => {
       (ele) => ele === item?.status,
     );
     let status = Object.keys(configData?.status)[ind]?.split('_').join(' ');
-    if (status === 'awaiting bid result') {
+    if (status === 'awaiting bid result' || status === 'price review pending') {
       status = 'Bidding';
     }
     let statusInd = Object.keys(configData?.status)[ind];

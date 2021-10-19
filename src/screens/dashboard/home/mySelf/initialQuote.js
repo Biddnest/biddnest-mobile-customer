@@ -236,8 +236,8 @@ const InitialQuote = (props) => {
                 marginHorizontal: wp(6),
                 marginTop: hp(2),
               }}>
-              This is just an estimated price. We are working with our moving partners to provide the best package.
-              Wait to be excited.
+              This is just an estimated price. We are working with our moving
+              partners to provide the best package. Wait to be excited.
             </Text>
             <View
               style={{
@@ -321,15 +321,22 @@ const InitialQuote = (props) => {
                             color: Colors.inputTextColor,
                             flex: 1,
                           }}>
-                          ₹ {item.price}*
+                          {item?.price === null ||
+                          isNaN(item?.price) ||
+                          item?.price === -1
+                            ? ''
+                            : `₹ ${item?.price}*`}
                           <Text
                             style={{
                               fontFamily: 'Roboto-Regular',
                               fontSize: wp(3.2),
                               marginLeft: wp(2),
                             }}>
-                            {' '}
-                            Base price
+                            {item?.price === null ||
+                            isNaN(item?.price) ||
+                            item?.price === -1
+                              ? 'Choose this'
+                              : ' Base price'}
                           </Text>
                         </Text>
                         <MaterialIcons
@@ -368,7 +375,7 @@ const InitialQuote = (props) => {
                         fontSize: wp(4),
                         color: Colors.inputTextColor,
                         marginRight: 5,
-                        textTransform: 'uppercase'
+                        textTransform: 'uppercase',
                       }}>
                       Not satisfied with prices?
                     </Text>
