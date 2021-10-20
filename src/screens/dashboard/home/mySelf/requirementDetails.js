@@ -28,9 +28,9 @@ import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import OrderDetailModal from '../../myBooking/orderDetailModal';
 import ImageCross from '../../../../assets/svg/image_cross.svg';
 import CustomLabel from './CustomLabel';
-import {APICall} from '../../../../redux/actions/user';
+import {APICall, getAllInventories} from '../../../../redux/actions/user';
 import {STORE} from '../../../../redux';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import TwoButton from '../../../../components/twoButton';
 import SearchableItem from '../../../../components/searchableItem';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -39,6 +39,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import SelectionModalAndroid from '../../../../components/selectionModal';
 
 const RequirementDetails = (props) => {
+  const dispatch = useDispatch();
   const {
     data,
     handleStateChange,
@@ -105,6 +106,22 @@ const RequirementDetails = (props) => {
     }
     handleStateChange('meta', temp);
   };
+  const fetchAllInventories = () => {
+    dispatch(getAllInventories()).then((res) => {
+      if (res?.data?.inventories?.length > 0) {
+        let temp1 = [];
+        res?.data?.inventories?.forEach((item, index) => {
+          let temp = {...item};
+          temp.label = temp.name;
+          temp.value = temp.name;
+          delete temp.icon;
+          temp1[index] = temp;
+        });
+        setDefaultInventories(temp1);
+      }
+    });
+  };
+
   useEffect(() => {
     let inv = [...defaultInventories];
     defaultInventories.forEach((item, index) => {
@@ -237,6 +254,8 @@ const RequirementDetails = (props) => {
               handleSelectedSubCategory(selectedSubCategory);
               handleState('subcategory', selectedSubCategory.name);
             }
+          } else {
+            fetchAllInventories();
           }
           setSubServices(res?.data?.data?.subservices || []);
         } else {
