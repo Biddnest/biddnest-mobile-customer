@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -7,27 +7,27 @@ import {
   ScrollView,
   Keyboard,
 } from 'react-native';
-import {Colors, hp, wp} from '../../../../constant/colors';
+import { Colors, hp, wp } from '../../../../constant/colors';
 import Button from '../../../../components/button';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Input} from 'react-native-elements';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Input } from 'react-native-elements';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CustomModalAndroid from '../../../../components/customModal';
-import {Calendar} from 'react-native-calendars';
+import { Calendar } from 'react-native-calendars';
 import FlatButton from '../../../../components/flatButton';
-import {STYLES} from '../../../../constant/commonStyle';
+import { STYLES } from '../../../../constant/commonStyle';
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash';
-import {CustomAlert, CustomConsole} from '../../../../constant/commonFun';
+import { CustomAlert, CustomConsole } from '../../../../constant/commonFun';
 import Switch from '../../../../components/switch';
 import InformationPopUp from '../../../../components/informationPopUp';
-import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
-import {STORE} from '../../../../redux';
-import {APICall} from '../../../../redux/actions/user';
+import { isAndroid } from 'react-native-calendars/src/expandableCalendar/commons';
+import { STORE } from '../../../../redux';
+import { APICall } from '../../../../redux/actions/user';
 
 const DateOfMovement = (props) => {
-  const {data, handleStateChange} = props;
+  const { data, handleStateChange } = props;
   const [openCalender, setCalender] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState(undefined);
@@ -71,7 +71,7 @@ const DateOfMovement = (props) => {
   }, [sharedService]);
 
   const handleState = (key, value) => {
-    let temp = {...source};
+    let temp = { ...source };
     temp.meta[key] = value;
     handleStateChange('source', temp);
   };
@@ -92,7 +92,7 @@ const DateOfMovement = (props) => {
           }}>
           Choose a Date
         </Text>
-        <View style={{marginTop: hp(3), width: '90%', alignSelf: 'center'}}>
+        <View style={{ marginTop: hp(3), width: '90%', alignSelf: 'center' }}>
           <Text
             style={{
               fontFamily: 'Roboto-Italic',
@@ -151,7 +151,7 @@ const DateOfMovement = (props) => {
         </View>
         {isAndroid ? (
           <Pressable
-            style={{marginTop: hp(1.5)}}
+            style={{ marginTop: hp(1.5) }}
             onPress={() => setCalender(true)}>
             <Input
               placeholder={'Choose a Date'}
@@ -230,7 +230,7 @@ const DateOfMovement = (props) => {
               style={{
                 color:
                   source?.meta?.shared_service === true ||
-                  source?.meta?.shared_service == 1
+                    source?.meta?.shared_service == 1
                     ? Colors.textLabelColor
                     : '#99A0A5',
                 fontFamily: 'Roboto-Bold',
@@ -241,8 +241,8 @@ const DateOfMovement = (props) => {
             </Text>
           </View>
           <Switch
-            // onChange={(text) => setSharedService(text === 1)}
-            onChange={() => {}}
+            onChange={(text) => setSharedService(text === 1)}
+            // onChange={() => {}}
             value={sharedService}
           />
         </View>
@@ -277,12 +277,13 @@ const DateOfMovement = (props) => {
           }}>
           <Calendar
             markedDates={dateArray}
-            style={{width: wp(90), height: hp(50)}}
+            showWeekNumbers={false}
+            style={{ width: wp(90), height: hp(50) }}
             current={new Date()}
             minDate={date.setDate(date.getDate() + 1)}
-            maxDate={date.setDate(date.getDate() + 20)}
+            maxDate={date.setDate(date.getDate() + 13)}
             onDayPress={(day) => {
-              let temp = {...dateArray};
+              let temp = { ...dateArray };
               if (day.dateString in temp) {
                 delete temp[day.dateString];
               } else {
@@ -339,7 +340,6 @@ const DateOfMovement = (props) => {
               setDateArray(temp);
             }}
             monthFormat={'MMM yyyy'}
-            showWeekNumbers={true}
             onPressArrowLeft={(subtractMonth) => subtractMonth()}
             onPressArrowRight={(addMonth) => addMonth()}
             disableAllTouchEventsForDisabledDays={true}
@@ -390,7 +390,7 @@ const DateOfMovement = (props) => {
           />
         </CustomModalAndroid>
       </KeyboardAwareScrollView>
-      <View style={{alignSelf: 'center'}}>
+      <View style={{ alignSelf: 'center' }}>
         <Button
           label={'NEXT'}
           isLoading={isLoading}
