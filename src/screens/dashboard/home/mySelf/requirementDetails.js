@@ -290,7 +290,7 @@ const RequirementDetails = (props) => {
   };
 
   console.log(editData, "editData ==>>");
-  console.log(addData, "addData ==>>");
+  console.log(inventoryItems, "inventoryItems ==>>");
 
 
   const renderItem = ({ item, index }) => {
@@ -538,7 +538,7 @@ const RequirementDetails = (props) => {
                   : [...inventoryItems, { inventory_id: -1 }]
             }
             contentContainerStyle={{
-              flexDirection: 'row',
+              flexDirection: 'column',
               // flexWrap: 'wrap',
             }}
             extraData={
@@ -691,16 +691,16 @@ const RequirementDetails = (props) => {
         title={editItem ? 'EDIT ITEM' : 'ADD ITEM'}
         onPress={() => {
 
-          // setAddItem(false);
-          // setAddData({});
-          // setEditItem(false);
-          // setEditData({});
-          console.log(addData, "addData VALUE");
-          console.log("called");
+          setAddItem(false);
+          setAddData({});
+          setEditItem(false);
+          setEditData({});
+          // console.log(addData, "addData VALUE");
+          // console.log("called");
 
-          if (addData?.quantity > 3) {
-            CustomAlert('You canot add more than 2 items')
-          }
+          // if (addData?.quantity > 3) {
+          //   CustomAlert('You canot add more than 2 items')
+          // }
         }}>
         <Pressable
           onPress={() => {
@@ -1049,6 +1049,8 @@ const RequirementDetails = (props) => {
             <FlatButton
               onPress={() => {
                 let temp = [...inventoryItems];
+
+
                 let error = [];
                 if (
                   addData?.inventory_id !== null
@@ -1087,12 +1089,27 @@ const RequirementDetails = (props) => {
                       ) {
                         addData.quantity = parseInt(addData?.quantity);
                       }
-                      temp.push(addData);
-                      handleStateChange('inventory_items', temp);
-                      setInventoryItems(temp);
-                      setAddData({});
-                      setAddItem(false);
-                    } else {
+
+                      if (addData.quantity > 2 || editData.quantity > 2) {
+                        CustomAlert("Cannot have more than 2 items")
+                      }
+                      else {
+                        temp.push(addData);
+                        handleStateChange('inventory_items', temp);
+                      }
+                      //based on quantity we are adding items
+                      let customInventoryItems = temp.filter(item => item.is_custom);
+                      let quantityOfEachItems = customInventoryItems.reduce((acc, val) => acc + val.quantity, 0);
+
+                      if (quantityOfEachItems > 2) {
+                        CustomAlert("Cannot have more than 2 items")
+                      } else {
+                        setInventoryItems(temp);
+                        // setAddData({});
+                        setAddItem(false)
+                      }
+                    }
+                    else {
                       CustomAlert('The item has already been added.');
                     }
                   } else {
