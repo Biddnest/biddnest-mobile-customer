@@ -1,20 +1,24 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   MainStackNavigator,
   MyBookingStackNavigator,
   MyProfileStackNavigator,
+  RewardsStackNavigator,
 } from './stackNavigation';
-import {wp, hp, Colors} from '../constant/colors';
-import {Image, Text} from 'react-native';
+import { wp, hp, Colors } from '../constant/colors';
+import { Image, Text } from 'react-native';
 import ActiveHome from '../assets/svg/active_home.svg';
 import InActiveHome from '../assets/svg/inactive_home.svg';
 import ActiveBooking from '../assets/svg/active_booking.svg';
 import InactiveBooking from '../assets/svg/inactive_booking.svg';
 import ActiveProfile from '../assets/svg/active_profile.svg';
 import InactiveProfile from '../assets/svg/inactive_profile.svg';
-import {useDispatch} from 'react-redux';
+import ActiveGift from '../assets/svg/active_gift.svg';
+import InactiveGift from '../assets/svg/inactive_gift.svg'
+
+import { useDispatch } from 'react-redux';
 
 const TabNavigation = (props: any) => {
   const Tab = createBottomTabNavigator();
@@ -36,8 +40,8 @@ const TabNavigation = (props: any) => {
           overflow: 'hidden',
         },
       }}
-      screenOptions={({route}) => ({
-        tabBarIcon: ({focused, color, size}) => {
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
           if (route.name === 'Home') {
             if (focused) {
               return <ActiveHome width={hp(3)} height={hp(3)} />;
@@ -48,7 +52,14 @@ const TabNavigation = (props: any) => {
               return <ActiveBooking width={hp(12)} height={hp(12)} />;
             }
             return <InactiveBooking width={hp(3)} height={hp(3)} />;
-          } else if (route.name === 'MyProfile') {
+          } else if (route.name === 'Rewards') {
+            if (focused) {
+              return <ActiveGift width={hp(3)} height={hp(3)} />;
+            }
+            return <InactiveGift width={hp(3)} height={hp(3)} />;
+          }
+
+          else if (route.name === 'MyProfile') {
             if (focused) {
               return <ActiveProfile width={hp(12)} height={hp(12)} />;
             }
@@ -56,12 +67,15 @@ const TabNavigation = (props: any) => {
           }
           return <ActiveHome width={hp(3)} height={hp(3)} />;
         },
-        tabBarLabel: ({focused, color, size, position}) => {
+        tabBarLabel: ({ focused, color, size, position }) => {
           let tabLabel = 'Home';
           if (route.name === 'Home') {
           } else if (route.name === 'MyBooking') {
             tabLabel = 'My Bookings';
-          } else if (route.name === 'MyProfile') {
+          } else if (route.name === 'Rewards') {
+            tabLabel = 'Rewards';
+          }
+          else if (route.name === 'MyProfile') {
             tabLabel = 'My Profile';
           }
           return (
@@ -81,12 +95,15 @@ const TabNavigation = (props: any) => {
       <Tab.Screen
         name="Home"
         component={MainStackNavigator}
-        listeners={({navigation, route}) => ({
-          tabPress: (e) => {},
+        listeners={({ navigation, route }) => ({
+          tabPress: (e) => { },
         })}
       />
       <Tab.Screen name="MyBooking" component={MyBookingStackNavigator} />
+      <Tab.Screen name="Rewards" component={RewardsStackNavigator} />
+
       <Tab.Screen name="MyProfile" component={MyProfileStackNavigator} />
+
     </Tab.Navigator>
   );
 };
