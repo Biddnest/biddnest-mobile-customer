@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {Colors, wp, hp} from '../../../constant/colors';
 import SimpleHeader from '../../../components/simpleHeader';
@@ -7,10 +7,71 @@ import Button from '../../../components/button';
 import {STYLES} from '../../../constant/commonStyle';
 import Share from 'react-native-share';
 import {useSelector} from 'react-redux';
+import {PlayInstallReferrer} from 'react-native-play-install-referrer';
+import {STORE} from '../../../redux';
+import {APICall} from '../../../redux/actions/user';
+import {CustomAlert} from '../../../constant/commonFun';
 
 const ReferFriend = (props) => {
+  const [url, setUrl] = useState();
+  useEffect(() => {
+    PlayInstallReferrer.getInstallReferrerInfo((installReferrerInfo, error) => {
+      if (!error) {
+        console.log(
+          'Install referrer = ' + installReferrerInfo.installReferrer,
+        );
+        console.log(
+          'Referrer click timestamp seconds = ' +
+            installReferrerInfo.referrerClickTimestampSeconds,
+        );
+        console.log(
+          'Install begin timestamp seconds = ' +
+            installReferrerInfo.installBeginTimestampSeconds,
+        );
+        console.log(
+          'Referrer click timestamp server seconds = ' +
+            installReferrerInfo.referrerClickTimestampServerSeconds,
+        );
+        console.log(
+          'Install begin timestamp server seconds = ' +
+            installReferrerInfo.installBeginTimestampServerSeconds,
+        );
+        console.log('Install version = ' + installReferrerInfo.installVersion);
+        console.log(
+          'Google Play instant = ' + installReferrerInfo.googlePlayInstant,
+        );
+      } else {
+        console.log('Failed to get install referrer info!');
+        console.log('Response code: ' + error.responseCode);
+        console.log('Message: ' + error.message);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    let obj = {
+      url: '/referral-link',
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+      },
+    };
+    APICall(obj)
+      .then((res) => {
+        if (res.status === 200) {
+          // setTransactionHistory(res?.data?.data?.ledger);
+          console.log(res, 'res from referral');
+          setUrl(res?.data?.data?.short_url);
+        }
+      })
+      .catch((err) => {
+        // (false);
+        CustomAlert(err?.data?.message);
+      });
+  }, []);
   const userData =
     useSelector((state) => state.Login?.loginData?.user?.meta) || '';
+
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <SimpleHeader
@@ -47,7 +108,7 @@ const ReferFriend = (props) => {
                   message: `Hey there, \nI invite you to install this application using my refferal code - ${
                     JSON.parse(userData)?.refferal_code
                   } to get ₹100 off on your first booking. \nclick here to install \n`,
-                  url: 'https://play.google.com/store',
+                  url: url,
                 })
                   .then((res) => {
                     console.log(res);

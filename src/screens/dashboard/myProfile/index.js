@@ -70,6 +70,13 @@ const MyProfile = (props) => {
             </Text>
           </View>
           <View style={styles.textWrapper}>
+            <Text style={styles.headerText}>City</Text>
+            <Text style={[styles.bodyText, {textTransform: 'capitalize'}]}>
+              {userData?.city}
+            </Text>
+          </View>
+
+          <View style={styles.textWrapper}>
             <Text style={styles.headerText}>Date of Birth</Text>
             <Text style={styles.bodyText}>
               {(userData?.dob && moment(userData?.dob).format('D MMM yyyy')) ||

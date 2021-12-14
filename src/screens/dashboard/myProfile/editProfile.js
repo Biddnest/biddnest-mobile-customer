@@ -54,6 +54,7 @@ const EditProfile = (props) => {
     lname: undefined,
     email: undefined,
     dob: undefined,
+    city: undefined,
   });
   const handleState = (key, value) => {
     setData({
@@ -247,6 +248,15 @@ const EditProfile = (props) => {
                 onDateChange={(date) => {
                   handleState('dob', date);
                 }}
+              />
+            </View>
+            <View style={{width: wp(45)}}>
+              <TextInput
+                value={data?.city}
+                isRight={error.city}
+                label={'City *'}
+                placeHolder={'Chennai'}
+                onChange={(text) => handleState('city', text)}
               />
             </View>
           </View>
