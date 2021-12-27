@@ -6,13 +6,16 @@ const Switch = (props) => {
   const [switchValue, setSwitchValue] = useState(props.value != 0);
 
   useEffect(() => {
-    setSwitchValue(props.value != 0);
-  }, [props.value]);
+    // setSwitchValue(!props.value);
+  }, [switchValue]);
 
   return (
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
       <Pressable
-        onPress={() => props.onChange(props.value == 0 ? 1 : 0)}
+        onPress={() => {
+          props.onChange(props.value === 0 ? 1 : 0);
+          setSwitchValue(props.value);
+        }}
         style={{
           height: hp(3),
           width: hp(6),
