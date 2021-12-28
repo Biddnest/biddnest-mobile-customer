@@ -246,10 +246,10 @@ const Home = (props) => {
                   } else {
                     activeSlide2 = activeSlide2 + 1;
                   }
-                  scrollViewRef?.current?.scrollToIndex({
-                    animated: true,
-                    index: activeSlide2 === 2 ? 0 : activeSlide2 + 1,
-                  });
+                  // scrollViewRef?.current?.scrollToIndex({
+                  //   animated: true,
+                  //   index: activeSlide2 === 2 ? 0 : activeSlide2 + 1,
+                  // });
                 }, 5000);
               } else {
                 CustomAlert(res.message);
@@ -330,6 +330,7 @@ const Home = (props) => {
   }, []);
 
   const renderItem = ({item, index}) => {
+    // console.log({item});
     let mainSize = [];
     Object.values(sliderSize.size).forEach((i, ind) => {
       if (i === item?.banner_size) {
@@ -384,7 +385,7 @@ const Home = (props) => {
         showsVerticalScrollIndicator={false}
         bounces={false}>
         {/*<LocationDistance inTransit={true} />*/}
-        {sliderLoader && (
+        {/* {sliderLoader && (
           <Shimmer
             style={{
               height: hp(18),
@@ -395,8 +396,9 @@ const Home = (props) => {
               borderRadius: hp(1),
             }}
           />
-        )}
+        )} */}
         {sliderData.map((item, index) => {
+          // console.log({item});
           if (configData?.enums?.slider?.position?.main === item.position) {
             let bottomSize = [];
             Object.values(sliderSize.size).forEach((i, ind) => {
@@ -814,6 +816,7 @@ const Home = (props) => {
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => {
+                  console.log({item});
                   return (
                     <Pressable
                       onPress={() => {
@@ -832,7 +835,10 @@ const Home = (props) => {
                           overflow: 'hidden',
                         }}>
                         <Image
-                          source={{uri: item?.image}}
+                          source={{
+                            uri: item?.image,
+                            // 'https://images.immediate.co.uk/production/volatile/sites/3/2020/12/daniel-craig-bond-1d24ba1.jpg?quality=90&resize=620,413',
+                          }}
                           resizeMode={'contain'}
                           style={{height: '100%', width: '100%'}}
                         />

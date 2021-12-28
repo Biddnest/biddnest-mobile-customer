@@ -147,12 +147,6 @@ export default function Rewards(props) {
   };
 
   const Vouchers = () => {
-    const voucheraData = [
-      {id: 1, price: 350, text: 'On your first order 4 meal', time: 'expired'},
-      {id: 2, price: 350, text: 'On your first order 4 meal', time: 'expired'},
-      {id: 2, price: 350, text: 'On your first order 4 meal', time: 'expired'},
-      {id: 2, price: 350, text: 'On your first order 4 meal', time: 'expired'},
-    ];
     return (
       <View>
         <CustomModalAndroid
@@ -317,6 +311,18 @@ export default function Rewards(props) {
               </Pressable>
             );
           }}
+          ListEmptyComponent={() => (
+            <Text
+              style={{
+                fontFamily: 'Roboto-Italic',
+                fontSize: wp(3.5),
+                color: '#99A0A5',
+                textAlign: 'center',
+                marginHorizontal: 20,
+              }}>
+              No Vouchers Yet!
+            </Text>
+          )}
         />
       </View>
     );
@@ -331,7 +337,7 @@ export default function Rewards(props) {
           style={{width: '100%', height: '100%', flex: 1}}>
           <View style={styles.points}>
             {rewards.balance ? (
-              <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+              <Text style={{fontSize: wp(10), fontWeight: 'bold'}}>
                 {parseInt(rewards?.balance)}
               </Text>
             ) : (
@@ -344,25 +350,32 @@ export default function Rewards(props) {
           </View>
         </ImageBackground>
 
-        <View style={styles.movementView}>
-          <Text
-            style={[styles.transactionList, {fontSize: wp(4), padding: wp(2)}]}>
-            Transaction List
-          </Text>
-          <Divider style={{marginTop: wp(2)}} />
+        {rewards.balance > 0 && (
+          <View>
+            <Button label={'REEDEM'} width={wp(95)} />
 
-          <FlatList
-            renderItem={renderItem}
-            data={transactionHistory}
-            keyExtractor={(item, index) => item.id}
-            bounces={false}
-            contentContainerStyle={{
-              flexGrow: 1,
-            }}
-          />
+            <View style={styles.movementView}>
+              <Text
+                style={[
+                  styles.transactionList,
+                  {fontSize: wp(4), padding: wp(2)},
+                ]}>
+                Transaction List
+              </Text>
+              <Divider style={{marginTop: wp(2)}} />
 
-          <Button label={'REEDEM'} />
-        </View>
+              <FlatList
+                renderItem={renderItem}
+                data={transactionHistory}
+                keyExtractor={(item, index) => item.id}
+                bounces={false}
+                contentContainerStyle={{
+                  flexGrow: 1,
+                }}
+              />
+            </View>
+          </View>
+        )}
       </ScrollView>
     );
   };

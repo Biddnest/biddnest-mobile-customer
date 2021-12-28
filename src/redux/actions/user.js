@@ -171,6 +171,7 @@ export const signUP = (data) => {
 };
 
 export const updateProfile = (data) => {
+  console.log({data});
   return (dispatch) => {
     return new Promise((resolve, reject) => {
       let obj = {

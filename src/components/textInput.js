@@ -85,7 +85,7 @@ const TextInput = (props) => {
       inputStyle={{
         fontFamily: 'Gilroy-SemiBold',
         fontSize: wp(4),
-        backgroundColor: Colors.textBG,
+        // backgroundColor: Colors.textBG,
         color: Colors.inputTextColor,
         height: '98%',
         // borderTopWidth: 1,
