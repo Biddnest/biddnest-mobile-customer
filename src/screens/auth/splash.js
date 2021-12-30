@@ -61,7 +61,6 @@ const Splash = (props) => {
   }
 
   function onOpened(openResult) {
-    console.log('Data: ', openResult);
     let temp = openResult?.notification?.payload?.additionalData || {};
     if (temp?.type === notificationData?.booking) {
       if (

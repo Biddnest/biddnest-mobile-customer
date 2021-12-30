@@ -352,7 +352,11 @@ export default function Rewards(props) {
 
         {rewards.balance > 0 && (
           <View>
-            <Button label={'REEDEM'} width={wp(95)} />
+            <Button
+              label={'REEDEM'}
+              width={wp(95)}
+              onPress={() => console.log('called')}
+            />
 
             <View style={styles.movementView}>
               <Text

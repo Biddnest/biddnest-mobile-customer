@@ -60,7 +60,6 @@ const ReferFriend = (props) => {
       .then((res) => {
         if (res.status === 200) {
           // setTransactionHistory(res?.data?.data?.ledger);
-          console.log(res, 'res from referral');
           setUrl(res?.data?.data?.short_url);
         }
       })

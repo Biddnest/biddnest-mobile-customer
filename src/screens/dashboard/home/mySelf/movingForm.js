@@ -25,6 +25,7 @@ import MapView, {
   PROVIDER_GOOGLE,
   PROVIDER_DEFAULT,
   Marker,
+  Polygon,
 } from 'react-native-maps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CloseIcon from '../../../../components/closeIcon';
@@ -591,6 +592,7 @@ const MovingForm = (props) => {
               onMapReady={handleMapReady}
               // showsUserLocation
               onRegionChangeComplete={(region1) => {
+                console.log({region1});
                 if (
                   !isKeyboardOpen &&
                   region1.latitude.toFixed(6) !== region.latitude.toFixed(6) &&
@@ -632,17 +634,32 @@ const MovingForm = (props) => {
               />
               {!props.movingFrom &&
                 zones.map((item, index) => {
+                  let coords = item.coordinates.map((coordsArr) => {
+                    let newCoordinates = {
+                      latitude: coordsArr.lat,
+                      longitude: coordsArr.lng,
+                    };
+                    return newCoordinates;
+                  });
+                  console.log(coords, 'now');
                   return (
-                    <MapView.Circle
-                      key={index}
-                      center={{
-                        latitude: item?.lat,
-                        longitude: item?.lng,
-                      }}
-                      radius={item?.service_radius * 1000}
-                      strokeWidth={1}
+                    // <MapView.Circle
+                    //   key={index}
+                    //   center={{
+                    //     latitude: item?.coordinates[0].lat,
+                    //     longitude: item?.coordinates[0].lng,
+                    //   }}
+                    //   radius={5000}
+                    //   strokeWidth={1}
+                    //   strokeColor={Colors.darkBlue}
+                    //   fillColor={'rgba(230,238,255,0.5)'}
+                    // />
+
+                    <Polygon
+                      coordinates={coords}
+                      strokeWidth={2}
                       strokeColor={Colors.darkBlue}
-                      fillColor={'rgba(230,238,255,0.5)'}
+                      fillColor="rgba(230,238,255,0.5)"
                     />
                   );
                 })}
@@ -703,6 +720,7 @@ const MovingForm = (props) => {
               ref={googlePlaceRef}
               placeholder="Search"
               onPress={(data1, details = null) => {
+                console.log({details});
                 fetchLocationString({
                   latitude: details?.geometry?.location?.lat,
                   longitude: details?.geometry?.location?.lng,
