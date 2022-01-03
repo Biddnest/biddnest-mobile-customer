@@ -13,8 +13,8 @@ const Switch = (props) => {
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
       <Pressable
         onPress={() => {
-          props.onChange(props.value === 0 ? 1 : 0);
           setSwitchValue(props.value);
+          props.onChange(props.value === 0 ? 1 : 0);
         }}
         style={{
           height: hp(3),

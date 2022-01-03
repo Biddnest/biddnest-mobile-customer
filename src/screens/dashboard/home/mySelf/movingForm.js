@@ -592,7 +592,6 @@ const MovingForm = (props) => {
               onMapReady={handleMapReady}
               // showsUserLocation
               onRegionChangeComplete={(region1) => {
-                console.log({region1});
                 if (
                   !isKeyboardOpen &&
                   region1.latitude.toFixed(6) !== region.latitude.toFixed(6) &&
@@ -641,7 +640,6 @@ const MovingForm = (props) => {
                     };
                     return newCoordinates;
                   });
-                  console.log(coords, 'now');
                   return (
                     // <MapView.Circle
                     //   key={index}
@@ -720,7 +718,6 @@ const MovingForm = (props) => {
               ref={googlePlaceRef}
               placeholder="Search"
               onPress={(data1, details = null) => {
-                console.log({details});
                 fetchLocationString({
                   latitude: details?.geometry?.location?.lat,
                   longitude: details?.geometry?.location?.lng,
@@ -768,6 +765,8 @@ const MovingForm = (props) => {
               label={'OKAY'}
               isLoading={isLoading}
               onPress={() => {
+                //to get distance between two coordinates
+                //destination
                 if (props.movingFrom) {
                   setLoading(true);
                   let obj = {
@@ -791,7 +790,7 @@ const MovingForm = (props) => {
                   APICall(obj)
                     .then((res) => {
                       setLoading(false);
-                      if (res?.data?.status === 'success') {
+                      if (res?.status === 200) {
                         if (res?.data?.data?.distance > 0) {
                           let temp = {...destination};
                           temp.meta.address_line1 = mapData.address_line1;
@@ -818,37 +817,81 @@ const MovingForm = (props) => {
                       CustomConsole(err);
                     });
                 } else {
-                  let count = 0;
-                  zones.forEach((item, index) => {
-                    let temp = getDistance(
-                      {
-                        latitude: mapData?.latitude,
-                        longitude: mapData?.longitude,
-                      },
-                      {latitude: item?.lat, longitude: item?.lng},
-                    );
-                    if (temp <= item?.service_radius * 1000) {
-                      count = count + 1;
-                    }
-                  });
+                  //get the source and check if the service is available in selected area
 
-                  if (count > 0) {
-                    let temp = {...source};
-                    temp.meta.address_line1 = mapData.address_line1;
-                    temp.meta.address_line2 = mapData.address_line2;
-                    temp.meta.city = mapData.city;
-                    temp.meta.pincode = mapData.pincode;
-                    temp.meta.state = mapData.state;
-                    temp.meta.geocode = mapData.geocode;
-                    temp.lat = mapData.latitude;
-                    temp.lng = mapData.longitude;
-                    handleStateChange('source', temp);
-                    setMapVisible(false);
-                  } else {
-                    alert(
-                      'Your location is not currently serviceable by biddnest. We will be expanding soon.',
-                    );
-                  }
+                  let obj = {
+                    url: 'zone/check-serviceability',
+                    method: 'post',
+                    headers: {
+                      Authorization:
+                        'Bearer ' + STORE.getState().Login?.loginData?.token,
+                    },
+                    data: {
+                      latitude: mapData.latitude,
+                      longitude: mapData.longitude,
+                    },
+                  };
+                  APICall(obj)
+                    .then((res) => {
+                      setLoading(false);
+                      if (res?.status === 200) {
+                        if (res?.data?.data.serviceable) {
+                          let temp = {...source};
+                          temp.meta.address_line1 = mapData.address_line1;
+                          temp.meta.address_line2 = mapData.address_line2;
+                          temp.meta.city = mapData.city;
+                          temp.meta.pincode = mapData.pincode;
+                          temp.meta.state = mapData.state;
+                          temp.meta.geocode = mapData.geocode;
+                          temp.lat = mapData.latitude;
+                          temp.lng = mapData.longitude;
+                          handleStateChange('source', temp);
+                          setMapVisible(false);
+                        } else {
+                          alert(
+                            'Currently we are unable to deliver here. Please select a valid destination.',
+                          );
+                        }
+                      } else {
+                        CustomAlert(res?.data?.message);
+                      }
+                    })
+                    .catch((err) => {
+                      setLoading(false);
+                      CustomConsole(err);
+                    });
+
+                  // let count = 0;
+                  // zones.forEach((item, index) => {
+                  //   let temp = getDistance(
+                  //     {
+                  //       latitude: mapData?.latitude,
+                  //       longitude: mapData?.longitude,
+                  //     },
+                  //     {latitude: item?.lat, longitude: item?.lng},
+                  //   );
+                  //   if (temp <= item?.service_radius * 1000) {
+                  //     count = count + 1;
+                  //   }
+                  // });
+
+                  // if (count > 0) {
+                  //   let temp = {...source};
+                  //   temp.meta.address_line1 = mapData.address_line1;
+                  //   temp.meta.address_line2 = mapData.address_line2;
+                  //   temp.meta.city = mapData.city;
+                  //   temp.meta.pincode = mapData.pincode;
+                  //   temp.meta.state = mapData.state;
+                  //   temp.meta.geocode = mapData.geocode;
+                  //   temp.lat = mapData.latitude;
+                  //   temp.lng = mapData.longitude;
+                  //   handleStateChange('source', temp);
+                  //   setMapVisible(false);
+                  // } else {
+                  //   alert(
+                  //     'Your location is not currently serviceable by biddnest. We will be expanding soon.',
+                  //   );
+                  // }
                 }
               }}
             />

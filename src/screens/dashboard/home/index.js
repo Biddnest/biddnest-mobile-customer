@@ -321,7 +321,9 @@ const Home = (props) => {
         },
       };
       APICall(obj)
-        .then((res) => {})
+        .then((res) => {
+          console.log(res, 'res from zone/register');
+        })
         .catch((err) => {
           setLoading(false);
           CustomAlert(err?.data?.message);
@@ -330,7 +332,6 @@ const Home = (props) => {
   }, []);
 
   const renderItem = ({item, index}) => {
-    // console.log({item});
     let mainSize = [];
     Object.values(sliderSize.size).forEach((i, ind) => {
       if (i === item?.banner_size) {
@@ -398,7 +399,6 @@ const Home = (props) => {
           />
         )} */}
         {sliderData.map((item, index) => {
-          // console.log({item});
           if (configData?.enums?.slider?.position?.main === item.position) {
             let bottomSize = [];
             Object.values(sliderSize.size).forEach((i, ind) => {
@@ -816,7 +816,6 @@ const Home = (props) => {
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => {
-                  console.log({item});
                   return (
                     <Pressable
                       onPress={() => {

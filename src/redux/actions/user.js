@@ -397,6 +397,7 @@ export const getZones = () => {
       };
       APICall(obj)
         .then((res) => {
+          console.log(res, 'res from zones');
           dispatch({
             type: GET_ZONES,
             payload: res?.data?.data?.zones || [],
@@ -404,6 +405,7 @@ export const getZones = () => {
           resolve(res.data);
         })
         .catch((err) => {
+          console.log(err, 'error from zones');
           CustomAlert(err?.data?.message);
           reject(err);
         });
