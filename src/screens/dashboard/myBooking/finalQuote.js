@@ -80,6 +80,9 @@ const FinalQuote = (props) => {
       JSON.parse(orderDetails?.bid?.meta?.toString())) ||
     {};
 
+  const parseMovingDate =
+    orderDetails?.bid && JSON.parse(orderDetails?.bid?.moving_dates);
+
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <View style={styles.container}>
@@ -148,6 +151,54 @@ const FinalQuote = (props) => {
                     ]}>
                     man power
                   </Text>
+
+                  <Text
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    Order Id:
+                  </Text>
+
+                  <Text
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    Initial Quote:
+                  </Text>
+
+                  <Text
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    Final Quote:
+                  </Text>
+                  <Text
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    Moving Dates:
+                  </Text>
+                  <Text
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    Movement Type:
+                  </Text>
                 </View>
                 <View style={{flex: 1, marginLeft: 15}}>
                   <Text
@@ -164,6 +215,58 @@ const FinalQuote = (props) => {
                         JSON.parse(
                           orderDetails?.movement_specifications?.meta?.toString(),
                         ).max_man_power}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    {orderDetails?.public_enquiry_id}
+                  </Text>
+
+                  <Text
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    {orderDetails?.final_estimated_quote}
+                  </Text>
+
+                  <Text
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    {orderDetails?.final_quote}
+                  </Text>
+
+                  {parseMovingDate?.map((movingDate, i) => (
+                    <Text
+                      key={i}
+                      style={[
+                        styles.leftText,
+                        {
+                          textTransform: 'uppercase',
+                        },
+                      ]}>
+                      {movingDate}
+                    </Text>
+                  ))}
+
+                  <Text
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    {bid_meta.type_of_movement}
                   </Text>
                 </View>
               </View>
