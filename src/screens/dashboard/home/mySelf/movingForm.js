@@ -115,6 +115,8 @@ const MovingForm = (props) => {
       });
   };
 
+  console.log({mapData});
+
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => setKeyboardOpen(true));
     Keyboard.addListener('keyboardDidHide', () => setKeyboardOpen(false));
@@ -145,6 +147,7 @@ const MovingForm = (props) => {
     )
       .then((response) => response.json())
       .then((responseJson) => {
+        console.log({responseJson});
         let temp = JSON.parse(JSON.stringify(responseJson));
         if (temp?.results && temp?.results?.length > 0) {
           googlePlaceRef?.current?.setAddressText(
@@ -153,9 +156,8 @@ const MovingForm = (props) => {
           setAddress(temp?.results[0]?.formatted_address);
           temp?.results[0].address_components.forEach((item, index) => {
             if (
-              item?.types?.findIndex(
-                (ele) => ele === 'administrative_area_level_2',
-              ) !== -1
+              item?.types?.findIndex((ele) => ele === 'sublocality_level_1') !==
+              -1
             ) {
               t1.city = item?.long_name;
             } else if (

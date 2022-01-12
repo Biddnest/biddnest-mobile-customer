@@ -16,10 +16,9 @@ import moment from 'moment';
 
 const MyProfile = (props) => {
   const userData = useSelector((state) => state.Login?.loginData?.user) || {};
-  console.log({userData});
 
-  const parsedCity = JSON.parse(userData.meta);
-  console.log({parsedCity});
+  const parsedCity = JSON.parse(userData?.meta);
+  // console.log({parsedCity});
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <HomeHeader
