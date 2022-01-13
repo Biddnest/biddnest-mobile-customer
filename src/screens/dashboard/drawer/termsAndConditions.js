@@ -11,6 +11,7 @@ import {
   LoadingScreen,
 } from '../../../constant/commonFun';
 import {Html5Entities} from 'html-entities';
+import RenderHtml from 'react-native-render-html';
 
 const TermsAndConditions = (props) => {
   const [termsText, setTermsText] = useState('');
@@ -49,7 +50,8 @@ const TermsAndConditions = (props) => {
         showsVerticalScrollIndicator={false}
         bounces={false}>
         <View style={styles.inputForm}>
-          <Text style={styles.bottomText}>{termsText}</Text>
+          {/* <Text style={styles.bottomText}>{termsText}</Text> */}
+          <RenderHtml source={{html: termsText}} contentWidth={250} />
         </View>
       </ScrollView>
     </LinearGradient>

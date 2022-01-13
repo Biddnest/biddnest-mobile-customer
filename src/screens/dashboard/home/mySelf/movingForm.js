@@ -45,6 +45,7 @@ import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 navigator.geolocation = require('@react-native-community/geolocation');
 
 const MovingForm = (props) => {
+  console.log({props});
   const dispatch = useDispatch();
   const mapRef = useRef(null);
   const googlePlaceRef = useRef(null);
@@ -203,6 +204,9 @@ const MovingForm = (props) => {
     setMapData(t1);
   };
   const handleState = (key, value) => {
+    console.log({value});
+    console.log({key});
+
     if (props.movingFrom) {
       let temp = {...destination};
       temp.meta[key] = value;
@@ -217,6 +221,8 @@ const MovingForm = (props) => {
   const handleMapReady = useCallback(() => {
     setMapReady(true);
   }, [mapRef, setMapReady]);
+
+  console.log({destination});
 
   return (
     <KeyboardAwareScrollView
@@ -444,6 +450,18 @@ const MovingForm = (props) => {
               My Flat/Apartment has SERVICE Lift.
             </Text>
           </View>
+          {/* {props.movingFrom ? (
+            <Switch
+              onChange={(text) => handleState('lift', text)}
+              value={destination?.meta?.lift}
+            />
+          ) : (
+            <Switch
+              onChange={(text) => handleState('lift', text)}
+              value={source?.meta?.lift}
+            />
+          )} */}
+
           <Switch
             onChange={(text) => handleState('lift', text)}
             value={

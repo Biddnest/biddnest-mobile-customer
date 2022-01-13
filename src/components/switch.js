@@ -1,19 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {Animated, Pressable, Text, View} from 'react-native';
-import {Colors, wp, hp} from '../constant/colors';
+import {Animated, Pressable, View} from 'react-native';
+import {Colors, hp} from '../constant/colors';
 
 const Switch = (props) => {
-  const [switchValue, setSwitchValue] = useState(props.value != 0);
+  const [switchValue, setSwitchValue] = useState(0);
 
   useEffect(() => {
-    // setSwitchValue(!props.value);
-  }, [switchValue]);
+    setSwitchValue(props.value);
+  }, [props.value, switchValue]);
 
   return (
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
       <Pressable
         onPress={() => {
-          setSwitchValue(props.value);
+          setSwitchValue(!props.value);
           props.onChange(props.value === 0 ? 1 : 0);
         }}
         style={{

@@ -77,7 +77,7 @@ const BookingStepper = (props) => {
         city: '',
         state: '',
         pincode: '',
-        lift: 1,
+        lift: 0,
         address_line1: '',
         address_line2: '',
       },

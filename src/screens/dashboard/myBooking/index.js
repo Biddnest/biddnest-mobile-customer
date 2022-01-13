@@ -21,6 +21,7 @@ const MyBooking = (props) => {
   const isFocused = useIsFocused();
   const configData =
     useSelector((state) => state.Login?.configData?.enums?.booking) || {};
+
   const userData = useSelector((state) => state.Login?.loginData?.user) || {};
   const [liveOrders, setLiveOrders] = useState(
     useSelector((state) => state.Login?.liveOrders?.booking) || [],
@@ -162,11 +163,15 @@ const MyBooking = (props) => {
     let ind = Object.values(configData?.status).findIndex(
       (ele) => ele === item?.status,
     );
+
     let status = Object.keys(configData?.status)[ind]?.split('_').join(' ');
     if (status === 'awaiting bid result' || status === 'price review pending') {
       status = 'Bidding';
     }
+
+    console.log({configData});
     let statusInd = Object.keys(configData?.status)[ind];
+    console.log({statusInd});
     let source_meta =
       (item?.source_meta && JSON.parse(item?.source_meta?.toString())) || {};
     let destination_meta =
@@ -228,15 +233,19 @@ const MyBooking = (props) => {
             style={[
               styles.statusView,
               {
+                // color: '#000',
+                fontWeight: 'bold',
                 backgroundColor:
                   item?.status === 14
                     ? configData?.color.biding
                     : configData?.color[statusInd],
-                maxWidth: '45%',
+                // ? item.status === 12
+                // : '#ce3131',
+                maxWidth: '85%',
                 overflow: 'hidden',
               },
             ]}>
-            {status === 'cancelrequest' ? 'Request To Cancel' : status}
+            {status === 'cancel request' ? 'Request To Cancel' : status}
           </Text>
           <Text
             style={{
@@ -379,6 +388,7 @@ const MyBooking = (props) => {
             </Text>
           </View>
         )}
+        {/* {item?.moving_date && renderComponent()} */}
         {renderComponent()}
         <View style={[styles.flexBox, {marginTop: hp(1.2)}]}>
           <Text style={styles.leftText}>category</Text>
