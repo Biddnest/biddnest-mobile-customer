@@ -240,10 +240,10 @@ const Home = (props) => {
                   } else {
                     activeSlide2 = activeSlide2 + 1;
                   }
-                  scrollViewRef?.current?.scrollToIndex({
-                    animated: true,
-                    index: activeSlide2 === 2 ? 0 : activeSlide2 + 1,
-                  });
+                  // scrollViewRef?.current?.scrollToIndex({
+                  //   animated: true,
+                  //   index: activeSlide2 === 2 ? 0 : activeSlide2 + 1,
+                  // });
                 }, 5000);
               } else {
                 CustomAlert(res.message);

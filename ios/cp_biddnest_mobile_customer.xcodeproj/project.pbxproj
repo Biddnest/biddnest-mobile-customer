@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* cp_biddnest_mobile_customerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* cp_biddnest_mobile_customerTests.m */; };
-		040CC7E98CA415BFE1911761 /* libPods-cp_biddnest_mobile_customer-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F827C4DE369D2BC747B8BCE /* libPods-cp_biddnest_mobile_customer-tvOSTests.a */; };
-		053255BC106A07B78BBB9DB2 /* libPods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62313C60D7835752803FBF14 /* libPods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -17,13 +15,26 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* cp_biddnest_mobile_customerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* cp_biddnest_mobile_customerTests.m */; };
-		3CC03F904A0A53B3C7688BBC /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A376BE83E5128C3D2970761 /* libPods-OneSignalNotificationServiceExtension.a */; };
-		3F2093BAA1E2D3BEC20E7B4B /* libPods-cp_biddnest_mobile_customer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1950B1052A76EC71C27C0E51 /* libPods-cp_biddnest_mobile_customer.a */; };
 		65E4AE3426D4B03C000D9312 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E4AE3326D4B03C000D9312 /* NotificationService.swift */; };
 		65E4AE3826D4B03C000D9312 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 65E4AE3126D4B03C000D9312 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7B9F60F429F517E26ADBF7B1 /* libPods-cp_biddnest_mobile_customer-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 686BCD562D6EC9690EDE3AC8 /* libPods-cp_biddnest_mobile_customer-tvOSTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		A33E9536BF5E014351EA6403 /* libPods-cp_biddnest_mobile_customer-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71D9FB244F4D58256A1717C4 /* libPods-cp_biddnest_mobile_customer-tvOS.a */; };
+		8256DE0045DB004C4553A7CE /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CF2D421A288805FEA98481B1 /* libPods-OneSignalNotificationServiceExtension.a */; };
+		A44268CE01E7BD0F7A944546 /* libPods-cp_biddnest_mobile_customer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD32B70992699E8227ED0E42 /* libPods-cp_biddnest_mobile_customer.a */; };
+		D494982AAF43291C5774A12F /* libPods-cp_biddnest_mobile_customer-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F14E206AA8780FD55A8A96D3 /* libPods-cp_biddnest_mobile_customer-tvOS.a */; };
+		DD569690D0ACC5107448B341 /* libPods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 062FD7EB09C88E2848DED12B /* libPods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.a */; };
 		E2308C502797E4CE008172E5 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E2308C4F2797E4CE008172E5 /* libBVLinearGradient.a */; };
+		E239DC1627985035009D4408 /* Gilroy-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 99ED99F0A392414CA81D9C66 /* Gilroy-Bold.ttf */; };
+		E239DC1727985035009D4408 /* Gilroy-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AE580317EE44A88B595CDB5 /* Gilroy-ExtraBold.ttf */; };
+		E239DC1827985035009D4408 /* Gilroy-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D0B67C4D65A497894089E9E /* Gilroy-Light.ttf */; };
+		E239DC1927985035009D4408 /* Gilroy-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7D9EB38C5D104CDD936D7FAE /* Gilroy-Medium.ttf */; };
+		E239DC1A27985035009D4408 /* Gilroy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E18924227864D0F92DC4B05 /* Gilroy-Regular.ttf */; };
+		E239DC1B27985035009D4408 /* Gilroy-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1BAF2BCA4EF841C983A282B1 /* Gilroy-SemiBold.ttf */; };
+		E239DC1C279851CF009D4408 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A9F310E05D64D489E8B91B6 /* Roboto-Bold.ttf */; };
+		E239DC1D279851FF009D4408 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 60B1102E68A74DC1B3C2DD9F /* Roboto-Italic.ttf */; };
+		E239DC1E279851FF009D4408 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 931A9D45AC45404E94E47F1F /* Roboto-Light.ttf */; };
+		E239DC1F279851FF009D4408 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BBFDD5DFE5AF451288F6CF5B /* Roboto-Medium.ttf */; };
+		E239DC20279851FF009D4408 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B62A9049DC3842979912856F /* Roboto-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,11 +76,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0069D28F5B644D158B6FFAEB /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* cp_biddnest_mobile_customerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = cp_biddnest_mobile_customerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* cp_biddnest_mobile_customerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = cp_biddnest_mobile_customerTests.m; sourceTree = "<group>"; };
-		0678933EB5D99660BAEB4E72 /* Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.release.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.release.xcconfig"; sourceTree = "<group>"; };
+		0471DBBAB5CC88C02F60600D /* Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.release.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.release.xcconfig"; sourceTree = "<group>"; };
+		062FD7EB09C88E2848DED12B /* libPods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D86BBE51FAC73C967246A59 /* Pods-cp_biddnest_mobile_customer-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer-tvOS.release.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer-tvOS/Pods-cp_biddnest_mobile_customer-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* cp_biddnest_mobile_customer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cp_biddnest_mobile_customer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = cp_biddnest_mobile_customer/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = cp_biddnest_mobile_customer/AppDelegate.m; sourceTree = "<group>"; };
@@ -78,35 +92,41 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = cp_biddnest_mobile_customer/main.m; sourceTree = "<group>"; };
 		1440B518FBA24BD4AAD25D63 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = ../src/assets/fonts/Foundation.ttf; sourceTree = "<group>"; };
 		16FA489C461940ABB6373214 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = ../src/assets/fonts/Fontisto.ttf; sourceTree = "<group>"; };
-		1950B1052A76EC71C27C0E51 /* libPods-cp_biddnest_mobile_customer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-cp_biddnest_mobile_customer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A9F310E05D64D489E8B91B6 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Bold.ttf"; path = "../src/assets/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		1AE580317EE44A88B595CDB5 /* Gilroy-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-ExtraBold.ttf"; path = "../src/assets/fonts/Gilroy-ExtraBold.ttf"; sourceTree = "<group>"; };
 		1BAF2BCA4EF841C983A282B1 /* Gilroy-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-SemiBold.ttf"; path = "../src/assets/fonts/Gilroy-SemiBold.ttf"; sourceTree = "<group>"; };
 		1D0B67C4D65A497894089E9E /* Gilroy-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-Light.ttf"; path = "../src/assets/fonts/Gilroy-Light.ttf"; sourceTree = "<group>"; };
-		1F827C4DE369D2BC747B8BCE /* libPods-cp_biddnest_mobile_customer-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-cp_biddnest_mobile_customer-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		26B450DE3FDE2864507B84C2 /* Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.debug.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.debug.xcconfig"; sourceTree = "<group>"; };
-		2BA7E7C26E84A8B80B3DB6DA /* Pods-cp_biddnest_mobile_customer-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer-tvOS.release.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer-tvOS/Pods-cp_biddnest_mobile_customer-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		23C8CFC9B10745F98FE763DA /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
+		24526C38723A423FA3F7DD38 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
+		2AE9DF77C9C94AFA95BFD848 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		2BAC37CCBA164942A8DB6A7C /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = ../src/assets/fonts/MaterialIcons.ttf; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* cp_biddnest_mobile_customer-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "cp_biddnest_mobile_customer-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* cp_biddnest_mobile_customer-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "cp_biddnest_mobile_customer-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		382BAAA35BC9235A9149DA4C /* Pods-cp_biddnest_mobile_customer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer.debug.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer/Pods-cp_biddnest_mobile_customer.debug.xcconfig"; sourceTree = "<group>"; };
+		35B0EA9B695D4D5882BB270A /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
+		38DB0E0675BE8A39DB6DC229 /* Pods-cp_biddnest_mobile_customer-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer-tvOSTests/Pods-cp_biddnest_mobile_customer-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		39A7CFBFAFB0411AB3F18782 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		45F187E5C07F4871BB883E59 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		462B9E98A46643DDA6843DCA /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = ../src/assets/fonts/AntDesign.ttf; sourceTree = "<group>"; };
-		4CB3B4D2FEDFB8FB474BA8B6 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
+		4A34442942CC477E855D583F /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
+		4D24B06DC9F2609A5B346B0E /* Pods-cp_biddnest_mobile_customer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer.debug.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer/Pods-cp_biddnest_mobile_customer.debug.xcconfig"; sourceTree = "<group>"; };
+		5090D7A297C081235BDF29FA /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		585E1233547D46C69044F918 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = ../src/assets/fonts/Octicons.ttf; sourceTree = "<group>"; };
+		595F43DE33EC4298BDEF026B /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		5E4350E145AB49D8A23BD8FC /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
+		5FAFA9C8F27545388454C520 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		60B1102E68A74DC1B3C2DD9F /* Roboto-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Italic.ttf"; path = "../src/assets/fonts/Roboto-Italic.ttf"; sourceTree = "<group>"; };
-		62313C60D7835752803FBF14 /* libPods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		65E4ADD526D4AFE9000D9312 /* cp_biddnest_mobile_customer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = cp_biddnest_mobile_customer.entitlements; path = cp_biddnest_mobile_customer/cp_biddnest_mobile_customer.entitlements; sourceTree = "<group>"; };
 		65E4AE3126D4B03C000D9312 /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		65E4AE3326D4B03C000D9312 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		65E4AE3526D4B03C000D9312 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		65E4AE4726D4B0CA000D9312 /* OneSignalNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneSignalNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
-		6951AEB5C1B09C1F17C121E4 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
-		6A376BE83E5128C3D2970761 /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		686BCD562D6EC9690EDE3AC8 /* libPods-cp_biddnest_mobile_customer-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-cp_biddnest_mobile_customer-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C8BE060D1BC42F89DDFBF35 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = ../src/assets/fonts/MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
 		6CFF28A80A2B4B649F60FAC2 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = ../src/assets/fonts/FontAwesome5_Solid.ttf; sourceTree = "<group>"; };
-		71D9FB244F4D58256A1717C4 /* libPods-cp_biddnest_mobile_customer-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-cp_biddnest_mobile_customer-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		747C016285FF400E93A743D1 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		7A3F03C5FA2F42939018C90C /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = ../src/assets/fonts/Feather.ttf; sourceTree = "<group>"; };
 		7D9EB38C5D104CDD936D7FAE /* Gilroy-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-Medium.ttf"; path = "../src/assets/fonts/Gilroy-Medium.ttf"; sourceTree = "<group>"; };
+		7E945F97C2124D7BA51296EA /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		817250BB8D4B46048039FBAB /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = ../src/assets/fonts/Zocial.ttf; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = cp_biddnest_mobile_customer/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8D37050D555E4DE8BD19885C /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = ../src/assets/fonts/FontAwesome5_Regular.ttf; sourceTree = "<group>"; };
@@ -114,20 +134,28 @@
 		931A9D45AC45404E94E47F1F /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../src/assets/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
 		96B011F8C6B14759AA85D362 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = ../src/assets/fonts/Entypo.ttf; sourceTree = "<group>"; };
 		99ED99F0A392414CA81D9C66 /* Gilroy-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-Bold.ttf"; path = "../src/assets/fonts/Gilroy-Bold.ttf"; sourceTree = "<group>"; };
-		9AF0C297C0439AC53D4B69BB /* Pods-cp_biddnest_mobile_customer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer.release.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer/Pods-cp_biddnest_mobile_customer.release.xcconfig"; sourceTree = "<group>"; };
+		9C8D7AEC696B5C17466F5F46 /* Pods-cp_biddnest_mobile_customer-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer-tvOS/Pods-cp_biddnest_mobile_customer-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		A078B4917F704EEFAEE65301 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = ../src/assets/fonts/FontAwesome.ttf; sourceTree = "<group>"; };
 		A18C697CADE6490C84586C4E /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = ../src/assets/fonts/FontAwesome5_Brands.ttf; sourceTree = "<group>"; };
 		B62A9049DC3842979912856F /* Roboto-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Regular.ttf"; path = "../src/assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		BBFDD5DFE5AF451288F6CF5B /* Roboto-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Medium.ttf"; path = "../src/assets/fonts/Roboto-Medium.ttf"; sourceTree = "<group>"; };
-		C41E6606D1E4DA5A0FABB76D /* Pods-cp_biddnest_mobile_customer-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer-tvOSTests/Pods-cp_biddnest_mobile_customer-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		BCDC4BA713FCD6DEB1B0A180 /* Pods-cp_biddnest_mobile_customer-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer-tvOSTests/Pods-cp_biddnest_mobile_customer-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		BF4D31AD3B391052F1F0FD81 /* Pods-cp_biddnest_mobile_customer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer.release.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer/Pods-cp_biddnest_mobile_customer.release.xcconfig"; sourceTree = "<group>"; };
+		C0942249FD814A45A30D5774 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		C4E56626A10B4996B87CFD2B /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = ../src/assets/fonts/SimpleLineIcons.ttf; sourceTree = "<group>"; };
+		C6E85C6315B240898C276F2C /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
+		CF2D421A288805FEA98481B1 /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2308C4F2797E4CE008172E5 /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E239DBE92798467D009D4408 /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E27086C00F5C4D43B263D109 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = ../src/assets/fonts/EvilIcons.ttf; sourceTree = "<group>"; };
 		ECB84B526502451BB729380C /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = ../src/assets/fonts/Ionicons.ttf; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		F1D056A09D66BEA0686E801B /* Pods-cp_biddnest_mobile_customer-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer-tvOS/Pods-cp_biddnest_mobile_customer-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		F2816CE58AAD607C94A65246 /* Pods-cp_biddnest_mobile_customer-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer-tvOSTests/Pods-cp_biddnest_mobile_customer-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		F14E206AA8780FD55A8A96D3 /* libPods-cp_biddnest_mobile_customer-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-cp_biddnest_mobile_customer-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F72BD36B11CAD0B08E669FF3 /* Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.debug.xcconfig"; path = "Target Support Files/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.debug.xcconfig"; sourceTree = "<group>"; };
+		FA01650D60634793961B5C0C /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
+		FBE8A5B1089332FD71BF6C1B /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
+		FD32B70992699E8227ED0E42 /* libPods-cp_biddnest_mobile_customer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-cp_biddnest_mobile_customer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,7 +163,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				053255BC106A07B78BBB9DB2 /* libPods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.a in Frameworks */,
+				DD569690D0ACC5107448B341 /* libPods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,7 +172,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2308C502797E4CE008172E5 /* libBVLinearGradient.a in Frameworks */,
-				3F2093BAA1E2D3BEC20E7B4B /* libPods-cp_biddnest_mobile_customer.a in Frameworks */,
+				A44268CE01E7BD0F7A944546 /* libPods-cp_biddnest_mobile_customer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,7 +180,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A33E9536BF5E014351EA6403 /* libPods-cp_biddnest_mobile_customer-tvOS.a in Frameworks */,
+				D494982AAF43291C5774A12F /* libPods-cp_biddnest_mobile_customer-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,7 +188,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				040CC7E98CA415BFE1911761 /* libPods-cp_biddnest_mobile_customer-tvOSTests.a in Frameworks */,
+				7B9F60F429F517E26ADBF7B1 /* libPods-cp_biddnest_mobile_customer-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,7 +196,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3CC03F904A0A53B3C7688BBC /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */,
+				8256DE0045DB004C4553A7CE /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,14 +238,15 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E239DBE92798467D009D4408 /* libBVLinearGradient.a */,
 				E2308C4F2797E4CE008172E5 /* libBVLinearGradient.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				6A376BE83E5128C3D2970761 /* libPods-OneSignalNotificationServiceExtension.a */,
-				1950B1052A76EC71C27C0E51 /* libPods-cp_biddnest_mobile_customer.a */,
-				62313C60D7835752803FBF14 /* libPods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.a */,
-				71D9FB244F4D58256A1717C4 /* libPods-cp_biddnest_mobile_customer-tvOS.a */,
-				1F827C4DE369D2BC747B8BCE /* libPods-cp_biddnest_mobile_customer-tvOSTests.a */,
+				CF2D421A288805FEA98481B1 /* libPods-OneSignalNotificationServiceExtension.a */,
+				FD32B70992699E8227ED0E42 /* libPods-cp_biddnest_mobile_customer.a */,
+				062FD7EB09C88E2848DED12B /* libPods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.a */,
+				F14E206AA8780FD55A8A96D3 /* libPods-cp_biddnest_mobile_customer-tvOS.a */,
+				686BCD562D6EC9690EDE3AC8 /* libPods-cp_biddnest_mobile_customer-tvOSTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -252,6 +281,22 @@
 				6CFF28A80A2B4B649F60FAC2 /* FontAwesome5_Solid.ttf */,
 				16FA489C461940ABB6373214 /* Fontisto.ttf */,
 				1440B518FBA24BD4AAD25D63 /* Foundation.ttf */,
+				23C8CFC9B10745F98FE763DA /* AntDesign.ttf */,
+				2AE9DF77C9C94AFA95BFD848 /* Entypo.ttf */,
+				5FAFA9C8F27545388454C520 /* EvilIcons.ttf */,
+				747C016285FF400E93A743D1 /* Feather.ttf */,
+				595F43DE33EC4298BDEF026B /* FontAwesome.ttf */,
+				C0942249FD814A45A30D5774 /* FontAwesome5_Brands.ttf */,
+				35B0EA9B695D4D5882BB270A /* FontAwesome5_Regular.ttf */,
+				24526C38723A423FA3F7DD38 /* FontAwesome5_Solid.ttf */,
+				C6E85C6315B240898C276F2C /* Fontisto.ttf */,
+				45F187E5C07F4871BB883E59 /* Foundation.ttf */,
+				39A7CFBFAFB0411AB3F18782 /* Ionicons.ttf */,
+				7E945F97C2124D7BA51296EA /* MaterialCommunityIcons.ttf */,
+				4A34442942CC477E855D583F /* MaterialIcons.ttf */,
+				5E4350E145AB49D8A23BD8FC /* Octicons.ttf */,
+				FA01650D60634793961B5C0C /* SimpleLineIcons.ttf */,
+				0069D28F5B644D158B6FFAEB /* Zocial.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -269,16 +314,16 @@
 		6D2D717A295DC5FF1E7ECAD3 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				6951AEB5C1B09C1F17C121E4 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
-				4CB3B4D2FEDFB8FB474BA8B6 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
-				382BAAA35BC9235A9149DA4C /* Pods-cp_biddnest_mobile_customer.debug.xcconfig */,
-				9AF0C297C0439AC53D4B69BB /* Pods-cp_biddnest_mobile_customer.release.xcconfig */,
-				26B450DE3FDE2864507B84C2 /* Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.debug.xcconfig */,
-				0678933EB5D99660BAEB4E72 /* Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.release.xcconfig */,
-				F1D056A09D66BEA0686E801B /* Pods-cp_biddnest_mobile_customer-tvOS.debug.xcconfig */,
-				2BA7E7C26E84A8B80B3DB6DA /* Pods-cp_biddnest_mobile_customer-tvOS.release.xcconfig */,
-				F2816CE58AAD607C94A65246 /* Pods-cp_biddnest_mobile_customer-tvOSTests.debug.xcconfig */,
-				C41E6606D1E4DA5A0FABB76D /* Pods-cp_biddnest_mobile_customer-tvOSTests.release.xcconfig */,
+				5090D7A297C081235BDF29FA /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
+				FBE8A5B1089332FD71BF6C1B /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
+				4D24B06DC9F2609A5B346B0E /* Pods-cp_biddnest_mobile_customer.debug.xcconfig */,
+				BF4D31AD3B391052F1F0FD81 /* Pods-cp_biddnest_mobile_customer.release.xcconfig */,
+				F72BD36B11CAD0B08E669FF3 /* Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.debug.xcconfig */,
+				0471DBBAB5CC88C02F60600D /* Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.release.xcconfig */,
+				9C8D7AEC696B5C17466F5F46 /* Pods-cp_biddnest_mobile_customer-tvOS.debug.xcconfig */,
+				0D86BBE51FAC73C967246A59 /* Pods-cp_biddnest_mobile_customer-tvOS.release.xcconfig */,
+				BCDC4BA713FCD6DEB1B0A180 /* Pods-cp_biddnest_mobile_customer-tvOSTests.debug.xcconfig */,
+				38DB0E0675BE8A39DB6DC229 /* Pods-cp_biddnest_mobile_customer-tvOSTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -326,12 +371,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "cp_biddnest_mobile_customerTests" */;
 			buildPhases = (
-				195EA7F7047785EA7898CBF9 /* [CP] Check Pods Manifest.lock */,
+				E725A09969B999580B0AF5FC /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				A05767DCA69ECBA4EB2BE5D5 /* [CP] Embed Pods Frameworks */,
-				1981BBDD82B9B26C6E69A9BB /* [CP] Copy Pods Resources */,
+				93227EA56C80EDB67366EBE1 /* [CP] Embed Pods Frameworks */,
+				CF940121900A16FF63B9A762 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -347,15 +392,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "cp_biddnest_mobile_customer" */;
 			buildPhases = (
-				2468C581D6D7A055749E17E9 /* [CP] Check Pods Manifest.lock */,
+				A5DA915493276B8806B39CA5 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				65E4AE3C26D4B03C000D9312 /* Embed App Extensions */,
-				3A263C8070F71FBFF952D1D3 /* [CP] Embed Pods Frameworks */,
-				444F870B0EAF3B93F4495041 /* [CP] Copy Pods Resources */,
+				058C8C6C9FCF7F7AE1A31579 /* [CP] Embed Pods Frameworks */,
+				F01B8C05E822A459B02BEA61 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -371,7 +416,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "cp_biddnest_mobile_customer-tvOS" */;
 			buildPhases = (
-				69CA37F285BAF71AD47E0CF0 /* [CP] Check Pods Manifest.lock */,
+				69890C41166910217A2D9BAE /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
@@ -391,7 +436,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "cp_biddnest_mobile_customer-tvOSTests" */;
 			buildPhases = (
-				60D4D3A302093D271880568D /* [CP] Check Pods Manifest.lock */,
+				7955ED1F60DBA606BE5D6921 /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
 				2D02E48E1E0B4A5D006451C7 /* Resources */,
@@ -410,7 +455,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 65E4AE3926D4B03C000D9312 /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
 			buildPhases = (
-				14B0826E8D89452B989F9BA6 /* [CP] Check Pods Manifest.lock */,
+				56AF22F85BF7CAB146F3B5F8 /* [CP] Check Pods Manifest.lock */,
 				65E4AE2D26D4B03C000D9312 /* Sources */,
 				65E4AE2E26D4B03C000D9312 /* Frameworks */,
 				65E4AE2F26D4B03C000D9312 /* Resources */,
@@ -491,6 +536,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E239DC1D279851FF009D4408 /* Roboto-Italic.ttf in Resources */,
+				E239DC1E279851FF009D4408 /* Roboto-Light.ttf in Resources */,
+				E239DC1F279851FF009D4408 /* Roboto-Medium.ttf in Resources */,
+				E239DC20279851FF009D4408 /* Roboto-Regular.ttf in Resources */,
+				E239DC1C279851CF009D4408 /* Roboto-Bold.ttf in Resources */,
+				E239DC1627985035009D4408 /* Gilroy-Bold.ttf in Resources */,
+				E239DC1727985035009D4408 /* Gilroy-ExtraBold.ttf in Resources */,
+				E239DC1827985035009D4408 /* Gilroy-Light.ttf in Resources */,
+				E239DC1927985035009D4408 /* Gilroy-Medium.ttf in Resources */,
+				E239DC1A27985035009D4408 /* Gilroy-Regular.ttf in Resources */,
+				E239DC1B27985035009D4408 /* Gilroy-SemiBold.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
@@ -535,7 +591,39 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		14B0826E8D89452B989F9BA6 /* [CP] Check Pods Manifest.lock */ = {
+		058C8C6C9FCF7F7AE1A31579 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-cp_biddnest_mobile_customer/Pods-cp_biddnest_mobile_customer-frameworks.sh",
+				"${PODS_ROOT}/razorpay-pod/Pod/Razorpay.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Razorpay.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-cp_biddnest_mobile_customer/Pods-cp_biddnest_mobile_customer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native Code And Images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		56AF22F85BF7CAB146F3B5F8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -557,7 +645,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		195EA7F7047785EA7898CBF9 /* [CP] Check Pods Manifest.lock */ = {
+		69890C41166910217A2D9BAE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -572,14 +660,76 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-cp_biddnest_mobile_customer-tvOS-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		1981BBDD82B9B26C6E69A9BB /* [CP] Copy Pods Resources */ = {
+		7955ED1F60DBA606BE5D6921 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-cp_biddnest_mobile_customer-tvOSTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		93227EA56C80EDB67366EBE1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests-frameworks.sh",
+				"${PODS_ROOT}/razorpay-pod/Pod/Razorpay.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Razorpay.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A5DA915493276B8806B39CA5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-cp_biddnest_mobile_customer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CF940121900A16FF63B9A762 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -635,7 +785,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2468C581D6D7A055749E17E9 /* [CP] Check Pods Manifest.lock */ = {
+		E725A09969B999580B0AF5FC /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -650,46 +800,14 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-cp_biddnest_mobile_customer-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native Code And Images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
-		};
-		3A263C8070F71FBFF952D1D3 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-cp_biddnest_mobile_customer/Pods-cp_biddnest_mobile_customer-frameworks.sh",
-				"${PODS_ROOT}/razorpay-pod/Pod/Razorpay.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Razorpay.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-cp_biddnest_mobile_customer/Pods-cp_biddnest_mobile_customer-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		444F870B0EAF3B93F4495041 /* [CP] Copy Pods Resources */ = {
+		F01B8C05E822A459B02BEA61 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -743,68 +861,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-cp_biddnest_mobile_customer/Pods-cp_biddnest_mobile_customer-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		60D4D3A302093D271880568D /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-cp_biddnest_mobile_customer-tvOSTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		69CA37F285BAF71AD47E0CF0 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-cp_biddnest_mobile_customer-tvOS-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A05767DCA69ECBA4EB2BE5D5 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests-frameworks.sh",
-				"${PODS_ROOT}/razorpay-pod/Pod/Razorpay.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Razorpay.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests/Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -913,7 +969,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 26B450DE3FDE2864507B84C2 /* Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.debug.xcconfig */;
+			baseConfigurationReference = F72BD36B11CAD0B08E669FF3 /* Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -936,7 +992,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0678933EB5D99660BAEB4E72 /* Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.release.xcconfig */;
+			baseConfigurationReference = 0471DBBAB5CC88C02F60600D /* Pods-cp_biddnest_mobile_customer-cp_biddnest_mobile_customerTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -956,7 +1012,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 382BAAA35BC9235A9149DA4C /* Pods-cp_biddnest_mobile_customer.debug.xcconfig */;
+			baseConfigurationReference = 4D24B06DC9F2609A5B346B0E /* Pods-cp_biddnest_mobile_customer.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -966,6 +1022,7 @@
 				DEVELOPMENT_TEAM = 24FRL3HW8M;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = cp_biddnest_mobile_customer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -983,7 +1040,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9AF0C297C0439AC53D4B69BB /* Pods-cp_biddnest_mobile_customer.release.xcconfig */;
+			baseConfigurationReference = BF4D31AD3B391052F1F0FD81 /* Pods-cp_biddnest_mobile_customer.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -991,6 +1048,7 @@
 				CODE_SIGN_ENTITLEMENTS = cp_biddnest_mobile_customer/cp_biddnest_mobile_customer.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = cp_biddnest_mobile_customer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1007,7 +1065,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F1D056A09D66BEA0686E801B /* Pods-cp_biddnest_mobile_customer-tvOS.debug.xcconfig */;
+			baseConfigurationReference = 9C8D7AEC696B5C17466F5F46 /* Pods-cp_biddnest_mobile_customer-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1035,7 +1093,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2BA7E7C26E84A8B80B3DB6DA /* Pods-cp_biddnest_mobile_customer-tvOS.release.xcconfig */;
+			baseConfigurationReference = 0D86BBE51FAC73C967246A59 /* Pods-cp_biddnest_mobile_customer-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1063,7 +1121,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F2816CE58AAD607C94A65246 /* Pods-cp_biddnest_mobile_customer-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = BCDC4BA713FCD6DEB1B0A180 /* Pods-cp_biddnest_mobile_customer-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1090,7 +1148,7 @@
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C41E6606D1E4DA5A0FABB76D /* Pods-cp_biddnest_mobile_customer-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = 38DB0E0675BE8A39DB6DC229 /* Pods-cp_biddnest_mobile_customer-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1117,7 +1175,7 @@
 		};
 		65E4AE3A26D4B03C000D9312 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6951AEB5C1B09C1F17C121E4 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
+			baseConfigurationReference = 5090D7A297C081235BDF29FA /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1148,7 +1206,7 @@
 		};
 		65E4AE3B26D4B03C000D9312 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4CB3B4D2FEDFB8FB474BA8B6 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
+			baseConfigurationReference = FBE8A5B1089332FD71BF6C1B /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

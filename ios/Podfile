@@ -1,7 +1,7 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '10.0'
+platform :ios, '11.0'
 
 target 'cp_biddnest_mobile_customer' do
   config = use_native_modules!
@@ -17,8 +17,11 @@ target 'cp_biddnest_mobile_customer' do
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
 
+  
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
-
+  
   target 'cp_biddnest_mobile_customerTests' do
     inherit! :complete
     # Pods for testing
