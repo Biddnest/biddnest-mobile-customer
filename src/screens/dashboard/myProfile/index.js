@@ -16,6 +16,7 @@ import moment from 'moment';
 
 const MyProfile = (props) => {
   const userData = useSelector((state) => state.Login?.loginData?.user) || {};
+  const parsedCity = JSON.parse(userData?.meta);
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <HomeHeader
@@ -67,6 +68,12 @@ const MyProfile = (props) => {
             <Text style={styles.headerText}>Gender</Text>
             <Text style={[styles.bodyText, {textTransform: 'capitalize'}]}>
               {userData.gender}
+            </Text>
+          </View>
+          <View style={styles.textWrapper}>
+            <Text style={styles.headerText}>City</Text>
+            <Text style={[styles.bodyText, {textTransform: 'capitalize'}]}>
+              {parsedCity.city}
             </Text>
           </View>
           <View style={styles.textWrapper}>

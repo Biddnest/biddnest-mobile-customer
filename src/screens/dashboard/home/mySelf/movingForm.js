@@ -25,6 +25,7 @@ import MapView, {
   PROVIDER_GOOGLE,
   PROVIDER_DEFAULT,
   Marker,
+  Polygon,
 } from 'react-native-maps';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CloseIcon from '../../../../components/closeIcon';
@@ -44,6 +45,7 @@ import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 navigator.geolocation = require('@react-native-community/geolocation');
 
 const MovingForm = (props) => {
+  console.log({props});
   const dispatch = useDispatch();
   const mapRef = useRef(null);
   const googlePlaceRef = useRef(null);
@@ -114,6 +116,8 @@ const MovingForm = (props) => {
       });
   };
 
+  console.log({mapData});
+
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => setKeyboardOpen(true));
     Keyboard.addListener('keyboardDidHide', () => setKeyboardOpen(false));
@@ -144,6 +148,7 @@ const MovingForm = (props) => {
     )
       .then((response) => response.json())
       .then((responseJson) => {
+        console.log({responseJson});
         let temp = JSON.parse(JSON.stringify(responseJson));
         if (temp?.results && temp?.results?.length > 0) {
           googlePlaceRef?.current?.setAddressText(
@@ -152,9 +157,8 @@ const MovingForm = (props) => {
           setAddress(temp?.results[0]?.formatted_address);
           temp?.results[0].address_components.forEach((item, index) => {
             if (
-              item?.types?.findIndex(
-                (ele) => ele === 'administrative_area_level_2',
-              ) !== -1
+              item?.types?.findIndex((ele) => ele === 'sublocality_level_1') !==
+              -1
             ) {
               t1.city = item?.long_name;
             } else if (
@@ -200,6 +204,9 @@ const MovingForm = (props) => {
     setMapData(t1);
   };
   const handleState = (key, value) => {
+    console.log({value});
+    console.log({key});
+
     if (props.movingFrom) {
       let temp = {...destination};
       temp.meta[key] = value;
@@ -214,6 +221,8 @@ const MovingForm = (props) => {
   const handleMapReady = useCallback(() => {
     setMapReady(true);
   }, [mapRef, setMapReady]);
+
+  console.log({destination});
 
   return (
     <KeyboardAwareScrollView
@@ -441,6 +450,18 @@ const MovingForm = (props) => {
               My Flat/Apartment has SERVICE Lift.
             </Text>
           </View>
+          {/* {props.movingFrom ? (
+            <Switch
+              onChange={(text) => handleState('lift', text)}
+              value={destination?.meta?.lift}
+            />
+          ) : (
+            <Switch
+              onChange={(text) => handleState('lift', text)}
+              value={source?.meta?.lift}
+            />
+          )} */}
+
           <Switch
             onChange={(text) => handleState('lift', text)}
             value={
@@ -632,17 +653,31 @@ const MovingForm = (props) => {
               />
               {!props.movingFrom &&
                 zones.map((item, index) => {
+                  let coords = item.coordinates.map((coordsArr) => {
+                    let newCoordinates = {
+                      latitude: coordsArr.lat,
+                      longitude: coordsArr.lng,
+                    };
+                    return newCoordinates;
+                  });
                   return (
-                    <MapView.Circle
-                      key={index}
-                      center={{
-                        latitude: item?.lat,
-                        longitude: item?.lng,
-                      }}
-                      radius={item?.service_radius * 1000}
-                      strokeWidth={1}
+                    // <MapView.Circle
+                    //   key={index}
+                    //   center={{
+                    //     latitude: item?.coordinates[0].lat,
+                    //     longitude: item?.coordinates[0].lng,
+                    //   }}
+                    //   radius={5000}
+                    //   strokeWidth={1}
+                    //   strokeColor={Colors.darkBlue}
+                    //   fillColor={'rgba(230,238,255,0.5)'}
+                    // />
+
+                    <Polygon
+                      coordinates={coords}
+                      strokeWidth={2}
                       strokeColor={Colors.darkBlue}
-                      fillColor={'rgba(230,238,255,0.5)'}
+                      fillColor="rgba(230,238,255,0.5)"
                     />
                   );
                 })}
@@ -750,6 +785,8 @@ const MovingForm = (props) => {
               label={'OKAY'}
               isLoading={isLoading}
               onPress={() => {
+                //to get distance between two coordinates
+                //destination
                 if (props.movingFrom) {
                   setLoading(true);
                   let obj = {
@@ -773,7 +810,7 @@ const MovingForm = (props) => {
                   APICall(obj)
                     .then((res) => {
                       setLoading(false);
-                      if (res?.data?.status === 'success') {
+                      if (res?.status === 200) {
                         if (res?.data?.data?.distance > 0) {
                           let temp = {...destination};
                           temp.meta.address_line1 = mapData.address_line1;
@@ -800,37 +837,81 @@ const MovingForm = (props) => {
                       CustomConsole(err);
                     });
                 } else {
-                  let count = 0;
-                  zones.forEach((item, index) => {
-                    let temp = getDistance(
-                      {
-                        latitude: mapData?.latitude,
-                        longitude: mapData?.longitude,
-                      },
-                      {latitude: item?.lat, longitude: item?.lng},
-                    );
-                    if (temp <= item?.service_radius * 1000) {
-                      count = count + 1;
-                    }
-                  });
+                  //get the source and check if the service is available in selected area
 
-                  if (count > 0) {
-                    let temp = {...source};
-                    temp.meta.address_line1 = mapData.address_line1;
-                    temp.meta.address_line2 = mapData.address_line2;
-                    temp.meta.city = mapData.city;
-                    temp.meta.pincode = mapData.pincode;
-                    temp.meta.state = mapData.state;
-                    temp.meta.geocode = mapData.geocode;
-                    temp.lat = mapData.latitude;
-                    temp.lng = mapData.longitude;
-                    handleStateChange('source', temp);
-                    setMapVisible(false);
-                  } else {
-                    alert(
-                      'Your location is not currently serviceable by biddnest. We will be expanding soon.',
-                    );
-                  }
+                  let obj = {
+                    url: 'zone/check-serviceability',
+                    method: 'post',
+                    headers: {
+                      Authorization:
+                        'Bearer ' + STORE.getState().Login?.loginData?.token,
+                    },
+                    data: {
+                      latitude: mapData.latitude,
+                      longitude: mapData.longitude,
+                    },
+                  };
+                  APICall(obj)
+                    .then((res) => {
+                      setLoading(false);
+                      if (res?.status === 200) {
+                        if (res?.data?.data.serviceable) {
+                          let temp = {...source};
+                          temp.meta.address_line1 = mapData.address_line1;
+                          temp.meta.address_line2 = mapData.address_line2;
+                          temp.meta.city = mapData.city;
+                          temp.meta.pincode = mapData.pincode;
+                          temp.meta.state = mapData.state;
+                          temp.meta.geocode = mapData.geocode;
+                          temp.lat = mapData.latitude;
+                          temp.lng = mapData.longitude;
+                          handleStateChange('source', temp);
+                          setMapVisible(false);
+                        } else {
+                          alert(
+                            'Currently we are unable to deliver here. Please select a valid destination.',
+                          );
+                        }
+                      } else {
+                        CustomAlert(res?.data?.message);
+                      }
+                    })
+                    .catch((err) => {
+                      setLoading(false);
+                      CustomConsole(err);
+                    });
+
+                  // let count = 0;
+                  // zones.forEach((item, index) => {
+                  //   let temp = getDistance(
+                  //     {
+                  //       latitude: mapData?.latitude,
+                  //       longitude: mapData?.longitude,
+                  //     },
+                  //     {latitude: item?.lat, longitude: item?.lng},
+                  //   );
+                  //   if (temp <= item?.service_radius * 1000) {
+                  //     count = count + 1;
+                  //   }
+                  // });
+
+                  // if (count > 0) {
+                  //   let temp = {...source};
+                  //   temp.meta.address_line1 = mapData.address_line1;
+                  //   temp.meta.address_line2 = mapData.address_line2;
+                  //   temp.meta.city = mapData.city;
+                  //   temp.meta.pincode = mapData.pincode;
+                  //   temp.meta.state = mapData.state;
+                  //   temp.meta.geocode = mapData.geocode;
+                  //   temp.lat = mapData.latitude;
+                  //   temp.lng = mapData.longitude;
+                  //   handleStateChange('source', temp);
+                  //   setMapVisible(false);
+                  // } else {
+                  //   alert(
+                  //     'Your location is not currently serviceable by biddnest. We will be expanding soon.',
+                  //   );
+                  // }
                 }
               }}
             />

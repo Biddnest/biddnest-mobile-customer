@@ -42,6 +42,7 @@ const EditProfile = (props) => {
   const [data, setData] = useState(
     useSelector((state) => state.Login?.loginData?.user) || {},
   );
+  const parsedCity = JSON.parse(data.meta);
   const [otpModal, setOTPModal] = useState(false);
   const [imageSelect, setImageSelect] = useState(false);
   const [phone, setPhone] = React.useState();
@@ -54,6 +55,7 @@ const EditProfile = (props) => {
     lname: undefined,
     email: undefined,
     dob: undefined,
+    city: undefined,
   });
   const handleState = (key, value) => {
     setData({
@@ -249,6 +251,15 @@ const EditProfile = (props) => {
                 }}
               />
             </View>
+          </View>
+          <View style={{width: wp(45)}}>
+            <TextInput
+              value={parsedCity?.city}
+              isRight={error.city}
+              label={'City *'}
+              placeHolder={'Chennai'}
+              onChange={(text) => handleState('city', text)}
+            />
           </View>
           <View style={{marginHorizontal: wp(3)}}>
             <Text

@@ -177,6 +177,8 @@ const Home = (props) => {
   const [contactUs, setContactUs] = useState({});
   const [selectedTestimonial, setSelectedTestimonial] = useState({});
   const [activeSlide1, setActiveSlide1] = useState(0);
+  const [location, setLocation] = useState();
+
   // const [activeSlide2, setActiveSlide2] = useState(0);
   let activeSlide2 = 0;
   const carousel1 = useRef(null);
@@ -217,6 +219,10 @@ const Home = (props) => {
       });
       getLocation()
         .then((locationData) => {
+          setLocation({
+            lat: locationData?.latitude,
+            long: locationData?.longitude,
+          });
           setLoading(true);
           dispatch(getSlider(locationData, props))
             .then((res) => {
@@ -300,6 +306,31 @@ const Home = (props) => {
         .finally(() => setLoading(false));
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    if (location) {
+      let obj = {
+        url: 'zone/register',
+        method: 'post',
+        headers: {
+          Authorization: 'Bearer ' + STORE.getState().Login?.loginData?.token,
+        },
+        data: {
+          latitude: location?.lat?.toString(),
+          longitude: location?.long?.toString(),
+        },
+      };
+      APICall(obj)
+        .then((res) => {
+          console.log(res, 'res from zone/register');
+        })
+        .catch((err) => {
+          setLoading(false);
+          CustomAlert(err?.data?.message);
+        });
+    }
+  }, []);
+
   const renderItem = ({item, index}) => {
     let mainSize = [];
     Object.values(sliderSize.size).forEach((i, ind) => {

@@ -228,6 +228,7 @@ const MyBooking = (props) => {
             style={[
               styles.statusView,
               {
+                fontWeight: 'bold',
                 backgroundColor:
                   item?.status === 14
                     ? configData?.color.biding
@@ -236,7 +237,8 @@ const MyBooking = (props) => {
                 overflow: 'hidden',
               },
             ]}>
-            {status === 'cancelrequest' ? 'Request To Cancel' : status}
+            {/* {status === 'cancelrequest' ? 'Request To Cancel' : status} */}
+            {status === 'cancel request' ? 'Request To Cancel' : status}
           </Text>
           <Text
             style={{

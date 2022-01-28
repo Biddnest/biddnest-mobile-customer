@@ -20,6 +20,7 @@ import BookingInitialQuote from '../screens/dashboard/myBooking/bookingIntialQuo
 import OrderDetails from '../screens/dashboard/drawer/orderDetails';
 import PrivacyPolicy from '../screens/dashboard/drawer/privacyPolicy';
 import Notification from '../screens/dashboard/drawer/notification';
+import Rewards from '../screens/dashboard/rewards';
 
 const Stack = createStackNavigator();
 
@@ -58,6 +59,14 @@ const MainStackNavigator = () => {
   );
 };
 
+const RewardsStackNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle} headerMode={false}>
+      <Stack.Screen name="Rewards" component={Rewards} />
+    </Stack.Navigator>
+  );
+};
+
 const MyBookingStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle} headerMode={false}>
@@ -85,4 +94,9 @@ const MyProfileStackNavigator = () => {
   );
 };
 
-export {MainStackNavigator, MyBookingStackNavigator, MyProfileStackNavigator};
+export {
+  MainStackNavigator,
+  MyBookingStackNavigator,
+  MyProfileStackNavigator,
+  RewardsStackNavigator,
+};

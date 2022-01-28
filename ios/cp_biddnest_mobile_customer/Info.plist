@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -39,14 +43,14 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Allowing user to capture image for send images of booking items</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allowing user to select image/video from photos for send images of booking items</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Allow location for fetch nearest booking request</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Allow location for fetch nearest booking request</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allow location for fetch nearest booking request</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allowing user to select image/video from photos for send images of booking items</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Gilroy-Black.ttf</string>
