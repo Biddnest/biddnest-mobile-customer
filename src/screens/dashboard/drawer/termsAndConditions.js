@@ -10,7 +10,8 @@ import {
   CustomConsole,
   LoadingScreen,
 } from '../../../constant/commonFun';
-import {Html5Entities, decode} from 'html-entities';
+import {Html5Entities} from 'html-entities';
+import RenderHtml from 'react-native-render-html';
 
 const TermsAndConditions = (props) => {
   const [termsText, setTermsText] = useState('');
@@ -27,10 +28,7 @@ const TermsAndConditions = (props) => {
       .then((res) => {
         if (res?.data?.status === 'success') {
           const entities = new Html5Entities();
-          let temp = entities.decode(res?.data?.data?.page?.content, {
-            level: 'html5',
-          });
-          // let temp = entities.decode('&copy');
+          let temp = entities.decode(res?.data?.data?.page?.content);
           setTermsText(temp);
         } else {
           CustomAlert(res?.data?.message);
@@ -52,7 +50,8 @@ const TermsAndConditions = (props) => {
         showsVerticalScrollIndicator={false}
         bounces={false}>
         <View style={styles.inputForm}>
-          <Text style={styles.bottomText}>{termsText}</Text>
+          {/* <Text style={styles.bottomText}>{termsText}</Text> */}
+          <RenderHtml source={{html: termsText}} contentWidth={250} />
         </View>
       </ScrollView>
     </LinearGradient>

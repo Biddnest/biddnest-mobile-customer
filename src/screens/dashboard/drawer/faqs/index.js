@@ -53,6 +53,7 @@ const FAQS = (props) => {
           bounces={false}
           contentContainerStyle={{justifyContent: 'space-evenly'}}
           renderItem={({item, index}) => {
+            console.log({item});
             return (
               <Pressable
                 onPress={() =>
@@ -68,7 +69,13 @@ const FAQS = (props) => {
                     alignItems: 'center',
                     height: wp(30),
                   }}>
-                  <SvgCssUri width="60%" height="60%" uri={item?.image} />
+                  <SvgCssUri
+                    width="60%"
+                    height="60%"
+                    source={{
+                      uri: item?.image,
+                    }}
+                  />
                 </View>
                 <View style={styles.bottomView}>
                   <Text style={styles.bottomText}>{item.name}</Text>
