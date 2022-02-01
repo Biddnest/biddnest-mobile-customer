@@ -10,7 +10,7 @@ import {
   CustomConsole,
   LoadingScreen,
 } from '../../../constant/commonFun';
-import {Html5Entities} from 'html-entities';
+import RenderHtml from 'react-native-render-html';
 
 const AboutUs = (props) => {
   const [aboutText, setAboutText] = useState('');
@@ -26,8 +26,7 @@ const AboutUs = (props) => {
     APICall(obj)
       .then((res) => {
         if (res?.data?.status === 'success') {
-          const entities = new Html5Entities();
-          let temp = entities.decode(res?.data?.data?.page?.content);
+          let temp = res?.data?.data?.page?.content;
           setAboutText(temp);
         } else {
           CustomAlert(res?.data?.message);
@@ -49,7 +48,7 @@ const AboutUs = (props) => {
         showsVerticalScrollIndicator={false}
         bounces={false}>
         <View style={styles.inputForm}>
-          <Text style={styles.bottomText}>{aboutText}</Text>
+          <RenderHtml source={{html: aboutText}} contentWidth={250} />
         </View>
       </ScrollView>
     </LinearGradient>
