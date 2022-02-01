@@ -18,6 +18,7 @@ import CustomModalAndroid from '../../../../components/customModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FlatButton from '../../../../components/flatButton';
 import {
+  ArrayUnique,
   CustomAlert,
   CustomConsole,
   ImageSelection,
@@ -27,17 +28,18 @@ import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import OrderDetailModal from '../../myBooking/orderDetailModal';
 import ImageCross from '../../../../assets/svg/image_cross.svg';
 import CustomLabel from './CustomLabel';
-import {APICall} from '../../../../redux/actions/user';
+import {APICall, getAllInventories} from '../../../../redux/actions/user';
 import {STORE} from '../../../../redux';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import TwoButton from '../../../../components/twoButton';
 import SearchableItem from '../../../../components/searchableItem';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ripple from 'react-native-material-ripple';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import SelectionModal from '../../../../components/selectionModal';
+import SelectionModalAndroid from '../../../../components/selectionModal';
 
 const RequirementDetails = (props) => {
+  const dispatch = useDispatch();
   const {
     data,
     handleStateChange,
@@ -47,12 +49,27 @@ const RequirementDetails = (props) => {
   } = props;
   const configData =
     useSelector((state) => state.Login?.configData?.enums?.service) || {};
-  const [defaultInventories, setDefaultInventories] = useState(
-    useSelector((state) => state.Login?.inventoriesData?.inventories) || [],
-  );
+  const [defaultInventories, setDefaultInventories] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [isWait, setWait] = useState(false);
-  const [selectedInventory, setSelectedInventory] = useState({});
+  const [selectedInventory, setSelectedInventory] = useState({
+    id: null,
+    label: '',
+    material: [
+      {
+        label: '-Select-',
+        value: null,
+      },
+    ],
+    name: '',
+    size: [
+      {
+        label: '-Select-',
+        value: null,
+      },
+    ],
+    value: [],
+  });
   const [addItem, setAddItem] = useState(false);
   const [addData, setAddData] = useState({});
   const [editItem, setEditItem] = useState(false);
@@ -63,9 +80,6 @@ const RequirementDetails = (props) => {
   const [editData, setEditData] = useState({});
   const [confirmationModalVisible, setConfirmationModalVisible] =
     useState(false);
-  const [defaultInventoryStore, setDefaultInventoryStore] = useState(
-    data?.inventory_items,
-  );
   const [error, setError] = useState({
     inventory: undefined,
   });
@@ -91,6 +105,21 @@ const RequirementDetails = (props) => {
     }
     handleStateChange('meta', temp);
   };
+  const fetchAllInventories = () => {
+    dispatch(getAllInventories()).then((res) => {
+      if (res?.data?.inventories?.length > 0) {
+        let temp1 = [];
+        res?.data?.inventories?.forEach((item, index) => {
+          let temp = {...item};
+          temp.label = temp.name;
+          temp.value = temp.name;
+          delete temp.icon;
+          temp1[index] = temp;
+        });
+        setDefaultInventories(temp1);
+      }
+    });
+  };
 
   useEffect(() => {
     let inv = [...defaultInventories];
@@ -101,32 +130,7 @@ const RequirementDetails = (props) => {
       delete temp.icon;
       inv[index] = temp;
     });
-    // if (inv.findIndex((item) => item.id === 'select') === -1 && isAndroid) {
-    //   inv.unshift({
-    //     label: '-Select-',
-    //     value: null,
-    //     category: '',
-    //     id: 'select',
-    //     image:
-    //       'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
-    //     material: '["wood","plastic","steel","fibre","glass"]',
-    //     name: '-Select-',
-    //     size: '["small","medium","large"]',
-    //   });
-    //   inv.push({
-    //     label: '-Other-',
-    //     value: 'other',
-    //     category: '',
-    //     id: null,
-    //     image:
-    //       'http://localhost:8000/storage/inventories/inventory-imageTable-603cd3ca1cb58.png',
-    //     material: '["wood","plastic","steel","fibre","glass"]',
-    //     name: '-Other-',
-    //     size: '["small","medium","large"]',
-    //   });
-    // }
     if (JSON.stringify(inv) !== JSON.stringify(defaultInventories)) {
-      setDefaultInventories(inv);
       if (inv.length > 0) {
         let temp = {...inv[0]};
         temp.material = JSON.parse(temp.material.toString());
@@ -177,8 +181,21 @@ const RequirementDetails = (props) => {
     APICall(obj)
       .then((res) => {
         if (res?.data?.status === 'success') {
-          let temp = [];
+          if (res?.data?.data?.extra_inventories?.length > 0) {
+            let temp1 = [];
+            res?.data?.data?.extra_inventories?.forEach((item, index) => {
+              let temp = {...item};
+              temp.label = temp.name;
+              temp.value = temp.name;
+              delete temp.icon;
+              temp1[index] = temp;
+            });
+            setDefaultInventories(temp1);
+          } else {
+            setDefaultInventories([]);
+          }
           if (res?.data?.data?.inventories?.length > 0) {
+            let temp = [];
             res?.data?.data?.inventories.forEach((item) => {
               temp.push({
                 inventory_id: item?.inventory_id,
@@ -194,25 +211,24 @@ const RequirementDetails = (props) => {
                     : parseInt(item?.quantity),
                 name: item?.meta?.name,
                 image: item?.meta?.image,
+                meta: item?.meta,
+                is_custom: false,
               });
             });
-            setDefaultInventoryStore(temp);
             setInventoryItems(temp);
             handleStateChange('inventory_items', temp);
           } else {
-            setDefaultInventoryStore([]);
             setInventoryItems([]);
             handleStateChange('inventory_items', []);
           }
         } else {
           CustomAlert(res?.data?.message);
         }
-        setWait(false);
       })
       .catch((err) => {
-        setWait(false);
         CustomConsole(err);
-      });
+      })
+      .finally(() => setWait(false));
   };
 
   useEffect(() => {
@@ -228,7 +244,8 @@ const RequirementDetails = (props) => {
         if (res?.data?.status === 'success') {
           if (res?.data?.data?.subservices.length > 0) {
             let temp = res?.data?.data?.subservices[0];
-            if (!selectedSubCategory) {
+            getInventories(temp.id);
+            if (Object.keys(selectedSubCategory).length === 0) {
               handleSelectedSubCategory(temp);
               getInventories(temp.id);
               handleState('subcategory', temp.name);
@@ -236,6 +253,8 @@ const RequirementDetails = (props) => {
               handleSelectedSubCategory(selectedSubCategory);
               handleState('subcategory', selectedSubCategory.name);
             }
+          } else {
+            fetchAllInventories();
           }
           setSubServices(res?.data?.data?.subservices || []);
         } else {
@@ -294,10 +313,8 @@ const RequirementDetails = (props) => {
             borderWidth: 1.2,
             flexDirection: 'row',
             alignItems: 'center',
-            marginBottom: hp(1.5),
-            padding: wp(2),
+            padding: wp(1.5),
             borderRadius: hp(1),
-            marginRight: hp(1.3),
           }}>
           <View
             style={{
@@ -305,17 +322,17 @@ const RequirementDetails = (props) => {
               ...STYLES.common,
               backgroundColor: Colors.pageBG,
             }}>
-            <AntDesign name={'plus'} size={hp(3)} color={Colors.darkBlue} />
+            <AntDesign name={'plus'} size={hp(2)} color={Colors.darkBlue} />
           </View>
           <View
             style={{
-              marginLeft: wp(2),
+              marginLeft: wp(1),
             }}>
             <Text
               style={{
                 fontFamily: 'Gilroy-SemiBold',
                 color: Colors.inputTextColor,
-                fontSize: wp(4.5),
+                fontSize: wp(3),
               }}>
               {'Add More'}
             </Text>
@@ -330,36 +347,63 @@ const RequirementDetails = (props) => {
           backgroundColor: Colors.pageBG,
           flexDirection: 'row',
           alignItems: 'center',
-          marginBottom: hp(1.5),
-          padding: wp(2),
+          marginBottom: hp(0.5),
+          padding: wp(1),
           borderRadius: hp(1),
-          marginRight: hp(1.3),
+          marginRight: hp(0.5),
         }}>
-        <Pressable
-          onPress={() => {
-            setEditData(item);
-            setConfirmationModalVisible(false);
-            setEditItem(true);
-          }}
-          style={{
-            ...styles.backgroundCircle,
-            ...STYLES.common,
-          }}>
-          <SimpleLineIcons
-            name={'pencil'}
-            size={hp(2.5)}
-            color={Colors.darkBlue}
-          />
-        </Pressable>
+        {item?.is_custom ? (
+          <Pressable
+            onPress={() => {
+              let finalMaterialAry = [];
+              let finalSizeAry = [];
+              if (item?.meta?.material) {
+                let materialAry = JSON.parse(item?.meta?.material.toString());
+                let sizeAry = JSON.parse(item?.meta?.size.toString());
+                materialAry.forEach((i) =>
+                  finalMaterialAry.push({
+                    value: i,
+                    label: i,
+                  }),
+                );
+                sizeAry.forEach((i) =>
+                  finalSizeAry.push({
+                    value: i,
+                    label: i,
+                  }),
+                );
+              }
+              setEditData({
+                ...item,
+                defaultMaterial: finalMaterialAry,
+                defaultSize: finalSizeAry,
+              });
+              setConfirmationModalVisible(false);
+              setEditItem(true);
+            }}
+            style={{
+              height: hp(3.5),
+              width: hp(3.5),
+              borderRadius: hp(2),
+              backgroundColor: Colors.white,
+              ...STYLES.common,
+            }}>
+            <SimpleLineIcons
+              name={'pencil'}
+              size={hp(1.8)}
+              color={Colors.darkBlue}
+            />
+          </Pressable>
+        ) : null}
         <View
           style={{
-            marginLeft: wp(2),
+            marginLeft: wp(1),
           }}>
           <Text
             style={{
               fontFamily: 'Gilroy-SemiBold',
               color: Colors.inputTextColor,
-              fontSize: wp(4.5),
+              fontSize: wp(3),
             }}>
             {configData?.inventory_quantity_type.range ===
             movementType?.inventory_quantity_type
@@ -374,7 +418,7 @@ const RequirementDetails = (props) => {
                 style={{
                   fontFamily: 'Roboto-Regular',
                   color: Colors.inputTextColor,
-                  fontSize: wp(3.5),
+                  fontSize: wp(2.8),
                   textTransform: 'capitalize',
                 }}>
                 {item?.material}, {item?.size}
@@ -385,14 +429,17 @@ const RequirementDetails = (props) => {
       </View>
     );
   };
+
   const setImage = (type) => {
+    let imageData = [...data?.meta?.images];
     ImageSelection(type, true)
       .then((res) => {
-        handleState('images', res);
+        let array3 = ArrayUnique(imageData.concat(res));
+        handleState('images', array3);
       })
       .catch((err) => {});
   };
-  let imageData = [...data?.meta?.images];
+  let imageData = ArrayUnique([...data?.meta?.images]);
   imageData.push('Plus');
   return (
     <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
@@ -404,7 +451,7 @@ const RequirementDetails = (props) => {
           fontSize: wp(4),
           textTransform: 'uppercase',
         }}>
-        Pick an item list
+        Studio
       </Text>
       <ScrollView
         horizontal
@@ -475,12 +522,24 @@ const RequirementDetails = (props) => {
           <FlatList
             keyExtractor={(item, index) => index.toString()}
             bounces={false}
-            data={[...inventoryItems, {inventory_id: -1}]}
+            data={
+              selectedSubCategory?.name === 'custom'
+                ? [...inventoryItems, {inventory_id: -1}]
+                : inventoryItems.filter((item) => item.is_custom === true)
+                    .length === selectedSubCategory?.max_extra_items
+                ? [...inventoryItems]
+                : [...inventoryItems, {inventory_id: -1}]
+            }
             contentContainerStyle={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
+              flexDirection: 'column',
+              // flexWrap: 'wrap',
             }}
-            extraData={[...inventoryItems, {inventory_id: -1}]}
+            extraData={
+              inventoryItems.filter((item) => item.is_custom === true)
+                .length === selectedSubCategory?.max_extra_items
+                ? [...inventoryItems]
+                : [...inventoryItems, {inventory_id: -1}]
+            }
             renderItem={renderItem}
             refreshing={isWait}
             ListEmptyComponent={() => (
@@ -519,15 +578,7 @@ const RequirementDetails = (props) => {
                 return (
                   <Pressable
                     onPress={() => setImageSelect(true)}
-                    style={{
-                      height: wp(16),
-                      width: wp(16),
-                      borderRadius: wp(3),
-                      backgroundColor: Colors.btnBG,
-                      marginRight: wp(3),
-                      marginTop: hp(1),
-                      ...STYLES.common,
-                    }}>
+                    style={[STYLES.common, STYLES.imageWrapper]}>
                     <MaterialCommunityIcons
                       name={'plus'}
                       size={hp(5)}
@@ -539,21 +590,19 @@ const RequirementDetails = (props) => {
               return (
                 <Pressable
                   key={index}
-                  onPress={() => handleSelectedSubCategory(item)}
-                  style={{
-                    height: wp(16),
-                    width: wp(16),
-                    borderRadius: wp(3),
-                    backgroundColor: Colors.silver,
-                    marginRight: wp(3),
-                    marginTop: hp(1),
-                  }}>
+                  style={[
+                    STYLES.imageWrapper,
+                    {
+                      backgroundColor: Colors.silver,
+                    },
+                  ]}>
                   <Image
                     source={{uri: item}}
                     resizeMode={'contain'}
                     style={{
                       height: '100%',
                       width: '100%',
+                      borderRadius: wp(3),
                     }}
                   />
                   <Pressable
@@ -564,13 +613,7 @@ const RequirementDetails = (props) => {
                       temp.images = t1;
                       handleStateChange('meta', temp);
                     }}
-                    style={{
-                      position: 'absolute',
-                      right: -4,
-                      top: -4,
-                      height: 18,
-                      width: 18,
-                    }}>
+                    style={STYLES.crossView}>
                     <ImageCross width={18} height={18} />
                   </Pressable>
                 </Pressable>
@@ -580,11 +623,11 @@ const RequirementDetails = (props) => {
         </View>
       </View>
       <View style={[styles.inputForm, {paddingTop: hp(2), paddingBottom: 0}]}>
-        <Text style={STYLES.textHeader}>COMMENTS IF ANY</Text>
+        <Text style={STYLES.textHeader}>COMMENTS/Instructions</Text>
         <View style={{marginTop: hp(2), marginBottom: 0}}>
           <TextInput
             label={''}
-            placeHolder={'Comments if any'}
+            placeHolder={'You can share any additional information here'}
             numberOfLines={4}
             value={data?.meta?.customer?.remarks}
             onChange={(text) => handleState('remarks', text)}
@@ -644,6 +687,10 @@ const RequirementDetails = (props) => {
           setAddData({});
           setEditItem(false);
           setEditData({});
+
+          // if (addData?.quantity > 3) {
+          //   CustomAlert('You canot add more than 2 items')
+          // }
         }}>
         <Pressable
           onPress={() => {
@@ -707,7 +754,7 @@ const RequirementDetails = (props) => {
               <TextInput
                 value={editItem ? editData?.material : addData?.material}
                 label={'Material/Variant *'}
-                placeHolder={'Material/Variant'}
+                placeHolder={'Material'}
                 onChange={(text) => {
                   if (editItem) {
                     setEditData({...editData, material: text});
@@ -718,11 +765,17 @@ const RequirementDetails = (props) => {
               />
             </View>
           )) || (
-            <SelectionModal
+            <SelectionModalAndroid
               width={wp(45)}
               value={editItem ? editData?.material : addData?.material}
               label={'Material/Variant *'}
-              items={selectedInventory?.material}
+              items={
+                editItem
+                  ? editData?.defaultMaterial?.length > 0
+                    ? editData?.defaultMaterial
+                    : selectedInventory?.material
+                  : selectedInventory?.material
+              }
               onChangeItem={(text) => {
                 if (editItem) {
                   setEditData({...editData, material: text});
@@ -748,11 +801,17 @@ const RequirementDetails = (props) => {
               />
             </View>
           )) || (
-            <SelectionModal
+            <SelectionModalAndroid
               width={wp(45)}
               value={editItem ? editData?.size : addData?.size}
               label={'Size *'}
-              items={selectedInventory?.size}
+              items={
+                editItem
+                  ? editData?.defaultSize?.length > 0
+                    ? editData?.defaultSize
+                    : selectedInventory?.size
+                  : selectedInventory?.size
+              }
               onChangeItem={(text) => {
                 if (editItem) {
                   setEditData({...editData, size: text});
@@ -954,7 +1013,6 @@ const RequirementDetails = (props) => {
                     let index = temp.findIndex(
                       (ele) => ele.inventory_id === editData.inventory_id,
                     );
-                    console.log(index);
                     if (
                       configData?.inventory_quantity_type.range !==
                       movementType?.inventory_quantity_type
@@ -981,6 +1039,7 @@ const RequirementDetails = (props) => {
           <FlatButton
             onPress={() => {
               let temp = [...inventoryItems];
+
               let error = [];
               if (
                 addData?.inventory_id !== null
@@ -1012,17 +1071,36 @@ const RequirementDetails = (props) => {
                   if (!obj) {
                     addData.inventory_id = selectedInventory.id;
                     addData.image = selectedInventory.image;
+                    addData.is_custom = true;
                     if (
                       configData?.inventory_quantity_type.range !==
                       movementType?.inventory_quantity_type
                     ) {
                       addData.quantity = parseInt(addData?.quantity);
                     }
-                    temp.push(addData);
-                    handleStateChange('inventory_items', temp);
-                    setInventoryItems(temp);
-                    setAddData({});
-                    setAddItem(false);
+
+                    if (addData.quantity > 2 || editData.quantity > 2) {
+                      CustomAlert('Cannot have more than 2 items');
+                    } else {
+                      temp.push(addData);
+                      handleStateChange('inventory_items', temp);
+                    }
+                    //based on quantity we are adding items
+                    let customInventoryItems = temp.filter(
+                      (item) => item.is_custom,
+                    );
+                    let quantityOfEachItems = customInventoryItems.reduce(
+                      (acc, val) => acc + val.quantity,
+                      0,
+                    );
+
+                    if (quantityOfEachItems > 2) {
+                      CustomAlert('Cannot have more than 2 items');
+                    } else {
+                      setInventoryItems(temp);
+                      // setAddData({});
+                      setAddItem(false);
+                    }
                   } else {
                     CustomAlert('The item has already been added.');
                   }
@@ -1036,6 +1114,88 @@ const RequirementDetails = (props) => {
             label={'ADD ITEM'}
           />
         )}
+        <SearchableItem
+          visible={!!openPicker}
+          title={'Warning'}
+          onPress={() => {
+            setOpenPicker(false);
+          }}
+          onConfirmPress={(itemData) => {
+            setOpenPicker(false);
+            if (itemData) {
+              let temp = {...itemData};
+              temp.material = JSON.parse(itemData.material.toString());
+              temp.size = JSON.parse(itemData.size.toString());
+
+              temp.label = itemData.name;
+              temp.value = itemData.name;
+              let materialAry = [];
+              let sizeAry = [];
+              temp.material.forEach((i) => {
+                materialAry.push({
+                  label: i,
+                  value: i,
+                });
+              });
+              if (materialAry.findIndex((item) => item.value === null) === -1) {
+                materialAry.unshift({
+                  label: '-Select-',
+                  value: null,
+                });
+              }
+              temp.size.forEach((i) => {
+                sizeAry.push({
+                  label: i,
+                  value: i,
+                });
+              });
+              if (sizeAry.findIndex((item) => item.value === null) === -1) {
+                sizeAry.unshift({
+                  label: '-Select-',
+                  value: null,
+                });
+              }
+              temp.material = materialAry;
+              temp.size = sizeAry;
+              setSelectedInventory(temp);
+              if (editItem) {
+                setEditData({
+                  ...editData,
+                  inventory_id: itemData?.id,
+                  name: itemData?.name,
+                  itemName: itemData?.itemName,
+                  material: null,
+                  size: null,
+                  quantity:
+                    configData?.inventory_quantity_type.range ===
+                    movementType?.inventory_quantity_type
+                      ? {
+                          min: 200,
+                          max: 750,
+                        }
+                      : 1,
+                });
+              } else {
+                setAddData({
+                  name: itemData?.name,
+                  inventory_id: itemData?.id,
+                  itemName: itemData?.itemName,
+                  material: null,
+                  size: null,
+                  quantity:
+                    configData?.inventory_quantity_type.range ===
+                    movementType?.inventory_quantity_type
+                      ? {
+                          min: 200,
+                          max: 750,
+                        }
+                      : 1,
+                });
+              }
+            }
+          }}
+          defaultInventories={defaultInventories}
+        />
       </CustomModalAndroid>
       <CustomModalAndroid
         visible={!!changeCategoryVisible?.id}
@@ -1065,80 +1225,13 @@ const RequirementDetails = (props) => {
           rightLabel={'Yes'}
           isLoading={isLoading}
           leftOnPress={() => {
-            // handleState('subcategory', changeCategoryVisible.name);
-            // getInventories(changeCategoryVisible.id);
-            // handleSelectedSubCategory(changeCategoryVisible);
             setChangeCategoryVisible({});
           }}
           rightOnPress={() => {
             setChangeCategoryVisible({});
             handleState('subcategory', changeCategoryVisible?.name);
             handleSelectedSubCategory(changeCategoryVisible);
-            setWait(true);
-            let obj = {
-              url: `inventories?subservice_id=${changeCategoryVisible?.id}`,
-              method: 'get',
-              headers: {
-                Authorization:
-                  'Bearer ' + STORE.getState().Login?.loginData?.token,
-              },
-            };
-            APICall(obj)
-              .then((res) => {
-                if (res?.data?.status === 'success') {
-                  let temp = [];
-                  let previousDummyInv = [...defaultInventoryStore];
-                  let t = [...inventoryItems];
-                  if (res?.data?.data?.inventories?.length > 0) {
-                    res?.data?.data?.inventories.forEach((item) => {
-                      temp.push({
-                        inventory_id: item?.inventory_id,
-                        material: item?.material,
-                        size: item?.size,
-                        quantity:
-                          configData?.inventory_quantity_type.range ===
-                          movementType?.inventory_quantity_type
-                            ? {
-                                min: parseInt(item?.quantity?.min),
-                                max: parseInt(item?.quantity?.max),
-                              }
-                            : parseInt(item?.quantity),
-                        name: item?.meta?.name,
-                        image: item?.meta?.image,
-                      });
-                    });
-                    let temp2 = [...t, ...temp];
-                    var result = temp2.reduce((unique, o) => {
-                      if (
-                        !unique.some(
-                          (obj) =>
-                            obj.name === o.name &&
-                            obj.material === o.material &&
-                            obj.size === o.size &&
-                            obj.itemName === o.itemName,
-                        )
-                      ) {
-                        unique.push(o);
-                      }
-                      return unique;
-                    }, []);
-                    setDefaultInventoryStore(temp);
-                    setInventoryItems(result);
-                    handleStateChange('inventory_items', result);
-                  } else {
-                    setInventoryItems(t);
-                    setDefaultInventoryStore([]);
-                    handleStateChange('inventory_items', []);
-                  }
-                } else {
-                  CustomAlert(res?.data?.message);
-                }
-                setWait(false);
-              })
-              .catch((err) => {
-                setWait(false);
-                CustomConsole(err);
-              });
+            getInventories(changeCategoryVisible?.id);
           }}
         />
       </CustomModalAndroid>
@@ -1184,18 +1277,25 @@ const RequirementDetails = (props) => {
               }
             });
             temp.inventory_items = t2;
+            temp.meta.subcategory =
+              Object.keys(selectedSubCategory).length > 0
+                ? selectedSubCategory?.name
+                : null;
             let obj = {
-              url: 'bookings/enquiry',
-              method: 'post',
+              url: 'bookings/track/inventory',
+              method: 'put',
               headers: {
                 Authorization:
                   'Bearer ' + STORE.getState().Login?.loginData?.token,
               },
-              data: temp,
+              data: {
+                public_booking_id: data?.booking_id,
+                meta: temp?.meta,
+                inventory_items: temp.inventory_items,
+              },
             };
             APICall(obj)
               .then((res) => {
-                setLoading(false);
                 if (res?.data?.status === 'success') {
                   props.setApiResponse(res?.data?.data?.booking);
                   if (props.bookingFor === 'Others') {
@@ -1208,9 +1308,10 @@ const RequirementDetails = (props) => {
                 }
               })
               .catch((err) => {
-                setLoading(false);
+                CustomAlert(err?.data?.message);
                 CustomConsole(err);
-              });
+              })
+              .finally(() => setLoading(false));
           }}
         />
       </CustomModalAndroid>
@@ -1267,93 +1368,11 @@ const RequirementDetails = (props) => {
           </View>
         </View>
       </CustomModalAndroid>
-      <SearchableItem
-        visible={!!openPicker}
-        title={'Warning'}
-        onPress={() => {
-          setOpenPicker(false);
-        }}
-        onConfirmPress={(itemData) => {
-          setOpenPicker(false);
-          if (itemData) {
-            let temp = {...itemData};
-            temp.material = JSON.parse(itemData.material.toString());
-            temp.size = JSON.parse(itemData.size.toString());
-
-            temp.label = itemData.name;
-            temp.value = itemData.name;
-            let materialAry = [];
-            let sizeAry = [];
-            temp.material.forEach((i) => {
-              materialAry.push({
-                label: i,
-                value: i,
-              });
-            });
-            if (materialAry.findIndex((item) => item.value === null) === -1) {
-              materialAry.unshift({
-                label: '-Select-',
-                value: null,
-              });
-            }
-            temp.size.forEach((i) => {
-              sizeAry.push({
-                label: i,
-                value: i,
-              });
-            });
-            if (sizeAry.findIndex((item) => item.value === null) === -1) {
-              sizeAry.unshift({
-                label: '-Select-',
-                value: null,
-              });
-            }
-            temp.material = materialAry;
-            temp.size = sizeAry;
-            setSelectedInventory(temp);
-            if (editItem) {
-              setEditData({
-                ...editData,
-                inventory_id: itemData?.id,
-                name: itemData?.name,
-                itemName: itemData?.itemName,
-                material: null,
-                size: null,
-                quantity:
-                  configData?.inventory_quantity_type.range ===
-                  movementType?.inventory_quantity_type
-                    ? {
-                        min: 200,
-                        max: 750,
-                      }
-                    : 1,
-              });
-            } else {
-              setAddData({
-                name: itemData?.name,
-                inventory_id: itemData?.id,
-                itemName: itemData?.itemName,
-                material: null,
-                size: null,
-                quantity:
-                  configData?.inventory_quantity_type.range ===
-                  movementType?.inventory_quantity_type
-                    ? {
-                        min: 200,
-                        max: 750,
-                      }
-                    : 1,
-              });
-            }
-          }
-        }}
-        defaultInventories={defaultInventories}
-      />
     </ScrollView>
   );
 };
 
-export default RequirementDetails;
+export default React.memo(RequirementDetails);
 
 const styles = StyleSheet.create({
   inputForm: {
@@ -1381,9 +1400,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   backgroundCircle: {
-    height: hp(5),
-    width: hp(5),
-    borderRadius: hp(2.5),
+    height: hp(4),
+    width: hp(4),
+    borderRadius: hp(2),
     backgroundColor: Colors.white,
   },
   sliderText: {

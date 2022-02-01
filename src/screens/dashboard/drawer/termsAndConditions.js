@@ -10,7 +10,7 @@ import {
   CustomConsole,
   LoadingScreen,
 } from '../../../constant/commonFun';
-import {Html5Entities} from 'html-entities';
+import {Html5Entities, decode} from 'html-entities';
 
 const TermsAndConditions = (props) => {
   const [termsText, setTermsText] = useState('');
@@ -27,7 +27,10 @@ const TermsAndConditions = (props) => {
       .then((res) => {
         if (res?.data?.status === 'success') {
           const entities = new Html5Entities();
-          let temp = entities.decode(res?.data?.data?.page?.content);
+          let temp = entities.decode(res?.data?.data?.page?.content, {
+            level: 'html5',
+          });
+          // let temp = entities.decode('&copy');
           setTermsText(temp);
         } else {
           CustomAlert(res?.data?.message);
