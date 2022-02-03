@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Image, Pressable, View, Text, StyleSheet, Linking} from 'react-native';
+import {Alert, Pressable, View, Text, StyleSheet, Linking} from 'react-native';
 import {boxShadow, Colors, hp, wp} from '../constant/colors';
 import BackArrow from '../assets/svg/back_arrow.svg';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -14,6 +14,8 @@ const SimpleHeader = (props) => {
     useSelector((state) => state.Login?.configData?.contact_us?.details) || '';
   let data = JSON.parse(configData.toString());
   const [openModal, setOpenModal] = useState(false);
+  const phoneNumber = data?.contact_no[0].replace(/[-]/g, '');
+
   return (
     <View
       style={[
@@ -80,9 +82,14 @@ const SimpleHeader = (props) => {
           </View>
           <View style={styles.common}>
             <Pressable
-              onPress={() => {
+              onPress={async () => {
                 setOpenModal(false);
-
+                const supported = await Linking.canOpenURL('https://wa.me/');
+                if (supported) {
+                  await Linking.openURL(`https://wa.me/${phoneNumber}`);
+                } else {
+                  Alert.alert('Url cannot be opened' + 'https://wa.me/');
+                }
               }}
               style={[STYLES.selectionView, STYLES.common]}>
               <Entypo name={'chat'} color={Colors.darkBlue} size={hp(6)} />
