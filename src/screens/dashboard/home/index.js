@@ -474,7 +474,9 @@ const Home = (props) => {
         {liveOrders.length > 0 && (
           <Pressable
             style={styles.inputForm}
-            onPress={() => props.navigation.navigate('MyBooking')}>
+            onPress={() => {
+              props.navigation.navigate('MyBooking');
+            }}>
             <View
               style={{
                 marginLeft: wp(2),
@@ -493,7 +495,7 @@ const Home = (props) => {
                     marginRight: 5,
                     textTransform: 'uppercase',
                   }}>
-                  You have an Ongoing order
+                  You have an Ongoing orders
                 </Text>
                 <Text
                   style={{

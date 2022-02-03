@@ -45,7 +45,6 @@ import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
 navigator.geolocation = require('@react-native-community/geolocation');
 
 const MovingForm = (props) => {
-  console.log({props});
   const dispatch = useDispatch();
   const mapRef = useRef(null);
   const googlePlaceRef = useRef(null);
@@ -116,8 +115,6 @@ const MovingForm = (props) => {
       });
   };
 
-  console.log({mapData});
-
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => setKeyboardOpen(true));
     Keyboard.addListener('keyboardDidHide', () => setKeyboardOpen(false));
@@ -148,7 +145,6 @@ const MovingForm = (props) => {
     )
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log({responseJson});
         let temp = JSON.parse(JSON.stringify(responseJson));
         if (temp?.results && temp?.results?.length > 0) {
           googlePlaceRef?.current?.setAddressText(
@@ -204,9 +200,6 @@ const MovingForm = (props) => {
     setMapData(t1);
   };
   const handleState = (key, value) => {
-    console.log({value});
-    console.log({key});
-
     if (props.movingFrom) {
       let temp = {...destination};
       temp.meta[key] = value;
