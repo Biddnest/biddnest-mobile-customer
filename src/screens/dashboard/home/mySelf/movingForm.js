@@ -677,7 +677,7 @@ const MovingForm = (props) => {
                       coordinates={coords}
                       strokeWidth={2}
                       strokeColor={Colors.darkBlue}
-                      fillColor="rgba(230,238,255,0.5)"
+                     fillColor="rgba(230,238,255,0.1)"
                     />
                   );
                 })}
