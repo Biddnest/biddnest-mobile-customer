@@ -221,7 +221,7 @@ PODS:
     - React
   - react-native-geolocation-service (5.2.0):
     - React
-  - react-native-in-app-review (3.3.1):
+  - react-native-in-app-review (3.3.2):
     - React
   - react-native-maps (0.27.1):
     - React
@@ -315,7 +315,7 @@ PODS:
     - React-Core
   - RNDateTimePicker (3.5.2):
     - React-Core
-  - RNDeviceInfo (8.4.8):
+  - RNDeviceInfo (8.4.9):
     - React-Core
   - RNGestureHandler (1.10.3):
     - React-Core
@@ -556,8 +556,8 @@ SPEC CHECKSUMS:
   Google-Maps-iOS-Utils: 3343332b18dfd5be8f1f44edd7d481ace3da4d9a
   GoogleMaps: eb03e327edfd70b06de1e6e321653f73712df7ad
   OneSignal: b72068b06b359f22e27404edee87338f4b68e783
-  Permission-LocationAlways: 210a933729111c29067e51373500ce1147a447c0
-  Permission-LocationWhenInUse: cb42b9f4094c0361ea65c4fb4cae9d934bb37f80
+  Permission-LocationAlways: 012fd2c1f610068c5f9a7b48bc908ea41edd0c43
+  Permission-LocationWhenInUse: 13de9a01e006cb53a6ac3c9f8d1ab6cc98318d9c
   razorpay-pod: 570fa697c5c0d8e356f42d783bf37d9361334062
   RCTRequired: 082f10cd3f905d6c124597fd1c14f6f2655ff65e
   RCTTypeSafety: 8c9c544ecbf20337d069e4ae7fd9a377aadf504b
@@ -569,17 +569,17 @@ SPEC CHECKSUMS:
   React-jsi: a0418934cf48f25b485631deb27c64dc40fb4c31
   React-jsiexecutor: 93bd528844ad21dc07aab1c67cb10abae6df6949
   React-jsinspector: 58aef7155bc9a9683f5b60b35eccea8722a4f53a
-  react-native-geolocation: cbd9d6bd06bac411eed2671810f454d4908484a8
+  react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
   react-native-geolocation-service: 7c9436da6dfdecd9526c62eac62ea2bc3f0cc8ea
-  react-native-in-app-review: dbdf950d70d9f33edd6958949c1da50d90d3a15e
+  react-native-in-app-review: 19f501795e776269dd216916e19e1ac4008b33d5
   react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
-  react-native-netinfo: 877946c7b4eb85a639cf1ea31333dadc2be999a1
-  react-native-onesignal: b6cdb41fdf4b4e48d0db1246ecf0d29ab590eca7
+  react-native-netinfo: 3d3769f0d65de15c83a9bf1346f8be71de5a24bf
+  react-native-onesignal: 5187b12401c959102a64bde48fbca39c5e3b8136
   react-native-orientation-locker: 2da91e5391971dace445495821c899c111dcad7a
-  react-native-razorpay: b35ef0a8067a725a288d9fb70a356d38d441bbe1
-  react-native-safe-area-context: 5cf05f49df9d17261e40e518481f2e334c6cd4b5
+  react-native-razorpay: 6796178680164b4716b9cbdacdda5da98781fb0a
+  react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   react-native-shimmer: 2fdba9953215a29106febc9d147caa31a0080a8a
-  react-native-simple-toast: b986e6c1befdc211af3df1bae293278a44e32990
+  react-native-simple-toast: bf002828cf816775a6809f7a9ec3907509bce11f
   React-RCTActionSheet: 89a0ca9f4a06c1f93c26067af074ccdce0f40336
   React-RCTAnimation: 1bde3ecc0c104c55df246eda516e0deb03c4e49b
   React-RCTBlob: a97d378b527740cc667e03ebfa183a75231ab0f0
@@ -590,21 +590,21 @@ SPEC CHECKSUMS:
   React-RCTText: 5c51df3f08cb9dedc6e790161195d12bac06101c
   React-RCTVibration: ae4f914cfe8de7d4de95ae1ea6cc8f6315d73d9d
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
-  RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
-  RNCCheckbox: 7e2cd6ea8e200210c36fe0898bbe200826bdaf56
-  RNCClipboard: 5e299c6df8e0c98f3d7416b86ae563d3a9f768a3
-  RNCMaskedView: f127cd9652acfa31b91dcff613e07ba18b774db6
+  RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
+  RNCCheckbox: 6369808337432cdbd5025d62ceced2480b4c51df
+  RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
+  RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNCPicker: 0991c56da7815c0cf946d6f63cf920b25296e5f6
-  RNDateTimePicker: c9911be59b1f8670b9f244b85af3a7c295e175ed
-  RNDeviceInfo: 417b2ef4456c13a9d50ad8c57895eea837b735a8
+  RNDateTimePicker: 7658208086d86d09e1627b5c34ba0cf237c60140
+  RNDeviceInfo: 4944cf8787b9c5bffaf301fda68cc1a2ec003341
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNImageCropPicker: 73891a709e6fd8a47d32104d942757971f220aee
-  RNPermissions: bf844d392fe0ecbfbd2e4ae2b88cc32f2f09b369
+  RNPermissions: f7ebe52db07c00901127966ca080b4ec6a6ceb0a
   RNReanimated: 514a11da3a2bcc6c3dfd9de32b38e2b9bf101926
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
   RNSentry: 68644ef607b780551cc555f084869764f2566652
   RNShare: 4df87d1791f50a2c7b1d89432fb9bbb7c02a9c9a
-  RNSnackbar: b6cbf294923b8d6c6056592bca87527c81a0130b
+  RNSnackbar: be3333a21a453ccc272f41a8add5a71f7d44dfcd
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   Sentry: 1d3eb1a25f8c5333c88dd5603904a6d461cd9fcf
@@ -613,6 +613,6 @@ SPEC CHECKSUMS:
   TOCropViewController: 3105367e808b7d3d886a74ff59bf4804e7d3ab38
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
 
-PODFILE CHECKSUM: 9fbe6ad4711d3e7302cc4a4fa0d0aad06fbde0af
+PODFILE CHECKSUM: 48b94f4df145d2eab5cdc308bd30b4cd206174ff
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.10.2

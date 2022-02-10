@@ -41,8 +41,7 @@ const Splash = (props) => {
       kOSSettingsKeyInFocusDisplayOption: 2,
     });
     Sentry.init({
-      dsn:
-        'https://cb2933829efd4941a6ecc455591e7c7a@o939247.ingest.sentry.io/5899802',
+      dsn: 'https://cb2933829efd4941a6ecc455591e7c7a@o939247.ingest.sentry.io/5899802',
     });
     OneSignal.inFocusDisplaying(2); // Controls what should happen if a notification is received while the app is open. 2 means that the notification will go directly to the device's notification center.
 
@@ -61,7 +60,6 @@ const Splash = (props) => {
   }
 
   function onOpened(openResult) {
-    console.log('Data: ', openResult);
     let temp = openResult?.notification?.payload?.additionalData || {};
     if (temp?.type === notificationData?.booking) {
       if (

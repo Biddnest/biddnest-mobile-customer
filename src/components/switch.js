@@ -3,6 +3,7 @@ import {Animated, Pressable, Text, View} from 'react-native';
 import {Colors, wp, hp} from '../constant/colors';
 
 const Switch = (props) => {
+
   const [switchValue, setSwitchValue] = useState(0);
 
   useEffect(() => {

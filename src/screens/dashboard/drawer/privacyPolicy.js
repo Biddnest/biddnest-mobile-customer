@@ -11,6 +11,7 @@ import {
   CustomConsole,
   LoadingScreen,
 } from '../../../constant/commonFun';
+import RenderHtml from 'react-native-render-html';
 
 const PrivacyPolicy = (props) => {
   const [termsText, setTermsText] = useState('');
@@ -51,7 +52,7 @@ const PrivacyPolicy = (props) => {
         showsVerticalScrollIndicator={false}
         bounces={false}>
         <View style={styles.inputForm}>
-          <Text style={styles.bottomText}>{termsText}</Text>
+          <RenderHtml source={{html: termsText}} contentWidth={250} />
         </View>
       </ScrollView>
     </LinearGradient>

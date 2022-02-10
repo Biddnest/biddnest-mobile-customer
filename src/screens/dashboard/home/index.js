@@ -8,6 +8,7 @@ import {
   FlatList,
   ScrollView,
   Linking,
+  Alert,
 } from 'react-native';
 import {Colors, hp, wp, boxShadow} from '../../../constant/colors';
 import LinearGradient from 'react-native-linear-gradient';
@@ -56,6 +57,7 @@ export const HomeHeader = (props) => {
     useSelector((state) => state.Login?.configData?.contact_us?.details) || '';
   let data = JSON.parse(configData.toString());
   const [openModal, setOpenModal] = useState(false);
+  const phoneNumber = data?.contact_no[0].replace(/[-]/g, '');
   return (
     <View
       style={[
@@ -131,11 +133,17 @@ export const HomeHeader = (props) => {
           <View style={styles.common}>
             <Ripple
               rippleColor={Colors.darkBlue}
-              onPress={() => {
+              onPress={async () => {
                 setOpenModal(false);
                 // setTimeout(() => {
                 //   Freshchat.showConversations();
                 // }, 500);
+                const supported = await Linking.canOpenURL('https://wa.me/');
+                if (supported) {
+                  await Linking.openURL(`https://wa.me/${phoneNumber}`);
+                } else {
+                  Alert.alert('Url cannot be opened' + 'https://wa.me/');
+                }
               }}
               style={[STYLES.selectionView, STYLES.common]}>
               <Entypo name={'chat'} color={Colors.darkBlue} size={hp(6)} />
@@ -466,7 +474,9 @@ const Home = (props) => {
         {liveOrders.length > 0 && (
           <Pressable
             style={styles.inputForm}
-            onPress={() => props.navigation.navigate('MyBooking')}>
+            onPress={() => {
+              props.navigation.navigate('MyBooking');
+            }}>
             <View
               style={{
                 marginLeft: wp(2),
@@ -485,7 +495,7 @@ const Home = (props) => {
                     marginRight: 5,
                     textTransform: 'uppercase',
                   }}>
-                  You have an Ongoing order
+                  You have an Ongoing orders
                 </Text>
                 <Text
                   style={{

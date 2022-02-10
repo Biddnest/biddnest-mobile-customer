@@ -32,12 +32,17 @@ const MyBooking = (props) => {
     useSelector((state) => state.Login?.pastOrders?.booking) || [],
   );
   const [selectedTab, setSelectedTab] = useState(0);
+
   const [isLoading, setLoading] = useState(false);
   useEffect(() => {
     if (isFocused && userData?.fname) {
       fetchOrderList();
     }
   }, [isFocused, selectedTab]);
+
+  useEffect(() => {
+    setSelectedTab(1);
+  }, []);
 
   const fetchOrderList = () => {
     if (!isLoading) {
