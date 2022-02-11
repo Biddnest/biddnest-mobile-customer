@@ -39,7 +39,6 @@ const DateOfMovement = (props) => {
   );
   let source = data?.source || {};
   let date = new Date();
-
   useEffect(() => {
     setDefaultSelectedDates();
     dateFormat();
@@ -241,7 +240,7 @@ const DateOfMovement = (props) => {
             </Text>
           </View>
           <Switch
-            onChange={(text) => setSharedService(text === 1 ? 1 : 0)}
+            onChange={(text) => setSharedService(text)}
             // onChange={() => {}}
             value={sharedService}
           />

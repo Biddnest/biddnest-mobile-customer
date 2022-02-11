@@ -200,9 +200,20 @@ const MovingForm = (props) => {
     setMapData(t1);
   };
   const handleState = (key, value) => {
+    console.log('key', key)
+    console.log('value', value)
+
+
+
+   
     if (props.movingFrom) {
+     
+      console.log('1111111', props.movingFrom)
       let temp = {...destination};
       temp.meta[key] = value;
+
+      console.log('tempCheck', value)
+      console.log('tempCheck', temp)
       handleStateChange('destination', temp);
     } else {
       let temp = {...source};
@@ -446,7 +457,7 @@ const MovingForm = (props) => {
           {/* {props.movingFrom ? (
             <Switch
               onChange={(text) => handleState('lift', text)}
-              value={destination?.meta?.lift}
+              value={destination?.meta?.lift ? 0 : 1}
             />
           ) : (
             <Switch
@@ -457,7 +468,7 @@ const MovingForm = (props) => {
 
           <Switch
             onChange={(text) => handleState('lift', text)}
-            value={
+            value={      
               props.movingFrom ? destination?.meta?.lift   : source?.meta?.lift
             }
           />

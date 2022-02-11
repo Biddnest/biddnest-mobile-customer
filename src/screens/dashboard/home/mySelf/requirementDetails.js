@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -9,10 +9,10 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import {boxShadow, Colors, hp, wp} from '../../../../constant/colors';
+import { boxShadow, Colors, hp, wp } from '../../../../constant/colors';
 import Button from '../../../../components/button';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {STYLES} from '../../../../constant/commonStyle';
+import { STYLES } from '../../../../constant/commonStyle';
 import TextInput from '../../../../components/textInput';
 import CustomModalAndroid from '../../../../components/customModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -28,9 +28,9 @@ import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import OrderDetailModal from '../../myBooking/orderDetailModal';
 import ImageCross from '../../../../assets/svg/image_cross.svg';
 import CustomLabel from './CustomLabel';
-import {APICall, getAllInventories} from '../../../../redux/actions/user';
-import {STORE} from '../../../../redux';
-import {useDispatch, useSelector} from 'react-redux';
+import { APICall, getAllInventories } from '../../../../redux/actions/user';
+import { STORE } from '../../../../redux';
+import { useDispatch, useSelector } from 'react-redux';
 import TwoButton from '../../../../components/twoButton';
 import SearchableItem from '../../../../components/searchableItem';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -86,7 +86,7 @@ const RequirementDetails = (props) => {
   const [subServices, setSubServices] = useState([]);
   const [inventoryItems, setInventoryItems] = useState(data?.inventory_items);
   const handleState = (key, value) => {
-    let temp = {...data.meta};
+    let temp = { ...data.meta };
     if (key === 'remarks') {
       temp.customer[key] = value;
     } else {
@@ -110,7 +110,7 @@ const RequirementDetails = (props) => {
       if (res?.data?.inventories?.length > 0) {
         let temp1 = [];
         res?.data?.inventories?.forEach((item, index) => {
-          let temp = {...item};
+          let temp = { ...item };
           temp.label = temp.name;
           temp.value = temp.name;
           delete temp.icon;
@@ -124,7 +124,7 @@ const RequirementDetails = (props) => {
   useEffect(() => {
     let inv = [...defaultInventories];
     defaultInventories.forEach((item, index) => {
-      let temp = {...item};
+      let temp = { ...item };
       temp.label = temp.name;
       temp.value = temp.name;
       delete temp.icon;
@@ -132,7 +132,7 @@ const RequirementDetails = (props) => {
     });
     if (JSON.stringify(inv) !== JSON.stringify(defaultInventories)) {
       if (inv.length > 0) {
-        let temp = {...inv[0]};
+        let temp = { ...inv[0] };
         temp.material = JSON.parse(temp.material.toString());
         temp.size = JSON.parse(temp.size.toString());
         let materialAry = [];
@@ -184,7 +184,7 @@ const RequirementDetails = (props) => {
           if (res?.data?.data?.extra_inventories?.length > 0) {
             let temp1 = [];
             res?.data?.data?.extra_inventories?.forEach((item, index) => {
-              let temp = {...item};
+              let temp = { ...item };
               temp.label = temp.name;
               temp.value = temp.name;
               delete temp.icon;
@@ -203,11 +203,11 @@ const RequirementDetails = (props) => {
                 size: item?.size,
                 quantity:
                   configData?.inventory_quantity_type.range ===
-                  movementType?.inventory_quantity_type
+                    movementType?.inventory_quantity_type
                     ? {
-                        min: parseInt(item?.quantity?.min),
-                        max: parseInt(item?.quantity?.max),
-                      }
+                      min: parseInt(item?.quantity?.min),
+                      max: parseInt(item?.quantity?.max),
+                    }
                     : parseInt(item?.quantity),
                 name: item?.meta?.name,
                 image: item?.meta?.image,
@@ -274,20 +274,22 @@ const RequirementDetails = (props) => {
   };
   const multiSliderValuesChange = (values) => {
     if (editItem) {
-      let temp = {...editData.quantity};
+      let temp = { ...editData.quantity };
       temp.min = values[0];
       temp.max = values[1];
-      setEditData({...editData, quantity: temp});
+      setEditData({ ...editData, quantity: temp });
     } else {
-      let temp = {...addData.quantity};
+      let temp = { ...addData.quantity };
       temp.min = values[0];
       temp.max = values[1];
-      setAddData({...addData, quantity: temp});
+      setAddData({ ...addData, quantity: temp });
     }
   };
 
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
+
     if (item?.inventory_id === -1) {
+
       return (
         <Pressable
           onPress={() => {
@@ -297,11 +299,11 @@ const RequirementDetails = (props) => {
               size: null,
               quantity:
                 configData?.inventory_quantity_type.range ===
-                movementType?.inventory_quantity_type
+                  movementType?.inventory_quantity_type
                   ? {
-                      min: 250,
-                      max: 750,
-                    }
+                    min: 250,
+                    max: 750,
+                  }
                   : 1,
             });
             setAddItem(true);
@@ -313,9 +315,11 @@ const RequirementDetails = (props) => {
             borderWidth: 1.2,
             flexDirection: 'row',
             alignItems: 'center',
-            padding: wp(1.5),
+            padding: wp(1),
             borderRadius: hp(1),
-            justifyContent:'center'
+            marginTop: hp(0.9),
+            // marginLeft: wp(50),
+            justifyContent:'center',
           }}>
           <View
             style={{
@@ -345,7 +349,8 @@ const RequirementDetails = (props) => {
       <View
         key={item.id}
         style={{
-          backgroundColor: Colors.pageBG,
+          // backgroundColor: Colors.pageBG,
+          // flexWrap: 'wrap',
           flexDirection: 'row',
           alignItems: 'center',
           marginBottom: hp(0.5),
@@ -353,77 +358,80 @@ const RequirementDetails = (props) => {
           borderRadius: hp(1),
           marginRight: hp(0.5),
         }}>
-        {item?.is_custom ? (
-          <Pressable
-            onPress={() => {
-              let finalMaterialAry = [];
-              let finalSizeAry = [];
-              if (item?.meta?.material) {
-                let materialAry = JSON.parse(item?.meta?.material.toString());
-                let sizeAry = JSON.parse(item?.meta?.size.toString());
-                materialAry.forEach((i) =>
-                  finalMaterialAry.push({
-                    value: i,
-                    label: i,
-                  }),
-                );
-                sizeAry.forEach((i) =>
-                  finalSizeAry.push({
-                    value: i,
-                    label: i,
-                  }),
-                );
-              }
-              setEditData({
-                ...item,
-                defaultMaterial: finalMaterialAry,
-                defaultSize: finalSizeAry,
-              });
-              setConfirmationModalVisible(false);
-              setEditItem(true);
-            }}
+
+        <View style={{ backgroundColor: Colors.pageBG, flexDirection: 'row', borderRadius: hp(1), padding: wp(2) }}>
+          {item?.is_custom ? (
+            <Pressable
+              onPress={() => {
+                let finalMaterialAry = [];
+                let finalSizeAry = [];
+                if (item?.meta?.material) {
+                  let materialAry = JSON.parse(item?.meta?.material.toString());
+                  let sizeAry = JSON.parse(item?.meta?.size.toString());
+                  materialAry.forEach((i) =>
+                    finalMaterialAry.push({
+                      value: i,
+                      label: i,
+                    }),
+                  );
+                  sizeAry.forEach((i) =>
+                    finalSizeAry.push({
+                      value: i,
+                      label: i,
+                    }),
+                  );
+                }
+                setEditData({
+                  ...item,
+                  defaultMaterial: finalMaterialAry,
+                  defaultSize: finalSizeAry,
+                });
+                setConfirmationModalVisible(false);
+                setEditItem(true);
+              }}
+              style={{
+                height: hp(3.5),
+                width: hp(3.5),
+                borderRadius: hp(2),
+                backgroundColor: Colors.white,
+                ...STYLES.common,
+              }}>
+              <SimpleLineIcons
+                name={'pencil'}
+                size={hp(1.8)}
+                color={Colors.darkBlue}
+              />
+            </Pressable>
+          ) : null}
+          <View
             style={{
-              height: hp(3.5),
-              width: hp(3.5),
-              borderRadius: hp(2),
-              backgroundColor: Colors.white,
-              ...STYLES.common,
+              marginLeft: wp(1),
             }}>
-            <SimpleLineIcons
-              name={'pencil'}
-              size={hp(1.8)}
-              color={Colors.darkBlue}
-            />
-          </Pressable>
-        ) : null}
-        <View
-          style={{
-            marginLeft: wp(1),
-          }}>
-          <Text
-            style={{
-              fontFamily: 'Gilroy-SemiBold',
-              color: Colors.inputTextColor,
-              fontSize: wp(3),
-            }}>
-            {configData?.inventory_quantity_type.range ===
-            movementType?.inventory_quantity_type
-              ? item?.quantity?.min + '-' + item?.quantity?.max
-              : item?.quantity}{' '}
-            {item?.itemName || item.name}
-          </Text>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <View style={{marginRight: '2%'}}>
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontFamily: 'Roboto-Regular',
-                  color: Colors.inputTextColor,
-                  fontSize: wp(2.8),
-                  textTransform: 'capitalize',
-                }}>
-                {item?.material}, {item?.size}
-              </Text>
+            <Text
+              style={{
+                fontFamily: 'Gilroy-SemiBold',
+                color: Colors.inputTextColor,
+                fontSize: wp(3),
+              }}>
+              {configData?.inventory_quantity_type.range ===
+                movementType?.inventory_quantity_type
+                ? item?.quantity?.min + '-' + item?.quantity?.max
+                : item?.quantity}{' '}
+              {item?.itemName || item.name}
+            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ marginRight: '2%' }}>
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    fontFamily: 'Roboto-Regular',
+                    color: Colors.inputTextColor,
+                    fontSize: wp(2.8),
+                    textTransform: 'capitalize',
+                  }}>
+                  {item?.material}, {item?.size}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -438,7 +446,7 @@ const RequirementDetails = (props) => {
         let array3 = ArrayUnique(imageData.concat(res));
         handleState('images', array3);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
   let imageData = ArrayUnique([...data?.meta?.images]);
   imageData.push('Plus');
@@ -523,23 +531,24 @@ const RequirementDetails = (props) => {
           <FlatList
             keyExtractor={(item, index) => index.toString()}
             bounces={false}
+            // style={{flexDirection:'row', flexWrap:'wrap'}}
             data={
               selectedSubCategory?.name === 'custom'
-                ? [...inventoryItems, {inventory_id: -1}]
+                ? [...inventoryItems, { inventory_id: -1 }]
                 : inventoryItems.filter((item) => item.is_custom === true)
-                    .length === selectedSubCategory?.max_extra_items
-                ? [...inventoryItems]
-                : [...inventoryItems, {inventory_id: -1}]
+                  .length === selectedSubCategory?.max_extra_items
+                  ? [...inventoryItems]
+                  : [...inventoryItems, { inventory_id: -1 }]
             }
             contentContainerStyle={{
-              flexDirection: 'column',
-              // flexWrap: 'wrap',
+              flexDirection: 'row',
+               flexWrap: 'wrap',
             }}
             extraData={
               inventoryItems.filter((item) => item.is_custom === true)
                 .length === selectedSubCategory?.max_extra_items
                 ? [...inventoryItems]
-                : [...inventoryItems, {inventory_id: -1}]
+                : [...inventoryItems, { inventory_id: -1 }]
             }
             renderItem={renderItem}
             refreshing={isWait}
@@ -561,7 +570,7 @@ const RequirementDetails = (props) => {
       </View>
       <View style={styles.inputForm}>
         <Text style={STYLES.textHeader}>UPLOAD PHOTOS</Text>
-        <View style={{marginTop: hp(3)}}>
+        <View style={{ marginTop: hp(3) }}>
           <FlatList
             bounces={false}
             numColumns={4}
@@ -573,8 +582,8 @@ const RequirementDetails = (props) => {
               paddingHorizontal: wp(5),
               paddingBottom: hp(1),
             }}
-            contentContainerStyle={{justifyContent: 'space-evenly'}}
-            renderItem={({item, index}) => {
+            contentContainerStyle={{ justifyContent: 'space-evenly' }}
+            renderItem={({ item, index }) => {
               if (item === 'Plus') {
                 return (
                   <Pressable
@@ -598,7 +607,7 @@ const RequirementDetails = (props) => {
                     },
                   ]}>
                   <Image
-                    source={{uri: item}}
+                    source={{ uri: item }}
                     resizeMode={'contain'}
                     style={{
                       height: '100%',
@@ -608,7 +617,7 @@ const RequirementDetails = (props) => {
                   />
                   <Pressable
                     onPress={() => {
-                      let temp = {...data.meta};
+                      let temp = { ...data.meta };
                       let t1 = [...temp.images];
                       t1.splice(index, 1);
                       temp.images = t1;
@@ -623,9 +632,9 @@ const RequirementDetails = (props) => {
           />
         </View>
       </View>
-      <View style={[styles.inputForm, {paddingTop: hp(2), paddingBottom: 0}]}>
+      <View style={[styles.inputForm, { paddingTop: hp(2), paddingBottom: 0 }]}>
         <Text style={STYLES.textHeader}>COMMENTS/Instructions</Text>
-        <View style={{marginTop: hp(2), marginBottom: 0}}>
+        <View style={{ marginTop: hp(2), marginBottom: 0 }}>
           <TextInput
             label={''}
             placeHolder={'You can share any additional information here'}
@@ -635,7 +644,7 @@ const RequirementDetails = (props) => {
           />
         </View>
       </View>
-      <View style={{alignSelf: 'center'}}>
+      <View style={{ alignSelf: 'center' }}>
         <Button
           label={'SHOW QUOTATION'}
           isLoading={isLoading}
@@ -718,7 +727,7 @@ const RequirementDetails = (props) => {
           </View>
         </Pressable>
         {(addData?.name === '-Other-' || editData?.name === '-Other-') && (
-          <View style={{width: '90%', marginTop: hp(2)}}>
+          <View style={{ width: '90%', marginTop: hp(2) }}>
             <TextInput
               value={editItem ? editData?.itemName : addData?.itemName}
               label={'Item Name *'}
@@ -748,214 +757,214 @@ const RequirementDetails = (props) => {
                   ? -hp(1)
                   : hp(2),
             },
-            Platform.OS !== 'android' && {zIndex: 5001},
+            Platform.OS !== 'android' && { zIndex: 5001 },
           ]}>
           {((addData?.name === '-Other-' || editData?.name === '-Other-') && (
-            <View style={{width: '45%', marginTop: hp(1)}}>
+            <View style={{ width: '45%', marginTop: hp(1) }}>
               <TextInput
                 value={editItem ? editData?.material : addData?.material}
                 label={'Material/Variant *'}
                 placeHolder={'Material'}
                 onChange={(text) => {
                   if (editItem) {
-                    setEditData({...editData, material: text});
+                    setEditData({ ...editData, material: text });
                   } else {
-                    setAddData({...addData, material: text});
+                    setAddData({ ...addData, material: text });
                   }
                 }}
               />
             </View>
           )) || (
-            <SelectionModalAndroid
-              width={wp(45)}
-              value={editItem ? editData?.material : addData?.material}
-              label={'Material/Variant *'}
-              items={
-                editItem
-                  ? editData?.defaultMaterial?.length > 0
-                    ? editData?.defaultMaterial
+              <SelectionModalAndroid
+                width={wp(45)}
+                value={editItem ? editData?.material : addData?.material}
+                label={'Material/Variant *'}
+                items={
+                  editItem
+                    ? editData?.defaultMaterial?.length > 0
+                      ? editData?.defaultMaterial
+                      : selectedInventory?.material
                     : selectedInventory?.material
-                  : selectedInventory?.material
-              }
-              onChangeItem={(text) => {
-                if (editItem) {
-                  setEditData({...editData, material: text});
-                } else {
-                  setAddData({...addData, material: text});
                 }
-              }}
-            />
-          )}
+                onChangeItem={(text) => {
+                  if (editItem) {
+                    setEditData({ ...editData, material: text });
+                  } else {
+                    setAddData({ ...addData, material: text });
+                  }
+                }}
+              />
+            )}
           {((addData?.name === '-Other-' || editData?.name === '-Other-') && (
-            <View style={{width: '45%', marginTop: hp(1)}}>
+            <View style={{ width: '45%', marginTop: hp(1) }}>
               <TextInput
                 label={'Size *'}
                 value={editItem ? editData?.size : addData?.size}
                 placeHolder={'Size'}
                 onChange={(text) => {
                   if (editItem) {
-                    setEditData({...editData, size: text});
+                    setEditData({ ...editData, size: text });
                   } else {
-                    setAddData({...addData, size: text});
+                    setAddData({ ...addData, size: text });
                   }
                 }}
               />
             </View>
           )) || (
-            <SelectionModalAndroid
-              width={wp(45)}
-              value={editItem ? editData?.size : addData?.size}
-              label={'Size *'}
-              items={
-                editItem
-                  ? editData?.defaultSize?.length > 0
-                    ? editData?.defaultSize
+              <SelectionModalAndroid
+                width={wp(45)}
+                value={editItem ? editData?.size : addData?.size}
+                label={'Size *'}
+                items={
+                  editItem
+                    ? editData?.defaultSize?.length > 0
+                      ? editData?.defaultSize
+                      : selectedInventory?.size
                     : selectedInventory?.size
-                  : selectedInventory?.size
-              }
-              onChangeItem={(text) => {
-                if (editItem) {
-                  setEditData({...editData, size: text});
-                } else {
-                  setAddData({...addData, size: text});
                 }
-              }}
-            />
-          )}
+                onChangeItem={(text) => {
+                  if (editItem) {
+                    setEditData({ ...editData, size: text });
+                  } else {
+                    setAddData({ ...addData, size: text });
+                  }
+                }}
+              />
+            )}
         </View>
-        <View style={{width: '90%'}}>
+        <View style={{ width: '90%' }}>
           {(configData?.inventory_quantity_type.range ===
             movementType?.inventory_quantity_type && (
-            <View
-              style={{
-                marginHorizontal: wp(3),
-              }}>
-              <Text
-                style={{
-                  fontFamily: 'Roboto-Bold',
-                  color: Colors.textLabelColor,
-                  fontSize: wp(4),
-                }}>
-                Quantity *
-              </Text>
-              <MultiSlider
-                values={
-                  editItem
-                    ? [editData?.quantity?.min, editData?.quantity?.max]
-                    : [addData?.quantity?.min, addData?.quantity?.max]
-                }
-                sliderLength={wp(85)}
-                onValuesChange={multiSliderValuesChange}
-                selectedStyle={{backgroundColor: Colors.darkBlue}}
-                unselectedStyle={{backgroundColor: '#F5E3FF'}}
-                min={0}
-                max={1000}
-                step={1}
-                allowOverlap
-                snapped
-                enableLabel={true}
-                customMarker={() => (
-                  <View
-                    style={{
-                      height: hp(2),
-                      width: hp(2),
-                      borderRadius: hp(1),
-                      backgroundColor: Colors.white,
-                      borderColor: '#B6DFFF',
-                      borderWidth: 0.8,
-                      ...boxShadow,
-                    }}
-                  />
-                )}
-                customLabel={CustomLabel}
-              />
               <View
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginBottom: hp(2),
+                  marginHorizontal: wp(3),
                 }}>
-                <Text style={styles.sliderText}>0</Text>
-                <Text style={styles.sliderText}>1000</Text>
-              </View>
-            </View>
-          )) || (
-            <View
-              style={{
-                width: Platform.OS === 'android' ? wp(60) : wp(57),
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop:
-                  addData?.name === '-Other-' || editData?.name === '-Other-'
-                    ? hp(0.01)
-                    : hp(2),
-              }}>
-              <TextInput
-                label={'Quantity *'}
-                // isRight={error.firstName}
-                placeHolder={'Quantity'}
-                value={
-                  editItem
-                    ? editData?.quantity?.toString()
-                    : addData?.quantity?.toString()
-                }
-                keyboard={'decimal-pad'}
-                onChange={(text) => {
-                  if (editItem) {
-                    setEditData({...editData, quantity: text});
-                  } else {
-                    setAddData({...addData, quantity: text});
+                <Text
+                  style={{
+                    fontFamily: 'Roboto-Bold',
+                    color: Colors.textLabelColor,
+                    fontSize: wp(4),
+                  }}>
+                  Quantity *
+                </Text>
+                <MultiSlider
+                  values={
+                    editItem
+                      ? [editData?.quantity?.min, editData?.quantity?.max]
+                      : [addData?.quantity?.min, addData?.quantity?.max]
                   }
-                }}
-              />
-              <Pressable
-                style={styles.arrowView}
-                onPress={() => {
-                  if (editItem) {
-                    if (parseInt(editData.quantity) - 1 > 0) {
-                      setEditData({
-                        ...editData,
-                        quantity: editData.quantity - 1,
-                      });
+                  sliderLength={wp(85)}
+                  onValuesChange={multiSliderValuesChange}
+                  selectedStyle={{ backgroundColor: Colors.darkBlue }}
+                  unselectedStyle={{ backgroundColor: '#F5E3FF' }}
+                  min={0}
+                  max={1000}
+                  step={1}
+                  allowOverlap
+                  snapped
+                  enableLabel={true}
+                  customMarker={() => (
+                    <View
+                      style={{
+                        height: hp(2),
+                        width: hp(2),
+                        borderRadius: hp(1),
+                        backgroundColor: Colors.white,
+                        borderColor: '#B6DFFF',
+                        borderWidth: 0.8,
+                        ...boxShadow,
+                      }}
+                    />
+                  )}
+                  customLabel={CustomLabel}
+                />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginBottom: hp(2),
+                  }}>
+                  <Text style={styles.sliderText}>0</Text>
+                  <Text style={styles.sliderText}>1000</Text>
+                </View>
+              </View>
+            )) || (
+              <View
+                style={{
+                  width: Platform.OS === 'android' ? wp(60) : wp(57),
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginTop:
+                    addData?.name === '-Other-' || editData?.name === '-Other-'
+                      ? hp(0.01)
+                      : hp(2),
+                }}>
+                <TextInput
+                  label={'Quantity *'}
+                  // isRight={error.firstName}
+                  placeHolder={'Quantity'}
+                  value={
+                    editItem
+                      ? editData?.quantity?.toString()
+                      : addData?.quantity?.toString()
+                  }
+                  keyboard={'decimal-pad'}
+                  onChange={(text) => {
+                    if (editItem) {
+                      setEditData({ ...editData, quantity: text });
+                    } else {
+                      setAddData({ ...addData, quantity: text });
                     }
-                  } else {
-                    if (parseInt(addData.quantity) - 1 > 0) {
+                  }}
+                />
+                <Pressable
+                  style={styles.arrowView}
+                  onPress={() => {
+                    if (editItem) {
+                      if (parseInt(editData.quantity) - 1 > 0) {
+                        setEditData({
+                          ...editData,
+                          quantity: editData.quantity - 1,
+                        });
+                      }
+                    } else {
+                      if (parseInt(addData.quantity) - 1 > 0) {
+                        handleItemState(
+                          'quantity',
+                          parseInt(addData.quantity) - 1 || 0,
+                        );
+                      }
+                    }
+                  }}>
+                  <MaterialCommunityIcons
+                    name="minus"
+                    size={hp(5)}
+                    color={Colors.btnBG}
+                  />
+                </Pressable>
+                <Pressable
+                  style={{
+                    ...styles.arrowView,
+                    marginLeft: wp(2),
+                  }}
+                  onPress={() => {
+                    if (editItem) {
+                      setEditData({ ...editData, quantity: editData.quantity + 1 });
+                    } else {
                       handleItemState(
                         'quantity',
-                        parseInt(addData.quantity) - 1 || 0,
+                        parseInt(addData.quantity) + 1 || 0,
                       );
                     }
-                  }
-                }}>
-                <MaterialCommunityIcons
-                  name="minus"
-                  size={hp(5)}
-                  color={Colors.btnBG}
-                />
-              </Pressable>
-              <Pressable
-                style={{
-                  ...styles.arrowView,
-                  marginLeft: wp(2),
-                }}
-                onPress={() => {
-                  if (editItem) {
-                    setEditData({...editData, quantity: editData.quantity + 1});
-                  } else {
-                    handleItemState(
-                      'quantity',
-                      parseInt(addData.quantity) + 1 || 0,
-                    );
-                  }
-                }}>
-                <MaterialCommunityIcons
-                  name="plus"
-                  size={hp(5)}
-                  color={Colors.btnBG}
-                />
-              </Pressable>
-            </View>
-          )}
+                  }}>
+                  <MaterialCommunityIcons
+                    name="plus"
+                    size={hp(5)}
+                    color={Colors.btnBG}
+                  />
+                </Pressable>
+              </View>
+            )}
         </View>
         {(editItem && (
           <TwoButton
@@ -987,18 +996,18 @@ const RequirementDetails = (props) => {
                   movementType?.inventory_quantity_type &&
                   parseInt(editData?.quantity) !== 0) ||
                 configData?.inventory_quantity_type.range ===
-                  movementType?.inventory_quantity_type
+                movementType?.inventory_quantity_type
               ) {
                 if (
                   editData?.inventory_id !== null
                     ? editData.name !== null &&
-                      editData.material !== null &&
-                      editData.size !== null
+                    editData.material !== null &&
+                    editData.size !== null
                     : editData.name !== null &&
-                      editData.material !== null &&
-                      editData.size !== null &&
-                      editData?.itemName !== null &&
-                      editData?.itemName !== ''
+                    editData.material !== null &&
+                    editData.size !== null &&
+                    editData?.itemName !== null &&
+                    editData?.itemName !== ''
                 ) {
                   let obj = temp.find((i) => {
                     if (
@@ -1010,7 +1019,8 @@ const RequirementDetails = (props) => {
                       return i;
                     }
                   });
-                  if (!obj) {
+                  if (!obj || obj ) {
+                    
                     let index = temp.findIndex(
                       (ele) => ele.inventory_id === editData.inventory_id,
                     );
@@ -1037,84 +1047,84 @@ const RequirementDetails = (props) => {
             }}
           />
         )) || (
-          <FlatButton
-            onPress={() => {
-              let temp = [...inventoryItems];
+            <FlatButton
+              onPress={() => {
+                let temp = [...inventoryItems];
 
-              let error = [];
-              if (
-                addData?.inventory_id !== null
-                  ? addData.name !== null &&
+                let error = [];
+                if (
+                  addData?.inventory_id !== null
+                    ? addData.name !== null &&
                     addData.material !== null &&
                     addData.size !== null
-                  : addData.name !== null &&
+                    : addData.name !== null &&
                     addData.material !== null &&
                     addData.size !== null &&
                     addData?.itemName !== null &&
                     addData?.itemName !== ''
-              ) {
-                if (
-                  (configData?.inventory_quantity_type.range !==
-                    movementType?.inventory_quantity_type &&
-                    parseInt(addData?.quantity) !== 0) ||
-                  configData?.inventory_quantity_type.range ===
-                    movementType?.inventory_quantity_type
                 ) {
-                  let obj = temp.find((i) => {
-                    if (
-                      i.name === addData.name &&
-                      i.material === addData.material &&
-                      i.size === addData.size
-                    ) {
-                      return i;
-                    }
-                  });
-                  if (!obj) {
-                    addData.inventory_id = selectedInventory.id;
-                    addData.image = selectedInventory.image;
-                    addData.is_custom = true;
-                    if (
-                      configData?.inventory_quantity_type.range !==
-                      movementType?.inventory_quantity_type
-                    ) {
-                      addData.quantity = parseInt(addData?.quantity);
-                    }
+                  if (
+                    (configData?.inventory_quantity_type.range !==
+                      movementType?.inventory_quantity_type &&
+                      parseInt(addData?.quantity) !== 0) ||
+                    configData?.inventory_quantity_type.range ===
+                    movementType?.inventory_quantity_type
+                  ) {
+                    let obj = temp.find((i) => {
+                      if (
+                        i.name === addData.name &&
+                        i.material === addData.material &&
+                        i.size === addData.size
+                      ) {
+                        return i;
+                      }
+                    });
+                    if (!obj) {
+                      addData.inventory_id = selectedInventory.id;
+                      addData.image = selectedInventory.image;
+                      addData.is_custom = true;
+                      if (
+                        configData?.inventory_quantity_type.range !==
+                        movementType?.inventory_quantity_type
+                      ) {
+                        addData.quantity = parseInt(addData?.quantity);
+                      }
 
-                    if (addData.quantity > 2 || editData.quantity > 2) {
-                      CustomAlert('Cannot have more than 2 items');
-                    } else {
-                      temp.push(addData);
-                      handleStateChange('inventory_items', temp);
-                    }
-                    //based on quantity we are adding items
-                    let customInventoryItems = temp.filter(
-                      (item) => item.is_custom,
-                    );
-                    let quantityOfEachItems = customInventoryItems.reduce(
-                      (acc, val) => acc + val.quantity,
-                      0,
-                    );
+                      if (addData.quantity > 2 || editData.quantity > 2) {
+                        CustomAlert('Cannot have more than 2 items');
+                      } else {
+                        temp.push(addData);
+                        handleStateChange('inventory_items', temp);
+                      }
+                      //based on quantity we are adding items
+                      let customInventoryItems = temp.filter(
+                        (item) => item.is_custom,
+                      );
+                      let quantityOfEachItems = customInventoryItems.reduce(
+                        (acc, val) => acc + val.quantity,
+                        0,
+                      );
 
-                    if (quantityOfEachItems > 2) {
-                      CustomAlert('Cannot have more than 2 items');
+                      if (quantityOfEachItems > 2) {
+                        CustomAlert('Cannot have more than 2 items');
+                      } else {
+                        setInventoryItems(temp);
+                        // setAddData({});
+                        setAddItem(false);
+                      }
                     } else {
-                      setInventoryItems(temp);
-                      // setAddData({});
-                      setAddItem(false);
+                      CustomAlert('The item has already been added.');
                     }
                   } else {
-                    CustomAlert('The item has already been added.');
+                    CustomAlert('Quantity not valid');
                   }
                 } else {
-                  CustomAlert('Quantity not valid');
+                  CustomAlert('All Fields are mendatory');
                 }
-              } else {
-                CustomAlert('All Fields are mendatory');
-              }
-            }}
-            label={'ADD ITEM'}
-          />
-        )}
+              }}
+              label={'ADD ITEM'}
+            />
+          )}
         <SearchableItem
           visible={!!openPicker}
           title={'Warning'}
@@ -1124,7 +1134,7 @@ const RequirementDetails = (props) => {
           onConfirmPress={(itemData) => {
             setOpenPicker(false);
             if (itemData) {
-              let temp = {...itemData};
+              let temp = { ...itemData };
               temp.material = JSON.parse(itemData.material.toString());
               temp.size = JSON.parse(itemData.size.toString());
 
@@ -1169,11 +1179,11 @@ const RequirementDetails = (props) => {
                   size: null,
                   quantity:
                     configData?.inventory_quantity_type.range ===
-                    movementType?.inventory_quantity_type
+                      movementType?.inventory_quantity_type
                       ? {
-                          min: 200,
-                          max: 750,
-                        }
+                        min: 200,
+                        max: 750,
+                      }
                       : 1,
                 });
               } else {
@@ -1185,11 +1195,11 @@ const RequirementDetails = (props) => {
                   size: null,
                   quantity:
                     configData?.inventory_quantity_type.range ===
-                    movementType?.inventory_quantity_type
+                      movementType?.inventory_quantity_type
                       ? {
-                          min: 200,
-                          max: 750,
-                        }
+                        min: 200,
+                        max: 750,
+                      }
                       : 1,
                 });
               }
@@ -1269,7 +1279,7 @@ const RequirementDetails = (props) => {
           rightOnPress={() => {
             // Booking API call
             setLoading(true);
-            let temp = {...props.data};
+            let temp = { ...props.data };
             let t2 = [...temp?.inventory_items];
             t2.forEach((item, index) => {
               if (item?.inventory_id === null) {
@@ -1395,6 +1405,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.btnBG,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop:  hp(1.2),
   },
   common: {
     alignItems: 'center',
