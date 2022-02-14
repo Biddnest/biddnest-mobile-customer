@@ -1,21 +1,22 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, Image, ScrollView} from 'react-native';
-import {Colors, hp, wp, boxShadow} from '../../../constant/colors';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Text, Image, ScrollView } from 'react-native';
+import { Colors, hp, wp, boxShadow } from '../../../constant/colors';
 import Button from '../../../components/button';
-import {STYLES} from '../../../constant/commonStyle';
+import { STYLES } from '../../../constant/commonStyle';
 import CheckBox from '../../../components/checkBox';
 import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import LocationDistance from '../../../components/locationDistance';
 import RejectBookingModal from './rejectBookingModal';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   CustomAlert,
   CustomConsole,
   LoadingScreen,
   resetNavigator,
 } from '../../../constant/commonFun';
-import {getOrderDetails} from '../../../redux/actions/user';
+import moment from 'moment';
+import { getOrderDetails } from '../../../redux/actions/user';
 
 const FinalQuote = (props) => {
   const orderData = props?.route?.params?.orderData || {};
@@ -84,7 +85,7 @@ const FinalQuote = (props) => {
     {};
 
   return (
-    <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
+    <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{ flex: 1 }}>
       <View style={styles.container}>
         <SimpleHeader
           headerText={'FINAL QUOTE'}
@@ -95,7 +96,7 @@ const FinalQuote = (props) => {
         <ScrollView
           bounces={false}
           showsVerticalScrollIndicator={false}
-          style={{flex: 1, marginBottom: hp(8)}}>
+          style={{ flex: 1, marginBottom: hp(8) }}>
           <LocationDistance
             from={
               source_meta?.city === destination_meta?.city
@@ -110,7 +111,7 @@ const FinalQuote = (props) => {
             finalDistance={meta?.distance}
           />
           <View style={styles.inputForm}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={styles.headerText}>FINAL BIDDING IS HERE</Text>
             </View>
             <View style={styles.circleView}>
@@ -126,13 +127,13 @@ const FinalQuote = (props) => {
                 color: Colors.inputTextColor,
               }}>
               {configDataEnums?.booking_type?.economic ==
-              orderDetails?.booking_type
+                orderDetails?.booking_type
                 ? 'Economic'
                 : 'Premium'}
             </Text>
             {bid_meta && (
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <View style={{flex: 1, alignItems: 'flex-end'}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ flex: 1, alignItems: 'flex-end' }}>
                   <Text
                     style={[
                       styles.leftText,
@@ -151,10 +152,55 @@ const FinalQuote = (props) => {
                     ]}>
                     man power
                   </Text>
-                </View>
-                <View style={{flex: 1, marginLeft: 15}}>
                   <Text
-                    style={[styles.leftText, {textTransform: 'capitalize'}]}>
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    oreder id
+                  </Text>
+                  <Text
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    initial quote
+                  </Text>
+                  <Text
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    final quote
+                  </Text>
+                  <Text
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    moving date
+                  </Text>
+                  <Text
+                    style={[
+                      styles.leftText,
+                      {
+                        textTransform: 'uppercase',
+                      },
+                    ]}>
+                    movement Type
+                  </Text>
+                </View>
+                <View style={{ flex: 1, marginLeft: 15 }}>
+                  <Text
+                    style={[styles.leftText, { textTransform: 'capitalize' }]}>
                     {/*{orderDetails?.vehicle?.name},{' '}*/}
                     {bid_meta?.vehicle_type}
                   </Text>
@@ -163,10 +209,33 @@ const FinalQuote = (props) => {
                       JSON.parse(
                         orderDetails?.movement_specifications?.meta?.toString(),
                       ).min_man_power +
-                        '-' +
-                        JSON.parse(
-                          orderDetails?.movement_specifications?.meta?.toString(),
-                        ).max_man_power}
+                      '-' +
+                      JSON.parse(
+                        orderDetails?.movement_specifications?.meta?.toString(),
+                      ).max_man_power}
+                  </Text>
+                  <Text
+                    style={[styles.leftText, { textTransform: 'uppercase' }]}>
+                    {orderData?.public_booking_id}
+                  </Text>
+                  <Text
+                    style={[styles.leftText, { textTransform: 'uppercase' }]}>
+                    {orderData?.final_estimated_quote}
+                  </Text>
+                  <Text
+                    style={[styles.leftText, { textTransform: 'uppercase' }]}>
+                    {orderData?.final_quote}
+                  </Text>
+                  <Text
+                    style={[styles.leftText, { textTransform: 'uppercase' }]}>
+                    { moment(orderDetails?.bid?.final_moving_date,
+                  ).format('D MMM yyyy')}
+                  </Text>
+                  <Text style={[styles.leftText, { textTransform: 'uppercase' }]}>
+                    {orderDetails?.movement_specifications?.meta &&
+                      JSON.parse(
+                        orderDetails?.movement_specifications?.meta?.toString(),
+                      ).type_of_movement}
                   </Text>
                 </View>
               </View>
@@ -211,11 +280,11 @@ const FinalQuote = (props) => {
           closeModal={() => setRejectVisible(false)}
           dropDownDefault={defaultReason}
           dropDownChange={(text) =>
-            setRejectData({...rejectData, reason: text})
+            setRejectData({ ...rejectData, reason: text })
           }
           textValue={rejectData?.desc}
           rejectData={rejectData}
-          textOnChange={(text) => setRejectData({...rejectData, desc: text})}
+          textOnChange={(text) => setRejectData({ ...rejectData, desc: text })}
           isLoading={isLoading}
           setLoading={(text) => setLoading(text)}
           public_booking_id={orderDetails?.public_booking_id}
@@ -274,6 +343,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: hp(2),
+    marginBottom: hp(5),
   },
   btnWrapper: {
     alignSelf: 'center',

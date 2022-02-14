@@ -47,6 +47,7 @@ const RequirementDetails = (props) => {
     selectedSubCategory,
     handleSelectedSubCategory,
   } = props;
+
   const configData =
     useSelector((state) => state.Login?.configData?.enums?.service) || {};
   const [defaultInventories, setDefaultInventories] = useState([]);
@@ -85,6 +86,8 @@ const RequirementDetails = (props) => {
   });
   const [subServices, setSubServices] = useState([]);
   const [inventoryItems, setInventoryItems] = useState(data?.inventory_items);
+
+
   const handleState = (key, value) => {
     let temp = { ...data.meta };
     if (key === 'remarks') {
@@ -319,7 +322,7 @@ const RequirementDetails = (props) => {
             borderRadius: hp(1),
             marginTop: hp(0.9),
             // marginLeft: wp(50),
-            justifyContent:'center',
+            justifyContent: 'center',
           }}>
           <View
             style={{
@@ -542,7 +545,7 @@ const RequirementDetails = (props) => {
             }
             contentContainerStyle={{
               flexDirection: 'row',
-               flexWrap: 'wrap',
+              flexWrap: 'wrap',
             }}
             extraData={
               inventoryItems.filter((item) => item.is_custom === true)
@@ -991,6 +994,7 @@ const RequirementDetails = (props) => {
             rightOnPress={() => {
               let temp = [...inventoryItems];
               let error = [];
+              addData.is_custom = true;
               if (
                 (configData?.inventory_quantity_type.range !==
                   movementType?.inventory_quantity_type &&
@@ -1019,8 +1023,9 @@ const RequirementDetails = (props) => {
                       return i;
                     }
                   });
-                  if (!obj || obj ) {
-                    
+
+                  if (!obj || obj) {
+                    addData.is_custom = true;
                     let index = temp.findIndex(
                       (ele) => ele.inventory_id === editData.inventory_id,
                     );
@@ -1031,10 +1036,35 @@ const RequirementDetails = (props) => {
                       editData.quantity = parseInt(editData?.quantity);
                     }
                     temp[index] = editData;
-                    handleStateChange('inventory_items', temp);
-                    setInventoryItems(temp);
-                    setEditItem(false);
-                    setEditData({});
+                    let customInventoryItems = temp.filter(
+                      (item) => item.is_custom,
+                    );
+                    let quantityOfEachItems = customInventoryItems.reduce(
+                      (acc, val) => acc + val.quantity,
+                      0,
+                    );
+
+                    console.log('11111selectedSubCategory', selectedSubCategory.max_extra_items)
+                    if (quantityOfEachItems > selectedSubCategory.max_extra_items) {
+                      CustomAlert('Cannot have more than ' + selectedSubCategory.max_extra_items + ' extra items');
+                    } else {
+                      handleStateChange('inventory_items', temp);
+                      setInventoryItems(temp);
+                      setEditItem(false);
+                      setEditData({});
+                    }
+
+
+                    // if (addData.quantity > 2 || editData.quantity > 2) {
+                    //   CustomAlert('Cannot have more than 2 items');
+                    // } else {
+                    //   temp[index] = editData;
+                    //   handleStateChange('inventory_items', temp);
+                    //   setInventoryItems(temp);
+                    //   setEditItem(false);
+                    //   setEditData({});
+                    // }
+
                   } else {
                     CustomAlert('The item has already been added.');
                   }
@@ -1079,7 +1109,7 @@ const RequirementDetails = (props) => {
                         return i;
                       }
                     });
-                    if (!obj) {
+                    if (!obj || obj) {
                       addData.inventory_id = selectedInventory.id;
                       addData.image = selectedInventory.image;
                       addData.is_custom = true;
@@ -1090,13 +1120,15 @@ const RequirementDetails = (props) => {
                         addData.quantity = parseInt(addData?.quantity);
                       }
 
-                      if (addData.quantity > 2 || editData.quantity > 2) {
-                        CustomAlert('Cannot have more than 2 items');
+
+                      if (addData.quantity > selectedSubCategory.max_extra_items || editData.quantity > selectedSubCategory.max_extra_items) {
+                        CustomAlert('Cannot have more than ' + selectedSubCategory.max_extra_items + ' extra items');
                       } else {
                         temp.push(addData);
                         handleStateChange('inventory_items', temp);
                       }
-                      //based on quantity we are adding items
+
+
                       let customInventoryItems = temp.filter(
                         (item) => item.is_custom,
                       );
@@ -1105,11 +1137,12 @@ const RequirementDetails = (props) => {
                         0,
                       );
 
-                      if (quantityOfEachItems > 2) {
-                        CustomAlert('Cannot have more than 2 items');
+                      //based on quantity we are adding items
+                      if (quantityOfEachItems > selectedSubCategory.max_extra_items) {
+                        CustomAlert('Cannot have more than ' + selectedSubCategory.max_extra_items + ' extra items');
                       } else {
                         setInventoryItems(temp);
-                        // setAddData({});
+                        // // setAddData({});
                         setAddItem(false);
                       }
                     } else {
@@ -1405,7 +1438,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.btnBG,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop:  hp(1.2),
+    marginTop: hp(1.2),
   },
   common: {
     alignItems: 'center',
