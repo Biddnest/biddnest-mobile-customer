@@ -289,7 +289,7 @@ const OrderTracking = (props) => {
                           JSON.parse(orderDetails?.bid?.meta?.toString())
                             ?.moving_date
                         }. Here are the details:
-                            \nVendor: ${orderDetails?.organization?.org_name}
+                          
                             ${
                               orderDetails?.driver
                                 ? '\nDriver Name: ' +
@@ -490,7 +490,7 @@ const OrderTracking = (props) => {
           <VerticalStepper key={new Date()} orderDetails={orderDetails} />
           <View
             style={{...styles.inputForm, marginTop: 0, marginBottom: hp(2)}}>
-            <View style={{...styles.flexBox, marginTop: 0}}>
+            {/* <View style={{...styles.flexBox, marginTop: 0}}>
               <Text style={styles.leftText}>assigned vendor</Text>
               <Text
                 style={{
@@ -501,7 +501,7 @@ const OrderTracking = (props) => {
                 {orderDetails?.organization?.org_name}{' '}
                 {orderDetails?.organization?.org_type}
               </Text>
-            </View>
+            </View> */}
             <View style={{...styles.flexBox}}>
               <Text style={styles.leftText}>address</Text>
               <Text
@@ -557,7 +557,7 @@ const OrderTracking = (props) => {
           cancelOrder
             ? 'CANCEL ORDER'
             : privacyPolicy
-            ? 'Terms & Conditions'
+            ? 'cancellation policy'
             : resecheduleOrder
             ? 'RESCHEDULE'
             : 'MANAGE ORDER'
@@ -652,10 +652,13 @@ const OrderTracking = (props) => {
                 },
               };
               if (cancelOrder) {
+               
                 // Call confirm request cancel api
                 obj.url = 'bookings/request/canceled';
                 APICall(obj)
                   .then((res) => {
+
+                    // console.log('00000',res )
                     if (res?.data?.status === 'success') {
                       setCancelOrder(false);
                       setManageOrderVisible(false);

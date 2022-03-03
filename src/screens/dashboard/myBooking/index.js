@@ -378,14 +378,22 @@ const MyBooking = (props) => {
           </View>
         </View>
         <View style={styles.separatorView} />
-        {selectedTab === 1 && (
+        {selectedTab === 1  && (
           <View style={styles.flexBox}>
-            <Text style={styles.leftText}>expected price</Text>
+            <Text style={styles.leftText}>final price </Text>
+            <Text style={styles.rightText}>
+              ₹ {item?.final_quote}
+            </Text>
+          </View>
+        )}
+         {/* {selectedTab === 1 && (
+          <View style={styles.flexBox}>
+            <Text style={styles.leftText}>expected price </Text>
             <Text style={styles.rightText}>
               ₹ {item?.final_estimated_quote}
             </Text>
           </View>
-        )}
+        )} */}
         {renderComponent()}
         <View style={[styles.flexBox, {marginTop: hp(1.2)}]}>
           <Text style={styles.leftText}>category</Text>

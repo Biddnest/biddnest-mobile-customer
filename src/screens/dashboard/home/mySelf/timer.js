@@ -148,7 +148,8 @@ const Timer = (props) => {
               marginBottom: hp(2),
             },
           ]}>
-          Order Placed Successfully!
+          {/* Order Placed Successfully! */}
+          Enquiry Placed Successfully!
         </Text>
         <View style={styles.separatorView} />
         <View

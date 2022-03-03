@@ -128,7 +128,7 @@ const DateOfMovement = (props) => {
                   }}
                   style={{
                     ...styles.closeView,
-                    ...STYLES.common,
+                    ...STYLES.common,                 
                   }}>
                   <Ionicons
                     name="close-sharp"
@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
     borderColor: '#DEE6ED',
   },
   categoryView: {
-    marginBottom: hp(0.8),
+    marginBottom: hp(1.2),
     paddingHorizontal: wp(2),
     paddingVertical: 5,
     borderColor: Colors.darkBlue,

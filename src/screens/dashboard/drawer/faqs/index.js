@@ -35,12 +35,15 @@ const FAQS = (props) => {
       .catch((err) => CustomConsole(err))
       .finally(() => setLoading(false));
   };
+
+  console.log('111111', faqs)
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <SimpleHeader
-        headerText={'FAQS'}
+        headerText={'FAQs'}
         navigation={props.navigation}
         onBack={() => props.navigation.goBack()}
+        textTransform
       />
       <View style={{flex: 1, padding: wp(3)}}>
         <FlatList

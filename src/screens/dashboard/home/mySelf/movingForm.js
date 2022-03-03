@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -27,7 +27,7 @@ import MapView, {
   Marker,
   Polygon,
 } from 'react-native-maps';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import CloseIcon from '../../../../components/closeIcon';
 import FlatButton from '../../../../components/flatButton';
 import {
@@ -35,13 +35,13 @@ import {
   CustomConsole,
   getLocation,
 } from '../../../../constant/commonFun';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import InformationPopUp from '../../../../components/informationPopUp';
-import {useDispatch, useSelector} from 'react-redux';
-import {APICall, getZones} from '../../../../redux/actions/user';
-import {getDistance} from 'geolib';
-import {STORE} from '../../../../redux';
-import {isAndroid} from 'react-native-calendars/src/expandableCalendar/commons';
+import { useDispatch, useSelector } from 'react-redux';
+import { APICall, getZones } from '../../../../redux/actions/user';
+import { getDistance } from 'geolib';
+import { STORE } from '../../../../redux';
+import { isAndroid } from 'react-native-calendars/src/expandableCalendar/commons';
 navigator.geolocation = require('@react-native-community/geolocation');
 
 const MovingForm = (props) => {
@@ -49,7 +49,7 @@ const MovingForm = (props) => {
   const mapRef = useRef(null);
   const googlePlaceRef = useRef(null);
   const [isMapReady, setMapReady] = useState(false);
-  const {data, handleStateChange} = props;
+  const { data, handleStateChange } = props;
   const [mapVisible, setMapVisible] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isPanding, setPanding] = useState(false);
@@ -126,7 +126,7 @@ const MovingForm = (props) => {
   }, []);
 
   const fetchLocationString = (regionData) => {
-    let t1 = {...mapData};
+    let t1 = { ...mapData };
     mapRef?.current?.animateToRegion({
       latitude: regionData?.latitude,
       longitude: regionData?.longitude,
@@ -205,18 +205,18 @@ const MovingForm = (props) => {
 
 
 
-   
+
     if (props.movingFrom) {
-     
+
       console.log('1111111', props.movingFrom)
-      let temp = {...destination};
+      let temp = { ...destination };
       temp.meta[key] = value;
 
       console.log('tempCheck', value)
       console.log('tempCheck', temp)
       handleStateChange('destination', temp);
     } else {
-      let temp = {...source};
+      let temp = { ...source };
       temp.meta[key] = value;
       handleStateChange('source', temp);
     }
@@ -226,7 +226,7 @@ const MovingForm = (props) => {
     setMapReady(true);
   }, [mapRef, setMapReady]);
 
-  console.log({destination});
+  console.log({ destination });
 
   return (
     <KeyboardAwareScrollView
@@ -242,14 +242,16 @@ const MovingForm = (props) => {
           color: Colors.inputTextColor,
           textAlign: 'center',
         }}>
-        MAKE MOVE
+        {props.movingFrom
+          ? "To Address"
+          : "From Address"}
       </Text>
-      <View style={{marginTop: hp(3)}}>
+      <View style={{ marginTop: hp(3) }}>
         {isAndroid ? (
           <Pressable onPress={() => setMapVisible(true)}>
             <TextInput
               disable={true}
-              selection={{start: 0}}
+              selection={{ start: 0 }}
               label={props.movingFrom ? 'To *' : 'From *'}
               isRight={error?.geocode}
               value={
@@ -267,7 +269,7 @@ const MovingForm = (props) => {
               Keyboard.dismiss();
               setMapVisible(true);
             }}
-            selection={{start: 0}}
+            selection={{ start: 0 }}
             label={props.movingFrom ? 'To *' : 'From *'}
             isRight={error?.geocode}
             value={
@@ -292,7 +294,7 @@ const MovingForm = (props) => {
         {/*  onChange={(text) => handleState('address', text)}*/}
         {/*/>*/}
         <TextInput
-          label={'Address Line 1 *'}
+          label={'Address *'}
           isRight={error.address_line1}
           placeHolder={'Flat no, Street no'}
           value={
@@ -303,10 +305,10 @@ const MovingForm = (props) => {
           onChange={(text) => handleState('address_line1', text)}
         />
         <TextInput
-          label={'Address Line 2 *'}
+          label={'Location Information *'}
           isRight={error.address_line2}
           placeHolder={'Landmark, Area'}
-          selection={isKeyboardOpen ? {end: 0} : {start: 0}}
+          selection={isKeyboardOpen ? { end: 0 } : { start: 0 }}
           value={
             props.movingFrom
               ? destination?.meta?.address_line2
@@ -468,8 +470,8 @@ const MovingForm = (props) => {
 
           <Switch
             onChange={(text) => handleState('lift', text)}
-            value={      
-              props.movingFrom ? destination?.meta?.lift   : source?.meta?.lift
+            value={
+              props.movingFrom ? destination?.meta?.lift : source?.meta?.lift
             }
           />
         </View>
@@ -484,7 +486,7 @@ const MovingForm = (props) => {
           }}>
           This will help us to move your things in a better way
         </Text>
-        <View style={{marginHorizontal: wp(3)}}>
+        <View style={{ marginHorizontal: wp(3) }}>
           <Button
             label={'NEXT'}
             isLoading={isLoading}
@@ -640,8 +642,8 @@ const MovingForm = (props) => {
               }}
               style={
                 isMapReady
-                  ? {flex: 1, marginBottom: 0}
-                  : {flex: 1, marginBottom: 1}
+                  ? { flex: 1, marginBottom: 0 }
+                  : { flex: 1, marginBottom: 1 }
               }
               initialRegion={{
                 latitude: region.latitude,
@@ -681,7 +683,7 @@ const MovingForm = (props) => {
                       coordinates={coords}
                       strokeWidth={2}
                       strokeColor={Colors.darkBlue}
-                     fillColor="rgba(230,238,255,0.1)"
+                      fillColor="rgba(230,238,255,0.1)"
                     />
                   );
                 })}
@@ -720,7 +722,7 @@ const MovingForm = (props) => {
               },
             ]}
           />
-          <View style={{marginTop: hp(3), width: wp(90)}}>
+          <View style={{ marginTop: hp(3), width: wp(90) }}>
             <Text
               style={{
                 fontFamily: 'Roboto-Bold',
@@ -784,7 +786,7 @@ const MovingForm = (props) => {
             {/*  onChange={(text) => setAddress(text)}*/}
             {/*/>*/}
           </View>
-          <View style={{marginTop: hp(2)}}>
+          <View style={{ marginTop: hp(2) }}>
             <FlatButton
               label={'OKAY'}
               isLoading={isLoading}
@@ -816,7 +818,7 @@ const MovingForm = (props) => {
                       setLoading(false);
                       if (res?.status === 200) {
                         if (res?.data?.data?.distance > 0) {
-                          let temp = {...destination};
+                          let temp = { ...destination };
                           temp.meta.address_line1 = mapData.address_line1;
                           temp.meta.address_line2 = mapData.address_line2;
                           temp.meta.city = mapData.city;
@@ -860,7 +862,7 @@ const MovingForm = (props) => {
                       setLoading(false);
                       if (res?.status === 200) {
                         if (res?.data?.data.serviceable) {
-                          let temp = {...source};
+                          let temp = { ...source };
                           temp.meta.address_line1 = mapData.address_line1;
                           temp.meta.address_line2 = mapData.address_line2;
                           temp.meta.city = mapData.city;

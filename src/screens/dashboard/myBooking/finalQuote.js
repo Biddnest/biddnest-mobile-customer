@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, Image, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Colors, hp, wp, boxShadow } from '../../../constant/colors';
 import Button from '../../../components/button';
 import { STYLES } from '../../../constant/commonStyle';
@@ -17,6 +17,7 @@ import {
 } from '../../../constant/commonFun';
 import moment from 'moment';
 import { getOrderDetails } from '../../../redux/actions/user';
+
 
 const FinalQuote = (props) => {
   const orderData = props?.route?.params?.orderData || {};
@@ -228,8 +229,8 @@ const FinalQuote = (props) => {
                   </Text>
                   <Text
                     style={[styles.leftText, { textTransform: 'uppercase' }]}>
-                    { moment(orderDetails?.bid?.final_moving_date,
-                  ).format('D MMM yyyy')}
+                    {moment(orderDetails?.bid?.final_moving_date,
+                    ).format('D MMM yyyy')}
                   </Text>
                   <Text style={[styles.leftText, { textTransform: 'uppercase' }]}>
                     {orderDetails?.movement_specifications?.meta &&
@@ -248,7 +249,18 @@ const FinalQuote = (props) => {
                 color: Colors.grey,
                 fontSize: wp(3.8),
               }}>
-              I agree to the Terms & conditions
+              I agree to the
+              <TouchableOpacity onPress={() => props.navigation.navigate('TermsAndConditions')}>
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    color: Colors.grey,
+                    fontSize: wp(3.8),
+                    marginLeft: wp(1),
+                    textDecorationLine: 'underline',
+                  }}>Terms & Conditions
+                </Text>
+              </TouchableOpacity>
             </Text>
           </View>
         </ScrollView>

@@ -38,6 +38,7 @@ import Ripple from 'react-native-material-ripple';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import SelectionModalAndroid from '../../../../components/selectionModal';
 
+
 const RequirementDetails = (props) => {
   const dispatch = useDispatch();
   const {
@@ -409,6 +410,9 @@ const RequirementDetails = (props) => {
           <View
             style={{
               marginLeft: wp(1),
+              height: hp(3.5), 
+              alignItems:'center',
+              justifyContent:'center',
             }}>
             <Text
               style={{
@@ -479,7 +483,9 @@ const RequirementDetails = (props) => {
               onPress={() => {
                 setChangeCategoryVisible(item);
               }}
-              style={{
+              >
+
+              <View style={{
                 height: wp(20),
                 width: wp(20),
                 borderRadius: wp(10),
@@ -490,8 +496,9 @@ const RequirementDetails = (props) => {
                     : Colors.white,
                 backgroundColor: Colors.white,
                 marginRight: wp(3),
-                ...STYLES.common,
+               ...STYLES.common
               }}>
+
               <Text
                 numberOfLines={1}
                 style={{
@@ -501,9 +508,26 @@ const RequirementDetails = (props) => {
                       ? Colors.darkBlue
                       : Colors.inputTextColor,
                   fontSize: wp(3.5),
+                  alignSelf: 'center',
+                 position:'absolute',
+                
                 }}>
                 {item?.name}
               </Text>
+                </View>
+                {selectedSubCategory.id === item.id
+                ? 
+                <View style={{marginTop:wp(15),
+                  backgroundColor:Colors.darkBlue,
+                   position:'absolute',
+                   borderRadius: 10}}> 
+                <Ionicons
+                  name={'checkmark-sharp'}
+                  size={hp(2)}
+                  color={Colors.white}
+                  
+                />
+                </View> : null}
             </Pressable>
           );
         })}

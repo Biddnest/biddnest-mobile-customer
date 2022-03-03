@@ -1,7 +1,7 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SimpleHeader from '../../../components/simpleHeader';
 import LinearGradient from 'react-native-linear-gradient';
-import {Colors, hp, wp, PAYMENT_OPTION} from '../../../constant/colors';
+import { Colors, hp, wp, PAYMENT_OPTION } from '../../../constant/colors';
 import {
   FlatList,
   Image,
@@ -13,34 +13,34 @@ import {
   View,
 } from 'react-native';
 import TextInput from '../../../components/textInput';
-import {STYLES} from '../../../constant/commonStyle';
+import { STYLES } from '../../../constant/commonStyle';
 import Button from '../../../components/button';
-import {APICall, getOrderDetails} from '../../../redux/actions/user';
+import { APICall, getOrderDetails } from '../../../redux/actions/user';
 import {
   CustomAlert,
   CustomConsole,
   LoadingScreen,
   resetNavigator,
 } from '../../../constant/commonFun';
-import {STORE} from '../../../redux';
+import { STORE } from '../../../redux';
 import RazorpayCheckout from 'react-native-razorpay';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {Html5Entities} from 'html-entities';
+import { Html5Entities } from 'html-entities';
 import HTML from 'react-native-render-html';
 import moment from 'moment';
-import {Base64} from 'js-base64';
+import { Base64 } from 'js-base64';
 import CustomModalAndroid from '../../../components/customModal';
 import * as Sentry from '@sentry/react-native';
-import {Input} from 'react-native-elements';
+import { Input } from 'react-native-elements';
 import {
   isAndroid,
   isIos,
 } from 'react-native-calendars/src/expandableCalendar/commons';
-import {Calendar} from 'react-native-calendars';
+import { Calendar } from 'react-native-calendars';
 import FlatButton from '../../../components/flatButton';
 import _ from 'lodash';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const Payment = (props) => {
   const inputCode = useRef(null);
@@ -172,7 +172,7 @@ const Payment = (props) => {
       key: Base64.decode(configData?.razorpay?.rzp_id),
       amount: parseFloat(paymentSummery?.grand_total).toFixed(2) * 100,
       order_id: payment?.rzp_order_id,
-      theme: {color: Colors.darkBlue, hide_topbar: true},
+      theme: { color: Colors.darkBlue, hide_topbar: true },
       name: APIData?.name,
       description: `Movement on ${moment(movingDate).format('Do MMM YYYY')}`,
       image: APIData?.logo,
@@ -214,7 +214,7 @@ const Payment = (props) => {
       });
   };
   return (
-    <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
+    <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{ flex: 1 }}>
       <View style={styles.container}>
         <SimpleHeader
           headerText={'PAYMENT'}
@@ -225,7 +225,7 @@ const Payment = (props) => {
         <ScrollView
           bounces={false}
           showsVerticalScrollIndicator={false}
-          style={{flex: 1, padding: hp(2)}}>
+          style={{ flex: 1, padding: hp(2) }}>
           <Text
             style={[
               styles.leftText,
@@ -329,11 +329,11 @@ const Payment = (props) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
-              marginTop: hp(1),
+              //marginTop: hp(1),
             }}>
             <View
               style={{
-                width: applyButton ? wp(65) : wp(96),
+                width: applyButton ? wp(65) : wp(65),
               }}>
               <TextInput
                 ref={inputCode}
@@ -355,12 +355,12 @@ const Payment = (props) => {
                 }}
               />
             </View>
-            {applyButton && (
+            {/* {applyButton && ( */}
               <Button
                 label={couponApplied ? 'Remove' : 'Apply'}
                 isLoading={isLoading}
                 width={wp(25)}
-                spaceTop={hp(1)}
+                spaceTop={hp(1.5)}
                 onPress={() => {
                   // Verify coupon API
                   setLoading(true);
@@ -396,7 +396,7 @@ const Payment = (props) => {
                   }
                 }}
               />
-            )}
+            {/* )} */}
           </View>
           {coupons?.length > 0 && (
             <Text
@@ -417,7 +417,7 @@ const Payment = (props) => {
             data={coupons}
             extraData={coupons}
             bounces={false}
-            renderItem={({item, index}) => {
+            renderItem={({ item, index }) => {
               return (
                 <View
                   style={[
@@ -434,7 +434,14 @@ const Payment = (props) => {
                       marginVertical: wp(1),
                       width: '100%',
                     }}>
-                    <View
+                    <Pressable
+                      onPress={() => {
+                        if (!applyButton) {
+                          setApplyButton(true);
+                        }
+                        setCouponCode(coupons[index].code);
+                        CustomAlert('Tap apply to get discount');
+                      }}
                       style={{
                         borderWidth: 1,
                         height: hp(5),
@@ -442,6 +449,7 @@ const Payment = (props) => {
                         borderStyle: 'dashed',
                         borderColor: Colors.btnBG,
                         backgroundColor: Colors.white,
+                        marginHorizontal: hp(1),
                         flex: 1,
                         ...STYLES.common,
                       }}>
@@ -453,8 +461,8 @@ const Payment = (props) => {
                         }}>
                         {coupons[index]?.code}
                       </Text>
-                    </View>
-                    <Pressable
+                    </Pressable>
+                    {/* <Pressable
                       style={{
                         width:
                           coupons?.length === index + 1
@@ -476,7 +484,7 @@ const Payment = (props) => {
                         size={hp(3.5)}
                         color={Colors.darkBlue}
                       />
-                    </Pressable>
+                    </Pressable> */}
                   </View>
                   <HTML
                     defaultTextProps={{
@@ -489,7 +497,7 @@ const Payment = (props) => {
                       textAlign: 'center',
                       color: '#99A0A5',
                     }}
-                    source={{html: coupons[index].desc}}
+                    source={{ html: coupons[index].desc }}
                     contentWidth={'90%'}
                   />
                 </View>
@@ -498,8 +506,8 @@ const Payment = (props) => {
           />
           <LinearGradient
             colors={[Colors.darkBlue, '#462F97']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
             style={{
               marginTop: coupons?.length > 0 ? hp(1) : 0,
               borderRadius: 10,
@@ -529,9 +537,9 @@ const Payment = (props) => {
             showsHorizontalScrollIndicator={false}
             data={PAYMENT_OPTION}
             bounces={false}
-            style={{marginTop: hp(2), marginBottom: hp(4)}}
-            contentContainerStyle={{justifyContent: 'space-evenly'}}
-            renderItem={({item, index}) => {
+            style={{ marginTop: hp(2), marginBottom: hp(4) }}
+            contentContainerStyle={{ justifyContent: 'space-evenly' }}
+            renderItem={({ item, index }) => {
               return (
                 <View style={styles.movementLinear} key={index}>
                   <Pressable
@@ -580,7 +588,7 @@ const Payment = (props) => {
           }}>
           <Image
             source={require('../../../assets/images/support_icon.png')}
-            style={{height: wp(30), width: wp(30)}}
+            style={{ height: wp(30), width: wp(30) }}
             resizeMode={'contain'}
           />
           <Text style={styles.bidText}>
@@ -596,25 +604,25 @@ const Payment = (props) => {
           <Calendar
             markingType={'custom'}
             markedDates={dateSelection}
-            style={{width: wp(90), height: hp(50)}}
+            style={{ width: wp(90), height: hp(50) }}
             current={new Date()}
             onDayPress={(day) => {
-              let temp = {...dateSelection};
+              let temp = { ...dateSelection };
               dateArray.forEach((i, index) => {
                 if (i === day?.dateString) {
                   temp[day?.dateString] = temp[day?.dateString]?.customStyles
                     ?.text?.color
                     ? {
-                        selected: true,
-                        selectedColor: Colors.btnBG,
-                      }
+                      selected: true,
+                      selectedColor: Colors.btnBG,
+                    }
                     : {
-                        customStyles: {
-                          text: {
-                            color: Colors.inputTextColor,
-                          },
+                      customStyles: {
+                        text: {
+                          color: Colors.inputTextColor,
                         },
-                      };
+                      },
+                    };
                 } else {
                   temp[i] = {
                     customStyles: {

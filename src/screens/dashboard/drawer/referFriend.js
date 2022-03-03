@@ -14,9 +14,10 @@ const ReferFriend = (props) => {
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <SimpleHeader
-        headerText={'Refer A Friend'}
+        headerText={'Refer a friend'}
         navigation={props.navigation}
         onBack={() => props.navigation.goBack()}
+        textTransform
       />
       <View style={{flex: 1}}>
         <View style={styles.inputForm}>
@@ -48,6 +49,7 @@ const ReferFriend = (props) => {
                     JSON.parse(userData)?.refferal_code
                   } to get ₹100 off on your first booking. \nclick here to install \n`,
                   url: 'https://play.google.com/store',
+                    // url: 'https://appstoreconnect.apple.com/apps/1606873664/testflight/ios',
                 })
                   .then((res) => {
                     console.log(res);

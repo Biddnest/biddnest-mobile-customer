@@ -490,12 +490,12 @@ const Home = (props) => {
                   style={{
                     fontFamily: 'Gilroy-Bold',
                     fontSize: wp(4),
-                    color: Colors.inputTextColor,
+                    color: Colors.darkBlue,
                     textAlign: 'center',
                     marginRight: 5,
-                    textTransform: 'uppercase',
+                    // textTransform: 'uppercase',
                   }}>
-                  You have an Ongoing orders
+                  You have an Ongoing Order
                 </Text>
                 <Text
                   style={{
