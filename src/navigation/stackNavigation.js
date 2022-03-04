@@ -81,6 +81,7 @@ const MyBookingStackNavigator = () => {
       />
       <Stack.Screen name="OrderTimer" component={OrderTimer} />
       <Stack.Screen name="RaiseTicket" component={RaiseTicket} />
+      <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
     </Stack.Navigator>
   );
 };

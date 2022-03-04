@@ -1,17 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Pressable, FlatList} from 'react-native';
-import {Colors, hp, wp} from '../../../constant/colors';
-import {HomeHeader} from '../home';
-import {STYLES} from '../../../constant/commonStyle';
-import {useDispatch, useSelector} from 'react-redux';
-import {useIsFocused} from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Pressable, FlatList } from 'react-native';
+import { Colors, hp, wp } from '../../../constant/colors';
+import { HomeHeader } from '../home';
+import { STYLES } from '../../../constant/commonStyle';
+import { useDispatch, useSelector } from 'react-redux';
+import { useIsFocused } from '@react-navigation/native';
 import CountDown from '../../../components/countDown';
 import {
   getEnquiryOrders,
   getLiveOrders,
   getPastOrders,
 } from '../../../redux/actions/user';
-import {CustomAlert, CustomConsole, DiffMin} from '../../../constant/commonFun';
+import { CustomAlert, CustomConsole, DiffMin } from '../../../constant/commonFun';
 import moment from 'moment';
 import MapPin from '../../../assets/svg/map_pin.svg';
 import Ripple from 'react-native-material-ripple';
@@ -43,6 +43,7 @@ const MyBooking = (props) => {
   useEffect(() => {
     setSelectedTab(1);
   }, []);
+
 
   const fetchOrderList = () => {
     if (!isLoading) {
@@ -86,23 +87,23 @@ const MyBooking = (props) => {
 
   const handleOrderClicked = (item) => {
     if (item?.status === 0) {
-      props.navigation.navigate('BookingInitialQuote', {orderData: item});
+      props.navigation.navigate('BookingInitialQuote', { orderData: item });
     } else if (
       item?.status === 2 ||
       item?.status === 3 ||
       item?.status === 14 ||
       item?.status === 15
     ) {
-      props.navigation.navigate('OrderTimer', {orderData: item});
+      props.navigation.navigate('OrderTimer', { orderData: item });
     } else if (item?.status === 4) {
-      props.navigation.navigate('FinalQuote', {orderData: item});
+      props.navigation.navigate('FinalQuote', { orderData: item });
     } else if (
       item?.status === 5 ||
       item?.status === 6 ||
       item?.status === 7 ||
       item?.status === 8
     ) {
-      props.navigation.navigate('OrderTracking', {orderData: item});
+      props.navigation.navigate('OrderTracking', { orderData: item });
     }
   };
   const renderRightDate = (item, dates) => {
@@ -163,7 +164,7 @@ const MyBooking = (props) => {
       </View>
     );
   };
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     let ind = Object.values(configData?.status).findIndex(
       (ele) => ele === item?.status,
     );
@@ -207,7 +208,7 @@ const MyBooking = (props) => {
         );
       }
     };
-
+   
     return (
       <Pressable
         style={[
@@ -280,16 +281,16 @@ const MyBooking = (props) => {
                     ₹ {item?.final_estimated_quote}
                   </Text>
                 </View>
-                <View style={[STYLES.priceView, {width: '40%'}]}>
+                <View style={[STYLES.priceView, { width: '40%' }]}>
                   <CountDown
                     key={new Date()}
                     until={DiffMin(item?.bid_result_at)}
                     // onFinish={() => fetchOrderData()}
-                    digitStyle={{height: '100%'}}
+                    digitStyle={{ height: '100%' }}
                     digitTxtStyle={STYLES.participatedText}
-                    separatorStyle={{color: '#000'}}
+                    separatorStyle={{ color: '#000' }}
                     timeToShow={['H', 'M', 'S']}
-                    timeLabels={{h: null, m: null, s: null}}
+                    timeLabels={{ h: null, m: null, s: null }}
                     showSeparator
                   />
                 </View>
@@ -353,8 +354,8 @@ const MyBooking = (props) => {
                   : destination_meta?.city}
               </Text>
             </View>
-            <View style={{alignItems: 'flex-end'}}>
-              <Text style={{...styles.locationText, marginTop: 0}}>
+            <View style={{ alignItems: 'flex-end' }}>
+              <Text style={{ ...styles.locationText, marginTop: 0 }}>
                 DISTANCE
               </Text>
               <View
@@ -378,7 +379,7 @@ const MyBooking = (props) => {
           </View>
         </View>
         <View style={styles.separatorView} />
-        {selectedTab === 1  && (
+        {selectedTab === 1 && (
           <View style={styles.flexBox}>
             <Text style={styles.leftText}>final price </Text>
             <Text style={styles.rightText}>
@@ -386,22 +387,22 @@ const MyBooking = (props) => {
             </Text>
           </View>
         )}
-         {/* {selectedTab === 1 && (
+        {selectedTab === 1 && item.status == 4 && (
           <View style={styles.flexBox}>
             <Text style={styles.leftText}>expected price </Text>
             <Text style={styles.rightText}>
               ₹ {item?.final_estimated_quote}
             </Text>
           </View>
-        )} */}
+        )}
         {renderComponent()}
-        <View style={[styles.flexBox, {marginTop: hp(1.2)}]}>
+        <View style={[styles.flexBox, { marginTop: hp(1.2) }]}>
           <Text style={styles.leftText}>category</Text>
           <Text style={styles.rightText}>{item?.service?.name}</Text>
         </View>
         <View style={styles.flexBox}>
           <Text style={styles.leftText}>booking type</Text>
-          <Text style={[styles.rightText, {textTransform: 'capitalize'}]}>
+          <Text style={[styles.rightText, { textTransform: 'capitalize' }]}>
             {configData?.booking_type?.economic == item?.booking_type
               ? 'Economic'
               : 'Premium'}
@@ -413,7 +414,7 @@ const MyBooking = (props) => {
   return (
     <View style={styles.container}>
       <HomeHeader navigation={props.navigation} title={'MY BOOKINGS'} />
-      <View style={{height: hp(7), flexDirection: 'row'}}>
+      <View style={{ height: hp(7), flexDirection: 'row' }}>
         {['Enquiry Orders', 'Ongoing Orders', 'Past Orders'].map(
           (item, index) => {
             return (
@@ -440,31 +441,31 @@ const MyBooking = (props) => {
           },
         )}
       </View>
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <FlatList
           bounces={false}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingBottom: hp(2)}}
+          contentContainerStyle={{ paddingBottom: hp(2) }}
           data={
             selectedTab === 0
               ? enquiryOrders.length > 0
                 ? enquiryOrders
                 : []
               : selectedTab === 1
-              ? liveOrders.length > 0
-                ? liveOrders
-                : []
-              : pastOrders.length > 0
-              ? pastOrders
-              : []
+                ? liveOrders.length > 0
+                  ? liveOrders
+                  : []
+                : pastOrders.length > 0
+                  ? pastOrders
+                  : []
           }
           extraData={
             selectedTab === 0
               ? enquiryOrders
               : selectedTab === 1
-              ? liveOrders
-              : pastOrders
+                ? liveOrders
+                : pastOrders
           }
           renderItem={renderItem}
           onRefresh={fetchOrderList}

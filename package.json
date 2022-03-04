@@ -55,6 +55,7 @@
     "react-native-material-ripple": "^0.9.1",
     "react-native-onesignal": "^3.9.2",
     "react-native-orientation-locker": "^1.2.0",
+    "react-native-otp-verify": "^1.0.4",
     "react-native-paper": "^4.7.1",
     "react-native-permissions": "^3.0.1",
     "react-native-ratings": "^7.4.0",

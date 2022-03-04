@@ -11,6 +11,8 @@ import {useSelector} from 'react-redux';
 const ReferFriend = (props) => {
   const userData =
     useSelector((state) => state.Login?.loginData?.user?.meta) || '';
+
+    //console.log()
   return (
     <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
       <SimpleHeader

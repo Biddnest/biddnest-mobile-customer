@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   Linking,
@@ -9,9 +9,9 @@ import {
   Text,
   View,
 } from 'react-native';
-import {Colors, hp, wp} from '../../../constant/colors';
+import { Colors, hp, wp } from '../../../constant/colors';
 import SimpleHeader from '../../../components/simpleHeader';
-import {STYLES} from '../../../constant/commonStyle';
+import { STYLES } from '../../../constant/commonStyle';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
@@ -23,8 +23,8 @@ import FlatButton from '../../../components/flatButton';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Share from 'react-native-share';
 import moment from 'moment';
-import {STORE} from '../../../redux';
-import {APICall, getOrderDetails} from '../../../redux/actions/user';
+import { STORE } from '../../../redux';
+import { APICall, getOrderDetails } from '../../../redux/actions/user';
 import {
   CustomAlert,
   CustomConsole,
@@ -35,6 +35,7 @@ import Button from '../../../components/button';
 import RateUs from '../drawer/rateUs';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import MapPin from '../../../assets/svg/map_pin.svg';
+import CancelBookingModal from './cancelBookingModel';
 
 const OrderTracking = (props) => {
   const orderData = props?.route?.params?.orderData || {};
@@ -47,6 +48,11 @@ const OrderTracking = (props) => {
   const [privacyPolicy, setPrivacyPolicy] = useState(false);
   const [resecheduleOrder, setRescheduleOrder] = useState(false);
   const [showPin, setShowPin] = useState(false);
+  const [cancelVisible, setCancelVisible] = useState(false);
+  const [reason, setReason] = useState('');
+  const [desc, setDesc] = useState('');
+
+
   let dateArray = [];
   const renderIcon = (item) => {
     switch (item.iconFamily) {
@@ -114,6 +120,41 @@ const OrderTracking = (props) => {
     let text = item?.name + ' - ' + item?.size + ', ' + item?.material;
     inventoryText = inventoryText + '\n' + text;
   });
+
+
+  const handleCancelApiCall = ()=>{ 
+    let obj = {
+    method: 'post',
+    headers: {
+      Authorization:
+        'Bearer ' + STORE.getState().Login?.loginData?.token,
+    },
+    data: {
+      public_booking_id: orderData?.public_booking_id,
+      reason: 'reson of cancel',
+      desc: 'this is desc',
+
+    },
+  };
+    obj.url = 'bookings/request/canceled';
+    APICall(obj)
+      .then((res) => {
+
+        // console.log('00000',res )
+        if (res?.data?.status === 'success') {
+          setCancelOrder(false);
+          setManageOrderVisible(false);
+          props.navigation.goBack();
+        } else {
+          CustomAlert(res?.data?.message);
+        }
+      })
+      .catch((err) => CustomConsole(err))
+      .finally(() => setLoading(false));
+
+  };
+
+
   return (
     <View style={styles.container}>
       <SimpleHeader
@@ -124,7 +165,7 @@ const OrderTracking = (props) => {
         onBack={() => props.navigation.goBack()}
       />
       {isLoading && <LoadingScreen />}
-      <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{flex: 1}}>
+      <LinearGradient colors={[Colors.pageBG, Colors.white]} style={{ flex: 1 }}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           bounces={false}
@@ -150,7 +191,7 @@ const OrderTracking = (props) => {
                 flex: 1,
                 marginLeft: 5,
               }}>
-              <View style={{width: '40%'}}>
+              <View style={{ width: '40%' }}>
                 <Text
                   numberOfLines={1}
                   style={{
@@ -167,7 +208,7 @@ const OrderTracking = (props) => {
                   numberOfLines={1}
                   style={[
                     styles.locationText,
-                    {textTransform: 'capitalize', fontFamily: 'Gilroy-Bold'},
+                    { textTransform: 'capitalize', fontFamily: 'Gilroy-Bold' },
                   ]}>
                   {destination_meta?.city === source_meta?.city
                     ? destination_meta?.address
@@ -175,7 +216,7 @@ const OrderTracking = (props) => {
                 </Text>
               </View>
               <View
-                style={{alignItems: 'flex-end', marginTop: 0, width: '58%'}}>
+                style={{ alignItems: 'flex-end', marginTop: 0, width: '58%' }}>
                 <Text
                   numberOfLines={1}
                   style={{
@@ -210,7 +251,7 @@ const OrderTracking = (props) => {
               </View>
             </View>
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
             {[
               {
                 icon: 'phone-call',
@@ -276,33 +317,27 @@ const OrderTracking = (props) => {
                       Share.open({
                         title: 'Share via',
                         message: `Hey there,
-                           \nI am shifting from ${
-                             source_meta?.city === destination_meta?.city
-                               ? source_meta?.address
-                               : source_meta?.city
-                           } to ${
-                          destination_meta?.city === source_meta?.city
+                           \nI am shifting from ${source_meta?.city === destination_meta?.city
+                            ? source_meta?.address
+                            : source_meta?.city
+                          } to ${destination_meta?.city === source_meta?.city
                             ? destination_meta?.address
                             : destination_meta?.city
-                        } on ${
-                          orderDetails?.bid?.meta &&
+                          } on ${orderDetails?.bid?.meta &&
                           JSON.parse(orderDetails?.bid?.meta?.toString())
                             ?.moving_date
-                        }. Here are the details:
-                          
-                            ${
-                              orderDetails?.driver
-                                ? '\nDriver Name: ' +
-                                  orderDetails?.driver?.fname +
-                                  orderDetails?.driver?.lname
-                                : ''
-                            }
-                            ${
-                              orderDetails?.driver
-                                ? '\nDriver Phone: ' +
-                                  orderDetails?.driver?.phone
-                                : ''
-                            }
+                          }. Here are the details:
+                            ${orderDetails?.driver
+                            ? '\nDriver Name: ' +
+                            orderDetails?.driver?.fname +
+                            orderDetails?.driver?.lname
+                            : ''
+                          }
+                            ${orderDetails?.driver
+                            ? '\nDriver Phone: ' +
+                            orderDetails?.driver?.phone
+                            : ''
+                          }
                             \nList of Items:
                             ${inventoryText}\n`,
                         url: 'https://play.google.com/store',
@@ -336,7 +371,7 @@ const OrderTracking = (props) => {
               );
             })}
           </View>
-          <View style={{alignItems: 'center'}}>
+          <View style={{ alignItems: 'center' }}>
             {orderDetails?.status === 8 && !orderDetails?.review?.id && (
               <Button
                 label={'GIVE REVIEW'}
@@ -350,8 +385,8 @@ const OrderTracking = (props) => {
             )}
           </View>
           {(orderDetails?.status === 6 || orderDetails?.status === 7) && (
-            <View style={{alignItems: 'center'}}>
-              <View style={{marginTop: hp(3), marginHorizontal: wp(3)}}>
+            <View style={{ alignItems: 'center' }}>
+              <View style={{ marginTop: hp(3), marginHorizontal: wp(3) }}>
                 <Text
                   style={{
                     fontFamily: 'Roboto-Italic',
@@ -402,7 +437,7 @@ const OrderTracking = (props) => {
                       width: wp(83),
                     }}>
                     <View>
-                      <Text style={{...styles.driverContact, marginTop: 10}}>
+                      <Text style={{ ...styles.driverContact, marginTop: 10 }}>
                         Name{' '}
                         <Text
                           style={{
@@ -415,9 +450,9 @@ const OrderTracking = (props) => {
                       </Text>
                       {orderDetails?.status !== 8 &&
                         orderDetails?.status !== 9 && (
-                          <Text style={{...styles.driverContact, marginTop: 5}}>
+                          <Text style={{ ...styles.driverContact, marginTop: 5 }}>
                             Phone{' '}
-                            <Text style={{fontFamily: 'Roboto-Regular'}}>
+                            <Text style={{ fontFamily: 'Roboto-Regular' }}>
                               {orderDetails?.driver?.phone}
                             </Text>
                           </Text>
@@ -444,15 +479,15 @@ const OrderTracking = (props) => {
                     )}
                   </View>
                 )) || (
-                  <Text
-                    style={{
-                      ...styles.driverContact,
-                      marginTop: 10,
-                      fontFamily: 'Roboto-Regular',
-                    }}>
-                    Driver will be assigned soon
-                  </Text>
-                )}
+                    <Text
+                      style={{
+                        ...styles.driverContact,
+                        marginTop: 10,
+                        fontFamily: 'Roboto-Regular',
+                      }}>
+                      Driver will be assigned soon
+                    </Text>
+                  )}
               </View>
             </View>
             {orderDetails?.vehicle && (
@@ -478,10 +513,10 @@ const OrderTracking = (props) => {
                       JSON.parse(
                         orderDetails?.movement_specifications?.meta?.toString(),
                       ).min_man_power +
-                        '-' +
-                        JSON.parse(
-                          orderDetails?.movement_specifications?.meta?.toString(),
-                        ).max_man_power}
+                      '-' +
+                      JSON.parse(
+                        orderDetails?.movement_specifications?.meta?.toString(),
+                      ).max_man_power}
                   </Text>
                 </View>
               </View>
@@ -489,7 +524,7 @@ const OrderTracking = (props) => {
           </View>
           <VerticalStepper key={new Date()} orderDetails={orderDetails} />
           <View
-            style={{...styles.inputForm, marginTop: 0, marginBottom: hp(2)}}>
+            style={{ ...styles.inputForm, marginTop: 0, marginBottom: hp(2) }}>
             {/* <View style={{...styles.flexBox, marginTop: 0}}>
               <Text style={styles.leftText}>assigned vendor</Text>
               <Text
@@ -502,7 +537,7 @@ const OrderTracking = (props) => {
                 {orderDetails?.organization?.org_type}
               </Text>
             </View> */}
-            <View style={{...styles.flexBox}}>
+            <View style={{ ...styles.flexBox }}>
               <Text style={styles.leftText}>address</Text>
               <Text
                 style={{
@@ -515,9 +550,9 @@ const OrderTracking = (props) => {
                     ?.address}{' '}
               </Text>
             </View>
-            <View style={{...styles.flexBox}}>
+            <View style={{ ...styles.flexBox }}>
               <Text style={styles.leftText}>price</Text>
-              <Text style={{...styles.rightText, fontFamily: 'Roboto-Bold'}}>
+              <Text style={{ ...styles.rightText, fontFamily: 'Roboto-Bold' }}>
                 ₹ {orderDetails?.final_quote}
               </Text>
             </View>
@@ -557,10 +592,10 @@ const OrderTracking = (props) => {
           cancelOrder
             ? 'CANCEL ORDER'
             : privacyPolicy
-            ? 'cancellation policy'
-            : resecheduleOrder
-            ? 'RESCHEDULE'
-            : 'MANAGE ORDER'
+              ? 'cancellation policy'
+              : resecheduleOrder
+                ? 'RESCHEDULE'
+                : 'MANAGE ORDER'
         }
         onPress={() => {
           setRescheduleOrder(false);
@@ -575,8 +610,8 @@ const OrderTracking = (props) => {
             marginHorizontal: cancelOrder
               ? wp(6)
               : privacyPolicy
-              ? wp(6)
-              : wp(20),
+                ? wp(6)
+                : wp(20),
           }}>
           {(privacyPolicy && (
             <Text
@@ -596,19 +631,30 @@ const OrderTracking = (props) => {
               magna aliquyam erat, sed diam voluptua.
             </Text>
           )) || (
-            <Text
-              style={{
-                ...styles.manageOrderText,
-                textAlign: cancelOrder ? 'left' : 'center',
-              }}>
-              {cancelOrder
-                ? 'Are you sure you want to cancel this order?'
-                : resecheduleOrder
-                ? 'Our Virtual Assistant will get in touch with you shortly'
-                : 'How would you like to manage your order?'}
-            </Text>
-          )}
+              <Text
+                style={{
+                  ...styles.manageOrderText,
+                  textAlign: cancelOrder ? 'left' : 'center',
+                }}>
+                {cancelOrder
+                  ? 'Are you sure you want to cancel this order?'
+                  : resecheduleOrder
+                    ? 'Our Virtual Assistant will get in touch with you shortly'
+                    : 'How would you like to manage your order?'}
+              </Text>
+            )}
         </View>
+        <CancelBookingModal 
+            visible={cancelVisible}
+            closeModal={() => setCancelVisible(false)}
+            isLoading={isLoading}
+            public_booking_id={orderData?.public_booking_id}
+            setApiResponse={() => {}}
+            navigation={props}
+            setReason={(text)=> setReason(text)}
+            setDesc={(text)=>  setDesc(text)}
+            onPressCancelButton={()=> handleCancelApiCall() }
+        />
         {(resecheduleOrder && (
           <FlatButton
             isLoading={isLoading}
@@ -620,77 +666,82 @@ const OrderTracking = (props) => {
             }}
           />
         )) || (
-          <TwoButton
-            leftLabel={
-              cancelOrder ? 'No' : privacyPolicy ? 'No' : 'CANCEL & REFUND'
-            }
-            rightLabel={
-              cancelOrder ? 'Yes' : privacyPolicy ? 'Yes' : 'RESCHEDULE'
-            }
-            isLoading={isLoading}
-            leftOnPress={() => {
-              if (cancelOrder) {
-                setCancelOrder(false);
-                setManageOrderVisible(false);
-                setManageOrderVisible(false);
-              } else if (privacyPolicy) {
-                setPrivacyPolicy(false);
-              } else {
-                setPrivacyPolicy(true);
+            <TwoButton
+              leftLabel={
+                cancelOrder ? 'No' : privacyPolicy ? 'No' : 'CANCEL & REFUND'
               }
-            }}
-            rightOnPress={() => {
-              setLoading(true);
-              let obj = {
-                method: 'post',
-                headers: {
-                  Authorization:
-                    'Bearer ' + STORE.getState().Login?.loginData?.token,
-                },
-                data: {
-                  public_booking_id: orderData?.public_booking_id,
-                },
-              };
-              if (cancelOrder) {
-               
-                // Call confirm request cancel api
-                obj.url = 'bookings/request/canceled';
-                APICall(obj)
-                  .then((res) => {
+              rightLabel={
+                cancelOrder ? 'Yes' : privacyPolicy ? 'Yes' : 'RESCHEDULE'
+              }
+              isLoading={isLoading}
+              leftOnPress={() => {
+                if (cancelOrder) {
+                  setCancelOrder(false);
+                  setManageOrderVisible(false);
+                  setManageOrderVisible(false);
+                } else if (privacyPolicy) {
+                  setPrivacyPolicy(false);
+                } else {
+                  setPrivacyPolicy(true);
+                }
+              }}
+              rightOnPress={() => {
+                //setLoading(true)
+                setCancelVisible(false)
+                let obj = {
+                  method: 'post',
+                  headers: {
+                    Authorization:
+                      'Bearer ' + STORE.getState().Login?.loginData?.token,
+                  },
+                  data: {
+                    public_booking_id: orderData?.public_booking_id,
+                    reason: 'reson of cancel',
+                    desc: 'this is desc',
 
-                    // console.log('00000',res )
-                    if (res?.data?.status === 'success') {
-                      setCancelOrder(false);
-                      setManageOrderVisible(false);
-                      props.navigation.goBack();
-                    } else {
-                      CustomAlert(res?.data?.message);
-                    }
-                  })
-                  .catch((err) => CustomConsole(err))
-                  .finally(() => setLoading(false));
-              } else if (privacyPolicy) {
-                setLoading(false);
-                setPrivacyPolicy(false);
-                setCancelOrder(true);
-              } else {
-                // Call reschedule API
-                obj.url = 'bookings/request/reschedule';
-                APICall(obj)
-                  .then((res) => {
-                    if (res?.data?.status === 'success') {
-                      setRescheduleOrder(true);
-                    } else {
-                      CustomAlert(res?.data?.message);
-                    }
-                  })
-                  .catch((err) => CustomConsole(err))
-                  .finally(() => setLoading(false));
-                // setManageOrderVisible(false);
-              }
-            }}
-          />
-        )}
+                  },
+                };
+                if (cancelOrder) {
+                  setCancelVisible(true)
+         //Call confirm request cancel api
+                  // obj.url = 'bookings/request/canceled';
+                  // APICall(obj)
+                  //   .then((res) => {
+
+                  //     // console.log('00000',res )
+                  //     if (res?.data?.status === 'success') {
+                  //       setCancelOrder(false);
+                  //       setManageOrderVisible(false);
+                  //       props.navigation.goBack();
+                  //     } else {
+                  //       CustomAlert(res?.data?.message);
+                  //     }
+                  //   })
+                  //   .catch((err) => CustomConsole(err))
+                  //   .finally(() => setLoading(false));
+               
+                } else if (privacyPolicy) {
+                  setLoading(false);
+                  setPrivacyPolicy(false);
+                  setCancelOrder(true);
+                } else {
+                  // Call reschedule API
+                  obj.url = 'bookings/request/reschedule';
+                  APICall(obj)
+                    .then((res) => {
+                      if (res?.data?.status === 'success') {
+                        setRescheduleOrder(true);
+                      } else {
+                        CustomAlert(res?.data?.message);
+                      }
+                    })
+                    .catch((err) => CustomConsole(err))
+                    .finally(() => setLoading(false));
+                  // setManageOrderVisible(false);
+                }
+              }}
+            />
+          )}
       </CustomModalAndroid>
       <CustomModalAndroid
         visible={showPin}

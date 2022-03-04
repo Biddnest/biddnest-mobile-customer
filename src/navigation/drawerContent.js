@@ -190,14 +190,14 @@ export function DrawerContent(props) {
               {userData?.phone}
             </Text>
           </View>
-          <View style={{width: wp(15)}}>
+          <View style={{width: wp(14)}}>
             <Pressable
               style={styles.logoutWrapper}
               onPress={() => props.navigation.navigate('MyProfile')}>
               <MaterialIcons
                 name={'person'}
                 color={Colors.white}
-                size={wp(6)}
+                size={wp(5)}
               />
             </Pressable>
           </View>
@@ -248,8 +248,8 @@ const styles = StyleSheet.create({
     fontSize: wp(6),
   },
   logoutWrapper: {
-    height: wp(10),
-    width: wp(10),
+    height: wp(8),
+    width: wp(8),
     borderRadius: wp(5),
     backgroundColor: '#5643A7',
     ...STYLES.common,
